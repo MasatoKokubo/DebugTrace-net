@@ -16,6 +16,8 @@
     <PackageLicenseUrl>https://github.com/MasatoKokubo/DebugTrace-net/blob/master/LICENSE</PackageLicenseUrl>
 
     <PackageProjectUrl>https://github.com/MasatoKokubo/DebugTrace-net</PackageProjectUrl>
+
+    <PackageIconUrl>https://github.com/MasatoKokubo/DebugTrace-net/blob/master/DebugTrace/DebugTrace-32.png</PackageIconUrl>
   </PropertyGroup>
 
   <ItemGroup>

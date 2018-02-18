@@ -125,7 +125,7 @@ namespace DebugTrace {
 			typeof(Guid),
 		};
 
-		private static string version                  = "1.0.0 alpha"; // The version string
+		private static string version                  = "0.0.1-alpha"; // The version string
 		private static string logLevel                 = "default"; // Log Level
 		private static string enterString              = "Enter {0}.{1} ({2}:{3:D})"; // string at enter
 		private static string leaveString              = "Leave {0}.{1} ({2}:{3:D})"; // string at leave

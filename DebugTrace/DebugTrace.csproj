@@ -9,6 +9,10 @@
     <Copyright>(C) 2018 Masato Kokubo</Copyright>
     <PackageLicenseUrl>https://github.com/MasatoKokubo/DebugTrace-net/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/MasatoKokubo/DebugTrace-net</PackageProjectUrl>
+    <PackageIconUrl>https://github.com/MasatoKokubo/DebugTrace-net/blob/master/DebugTrace/DebugTrace-32.png</PackageIconUrl>
+    <PackageId>DebugTrace</PackageId>
+    <Product>DebugTrace for .NET</Product>
+    <AssemblyName>DebugTrace</AssemblyName>
   </PropertyGroup>
 
 </Project>

@@ -7,6 +7,7 @@
     <Copyright>(C) 2018 Masato Kokubo</Copyright>
     <PackageLicenseUrl>https://github.com/MasatoKokubo/DebugTrace-net/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/MasatoKokubo/DebugTrace-net</PackageProjectUrl>
+    <PackageIconUrl>https://github.com/MasatoKokubo/DebugTrace-net/blob/master/DebugTrace/DebugTrace-32.png</PackageIconUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -18,8 +19,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="DebugTrace">
-      <HintPath>..\DebugTrace\bin\Debug\netstandard2.0\DebugTrace.dll</HintPath>
+    <ProjectReference Include="..\DebugTrace\DebugTrace.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DebugTrace-net">
+      <HintPath>..\DebugTrace\bin\Debug\netstandard2.0\DebugTrace-net.dll</HintPath>
     </Reference>
   </ItemGroup>
 
