@@ -421,41 +421,50 @@ namespace DebugTrace {
 		///
 		/// <returns>a caller stack trace element</returns>
 		private static StackTraceElement GetStackTraceElement() {
-			var result = new StackTraceElement("--", "--", "--", 0);
+		//	var element1s = Environment.StackTrace.Split('\n');
+		//	Console.WriteLine("");
+		//	foreach (var element in Environment.StackTrace.Split('\n'))
+		//		Console.WriteLine(element);
+		//	Console.WriteLine("");
 
 			var elements = Environment.StackTrace.Split('\n')
-				.Skip(1)
+				.Where(str => !str.Contains(".DebugTrace."))
+				.Where(str => !str.Contains("StackTrace"))
 				.Select(str => str.Trim())
-				.Where(str => str.StartsWith("at "))
 				.Select(str => {
-					str = str.Substring(3);
-					(var str1, var str2) = LastSplit(str, " in ");
-					(var typeName, var methodName) = LastSplit(str1, '.');
-					(var fileName, var lineNoStr) = LastSplit(str2, ':');
+					//  0  1            2  3             4
+					// "at Class.Method() in filePath:line N"
+					(var str1, var str2) = Split(str, ' ');
+					(var str3, var str4) = Split(str2, ')');
+					str3 = str3 + ')';
+					(var typeName, var methodName) = LastSplit(str3, '.');
+					(var str5, var str6) = Split(str4.Trim(), ' ');
+					(var fileName, var str7) = LastSplit(str6, ':');
 					fileName = Path.GetFileName(fileName);
-					var lineNo = int.Parse(lineNoStr.Substring(5));
+					(var str8, var lineNoStr) = Split(str7.Trim(), ' ');
+					var lineNo = int.Parse(lineNoStr);
 					return new StackTraceElement(typeName, methodName, fileName, lineNo);
 				});
 
-			string myTypeName = typeof(DebugTrace).FullName;
-
-			foreach (var element in elements) {
-				if (element.TypeName.Contains(myTypeName)) continue;
-				result = element;
-				break;
-			}
+			var result = elements.Count() > 0 
+				? elements.ElementAt(0)
+				: new StackTraceElement("--", "--", "--", 0);
 
 			return result;
 		}
 
-		private static (string, string) LastSplit(string str, char separator) {
-			var index = str.LastIndexOf(separator);
-			return (str.Substring(0, index), str.Substring(index + 1));
+		private static (string, string) Split(string str, char separator) {
+			var index = str.IndexOf(separator);
+			return index < 0
+				? (str, "")
+				: (str.Substring(0, index), str.Substring(index + 1));
 		}
 
-		private static (string, string) LastSplit(string str, string separator) {
+		private static (string, string) LastSplit(string str, char separator) {
 			var index = str.LastIndexOf(separator);
-			return (str.Substring(0, index), str.Substring(index + separator.Length));
+			return index < 0
+				? (str, "")
+				: (str.Substring(0, index), str.Substring(index + 1));
 		}
 
 		/// <summary>

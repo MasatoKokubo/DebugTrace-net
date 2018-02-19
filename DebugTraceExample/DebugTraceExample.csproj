@@ -22,10 +22,4 @@
     <ProjectReference Include="..\DebugTrace\DebugTrace.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="DebugTrace-net">
-      <HintPath>..\DebugTrace\bin\Debug\netstandard2.0\DebugTrace-net.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>
