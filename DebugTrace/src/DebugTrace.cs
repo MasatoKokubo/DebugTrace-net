@@ -12,6 +12,7 @@ using System.Threading;
 
 namespace DebugTrace {
 	using Logger;
+	using System.Text.RegularExpressions;
 
 	/// <summary>
 	/// A utility class for debugging.
@@ -129,7 +130,7 @@ namespace DebugTrace {
 		private static string logLevel                 = "default"; // Log Level
 		private static string enterString              = "Enter {0}.{1} ({2}:{3:D})"; // string at enter
 		private static string leaveString              = "Leave {0}.{1} ({2}:{3:D})"; // string at leave
-		private static string threadBoundaryString     = "______________________________ {0} ______________________________"; // string of threads boundary
+		private static string threadBoundaryString     = "______________________________ Thread {0} ______________________________"; // string of threads boundary
 		private static string classBoundaryString      = "____ {0} ____"; // string of classes boundary
 		private static string indentString             = "| "; // string of method call indent
 		private static string dataIndentString         = "  "; // string of data indent
@@ -151,7 +152,7 @@ namespace DebugTrace {
 	//	private static Dictionary<string, string> dictionaryNameIDictionary = Dictionary<string, string>(); // Name to dictionaryNmae dictionary 
 
 		// Logger
-		private static ILogger logger = new Std.Out();
+		private static ILogger logger = new Console.Out();
 
 		// Whether tracing is enabled
 		private static bool enabled = logger.IsEnabled;
@@ -266,7 +267,7 @@ namespace DebugTrace {
 			if (threadId !=  beforeThreadId) {
 				// Thread changing
 				logger.Log(""); // Line break
-				logger.Log(string.Format(threadBoundaryString, thread.Name, threadId));
+				logger.Log(string.Format(threadBoundaryString, threadId));
 				logger.Log(""); // Line break
 
 				beforeThreadId = threadId;
@@ -428,9 +429,8 @@ namespace DebugTrace {
 		//	Console.WriteLine("");
 
 			var elements = Environment.StackTrace.Split('\n')
-				.Where(str => !str.Contains(".DebugTrace."))
-				.Where(str => !str.Contains("StackTrace"))
 				.Select(str => str.Trim())
+				.Where(str => str != "" && !str.Contains(".DebugTrace.") && !str.Contains("StackTrace"))
 				.Select(str => {
 					//  0  1            2  3             4
 					// "at Class.Method() in filePath:line N"
@@ -442,7 +442,7 @@ namespace DebugTrace {
 					(var fileName, var str7) = LastSplit(str6, ':');
 					fileName = Path.GetFileName(fileName);
 					(var str8, var lineNoStr) = Split(str7.Trim(), ' ');
-					var lineNo = int.Parse(lineNoStr);
+					var lineNo = lineNoStr == "" ? 0 : int.Parse(lineNoStr);
 					return new StackTraceElement(typeName, methodName, fileName, lineNo);
 				});
 
@@ -622,6 +622,8 @@ namespace DebugTrace {
 			return typeName;
 		}
 
+		private static Regex typeRemoveRegex = new Regex("(`[0-9]+)|(, [^, \\]]+)+");
+
 		/// <summary>
 		/// Replace a class name.
 		/// </summary>
@@ -629,6 +631,8 @@ namespace DebugTrace {
 		/// <param name="typeName">a class name</param>
 		/// <returns>the replaced ckass name</returns>
 		private static string ReplaceTypeName(string typeName) {
+			typeName = typeRemoveRegex.Replace(typeName, "");
+
 			if (defaultPackage != "" && typeName.StartsWith(defaultPackage))
 				typeName = defaultPackageString + typeName.Substring(defaultPackage.Length);
 			return typeName;

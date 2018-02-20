@@ -1,7 +1,5 @@
-// Std.cs
+// Console.cs
 // (C) 2018 Masato Kokubo
-
-using System;
 
 namespace DebugTrace.Logger {
 	/// <summary>
@@ -10,7 +8,7 @@ namespace DebugTrace.Logger {
 	///
 	/// <since>1.0.0</since>
 	/// <author>Masato Kokubo</author>
-	public abstract class Std : ILogger {
+	public abstract class Console : ILogger {
 		/// <summary>
 		/// Set the logging level
 		/// </summary>
@@ -29,26 +27,26 @@ namespace DebugTrace.Logger {
 		/// <summary>
 		/// A logger using System.out.
 		/// </summary>
-		public class Out : Std {
+		public class Out : Console {
 			/// <summary>
 			/// Output the message to the log.
 			/// </summary>
 			public override void Log(string message) {
-			//	Console.Out.WriteLine(DebugTrace.appendTimestamp(message));
-				Console.Out.WriteLine(message); // TODO
+			//	System.Console.Out.WriteLine(DebugTrace.appendTimestamp(message));
+				System.Console.Out.WriteLine(message); // TODO
 			}
 		}
 
 		/// <summary>
 		/// A logger using System.err.
 		/// </summary>
-		public class Err : Std {
+		public class Error : Console {
 			/// <summary>
 			/// Output the message to the log.
 			/// </summary>
 			public override void Log(string message) {
-			//	Console.Error.WriteLine(DebugTrace.appendTimestamp(message));
-				Console.Error.WriteLine(message); // TODO
+			//	System.Console.Error.WriteLine(DebugTrace.appendTimestamp(message));
+				System.Console.Error.WriteLine(message); // TODO
 			}
 		}
 	}
