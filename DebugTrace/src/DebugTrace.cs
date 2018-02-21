@@ -126,7 +126,7 @@ namespace DebugTrace {
 			typeof(Guid),
 		};
 
-		private static string version                  = "0.0.1-alpha"; // The version string
+		private static string version                  = "0.0.2-alpha"; // The version string
 		private static string logLevel                 = "default"; // Log Level
 		private static string enterString              = "Enter {0}.{1} ({2}:{3:D})"; // string at enter
 		private static string leaveString              = "Leave {0}.{1} ({2}:{3:D})"; // string at leave
@@ -142,7 +142,7 @@ namespace DebugTrace {
 		private static string keyValueSeparator        = ": "; // Separator between the key and value for IDictionary obj
 		private static string fieldNameValueSeparator  = ": "; // Separator between the field name and value
 		private static string printSuffixFormat        = " ({2}:{3:D})"; // Format string of Print suffix
-		private static string dateTimeFormat           = "{0:G}"; // Format string of DateTime type
+		private static string dateTimeFormat           = "{0:G}"; // Format string of a DateTime and a string
 		private static int collectionLimit             = 512; // Limit of ICollection elements to output
 		private static int byteArrayLimit              = 8192; // Limit of byte array elements to output
 		private static int stringLimit                 = 8192; // Limit of string characters to output
@@ -152,7 +152,7 @@ namespace DebugTrace {
 	//	private static Dictionary<string, string> dictionaryNameIDictionary = Dictionary<string, string>(); // Name to dictionaryNmae dictionary 
 
 		// Logger
-		private static ILogger logger = new Console.Out();
+		private static ILogger logger = new Console.Error();
 
 		// Whether tracing is enabled
 		private static bool enabled = logger.IsEnabled;
@@ -185,6 +185,18 @@ namespace DebugTrace {
 			dataIndentStrings[0] = "";
 			for (var index = 1; index < dataIndentStrings.Length; ++index)
 				dataIndentStrings[index] = dataIndentStrings[index - 1] + dataIndentString;
+
+			logger.Log($"DebugTrace-net {version} / {logger.GetType().FullName}");
+		}
+
+		/// <summary>
+		/// Append a timestamp to the head of the string.
+		/// </summary>
+		///
+		/// <param name="string ">a string</param>
+		/// <returns>a string appended a timestamp string</returns>
+		public static String AppendDateTime(string str) {
+			return string.Format(dateTimeFormat, DateTime.Now) + " " + str;
 		}
 
 
@@ -383,8 +395,8 @@ namespace DebugTrace {
 		/// Outputs the name and value to the log.
 		/// </summary>
 		///
-		/// @param name the name of the value
-		/// @param value the value to output (accept null)
+		/// <param name="name">the name of the value</param>
+		/// <param name="value">the value to output (accept null)</param>
 		private static void PrintSub(string name, object value) {
 			lock (states) {
 				PrintStart(); // Common start processing of output
@@ -542,13 +554,15 @@ namespace DebugTrace {
 				case DateTime  dateTime    : buff.Append(string.Format(dateTimeFormat, dateTime)); break;
 				case IDictionary dictionary: Append(state, strings, buff, dictionary); break;
 				case ICollection collection: Append(state, strings, buff, collection); break;
+				case Enum         enumValue: buff.Append(enumValue   ); break;
 				default:
 					// Other
-					bool isReflection = reflectionClasses.Contains(type.FullName);
-					if (!isReflection && !HasToString(type)) {
-						isReflection = true;
-						reflectionClasses.Add(type.FullName);
-					}
+				//	bool isReflection = reflectionClasses.Contains(type.FullName); // TODO
+					bool isReflection = true;
+				//	if (!isReflection && !HasToString(type)) {
+				//		isReflection = true;
+				//		reflectionClasses.Add(type.FullName);
+				//	}
 
 					if (isReflection) {
 						// Use Reflection
@@ -622,7 +636,7 @@ namespace DebugTrace {
 			return typeName;
 		}
 
-		private static Regex typeRemoveRegex = new Regex("(`[0-9]+)|(, [^, \\]]+)+");
+		private static Regex typeRemoveRegex = new Regex(@"(`[0-9]+)|(, [^, \]]+)+");
 
 		/// <summary>
 		/// Replace a class name.
@@ -648,20 +662,20 @@ namespace DebugTrace {
 		/// <param name="ch">a character</param>
 		private static void Append(State state, IList<string> strings, StringBuilder buff, char ch) {
 			switch (ch) {
-			case '\0': buff.Append("\\0" ); break; // 00 NUL
-			case '\a': buff.Append("\\a" ); break; // 07 BEL
-			case '\b': buff.Append("\\b" ); break; // 08 BS
-			case '\t': buff.Append("\\t" ); break; // 09 HT
-			case '\n': buff.Append("\\n" ); break; // 0A LF
-			case '\v': buff.Append("\\v" ); break; // 0B VT
-			case '\f': buff.Append("\\f" ); break; // 0C FF
-			case '\r': buff.Append("\\r" ); break; // 0D CR
-			case '"' : buff.Append("\\\""); break; // "
-			case '\'': buff.Append("\\' "); break; // '
-			case '\\': buff.Append("\\\\"); break; // \
+			case '\0': buff.Append(@"\0"); break; // 00 NUL
+			case '\a': buff.Append(@"\a"); break; // 07 BEL
+			case '\b': buff.Append(@"\b"); break; // 08 BS
+			case '\t': buff.Append(@"\t"); break; // 09 HT
+			case '\n': buff.Append(@"\n"); break; // 0A LF
+			case '\v': buff.Append(@"\v"); break; // 0B VT
+			case '\f': buff.Append(@"\f"); break; // 0C FF
+			case '\r': buff.Append(@"\r"); break; // 0D CR
+			case '"' : buff.Append(@"\"""); break; // "
+			case '\'': buff.Append(@"\'"); break; // '
+			case '\\': buff.Append(@"\\"); break; // \
 			default:
 				if (ch < ' ' || ch == '\u007F')
-					buff.Append("\\u").Append(string.Format("{0:X4}", (ushort)ch));
+					buff.Append(string.Format(@"\u{0:X4}", (ushort)ch));
 				else
 					buff.Append(ch);
 				break;
@@ -832,12 +846,16 @@ namespace DebugTrace {
 		private static bool HasToString(Type type) {
 			var result = false;
 
-			while (type != typeof(object) && type != typeof(ValueType)) {
-				if (type.GetMethod("ToString", BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance) != null) {
-					result = true;
-					break;
+			try {
+				while (type != typeof(object) && type != typeof(ValueType)) {
+					if (type.GetMethod("ToString", BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance) != null) {
+						result = true;
+						break;
+					}
+					type = type.BaseType;
 				}
-				type = type.BaseType;
+			}
+			catch (Exception e) {
 			}
 
 			return result;
@@ -891,7 +909,13 @@ namespace DebugTrace {
 			var propertyInfos = type.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
 			foreach (var propertyInfo in propertyInfos) {
 				var propertyName = propertyInfo.Name;
-				var value = propertyInfo.GetValue(obj);
+				object value = null;
+				try {
+					value = propertyInfo.GetValue(obj);
+				}
+				catch (Exception e) {
+					value = e.ToString();
+				}
 
 				buff.Append(propertyName).Append(fieldNameValueSeparator);
 

@@ -9,7 +9,7 @@
 
     <Company>Masato Kokubo</Company>
 
-    <Version>0.0.1-alpha</Version>
+    <Version>0.0.2-alpha</Version>
 
     <Copyright>(C) 2018 Masato Kokubo</Copyright>
 
@@ -24,6 +24,10 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.2.0" />
     <PackageReference Include="MSTest.TestFramework" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DebugTrace\DebugTrace.csproj" />
   </ItemGroup>
 
 </Project>

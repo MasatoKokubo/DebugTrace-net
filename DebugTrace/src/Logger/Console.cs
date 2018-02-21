@@ -32,8 +32,7 @@ namespace DebugTrace.Logger {
 			/// Output the message to the log.
 			/// </summary>
 			public override void Log(string message) {
-			//	System.Console.Out.WriteLine(DebugTrace.appendTimestamp(message));
-				System.Console.Out.WriteLine(message); // TODO
+				System.Console.Out.WriteLine(DebugTrace.AppendDateTime(message));
 			}
 		}
 
@@ -45,8 +44,7 @@ namespace DebugTrace.Logger {
 			/// Output the message to the log.
 			/// </summary>
 			public override void Log(string message) {
-			//	System.Console.Error.WriteLine(DebugTrace.appendTimestamp(message));
-				System.Console.Error.WriteLine(message); // TODO
+				System.Console.Error.WriteLine(DebugTrace.AppendDateTime(message));
 			}
 		}
 	}

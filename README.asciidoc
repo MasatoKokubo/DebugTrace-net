@@ -1,0 +1,3 @@
+= DebugTrace-net
+
+`DebugTrace-net` is a .NET library that outputs trace logs when debugging .NET programs.
