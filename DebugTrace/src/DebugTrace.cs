@@ -67,6 +67,8 @@ namespace DebugTrace {
 			typeof(double  ),
 			typeof(decimal ),
 			typeof(string  ),
+			typeof(char[]  ),
+			typeof(byte[]  ),
 			typeof(DateTime),
 		};
 
@@ -84,46 +86,50 @@ namespace DebugTrace {
 			typeof(ulong   ),
 			typeof(float   ),
 			typeof(double  ),
-			typeof(string  ),
 			typeof(decimal ),
+			typeof(string  ),
+			typeof(char[]  ),
+			typeof(byte[]  ),
 			typeof(DateTime),
 		};
 
 		private static readonly IDictionary<Type, string> typeNameMap = new Dictionary<Type, string>() {
-			{typeof(bool    ), "bool"   },
-			{typeof(char    ), "char"   },
-			{typeof(sbyte   ), "sbyte"  },
-			{typeof(byte    ), "byte"   },
-			{typeof(short   ), "short"  },
-			{typeof(ushort  ), "ushort" },
-			{typeof(int     ), "int"    },
-			{typeof(uint    ), "uint"   },
-			{typeof(long    ), "long"   },
-			{typeof(ulong   ), "ulong"  },
-			{typeof(float   ), "float"  },
-			{typeof(double  ), "double" },
-			{typeof(decimal ), "decimal"},
+			{typeof(bool   ), "bool"   },
+			{typeof(char   ), "char"   },
+			{typeof(sbyte  ), "sbyte"  },
+			{typeof(byte   ), "byte"   },
+			{typeof(short  ), "short"  },
+			{typeof(ushort ), "ushort" },
+			{typeof(int    ), "int"    },
+			{typeof(uint   ), "uint"   },
+			{typeof(long   ), "long"   },
+			{typeof(ulong  ), "ulong"  },
+			{typeof(float  ), "float"  },
+			{typeof(double ), "double" },
+			{typeof(decimal), "decimal"},
+			{typeof(string ), "string"},
 		};
 
 		// Set of component types of array that output on the single line
-		private static readonly ISet<Type> singleLineComponentTypes = new HashSet<Type>() {
-			typeof(bool    ),
-			typeof(char    ),
-			typeof(sbyte   ),
-			typeof(byte    ),
-			typeof(short   ),
-			typeof(ushort  ),
-			typeof(int     ),
-			typeof(uint    ),
-			typeof(long    ),
-			typeof(ulong   ),
-			typeof(float   ),
-			typeof(double  ),
-			typeof(decimal ),
-			typeof(DateTime),
-			typeof(DateTimeOffset),
-			typeof(TimeSpan),
-			typeof(Guid),
+		private static readonly ISet<Type> singleLineTypes = new HashSet<Type>() {
+			typeof(bool          ), typeof(bool          []), typeof(bool          [,]), typeof(bool          [][]),
+			typeof(char          ), typeof(char          []), typeof(char          [,]), typeof(char          [][]),
+			typeof(sbyte         ), typeof(sbyte         []), typeof(sbyte         [,]), typeof(sbyte         [][]),
+			typeof(byte          ), typeof(byte          []), typeof(byte          [,]), typeof(byte          [][]),
+			typeof(short         ), typeof(short         []), typeof(short         [,]), typeof(short         [][]),
+			typeof(ushort        ), typeof(ushort        []), typeof(ushort        [,]), typeof(ushort        [][]),
+			typeof(int           ), typeof(int           []), typeof(int           [,]), typeof(int           [][]),
+			typeof(uint          ), typeof(uint          []), typeof(uint          [,]), typeof(uint          [][]),
+			typeof(long          ), typeof(long          []), typeof(long          [,]), typeof(long          [][]),
+			typeof(ulong         ), typeof(ulong         []), typeof(ulong         [,]), typeof(ulong         [][]),
+			typeof(float         ), typeof(float         []), typeof(float         [,]), typeof(float         [][]),
+			typeof(double        ), typeof(double        []), typeof(double        [,]), typeof(double        [][]),
+			typeof(decimal       ), typeof(decimal       []), typeof(decimal       [,]), typeof(decimal       [][]),
+			typeof(string        ), typeof(string        []), typeof(string        [,]), typeof(string        [][]),
+			typeof(DateTime      ), typeof(DateTime      []), typeof(DateTime      [,]), typeof(DateTime      [][]),
+			typeof(DateTimeOffset), typeof(DateTimeOffset[]), typeof(DateTimeOffset[,]), typeof(DateTimeOffset[][]),
+			typeof(TimeSpan      ), typeof(TimeSpan      []), typeof(TimeSpan      [,]), typeof(TimeSpan      [][]),
+			typeof(Guid          ), typeof(Guid          []), typeof(Guid          [,]), typeof(Guid          [][]),
 		};
 
 		private static string version                  = "0.0.2-alpha"; // The version string
@@ -434,12 +440,6 @@ namespace DebugTrace {
 		///
 		/// <returns>a caller stack trace element</returns>
 		private static StackTraceElement GetStackTraceElement() {
-		//	var element1s = Environment.StackTrace.Split('\n');
-		//	Console.WriteLine("");
-		//	foreach (var element in Environment.StackTrace.Split('\n'))
-		//		Console.WriteLine(element);
-		//	Console.WriteLine("");
-
 			var elements = Environment.StackTrace.Split('\n')
 				.Select(str => str.Trim())
 				.Where(str => str != "" && !str.Contains(".DebugTrace.") && !str.Contains("StackTrace"))
@@ -483,9 +483,9 @@ namespace DebugTrace {
 		/// Line Feed.
 		/// </summary>
 		///
-		/// <param name="state">indent state</param>
-		/// <param name="strings">a string list</param>
-		/// <param name="buff">a string buffer</param>
+		/// <param name="state">the indent state</param>
+		/// <param name="strings">the string list</param>
+		/// <param name="buff">the string buffer</param>
 		private static void LineFeed(State state, IList<string> strings, StringBuilder buff) {
 			strings.Add(GetIndentString(CurrentState) + buff.ToString());
 			buff.Clear();
@@ -518,9 +518,9 @@ namespace DebugTrace {
 		/// Appends the value for logging to the string buffer.
 		/// </summary>
 		///
-		/// <param name="state">indent state</param>
-		/// <param name="strings">a string list</param>
-		/// <param name="buff">a string buffer</param>
+		/// <param name="state">the indent state</param>
+		/// <param name="strings">the string list</param>
+		/// <param name="buff">the string buffer</param>
 		/// <param name="value">the value object</param>
 		/// <param name="isElement">true if the value is element of a container class, false otherwise</param>
 		/// 
@@ -530,31 +530,31 @@ namespace DebugTrace {
 			} else {
 				var type = value.GetType();
 
-				string typeName = GetTypeName(type, value, isElement, 0);
+				var typeName = GetTypeName(type, value, isElement);
 				if (typeName != null)
 					buff.Append(typeName);
 
 				switch (value) {
-				case bool      boolValue   : buff.Append(boolValue ? "true" : "false"); break;
-				case char      charValue   : buff.Append('\''); Append(state, strings, buff, charValue); buff.Append('\''); break;
-				case sbyte     sbyteValue  : buff.Append(sbyteValue  ); break;
-				case byte      byteValue   : buff.Append(byteValue   ); break;
-				case short     shortValue  : buff.Append(shortValue  ); break;
-				case ushort    ushortValue : buff.Append(ushortValue ); break;
-				case int       intValue    : buff.Append(intValue    ); break;
-				case uint      uintValue   : buff.Append(uintValue   ); break;
-				case long      longValue   : buff.Append(longValue   ).Append('L' ); break;
-				case ulong     ulongValue  : buff.Append(ulongValue  ).Append("uL"); break;
-				case float     floatValue  : buff.Append(floatValue  ).Append('f' ); break;
-				case double    doubleValue : buff.Append(doubleValue ).Append('d' ); break;
+				case bool         boolValue: buff.Append(boolValue ? "true" : "false"); break;
+				case char         charValue: buff.Append('\''); Append(state, strings, buff, charValue); buff.Append('\''); break;
+				case sbyte       sbyteValue: buff.Append(sbyteValue  ); break;
+				case byte         byteValue: buff.Append(byteValue   ); break;
+				case short       shortValue: buff.Append(shortValue  ); break;
+				case ushort     ushortValue: buff.Append(ushortValue ); break;
+				case int           intValue: buff.Append(intValue    ); break;
+				case uint         uintValue: buff.Append(uintValue   ); break;
+				case long         longValue: buff.Append(longValue   ).Append('L' ); break;
+				case ulong       ulongValue: buff.Append(ulongValue  ).Append("uL"); break;
+				case float       floatValue: buff.Append(floatValue  ).Append('f' ); break;
+				case double     doubleValue: buff.Append(doubleValue ).Append('d' ); break;
 				case decimal   decimalValue: buff.Append(decimalValue).Append('m' ); break;
-				case char[]    charArray   : Append(state, strings, buff, new string(charArray)); break;
-				case byte[]    byteArray   : Append(state, strings, buff, byteArray); break;
-				case string    stringValue : Append(state, strings, buff, stringValue); break;
-				case DateTime  dateTime    : buff.Append(string.Format(dateTimeFormat, dateTime)); break;
+				case DateTime      dateTime: buff.Append(string.Format(dateTimeFormat, dateTime)); break;
+				case char[]       charArray: Append(state, strings, buff, new string(charArray)); break;
+				case byte[]       byteArray: Append(state, strings, buff, byteArray); break;
+				case string     stringValue: Append(state, strings, buff, stringValue); break;
 				case IDictionary dictionary: Append(state, strings, buff, dictionary); break;
 				case ICollection collection: Append(state, strings, buff, collection); break;
-				case Enum         enumValue: buff.Append(enumValue   ); break;
+				case Enum         enumValue: buff.Append(enumValue); break;
 				default:
 					// Other
 				//	bool isReflection = reflectionClasses.Contains(type.FullName); // TODO
@@ -594,9 +594,8 @@ namespace DebugTrace {
 		/// <param name="isElement">true if the value is element of a container class, false otherwise</param>
 		/// <param name="nest">current nest count</param>
 		/// <returns>the type name to be output to the log</returns>
-		private static string GetTypeName(Type type, object value, bool isElement, int nest) {
+		private static string GetTypeName(Type type, object value, bool isElement, int nest = 0) {
 			string typeName = null;
-			var count  = -1;
 
 			if (type.IsArray) {
 				// Array
@@ -609,28 +608,29 @@ namespace DebugTrace {
 					int braIndex = typeName.IndexOf('[');
 					if (braIndex < 0)
 						braIndex = typeName.Length;
-					typeName = typeName.Substring(0, braIndex) + bracket + typeName.Substring(braIndex);
+					typeName = typeName.Substring(0, braIndex) + bracket + typeName.Substring(braIndex) + ' ';
 				}
+			} else if (type.Name.StartsWith("Tuple`")) {
+				typeName = "Tuple";
+
+			} else if (type.Name.StartsWith("ValueTuple`")) {
+				typeName = "ValueTuple";
+
 			} else {
 				// Not Array
-				if (nest > 0 || (isElement ? !noOutputElementTypes.Contains(type) : !noOutputTypes.Contains(type))) {
+				var noOutputType = isElement ? noOutputElementTypes.Contains(type) : noOutputTypes.Contains(type);
+				if (nest > 0 || !noOutputType) {
 					// Output the type name
 					if (typeNameMap.ContainsKey(type)) {
 						typeName = typeNameMap[type];
 					} else {
 						typeName = ReplaceTypeName(type.FullName);
 						if (value is ICollection collection)
-							count = collection.Count;
+							typeName += " Count:" + collection.Count;
 					}
 				}
-			}
-
-			if (typeName != null) {
-				if (count != -1)
-					typeName += " Count:" + count;
-
-				if (nest == 0)
-					typeName = "(" + typeName + ")";
+				if (typeName != null && nest == 0)
+					typeName += ' ';
 			}
 
 			return typeName;
@@ -656,9 +656,9 @@ namespace DebugTrace {
 		/// Appends a character representation for logging to the string buffer.
 		/// </summary>
 		///
-		/// <param name="state">indent state</param>
-		/// <param name="strings">a string list</param>
-		/// <param name="buff">a string buffer</param>
+		/// <param name="state">the indent state</param>
+		/// <param name="strings">the string list</param>
+		/// <param name="buff">the string buffer</param>
 		/// <param name="ch">a character</param>
 		private static void Append(State state, IList<string> strings, StringBuilder buff, char ch) {
 			switch (ch) {
@@ -686,9 +686,9 @@ namespace DebugTrace {
 		/// Appends a CharSequence representation for logging to the string buffer.
 		/// </summary>
 		///
-		/// <param name="state">indent state</param>
-		/// <param name="strings">a string list</param>
-		/// <param name="buff">a string buffer</param>
+		/// <param name="state">the indent state</param>
+		/// <param name="strings">the string list</param>
+		/// <param name="buff">the string buffer</param>
 		/// <param name="str">a string object</param>
 		private static void Append(State state, IList<string> strings, StringBuilder buff, string str) {
 			buff.Append('"');
@@ -706,14 +706,14 @@ namespace DebugTrace {
 		/// Appends a byte array representation for logging to the string buffer.
 		/// </summary>
 		///
-		/// <param name="state">indent state</param>
-		/// <param name="strings">a string list</param>
-		/// <param name="buff">a string buffer</param>
+		/// <param name="state">the indent state</param>
+		/// <param name="strings">the string list</param>
+		/// <param name="buff">the string buffer</param>
 		/// <param name="bytes">a byte array</param>
 		private static void Append(State state, IList<string> strings, StringBuilder buff, byte[] bytes) {
 			var multiLine = bytes.Length > 16 && byteArrayLimit > 16;
 
-			buff.Append('[');
+			buff.Append('{');
 			if (multiLine) {
 				LineFeed(state, strings, buff);
 				UpDataNest(state);
@@ -742,38 +742,36 @@ namespace DebugTrace {
 					LineFeed(state, strings, buff);
 				DownDataNest(state);
 			}
-			buff.Append(']');
+			buff.Append('}');
 		}
 
 		/// <summary>
 		/// Appends a Collection representation for logging to the string buffer.
 		/// </summary>
 		///
-		/// <param name="state">indent state</param>
-		/// <param name="strings">a string list</param>
-		/// <param name="buff">a string buffer</param>
+		/// <param name="state">the indent state</param>
+		/// <param name="strings">the string list</param>
+		/// <param name="buff">the string buffer</param>
 		/// <param name="collection">a Collection object</param>
 		private static void Append(State state, IList<string> strings, StringBuilder buff, ICollection collection) {
-			var enumerator = collection.GetEnumerator();
-			var multiLine = collection.Count >= 2;
+			var multiLine = !isSingleLine(collection);
 
-			buff.Append('[');
-			for (int index = 0; enumerator.MoveNext(); ++index) {
-				var element = enumerator.Current;
-				if (index == 0 && element != null) {
-					if (   singleLineComponentTypes.Contains(element.GetType()) || element is Enum)
-						multiLine = false;
+			buff.Append('{');
+			var index = 0;
+			foreach (var element in collection) {
+				if (index == 0) { 
 					if (multiLine) {
 						LineFeed(state, strings, buff);
 						UpDataNest(state);
 					}
+				} else {
+					if (!multiLine)
+						buff.Append(", ");
 				}
 
-				if (!multiLine && index > 0) buff.Append(", ");
-
-				if (index < collectionLimit) {
+				if (index < collectionLimit)
 					Append(state, strings, buff, element, true);
-				} else
+				else
 					buff.Append(limitString);
 
 				if (multiLine) {
@@ -781,41 +779,38 @@ namespace DebugTrace {
 					LineFeed(state, strings, buff);
 				}
 
-				if (index >= collectionLimit) break;
+				if (index++ >= collectionLimit) break;
 			}
 
 			if (multiLine)
 				DownDataNest(state);
-			buff.Append(']');
+			buff.Append('}');
 		}
 
 		/// <summary>
 		/// Appends a IDictionary representation for logging to the string buffer.
 		/// </summary>
 		///
-		/// <param name="state">indent state</param>
-		/// <param name="strings">a string list</param>
-		/// <param name="buff">a string buffer</param>
+		/// <param name="state">the indent state</param>
+		/// <param name="strings">the string list</param>
+		/// <param name="buff">the string buffer</param>
 		/// <param name="dictionary">a IDictionary</param>
 		private static void Append(State state, IList<string> strings, StringBuilder buff, IDictionary dictionary) {
-			var enumerator = dictionary.Keys.GetEnumerator();
+			var multiLine = !isSingleLine(dictionary);
 
-			var multiLine = dictionary.Count >= 2;
-
-			buff.Append('[');
-			for (var index = 0; enumerator.MoveNext(); ++index) {
-				var key   = enumerator.Current;
+			buff.Append('{');
+			var index = 0;
+			foreach (var key in dictionary.Keys) {
 				var value = dictionary[key];
 				if (index == 0) {
-					if (   key   != null && singleLineComponentTypes.Contains(key  .GetType())
-						&& value != null && singleLineComponentTypes.Contains(value.GetType()))
-						multiLine = false;
 					if (multiLine) {
 						LineFeed(state, strings, buff);
 						UpDataNest(state);
 					}
+				} else {
+					if (!multiLine)
+						buff.Append(", ");
 				}
-				if (!multiLine && index > 0) buff.Append(", ");
 
 				if (index < collectionLimit) {
 					Append(state, strings, buff, key, true);
@@ -829,12 +824,12 @@ namespace DebugTrace {
 					LineFeed(state, strings, buff);
 				}
 
-				if (index >= collectionLimit) break;
+				if (index++ >= collectionLimit) break;
 			}
 
 			if (multiLine)
 				DownDataNest(state);
-			buff.Append(']');
+			buff.Append('}');
 		}
 
 		/// <summary>
@@ -865,50 +860,87 @@ namespace DebugTrace {
 		/// Returns a string representation of the obj uses reflection.
 		/// </summary>
 		///
-		/// <param name="state">indent state</param>
-		/// <param name="strings">a string list</param>
+		/// <param name="state">the indent state</param>
+		/// <param name="strings">the string list</param>
 		/// <param name="obj">an object</param>
 		private static void AppendReflectString(State state, IList<string> strings, StringBuilder buff, object obj) {
 			var type = obj.GetType();
 			var extended = type.BaseType != typeof(object) && type.BaseType != typeof(ValueType);
+			var isTuple = type.Name.StartsWith("Tuple`") || type.Name.StartsWith("ValueTuple`");
+			var multiLine = !isSingleLine(obj);
 
-			buff.Append('[');
-			LineFeed(state, strings, buff);
-			UpDataNest(state);
+			buff.Append(isTuple ? '(' : '{');
+			if (multiLine) {
+				LineFeed(state, strings, buff);
+				UpDataNest(state);
+			}
 
-			AppendReflectStringSub(state, strings, buff, obj, type, extended);
+			AppendReflectStringSub(state, strings, buff, obj, type, extended, multiLine);
 
-			DownDataNest(state);
-			buff.Append(']');
+			if (multiLine)
+				DownDataNest(state);
+			buff.Append(isTuple ? ')' : '}');
 		}
 
 		/// <summary>
 		/// Returns a string representation of the obj uses reflection.
 		/// </summary>
 		///
-		/// <param name="state">indent state</param>
-		/// <param name="strings">a string list</param>
+		/// <param name="state">the indent state</param>
+		/// <param name="strings">the string list</param>
 		/// <param name="obj">an object</param>
 		/// <param name="type">the type of the object</param>
 		/// <param name="extended">the type is extended type</param>
-		private static void AppendReflectStringSub(State state, IList<string> strings, StringBuilder buff, object obj, Type type, bool extended) {
-			if (type == typeof(object) || type == typeof(ValueType))
-				return;
+		private static void AppendReflectStringSub(State state, IList<string> strings, StringBuilder buff, object obj, Type type, bool extended, bool multiLine) {
+			Type baseType = type.BaseType;
+			if (baseType != typeof(object) && baseType != typeof(ValueType))
+				// Call for the base type
+				AppendReflectStringSub(state, strings, buff, obj, baseType, extended, multiLine);
 
-			// Call for the base type
-			AppendReflectStringSub(state, strings, buff, obj, type.BaseType, extended);
+			var typeNamePrefix = type.FullName + "#";
+			var isTuple = type.Name.StartsWith("Tuple`") || type.Name.StartsWith("ValueTuple`");
 
 			if (extended) {
 				buff.Append(string.Format(classBoundaryString, ReplaceTypeName(type.FullName)));
 				LineFeed(state, strings, buff);
 			}
 
-			var typeNamePrefix = type.FullName + "#";
+			// field
+			var fieldInfos = type.GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
+			int fieldIndex = 0;
+			foreach (var fieldInfo in fieldInfos) {
+				if (!multiLine && fieldIndex > 0) buff.Append(", ");
+
+				object value = null;
+				try {
+					value = fieldInfo.GetValue(obj);
+				}
+				catch (Exception e) {
+					value = e.ToString();
+				}
+
+				var fieldName = fieldInfo.Name;
+				if (!isTuple)
+					buff.Append(fieldName).Append(fieldNameValueSeparator);
+
+				if (value != null && nonPrintProperties.Contains(typeNamePrefix + fieldName))
+					buff.Append(nonPrintString);
+				else
+					Append(state, strings, buff, value, false);
+
+				if (multiLine) {
+					buff.Append(",");
+					LineFeed(state, strings, buff);
+				}
+				++fieldIndex;
+			}
 
 			// property
 			var propertyInfos = type.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
+			int propertyIndex = 0;
 			foreach (var propertyInfo in propertyInfos) {
-				var propertyName = propertyInfo.Name;
+				if (!multiLine && propertyIndex > 0) buff.Append(", ");
+
 				object value = null;
 				try {
 					value = propertyInfo.GetValue(obj);
@@ -917,16 +949,85 @@ namespace DebugTrace {
 					value = e.ToString();
 				}
 
-				buff.Append(propertyName).Append(fieldNameValueSeparator);
+				var propertyName = propertyInfo.Name;
+				if (!isTuple)
+					buff.Append(propertyName).Append(fieldNameValueSeparator);
 
 				if (value != null && nonPrintProperties.Contains(typeNamePrefix + propertyName))
 					buff.Append(nonPrintString);
 				else
 					Append(state, strings, buff, value, false);
 
-				buff.Append(",");
-				LineFeed(state, strings, buff);
+				if (multiLine) {
+					buff.Append(",");
+					LineFeed(state, strings, buff);
+				}
+				++propertyIndex;
 			}
+		}
+
+		/// <summary>
+		/// Returns whether the value should be output on one line.
+		/// </summary>
+		///
+		/// <param name="value">the output value</param>
+		/// <param name="isElement">whether the value is an element of the collection</param>
+		/// <returns>true if the value should be output on one line, false otherwise</returns>
+		private static bool isSingleLine(object value, bool isElement = false) {
+			var type = value.GetType();
+
+			if (singleLineTypes.Contains(type)) return true;
+			if (value is Enum) return true;
+			if (isElement) return false;
+
+			if (value is IDictionary dictinary) {
+				var index = 0;
+				foreach (var key in dictinary.Keys) {
+					if (!isSingleLine(key) || !isSingleLine(dictinary[key], true)) return false;
+					if (index++ >= collectionLimit) break;
+				}
+				return true;
+			}
+
+			if (value is IEnumerable values) {
+				var index = 0;
+				foreach (var element in values) {
+					if (!isSingleLine(element, true)) return false;
+					if (index++ >= collectionLimit) break;
+				}
+				return true;
+			}
+
+			if (type.BaseType != typeof(object) && type.BaseType != typeof(ValueType))
+				return false;
+
+			var isTuple = type.Name.StartsWith("Tuple`") || type.Name.StartsWith("ValueTuple`");
+
+			// property
+			var propertyInfos = type.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
+			foreach (var propertyInfo in propertyInfos) {
+				try {
+					if (!isSingleLine(propertyInfo.GetValue(value), !isTuple))
+						return false;
+				}
+				catch (Exception e) {
+					return false;
+				}
+			}
+
+			// field
+			var fieldInfos = type.GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
+			foreach (var fieldInfo in fieldInfos) {
+				try {
+					if (!isSingleLine(fieldInfo.GetValue(value), !isTuple))
+						return false;
+				}
+				catch (Exception e) {
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 		/// <summary>

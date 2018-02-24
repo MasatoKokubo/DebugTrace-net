@@ -16,26 +16,14 @@ namespace DebugTraceExample {
 			Sub2();
 		/**/DebugTrace.Leave();
 		}
-		
+
 		static void Sub2() {
 		/**/DebugTrace.Enter();
 			Sub3();
 		/**/DebugTrace.Leave();
 		}
-		
+
 		static void Sub3() {
-		/**/DebugTrace.Enter();
-			Sub4();
-		/**/DebugTrace.Leave();
-		}
-		
-		static void Sub4() {
-		/**/DebugTrace.Enter();
-			Sub5();
-		/**/DebugTrace.Leave();
-		}
-		
-		static void Sub5() {
 	/**/DebugTrace.Enter();
 		{var value =        true  ; /**/DebugTrace.Print("value", value);}
 		{var value = (sbyte)  -1  ; /**/DebugTrace.Print("value", value);}
@@ -64,6 +52,11 @@ namespace DebugTraceExample {
 		{var value =     '\u0001' ; /**/DebugTrace.Print("value", value);}
 		{var value =     '\u007F' ; /**/DebugTrace.Print("value", value);}
 		{var value = "あ\0\a\b\t\n\v\f\r\"'\\\u007F"; /**/DebugTrace.Print("value", value);}
+		{var value = (1, 2)       ; /**/DebugTrace.Print("value", value);}
+		{var value = (10, "abc", 1.1F); /**/DebugTrace.Print("value", value);}
+		{var value = ((10, 20), "abc", 1.1F); /**/DebugTrace.Print("value", value);}
+		{var value = new Tuple<int, int>(1, 2); /**/DebugTrace.Print("value", value);}
+		{var value = new Tuple<Tuple<int, int>, string, float>(new Tuple<int, int>(10, 20), "abc", 1.1F); /**/DebugTrace.Print("value", value);}
 
 		{var value = new bool   [] {false, true, false      }; /**/DebugTrace.Print("value", value);}
 		{var value = new sbyte  [] {-128, -1, 0, 1, 127     }; /**/DebugTrace.Print("value", value);}
@@ -79,6 +72,8 @@ namespace DebugTraceExample {
 		{var value = new decimal[] { 1234.456789m, 0.0m     }; /**/DebugTrace.Print("value", value);}
 		{var value = new char   [] {'あ','\0','\a','\b','\t','\n','\v','\f','\r','"','\'','\\','\u007F'}; /**/DebugTrace.Print("value", value);}
 		{var value = new string [] {"あ\0\a\b\t\n\v\f\r\"'\\\u0001\u007F"}; /**/DebugTrace.Print("value", value);}
+		{var value = new (int, int, int)[] {(-3, -2, -1), (0, 1, 2) }; /**/DebugTrace.Print("value", value);}
+		{var value = (new int[] {-3, -2, -1}, new int[] {0, 1, 2}); /**/DebugTrace.Print("value", value);}
 
 		{var value = new bool   [,] {{false, true, false      }, {false, true, false      }}; /**/DebugTrace.Print("value", value);}
 		{var value = new sbyte  [,] {{-128, -1, 0, 1, 127     }, {-128, -1, 0, 1, 127     }}; /**/DebugTrace.Print("value", value);}
@@ -133,6 +128,7 @@ namespace DebugTraceExample {
 				new Contact(4, "Sasha" , "Apple", new DateTime(1993, 4, 5)),
 			};
 		/**/DebugTrace.Print("contacts", contacts);
+		/**/DebugTrace.Print("(points, point3s, contacts)", (points, point3s, contacts));
 		}
 
 		{
@@ -149,6 +145,7 @@ namespace DebugTraceExample {
 				new Contact(4, "Sasha" , "Apple", new DateTime(1993, 4, 5)),
 			};
 		/**/DebugTrace.Print("contacts", contacts);
+		/**/DebugTrace.Print("(points, point3s, contacts)", (points, point3s, contacts));
 		}
 
 		{
@@ -165,6 +162,7 @@ namespace DebugTraceExample {
 				{4, new Contact(4, "Sasha" , "Apple", new DateTime(1993, 4, 5))},
 			};
 		/**/DebugTrace.Print("contacts", contacts);
+		/**/DebugTrace.Print("(points, point3s, contacts)", (points, point3s, contacts));
 		}
 
 	/**/DebugTrace.Leave();
@@ -198,21 +196,27 @@ namespace DebugTraceExample {
 	}
 
 	public class Entity {
-		public int ID {get; set;}
+		public int ID;
 
 		public Entity(int id) {
 			ID = id;
 		}
 	}
 
-	public class Contact : Entity {
-		public string FirstName  {get; set;}
-		public string LastName   {get; set;}
-		public DateTime Birthday {get; set;}
+	public class ContactBase : Entity {
+		public string FirstName;
+		public string LastName;
 
-		public Contact(int id, string firstName, string lastName, DateTime birthday) : base(id) {
+		public ContactBase(int id, string firstName, string lastName) : base(id) {
 			FirstName = firstName;
 			LastName  = lastName ;
+		}
+	}
+
+	public class Contact : ContactBase {
+		public DateTime Birthday;
+
+		public Contact(int id, string firstName, string lastName, DateTime birthday) : base(id, firstName, lastName) {
 			Birthday  = birthday ;
 		}
 	}
