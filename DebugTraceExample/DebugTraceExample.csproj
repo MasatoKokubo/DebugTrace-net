@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <Version>0.0.2-alpha</Version>
+    <Version>1.0.0</Version>
     <Copyright>(C) 2018 Masato Kokubo</Copyright>
     <PackageLicenseUrl>https://github.com/MasatoKokubo/DebugTrace-net/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/MasatoKokubo/DebugTrace-net</PackageProjectUrl>
@@ -20,6 +20,18 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DebugTrace\DebugTrace.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System">
+      <HintPath>System</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="DebugTrace.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

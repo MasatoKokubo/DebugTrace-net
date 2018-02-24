@@ -132,36 +132,37 @@ namespace DebugTrace {
 			typeof(Guid          ), typeof(Guid          []), typeof(Guid          [,]), typeof(Guid          [][]),
 		};
 
-		private static string version                  = "0.0.2-alpha"; // The version string
-		private static string logLevel                 = "default"; // Log Level
-		private static string enterString              = "Enter {0}.{1} ({2}:{3:D})"; // string at enter
-		private static string leaveString              = "Leave {0}.{1} ({2}:{3:D})"; // string at leave
-		private static string threadBoundaryString     = "______________________________ Thread {0} ______________________________"; // string of threads boundary
-		private static string classBoundaryString      = "____ {0} ____"; // string of classes boundary
-		private static string indentString             = "| "; // string of method call indent
-		private static string dataIndentString         = "  "; // string of data indent
-		private static string limitString              = "..."; // string to represent that it has exceeded the limit
-		private static string defaultPackageString     = "..."; // string replacing the default package part
-		private static string nonPrintString           = "***"; // string of value in the case of properties that do not display the value
-		private static string cyclicReferenceString    = " *** cyclic reference *** "; // string to represent that the cyclic reference occurs
-		private static string varNameValueSeparator    = " = "; // Separator between the variable name and value
-		private static string keyValueSeparator        = ": "; // Separator between the key and value for IDictionary obj
-		private static string fieldNameValueSeparator  = ": "; // Separator between the field name and value
-		private static string printSuffixFormat        = " ({2}:{3:D})"; // Format string of Print suffix
-		private static string dateTimeFormat           = "{0:G}"; // Format string of a DateTime and a string
-		private static int collectionLimit             = 512; // Limit of ICollection elements to output
-		private static int byteArrayLimit              = 8192; // Limit of byte array elements to output
-		private static int stringLimit                 = 8192; // Limit of string characters to output
-		private static List<string> nonPrintProperties = new List<string>(); // Non Print properties (<class name>#<property name>)
-		private static string defaultPackage           = ""; // Default package part
-		private static List<string> reflectionClasses  = new List<string>(); // List of class names that output content in reflection even if ToString method is implemented
+		private static Resource resource = new Resource("DebugTrace");
+
+		private static string   logLevel                 = resource.GetString ("LogLevel"               , "default"); // Log Level
+		private static string   enterString              = resource.GetString ("EnterString"            , "Enter {0}.{1} ({2}:{3:D})"); // string at enter
+		private static string   leaveString              = resource.GetString ("LeaveString"            , "Leave {0}.{1} ({2}:{3:D})"); // string at leave
+		private static string   threadBoundaryString     = resource.GetString ("ThreadBoundaryString"   , "______________________________ Thread {0} ______________________________"); // string of threads boundary
+		private static string   classBoundaryString      = resource.GetString ("ClassBoundaryString"    , "____ {0} ____"); // string of classes boundary
+		private static string   indentString             = resource.GetString ("IndentString"           , "| "); // string of method call indent
+		private static string   dataIndentString         = resource.GetString ("DataIndentString"       , "  "); // string of data indent
+		private static string   limitString              = resource.GetString ("LimitString"            , "..."); // string to represent that it has exceeded the limit
+		private static string   defaultNameSpaceString   = resource.GetString ("DefaultNameSpaceString" , "..."); // string replacing the default package part
+		private static string   nonPrintString           = resource.GetString ("NonPrintString"         , "***"); // string of value in the case of properties that do not display the value
+		private static string   cyclicReferenceString    = resource.GetString ("CyclicReferenceString"  , " *** cyclic reference *** "); // string to represent that the cyclic reference occurs
+		private static string   varNameValueSeparator    = resource.GetString ("VarNameValueSeparator"  , " = "); // Separator between the variable name and value
+		private static string   keyValueSeparator        = resource.GetString ("KeyValueSeparator"      , ": "); // Separator between the key and value for IDictionary obj
+		private static string   fieldNameValueSeparator  = resource.GetString ("FieldNameValueSeparator", ": "); // Separator between the field name and value
+		private static string   printSuffixFormat        = resource.GetString ("PrintSuffixFormat"      , " ({2}:{3:D})"); // Format string of Print suffix
+		private static string   dateTimeFormat           = resource.GetString ("DateTimeFormat"         , "{0:G}"); // Format string of a DateTime and a string
+		private static int      collectionLimit          = resource.GetInt    ("CollectionLimit"        , 512); // Limit of ICollection elements to output
+		private static int      byteArrayLimit           = resource.GetInt    ("ByteArrayLimit"         , 8192); // Limit of byte array elements to output
+		private static int      stringLimit              = resource.GetInt    ("StringLimit"            , 8192); // Limit of string characters to output
+		private static string[] nonPrintProperties       = resource.GetStrings("NonPrintProperties"     , new string[0]); // Non Print properties (<class name>#<property name>)
+		private static string   defaultNameSpace         = resource.GetString ("DefaultNameSpace"       , ""); // Default package part
+		private static string[] reflectionClasses        = resource.GetStrings("ReflectionClasses"      , new string[0]); // List of class names that output content in reflection even if ToString method is implemented
 	//	private static Dictionary<string, string> dictionaryNameIDictionary = Dictionary<string, string>(); // Name to dictionaryNmae dictionary 
 
 		// Logger
-		private static ILogger logger = new Console.Error();
+		private static ILogger logger;
 
 		// Whether tracing is enabled
-		private static bool enabled = logger.IsEnabled;
+		private static bool enabled;
 
 		// Array of indent strings
 		private static readonly string[] indentStrings = new string[64];
@@ -184,15 +185,42 @@ namespace DebugTrace {
 		/// class constructor
 		/// </summary>
 		static DebugTrace() {
+			string loggerName = null;
+			try {
+				loggerName = resource.GetString("Logger", null);
+				if (loggerName != null) {
+					if (!loggerName.Contains('.'))
+						loggerName = typeof(ILogger).Namespace + '.' + loggerName;
+					logger = (ILogger)Type.GetType(loggerName).GetConstructor(new Type[0]).Invoke(new object[0]);
+				}
+			}
+			catch (Exception e) {
+				System.Console.Error.WriteLine($"DebugTrace-net: {e.ToString()}({loggerName})");
+			}
+
+			if (logger == null)
+				logger = new Console.Error();
+
+			// Set a logging level
+			logger.Level = logLevel;
+			enabled = logger.IsEnabled;
+
+			// make code indent strings
 			indentStrings[0] = "";
 			for (var index = 1; index < indentStrings.Length; ++index)
 				indentStrings[index] = indentStrings[index - 1] + indentString;
 
+			// make data indent strings
 			dataIndentStrings[0] = "";
 			for (var index = 1; index < dataIndentStrings.Length; ++index)
 				dataIndentStrings[index] = dataIndentStrings[index - 1] + dataIndentString;
 
-			logger.Log($"DebugTrace-net {version} / {logger.GetType().FullName}");
+			// output version log
+			var versionAttribute = (AssemblyInformationalVersionAttribute)
+				Attribute.GetCustomAttribute(Resource.selfAssembly, typeof(AssemblyInformationalVersionAttribute));
+			logger.Log($"DebugTrace-net {versionAttribute?.InformationalVersion}");
+			logger.Log($"  properties: {resource.fileInfo.FullName}");
+			logger.Log($"  Logger: {logger.GetType().FullName}");
 		}
 
 		/// <summary>
@@ -647,8 +675,8 @@ namespace DebugTrace {
 		private static string ReplaceTypeName(string typeName) {
 			typeName = typeRemoveRegex.Replace(typeName, "");
 
-			if (defaultPackage != "" && typeName.StartsWith(defaultPackage))
-				typeName = defaultPackageString + typeName.Substring(defaultPackage.Length);
+			if (defaultNameSpace != "" && typeName.StartsWith(defaultNameSpace))
+				typeName = defaultNameSpaceString + typeName.Substring(defaultNameSpace.Length);
 			return typeName;
 		}
 

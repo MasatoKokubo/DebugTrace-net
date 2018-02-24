@@ -9,7 +9,7 @@
 
     <Company>Masato Kokubo</Company>
 
-    <Version>0.0.2-alpha</Version>
+    <Version>1.0.0</Version>
 
     <Copyright>(C) 2018 Masato Kokubo</Copyright>
 
@@ -18,6 +18,10 @@
     <PackageProjectUrl>https://github.com/MasatoKokubo/DebugTrace-net</PackageProjectUrl>
 
     <PackageIconUrl>https://github.com/MasatoKokubo/DebugTrace-net/blob/master/DebugTrace/DebugTrace-32.png</PackageIconUrl>
+
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,6 +32,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DebugTrace\DebugTrace.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="DebugTrace.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

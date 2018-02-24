@@ -162,8 +162,10 @@ namespace DebugTraceExample {
 				{4, new Contact(4, "Sasha" , "Apple", new DateTime(1993, 4, 5))},
 			};
 		/**/DebugTrace.Print("contacts", contacts);
-		/**/DebugTrace.Print("(points, point3s, contacts)", (points, point3s, contacts));
+		/**/DebugTrace.Print("(points, point3s, contacts)", () => (points, point3s, contacts));
 		}
+
+	/**/DebugTrace.Print(() => "aaa" + "bbb");
 
 	/**/DebugTrace.Leave();
 		}
