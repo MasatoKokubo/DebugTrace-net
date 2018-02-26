@@ -139,23 +139,23 @@ namespace DebugTrace {
 		private static string   leaveString              = resource.GetString ("LeaveString"            , "Leave {0}.{1} ({2}:{3:D})"); // string at leave
 		private static string   threadBoundaryString     = resource.GetString ("ThreadBoundaryString"   , "______________________________ Thread {0} ______________________________"); // string of threads boundary
 		private static string   classBoundaryString      = resource.GetString ("ClassBoundaryString"    , "____ {0} ____"); // string of classes boundary
-		private static string   indentString             = resource.GetString ("IndentString"           , "| "); // string of method call indent
-		private static string   dataIndentString         = resource.GetString ("DataIndentString"       , "  "); // string of data indent
-		private static string   limitString              = resource.GetString ("LimitString"            , "..."); // string to represent that it has exceeded the limit
-		private static string   defaultNameSpaceString   = resource.GetString ("DefaultNameSpaceString" , "..."); // string replacing the default package part
-		private static string   nonPrintString           = resource.GetString ("NonPrintString"         , "***"); // string of value in the case of properties that do not display the value
+		private static string   codeIndentString         = resource.GetString ("CodeIndentString"       , "| ");            // string of method call indent
+		private static string   dataIndentString         = resource.GetString ("DataIndentString"       , "  ");            // string of data indent
+		private static string   limitString              = resource.GetString ("LimitString"            , "...");           // string to represent that it has exceeded the limit
+		private static string   defaultNameSpaceString   = resource.GetString ("DefaultNameSpaceString" , "...");           // string replacing the default package part
+		private static string   nonPrintString           = resource.GetString ("NonPrintString"         , "***");           // string of value in the case of properties that do not display the value
 		private static string   cyclicReferenceString    = resource.GetString ("CyclicReferenceString"  , " *** cyclic reference *** "); // string to represent that the cyclic reference occurs
-		private static string   varNameValueSeparator    = resource.GetString ("VarNameValueSeparator"  , " = "); // Separator between the variable name and value
-		private static string   keyValueSeparator        = resource.GetString ("KeyValueSeparator"      , ": "); // Separator between the key and value for IDictionary obj
-		private static string   fieldNameValueSeparator  = resource.GetString ("FieldNameValueSeparator", ": "); // Separator between the field name and value
-		private static string   printSuffixFormat        = resource.GetString ("PrintSuffixFormat"      , " ({2}:{3:D})"); // Format string of Print suffix
-		private static string   dateTimeFormat           = resource.GetString ("DateTimeFormat"         , "{0:G}"); // Format string of a DateTime and a string
-		private static int      collectionLimit          = resource.GetInt    ("CollectionLimit"        , 512); // Limit of ICollection elements to output
-		private static int      byteArrayLimit           = resource.GetInt    ("ByteArrayLimit"         , 8192); // Limit of byte array elements to output
-		private static int      stringLimit              = resource.GetInt    ("StringLimit"            , 8192); // Limit of string characters to output
-		private static string[] nonPrintProperties       = resource.GetStrings("NonPrintProperties"     , new string[0]); // Non Print properties (<class name>#<property name>)
-		private static string   defaultNameSpace         = resource.GetString ("DefaultNameSpace"       , ""); // Default package part
-		private static string[] reflectionClasses        = resource.GetStrings("ReflectionClasses"      , new string[0]); // List of class names that output content in reflection even if ToString method is implemented
+		private static string   varNameValueSeparator    = resource.GetString ("VarNameValueSeparator"  , " = ");           // Separator between the variable name and value
+		private static string   keyValueSeparator        = resource.GetString ("KeyValueSeparator"      , ": ");            // Separator between the key and value for IDictionary obj
+		private static string   fieldNameValueSeparator  = resource.GetString ("FieldNameValueSeparator", ": ");            // Separator between the field name and value
+		private static string   printSuffixFormat        = resource.GetString ("PrintSuffixFormat"      , " ({2}:{3:D})");  // Format string of Print suffix
+		private static string   dateTimeFormat           = resource.GetString ("DateTimeFormat"         , "{0:G}");         // Format string of a DateTime and a string
+		private static int      collectionLimit          = resource.GetInt    ("CollectionLimit"        , 512);             // Limit of ICollection elements to output
+		private static int      byteArrayLimit           = resource.GetInt    ("ByteArrayLimit"         , 8192);            // Limit of byte array elements to output
+		private static int      stringLimit              = resource.GetInt    ("StringLimit"            , 8192);            // Limit of string characters to output
+		private static string[] nonPrintProperties       = resource.GetStrings("NonPrintProperties"     , new string[0]);   // Non Print properties (<class name>#<property name>)
+		private static string   defaultNameSpace         = resource.GetString ("DefaultNameSpace"       , "");              // Default package part
+		private static string[] reflectionClasses        = resource.GetStrings("ReflectionClasses"      , new string[0]);   // List of class names that output content in reflection even if ToString method is implemented
 	//	private static Dictionary<string, string> dictionaryNameIDictionary = Dictionary<string, string>(); // Name to dictionaryNmae dictionary 
 
 		// Logger
@@ -208,7 +208,7 @@ namespace DebugTrace {
 			// make code indent strings
 			indentStrings[0] = "";
 			for (var index = 1; index < indentStrings.Length; ++index)
-				indentStrings[index] = indentStrings[index - 1] + indentString;
+				indentStrings[index] = indentStrings[index - 1] + codeIndentString;
 
 			// make data indent strings
 			dataIndentStrings[0] = "";
@@ -1002,8 +1002,8 @@ namespace DebugTrace {
 		/// <param name="isElement">whether the value is an element of the collection</param>
 		/// <returns>true if the value should be output on one line, false otherwise</returns>
 		private static bool isSingleLine(object value, bool isElement = false) {
+			if (value == null) return true;
 			var type = value.GetType();
-
 			if (singleLineTypes.Contains(type)) return true;
 			if (value is Enum) return true;
 			if (isElement) return false;
