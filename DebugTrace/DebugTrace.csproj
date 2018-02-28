@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Masato Kokubo</Authors>
     <Company>Masato Kokubo</Company>
-    <Version>0.1.1-beta</Version>
+    <Version>0.2.0-beta</Version>
     <Description>A .NET library to output logs for debugging.</Description>
     <Copyright>(C) 2018 Masato Kokubo</Copyright>
     <PackageLicenseUrl>https://github.com/MasatoKokubo/DebugTrace-net/blob/master/LICENSE</PackageLicenseUrl>

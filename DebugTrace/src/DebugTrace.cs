@@ -32,6 +32,12 @@ namespace DebugTrace {
 			public int BeforeNestLevel {get; set;} // The before nest level
 			public int DataNestLevel   {get; set;} // The data nest level
 
+			public void Reset() {
+				NestLevel       = 0;
+				BeforeNestLevel = 0;
+				DataNestLevel   = 0;
+			}
+
 			public override string ToString() {
 				return "(State)["
 					+ "NestLevel: " + NestLevel
@@ -235,22 +241,22 @@ namespace DebugTrace {
 
 
 		/// <summary>
-		/// Returns indent state.
+		/// Returns the indent state of the current thread.
 		/// </summary>
-		private static State CurrentState {
-			get {
-				State state;
-				int threadId = Thread.CurrentThread.ManagedThreadId;
+		///
+		/// <returns>the indent state of the current thread</returns>
+		private static State GetCurrentState() {
+			State state;
+			int threadId = Thread.CurrentThread.ManagedThreadId;
 
-				if (states.ContainsKey(threadId)) {
-					state = states[threadId];
-				} else {
-					state = new State();
-					states[threadId] = state;
-				}
-
-				return state;
+			if (states.ContainsKey(threadId)) {
+				state = states[threadId];
+			} else {
+				state = new State();
+				states[threadId] = state;
 			}
+
+			return state;
 		}
 
 		/// <summary>
@@ -328,44 +334,54 @@ namespace DebugTrace {
 		}
 
 		/// <summary>
-		/// Call this method at entrance of your methods.
+		/// Resets the nest level
 		/// </summary>
-		public static void Enter() {
-			if (enabled) {
-				lock (states) {
-					PrintStart(); // Common start processing of output
+		public static void ResetNest() {
+			if (!enabled) return;
 
-					var state = CurrentState;
-					if (state.BeforeNestLevel > state.NestLevel)
-						logger.Log(GetIndentString(state)); // Line break
-
-					lastLog = GetIndentString(state) + GetCallerInfo(enterString);
-					logger.Log(lastLog);
-
-					UpNest(state);
-
-					PrintEnd(); // Common end processing of output
-				}
+			lock (states) {
+				GetCurrentState().Reset();
 			}
 		}
 
+		/// <summary>
+		/// Call this method at entrance of your methods.
+		/// </summary>
+		public static void Enter() {
+			if (!enabled) return;
+
+			lock (states) {
+				PrintStart(); // Common start processing of output
+
+				var state = GetCurrentState();
+				if (state.BeforeNestLevel > state.NestLevel)
+					logger.Log(GetIndentString(state)); // Line break
+
+				lastLog = GetIndentString(state) + GetCallerInfo(enterString);
+				logger.Log(lastLog);
+
+				UpNest(state);
+
+				PrintEnd(); // Common end processing of output
+			}
+		}
 
 		/// <summary>
 		/// Call this method at exit of your methods.
 		/// </summary>
 		public static void Leave() {
-			if (enabled) {
-				lock (states) {
-					PrintStart(); // Common start processing of output
+			if (!enabled) return;
 
-					var state = CurrentState;
-					DownNest(state);
+			lock (states) {
+				PrintStart(); // Common start processing of output
 
-					lastLog = GetIndentString(state) + GetCallerInfo(leaveString);
-					logger.Log(lastLog);
+				var state = GetCurrentState();
+				DownNest(state);
 
-					PrintEnd(); // Common end processing of output
-				}
+				lastLog = GetIndentString(state) + GetCallerInfo(leaveString);
+				logger.Log(lastLog);
+
+				PrintEnd(); // Common end processing of output
 			}
 		}
 
@@ -388,8 +404,8 @@ namespace DebugTrace {
 		///
 		/// <param name="message">a message</param>
 		public static void Print(string message) {
-			if (enabled)
-				PrintSub(message);
+			if (!enabled) return;
+			PrintSub(message);
 		}
 
 		/// <summary>
@@ -398,8 +414,8 @@ namespace DebugTrace {
 		///
 		/// <param name="messageSupplier">a message supplier</param>
 		public static void Print(Func<string> messageSupplier) {
-			if (enabled)
-				PrintSub(messageSupplier());
+			if (!enabled) return;
+			PrintSub(messageSupplier());
 		}
 
 		/// <summary>
@@ -417,7 +433,7 @@ namespace DebugTrace {
 						element.MethodName,
 						element.FileName,
 						element.LineNumber);
-					lastLog = GetIndentString(CurrentState) + message + suffix;
+					lastLog = GetIndentString(GetCurrentState()) + message + suffix;
 				}
 				logger.Log(lastLog);
 
@@ -437,7 +453,7 @@ namespace DebugTrace {
 
 				reflectedObjects.Clear();
 
-				var state = CurrentState;
+				var state = GetCurrentState();
 				var strings = new List<string>();
 				var buff = new StringBuilder();
 
@@ -515,7 +531,7 @@ namespace DebugTrace {
 		/// <param name="strings">the string list</param>
 		/// <param name="buff">the string buffer</param>
 		private static void LineFeed(State state, IList<string> strings, StringBuilder buff) {
-			strings.Add(GetIndentString(CurrentState) + buff.ToString());
+			strings.Add(GetIndentString(GetCurrentState()) + buff.ToString());
 			buff.Clear();
 		}
 
@@ -526,8 +542,8 @@ namespace DebugTrace {
 		/// <param name="name">the name of the value</param>
 		/// <param name="value">the value to output (accept null)</param>
 		public static void Print(string name, object value) {
-			if (enabled)
-				PrintSub(name, value);
+			if (!enabled) return;
+			PrintSub(name, value);
 		}
 
 		/// <summary>
@@ -538,8 +554,8 @@ namespace DebugTrace {
 		/// <param name="name">the name of the value</param>
 		/// <param name="valueSupplier">the supplier of value to output</param>
 		public static void Print<T>(string name, Func<T> valueSupplier) {
-			if (enabled)
-				PrintSub(name, valueSupplier());
+			if (!enabled) return;
+			PrintSub(name, valueSupplier());
 		}
 
 		/// <summary>

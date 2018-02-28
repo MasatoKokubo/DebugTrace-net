@@ -7,7 +7,13 @@ namespace DebugTraceExample {
 	class Program {
 		static void Main(string[] args) {
 		/**/DebugTrace.Enter();
-			Sub1();
+			try {
+				Sub1();
+			}
+			catch (Exception e) {
+			/**/DebugTrace.Print("e.ToString()", e.ToString());
+			/**/DebugTrace.ResetNest();
+			}
 		/**/DebugTrace.Leave();
 		}
 
@@ -20,6 +26,7 @@ namespace DebugTraceExample {
 		static void Sub2() {
 		/**/DebugTrace.Enter();
 			Sub3();
+			throw new Exception("Not Error");
 		/**/DebugTrace.Leave();
 		}
 
