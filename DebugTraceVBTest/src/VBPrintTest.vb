@@ -1,6 +1,6 @@
 ﻿Imports System.Text
 Imports Microsoft.VisualStudio.TestTools.UnitTesting
-Imports DebugTrace.VB
+Imports DebugTrace.VisualBasic
 
 Namespace DebugTraceTest
 	<TestClass()>

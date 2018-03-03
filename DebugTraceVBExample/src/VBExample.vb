@@ -1,5 +1,5 @@
 Imports System
-Imports DebugTrace.VB
+Imports DebugTrace.VisualBasic
 
 Namespace DebugTraceExample
 	Module VBExample

@@ -1,4 +1,4 @@
-// VB.cs
+// VisualBasic.cs
 // (C) 2018 Masato Kokubo
 
 using System;
@@ -14,9 +14,9 @@ namespace DebugTrace {
 	///
 	/// <since>1.0.0</since>
 	/// <author>Masato Kokubo</author>
-	public class VB : Trace {
+	public class VisualBasic : Trace {
 		/// An ITrace object for Visual Basic
-		public static ITrace Trace {get;} = new VB();
+		public static ITrace Trace {get;} = new VisualBasic();
 
 		// Set of classes that dose not output the type name
 		protected override ISet<Type> NoOutputTypes {get;} = new HashSet<Type>() {
