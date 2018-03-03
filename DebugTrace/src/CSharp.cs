@@ -1,4 +1,4 @@
-// CS.cs
+// CSharp.cs
 // (C) 2018 Masato Kokubo
 
 using System;
@@ -14,9 +14,9 @@ namespace DebugTrace {
 	///
 	/// <since>1.0.0</since>
 	/// <author>Masato Kokubo</author>
-	public class CS : Trace {
+	public class CSharp : Trace {
 		/// An ITrace object for C#
-		public static ITrace Trace {get;} = new CS();
+		public static ITrace Trace {get;} = new CSharp();
 
 		// Set of classes that dose not output the type name
 		protected override ISet<Type> NoOutputTypes {get;} = new HashSet<Type>() {

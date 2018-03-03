@@ -5,7 +5,6 @@ Imports DebugTrace.VB
 Namespace DebugTraceTest
 	<TestClass()>
 	Public Class VBPrintTest
-
 		' Boolean
 		<DataTestMethod()>
 		<DataRow(False, "v = False ")>

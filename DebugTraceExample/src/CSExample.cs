@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using static DebugTrace.CS;
+using static DebugTrace.CSharp;
 
 namespace DebugTraceExample {
 	class CSExample {

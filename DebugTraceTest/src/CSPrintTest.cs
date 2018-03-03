@@ -1,6 +1,6 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static DebugTrace.CS;
+using static DebugTrace.CSharp;
 
 namespace DebugTraceTest {
 	[TestClass]
