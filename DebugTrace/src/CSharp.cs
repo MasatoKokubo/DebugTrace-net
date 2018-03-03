@@ -73,6 +73,9 @@ namespace DebugTrace {
 			{typeof(string ), "string"},
 		};
 
+		private CSharp() {
+		}
+
 		/// <summary>
 		/// Appends the value for logging to the string buffer.
 		/// </summary>

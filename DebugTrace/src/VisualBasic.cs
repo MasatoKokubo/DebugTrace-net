@@ -75,6 +75,9 @@ namespace DebugTrace {
 			{typeof(string ), "String"  },
 		};
 
+		private VisualBasic() {
+		}
+
 		/// <summary>
 		/// Appends the value for logging to the string buffer.
 		/// </summary>

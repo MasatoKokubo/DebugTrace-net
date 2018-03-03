@@ -35,7 +35,7 @@ namespace DebugTrace {
 		protected abstract IDictionary<Type, string> TypeNameMap {get;}
 
 		// Set of component types of array that output on the single line
-		protected static readonly ISet<Type> singleLineTypes = new HashSet<Type>() {
+		protected ISet<Type> SingleLineTypes {get;} = new HashSet<Type>() {
 			typeof(bool          ), typeof(bool          []), typeof(bool          [,]), typeof(bool          [][]),
 			typeof(char          ), typeof(char          []), typeof(char          [,]), typeof(char          [][]),
 			typeof(sbyte         ), typeof(sbyte         []), typeof(sbyte         [,]), typeof(sbyte         [][]),
@@ -786,7 +786,7 @@ namespace DebugTrace {
 		protected bool isSingleLine(object value, bool isElement = false) {
 			if (value == null) return true;
 			var type = value.GetType();
-			if (singleLineTypes.Contains(type)) return true;
+			if (SingleLineTypes.Contains(type)) return true;
 			if (value is Enum) return true;
 			if (isElement) return false;
 
