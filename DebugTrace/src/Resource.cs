@@ -1,4 +1,4 @@
-// DebugTrace.cs
+// Resource.cs
 // (C) 2018 Masato Kokubo
 
 using System;
@@ -15,7 +15,7 @@ namespace DebugTrace {
 	///
 	/// <since>1.0.0</since>
 	/// <author>Masato Kokubo</author>
-	internal class Resource {
+	public class Resource {
 		internal static Assembly selfAssembly = Assembly.GetExecutingAssembly();
 		internal static DirectoryInfo selfDirInfo = new FileInfo(selfAssembly.Location).Directory;
 		internal FileInfo fileInfo;
@@ -85,7 +85,7 @@ namespace DebugTrace {
 			try {
 				return values[name];
 			}
-			catch (Exception e) {
+			catch (Exception) {
 				return defaultValue;
 			}
 		}
@@ -94,7 +94,7 @@ namespace DebugTrace {
 			try {
 				return values[name].Split(',').Select(str => str.Trim()).ToArray();
 			}
-			catch (Exception e) {
+			catch (Exception) {
 				return defaultValue;
 			}
 		}
@@ -103,7 +103,7 @@ namespace DebugTrace {
 			try {
 				return int.Parse(values[name]);
 			}
-			catch (Exception e) {
+			catch (Exception) {
 				return defaultValue;
 			}
 		}

@@ -1,4 +1,4 @@
-﻿// DebugTrace.cs
+﻿// Trace.cs
 // (C) 2018 Masato Kokubo
 
 using System;
@@ -9,10 +9,10 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 namespace DebugTrace {
-	using Logger;
-	using System.Text.RegularExpressions;
+	using DebugTrace.Logger;
 
 	/// <summary>
 	/// A utility class for debugging.
@@ -25,99 +25,17 @@ namespace DebugTrace {
 	///
 	/// <since>1.0.0</since>
 	/// <author>Masato Kokubo</author>
-	public static class DebugTrace {
-		// State class
-		private class State {
-			public int NestLevel       {get; set;} // The nest level
-			public int BeforeNestLevel {get; set;} // The before nest level
-			public int DataNestLevel   {get; set;} // The data nest level
-
-			public void Reset() {
-				NestLevel       = 0;
-				BeforeNestLevel = 0;
-				DataNestLevel   = 0;
-			}
-
-			public override string ToString() {
-				return "(State)["
-					+ "NestLevel: " + NestLevel
-					+ ", BeforeNestLevel: " + BeforeNestLevel
-					+ ", DataNestLevel: " + DataNestLevel
-					+ "]";
-			}
-		}
-
-		// StackTraceElement struct
-		private struct StackTraceElement {
-			public StackTraceElement(string typeName, string methodName, string fileName, int lineNumber) {
-				TypeName   = typeName  ;
-				MethodName = methodName;
-				FileName   = fileName  ;
-				LineNumber = lineNumber;
-			}
-
-			public string TypeName   {get;} // The class name
-			public string MethodName {get;} // The method nme
-			public string FileName   {get;} // The file name
-			public int    LineNumber {get;} // The line number
-		}
-
+	public abstract class Trace : ITrace {
 		// Set of classes that dose not output the type name
-		private static readonly ISet<Type> noOutputTypes = new HashSet<Type>() {
-			typeof(bool    ),
-			typeof(char    ),
-			typeof(int     ),
-			typeof(long    ),
-			typeof(ulong   ),
-			typeof(float   ),
-			typeof(double  ),
-			typeof(decimal ),
-			typeof(string  ),
-			typeof(char[]  ),
-			typeof(byte[]  ),
-			typeof(DateTime),
-		};
+		protected abstract ISet<Type> NoOutputTypes {get;}
 
 		// Set of element types of array that dose not output the type name
-		private static readonly ISet<Type> noOutputElementTypes = new HashSet<Type>() {
-			typeof(bool    ),
-			typeof(char    ),
-			typeof(sbyte   ),
-			typeof(byte    ),
-			typeof(short   ),
-			typeof(ushort  ),
-			typeof(int     ),
-			typeof(uint    ),
-			typeof(long    ),
-			typeof(ulong   ),
-			typeof(float   ),
-			typeof(double  ),
-			typeof(decimal ),
-			typeof(string  ),
-			typeof(char[]  ),
-			typeof(byte[]  ),
-			typeof(DateTime),
-		};
+		protected abstract ISet<Type> NoOutputElementTypes {get;}
 
-		private static readonly IDictionary<Type, string> typeNameMap = new Dictionary<Type, string>() {
-			{typeof(bool   ), "bool"   },
-			{typeof(char   ), "char"   },
-			{typeof(sbyte  ), "sbyte"  },
-			{typeof(byte   ), "byte"   },
-			{typeof(short  ), "short"  },
-			{typeof(ushort ), "ushort" },
-			{typeof(int    ), "int"    },
-			{typeof(uint   ), "uint"   },
-			{typeof(long   ), "long"   },
-			{typeof(ulong  ), "ulong"  },
-			{typeof(float  ), "float"  },
-			{typeof(double ), "double" },
-			{typeof(decimal), "decimal"},
-			{typeof(string ), "string"},
-		};
+		protected abstract IDictionary<Type, string> TypeNameMap {get;}
 
 		// Set of component types of array that output on the single line
-		private static readonly ISet<Type> singleLineTypes = new HashSet<Type>() {
+		protected static readonly ISet<Type> singleLineTypes = new HashSet<Type>() {
 			typeof(bool          ), typeof(bool          []), typeof(bool          [,]), typeof(bool          [][]),
 			typeof(char          ), typeof(char          []), typeof(char          [,]), typeof(char          [][]),
 			typeof(sbyte         ), typeof(sbyte         []), typeof(sbyte         [,]), typeof(sbyte         [][]),
@@ -138,59 +56,59 @@ namespace DebugTrace {
 			typeof(Guid          ), typeof(Guid          []), typeof(Guid          [,]), typeof(Guid          [][]),
 		};
 
-		private static Resource resource = new Resource("DebugTrace");
+		protected static Resource resource = new Resource("DebugTrace");
 
-		private static string   logLevel                 = resource.GetString ("LogLevel"               , "default"); // Log Level
-		private static string   enterString              = resource.GetString ("EnterString"            , "Enter {0}.{1} ({2}:{3:D})"); // string at enter
-		private static string   leaveString              = resource.GetString ("LeaveString"            , "Leave {0}.{1} ({2}:{3:D})"); // string at leave
-		private static string   threadBoundaryString     = resource.GetString ("ThreadBoundaryString"   , "______________________________ Thread {0} ______________________________"); // string of threads boundary
-		private static string   classBoundaryString      = resource.GetString ("ClassBoundaryString"    , "____ {0} ____"); // string of classes boundary
-		private static string   codeIndentString         = resource.GetString ("CodeIndentString"       , "| ");            // string of method call indent
-		private static string   dataIndentString         = resource.GetString ("DataIndentString"       , "  ");            // string of data indent
-		private static string   limitString              = resource.GetString ("LimitString"            , "...");           // string to represent that it has exceeded the limit
-		private static string   defaultNameSpaceString   = resource.GetString ("DefaultNameSpaceString" , "...");           // string replacing the default package part
-		private static string   nonPrintString           = resource.GetString ("NonPrintString"         , "***");           // string of value in the case of properties that do not display the value
-		private static string   cyclicReferenceString    = resource.GetString ("CyclicReferenceString"  , " *** cyclic reference *** "); // string to represent that the cyclic reference occurs
-		private static string   varNameValueSeparator    = resource.GetString ("VarNameValueSeparator"  , " = ");           // Separator between the variable name and value
-		private static string   keyValueSeparator        = resource.GetString ("KeyValueSeparator"      , ": ");            // Separator between the key and value for IDictionary obj
-		private static string   fieldNameValueSeparator  = resource.GetString ("FieldNameValueSeparator", ": ");            // Separator between the field name and value
-		private static string   printSuffixFormat        = resource.GetString ("PrintSuffixFormat"      , " ({2}:{3:D})");  // Format string of Print suffix
-		private static string   dateTimeFormat           = resource.GetString ("DateTimeFormat"         , "{0:G}");         // Format string of a DateTime and a string
-		private static int      collectionLimit          = resource.GetInt    ("CollectionLimit"        , 512);             // Limit of ICollection elements to output
-		private static int      byteArrayLimit           = resource.GetInt    ("ByteArrayLimit"         , 8192);            // Limit of byte array elements to output
-		private static int      stringLimit              = resource.GetInt    ("StringLimit"            , 8192);            // Limit of string characters to output
-		private static string[] nonPrintProperties       = resource.GetStrings("NonPrintProperties"     , new string[0]);   // Non Print properties (<class name>#<property name>)
-		private static string   defaultNameSpace         = resource.GetString ("DefaultNameSpace"       , "");              // Default package part
-		private static string[] reflectionClasses        = resource.GetStrings("ReflectionClasses"      , new string[0]);   // List of class names that output content in reflection even if ToString method is implemented
-	//	private static Dictionary<string, string> dictionaryNameIDictionary = Dictionary<string, string>(); // Name to dictionaryNmae dictionary 
-
-		// Logger
-		private static ILogger logger;
-
-		// Whether tracing is enabled
-		private static bool enabled;
+		protected static string   logLevel                 = resource.GetString ("LogLevel"               , "default"); // Log Level
+		protected static string   enterString              = resource.GetString ("EnterString"            , "Enter {0}.{1} ({2}:{3:D})"); // string at enter
+		protected static string   leaveString              = resource.GetString ("LeaveString"            , "Leave {0}.{1} ({2}:{3:D})"); // string at leave
+		protected static string   threadBoundaryString     = resource.GetString ("ThreadBoundaryString"   , "______________________________ Thread {0} ______________________________"); // string of threads boundary
+		protected static string   classBoundaryString      = resource.GetString ("ClassBoundaryString"    , "____ {0} ____"); // string of classes boundary
+		protected static string   codeIndentString         = resource.GetString ("CodeIndentString"       , "| ");            // string of method call indent
+		protected static string   dataIndentString         = resource.GetString ("DataIndentString"       , "  ");            // string of data indent
+		protected static string   limitString              = resource.GetString ("LimitString"            , "...");           // string to represent that it has exceeded the limit
+		protected static string   defaultNameSpaceString   = resource.GetString ("DefaultNameSpaceString" , "...");           // string replacing the default package part
+		protected static string   nonPrintString           = resource.GetString ("NonPrintString"         , "***");           // string of value in the case of properties that do not display the value
+		protected static string   cyclicReferenceString    = resource.GetString ("CyclicReferenceString"  , " *** cyclic reference *** "); // string to represent that the cyclic reference occurs
+		protected static string   varNameValueSeparator    = resource.GetString ("VarNameValueSeparator"  , " = ");           // Separator between the variable name and value
+		protected static string   keyValueSeparator        = resource.GetString ("KeyValueSeparator"      , ": ");            // Separator between the key and value for IDictionary obj
+		protected static string   fieldNameValueSeparator  = resource.GetString ("FieldNameValueSeparator", ": ");            // Separator between the field name and value
+		protected static string   printSuffixFormat        = resource.GetString ("PrintSuffixFormat"      , " ({2}:{3:D})");  // Format string of Print suffix
+		protected static string   dateTimeFormat           = resource.GetString ("DateTimeFormat"         , "{0:G}");         // Format string of a DateTime and a string
+		protected static int      collectionLimit          = resource.GetInt    ("CollectionLimit"        , 512);             // Limit of ICollection elements to output
+		protected static int      byteArrayLimit           = resource.GetInt    ("ByteArrayLimit"         , 8192);            // Limit of byte array elements to output
+		protected static int      stringLimit              = resource.GetInt    ("StringLimit"            , 8192);            // Limit of string characters to output
+		protected static string[] nonPrintProperties       = resource.GetStrings("NonPrintProperties"     , new string[0]);   // Non Print properties (<class name>#<property name>)
+		protected static string   defaultNameSpace         = resource.GetString ("DefaultNameSpace"       , "");              // Default package part
+		protected static string[] reflectionClasses        = resource.GetStrings("ReflectionClasses"      , new string[0]);   // List of class names that output content in reflection even if ToString method is implemented
+	//	protected static Dictionary<string, string> dictionaryNameIDictionary = Dictionary<string, string>(); // Name to dictionaryNmae dictionary 
 
 		// Array of indent strings
-		private static readonly string[] indentStrings = new string[64];
+		protected static readonly string[] indentStrings = new string[64];
 
 		// Array of data indent strings
-		private static readonly string[] dataIndentStrings = new string[64];
+		protected static readonly string[] dataIndentStrings = new string[64];
+
+		// Logger
+		protected static ILogger logger;
+
+		// Whether tracing is enabled
+		protected static bool enabled;
 
 		// Dictionary of thread id to the indent state
-		private static readonly IDictionary<int, State> states = new Dictionary<int, State>();
+		protected readonly IDictionary<int, State> states = new Dictionary<int, State>();
 
 		// Before thread id
-		private static int beforeThreadId;
+		protected int beforeThreadId;
 
 		// Reflected objects
-		private static readonly ICollection<object> reflectedObjects = new List<object>();
+		protected readonly ICollection<object> reflectedObjects = new List<object>();
 
-		private static string lastLog = "";
+		protected string lastLog = "";
 
 		/// <summary>
 		/// class constructor
 		/// </summary>
-		static DebugTrace() {
+		static Trace() {
 			string loggerName = null;
 			try {
 				loggerName = resource.GetString("Logger", null);
@@ -230,22 +148,11 @@ namespace DebugTrace {
 		}
 
 		/// <summary>
-		/// Append a timestamp to the head of the string.
-		/// </summary>
-		///
-		/// <param name="string ">a string</param>
-		/// <returns>a string appended a timestamp string</returns>
-		public static String AppendDateTime(string str) {
-			return string.Format(dateTimeFormat, DateTime.Now) + " " + str;
-		}
-
-
-		/// <summary>
 		/// Returns the indent state of the current thread.
 		/// </summary>
 		///
 		/// <returns>the indent state of the current thread</returns>
-		private static State GetCurrentState() {
+		private protected State GetCurrentState() {
 			State state;
 			int threadId = Thread.CurrentThread.ManagedThreadId;
 
@@ -264,12 +171,12 @@ namespace DebugTrace {
 		/// </summary>
 		///
 		/// <returns>true if tracing is enabled; false otherwise</returns>
-		public static bool IsEnabled {get => enabled;}
+		public bool IsEnabled {get => enabled;}
 
 		/// <summary>
 		/// Returns a string corresponding to the current indent.
 		/// </summary>
-		private static string GetIndentString(State state) {
+		protected string GetIndentString(State state) {
 			return indentStrings[
 				state.NestLevel < 0 ? 0 :
 				state.NestLevel >= indentStrings.Length ? indentStrings.Length - 1
@@ -283,7 +190,7 @@ namespace DebugTrace {
 		/// <summary>
 		/// Up the nest level.
 		/// </summary>
-		private static void UpNest(State state) {
+		protected void UpNest(State state) {
 			state.BeforeNestLevel = state.NestLevel;
 			++state.NestLevel;
 		}
@@ -291,7 +198,7 @@ namespace DebugTrace {
 		/// <summary>
 		/// Down the nest level.
 		/// </summary>
-		private static void DownNest(State state) {
+		protected void DownNest(State state) {
 			state.BeforeNestLevel = state.NestLevel;
 			--state.NestLevel;
 		}
@@ -299,21 +206,21 @@ namespace DebugTrace {
 		/// <summary>
 		/// Up the data nest level.
 		/// </summary>
-		private static void UpDataNest(State state) {
+		protected void UpDataNest(State state) {
 			++state.DataNestLevel;
 		}
 
 		/// <summary>
 		/// Down the data nest level.
 		/// </summary>
-		private static void DownDataNest(State state) {
+		protected void DownDataNest(State state) {
 			--state.DataNestLevel;
 		}
 
 		/// <summary>
 		/// Common start processing of output.
 		/// </summary>
-		private static void PrintStart() {
+		protected void PrintStart() {
 			var thread = Thread.CurrentThread;
 			int threadId = thread.ManagedThreadId;
 			if (threadId !=  beforeThreadId) {
@@ -329,14 +236,14 @@ namespace DebugTrace {
 		/// <summary>
 		/// Common end processing of output.
 		/// </summary>
-		private static void PrintEnd() {
+		protected void PrintEnd() {
 			beforeThreadId = Thread.CurrentThread.ManagedThreadId;
 		}
 
 		/// <summary>
 		/// Resets the nest level
 		/// </summary>
-		public static void ResetNest() {
+		public void ResetNest() {
 			if (!enabled) return;
 
 			lock (states) {
@@ -347,7 +254,7 @@ namespace DebugTrace {
 		/// <summary>
 		/// Call this method at entrance of your methods.
 		/// </summary>
-		public static void Enter() {
+		public void Enter() {
 			if (!enabled) return;
 
 			lock (states) {
@@ -369,7 +276,7 @@ namespace DebugTrace {
 		/// <summary>
 		/// Call this method at exit of your methods.
 		/// </summary>
-		public static void Leave() {
+		public void Leave() {
 			if (!enabled) return;
 
 			lock (states) {
@@ -388,7 +295,7 @@ namespace DebugTrace {
 		/// <summary>
 		/// Returns a string of the caller information.
 		/// </summary>
-		private static string GetCallerInfo(string baseString) {
+		protected string GetCallerInfo(string baseString) {
 			var element = GetStackTraceElement();
 
 			return string.Format(baseString,
@@ -403,7 +310,7 @@ namespace DebugTrace {
 		/// </summary>
 		///
 		/// <param name="message">a message</param>
-		public static void Print(string message) {
+		public void Print(string message) {
 			if (!enabled) return;
 			PrintSub(message);
 		}
@@ -413,7 +320,7 @@ namespace DebugTrace {
 		/// </summary>
 		///
 		/// <param name="messageSupplier">a message supplier</param>
-		public static void Print(Func<string> messageSupplier) {
+		public void Print(Func<string> messageSupplier) {
 			if (!enabled) return;
 			PrintSub(messageSupplier());
 		}
@@ -421,7 +328,7 @@ namespace DebugTrace {
 		/// <summary>
 		/// Outputs the message to the log.
 		/// </summary>
-		private static void PrintSub(string message) {
+		protected void PrintSub(string message) {
 			lock (states) {
 				PrintStart(); // Common start processing of output
 
@@ -447,7 +354,7 @@ namespace DebugTrace {
 		///
 		/// <param name="name">the name of the value</param>
 		/// <param name="value">the value to output (accept null)</param>
-		private static void PrintSub(string name, object value) {
+		protected void PrintSub(string name, object value) {
 			lock (states) {
 				PrintStart(); // Common start processing of output
 
@@ -483,10 +390,10 @@ namespace DebugTrace {
 		/// </summary>
 		///
 		/// <returns>a caller stack trace element</returns>
-		private static StackTraceElement GetStackTraceElement() {
+		protected StackTraceElement GetStackTraceElement() {
 			var elements = Environment.StackTrace.Split('\n')
 				.Select(str => str.Trim())
-				.Where(str => str != "" && !str.Contains(".DebugTrace.") && !str.Contains("StackTrace"))
+				.Where(str => str != "" && !str.Contains("DebugTrace.Trace.") && !str.Contains("StackTrace"))
 				.Select(str => {
 					//  0  1            2  3             4
 					// "at Class.Method() in filePath:line N"
@@ -509,14 +416,14 @@ namespace DebugTrace {
 			return result;
 		}
 
-		private static (string, string) Split(string str, char separator) {
+		protected static (string, string) Split(string str, char separator) {
 			var index = str.IndexOf(separator);
 			return index < 0
 				? (str, "")
 				: (str.Substring(0, index), str.Substring(index + 1));
 		}
 
-		private static (string, string) LastSplit(string str, char separator) {
+		protected static (string, string) LastSplit(string str, char separator) {
 			var index = str.LastIndexOf(separator);
 			return index < 0
 				? (str, "")
@@ -530,7 +437,7 @@ namespace DebugTrace {
 		/// <param name="state">the indent state</param>
 		/// <param name="strings">the string list</param>
 		/// <param name="buff">the string buffer</param>
-		private static void LineFeed(State state, IList<string> strings, StringBuilder buff) {
+		protected void LineFeed(State state, IList<string> strings, StringBuilder buff) {
 			strings.Add(GetIndentString(GetCurrentState()) + buff.ToString());
 			buff.Clear();
 		}
@@ -541,7 +448,7 @@ namespace DebugTrace {
 		///
 		/// <param name="name">the name of the value</param>
 		/// <param name="value">the value to output (accept null)</param>
-		public static void Print(string name, object value) {
+		public void Print(string name, object value) {
 			if (!enabled) return;
 			PrintSub(name, value);
 		}
@@ -553,7 +460,7 @@ namespace DebugTrace {
 		/// <param name="">T> type of the value</param>
 		/// <param name="name">the name of the value</param>
 		/// <param name="valueSupplier">the supplier of value to output</param>
-		public static void Print<T>(string name, Func<T> valueSupplier) {
+		public void Print<T>(string name, Func<T> valueSupplier) {
 			if (!enabled) return;
 			PrintSub(name, valueSupplier());
 		}
@@ -568,65 +475,7 @@ namespace DebugTrace {
 		/// <param name="value">the value object</param>
 		/// <param name="isElement">true if the value is element of a container class, false otherwise</param>
 		/// 
-		private static void Append(State state, IList<string> strings, StringBuilder buff, object value, bool isElement) {
-			if (value == null) {
-				buff.Append("null");
-			} else {
-				var type = value.GetType();
-
-				var typeName = GetTypeName(type, value, isElement);
-				if (typeName != null)
-					buff.Append(typeName);
-
-				switch (value) {
-				case bool         boolValue: buff.Append(boolValue ? "true" : "false"); break;
-				case char         charValue: buff.Append('\''); Append(state, strings, buff, charValue); buff.Append('\''); break;
-				case sbyte       sbyteValue: buff.Append(sbyteValue  ); break;
-				case byte         byteValue: buff.Append(byteValue   ); break;
-				case short       shortValue: buff.Append(shortValue  ); break;
-				case ushort     ushortValue: buff.Append(ushortValue ); break;
-				case int           intValue: buff.Append(intValue    ); break;
-				case uint         uintValue: buff.Append(uintValue   ); break;
-				case long         longValue: buff.Append(longValue   ).Append('L' ); break;
-				case ulong       ulongValue: buff.Append(ulongValue  ).Append("uL"); break;
-				case float       floatValue: buff.Append(floatValue  ).Append('f' ); break;
-				case double     doubleValue: buff.Append(doubleValue ).Append('d' ); break;
-				case decimal   decimalValue: buff.Append(decimalValue).Append('m' ); break;
-				case DateTime      dateTime: buff.Append(string.Format(dateTimeFormat, dateTime)); break;
-				case char[]       charArray: Append(state, strings, buff, new string(charArray)); break;
-				case byte[]       byteArray: Append(state, strings, buff, byteArray); break;
-				case string     stringValue: Append(state, strings, buff, stringValue); break;
-				case IDictionary dictionary: Append(state, strings, buff, dictionary); break;
-				case ICollection collection: Append(state, strings, buff, collection); break;
-				case Enum         enumValue: buff.Append(enumValue); break;
-				default:
-					// Other
-				//	bool isReflection = reflectionClasses.Contains(type.FullName); // TODO
-					bool isReflection = true;
-				//	if (!isReflection && !HasToString(type)) {
-				//		isReflection = true;
-				//		reflectionClasses.Add(type.FullName);
-				//	}
-
-					if (isReflection) {
-						// Use Reflection
-						if (reflectedObjects.Any(obj => value == obj))
-							// Cyclic reference
-							buff.Append(cyclicReferenceString).Append(value);
-						else {
-							// Use Reflection
-							reflectedObjects.Add(value);
-							AppendReflectString(state, strings, buff, value);
-							reflectedObjects.Remove(reflectedObjects.Count - 1);
-						}
-					} else {
-						// Use ToString method
-						buff.Append(value);
-					}
-					break;
-				}
-			}
-		}
+		protected abstract void Append(State state, IList<string> strings, StringBuilder buff, object value, bool isElement);
 
 		/// <summary>
 		/// Returns the type name to be output to the log.<br>
@@ -638,49 +487,9 @@ namespace DebugTrace {
 		/// <param name="isElement">true if the value is element of a container class, false otherwise</param>
 		/// <param name="nest">current nest count</param>
 		/// <returns>the type name to be output to the log</returns>
-		private static string GetTypeName(Type type, object value, bool isElement, int nest = 0) {
-			string typeName = null;
+		protected abstract string GetTypeName(Type type, object value, bool isElement, int nest = 0);
 
-			if (type.IsArray) {
-				// Array
-				typeName = GetTypeName(type.GetElementType(), null, false, nest + 1);
-				if (typeName != null) {
-					var bracket = "[";
-					if (value != null)
-						bracket += ((Array)value).Length;
-					bracket += ']';
-					int braIndex = typeName.IndexOf('[');
-					if (braIndex < 0)
-						braIndex = typeName.Length;
-					typeName = typeName.Substring(0, braIndex) + bracket + typeName.Substring(braIndex) + ' ';
-				}
-			} else if (type.Name.StartsWith("Tuple`")) {
-				typeName = "Tuple";
-
-			} else if (type.Name.StartsWith("ValueTuple`")) {
-				typeName = "ValueTuple";
-
-			} else {
-				// Not Array
-				var noOutputType = isElement ? noOutputElementTypes.Contains(type) : noOutputTypes.Contains(type);
-				if (nest > 0 || !noOutputType) {
-					// Output the type name
-					if (typeNameMap.ContainsKey(type)) {
-						typeName = typeNameMap[type];
-					} else {
-						typeName = ReplaceTypeName(type.FullName);
-						if (value is ICollection collection)
-							typeName += " Count:" + collection.Count;
-					}
-				}
-				if (typeName != null && nest == 0)
-					typeName += ' ';
-			}
-
-			return typeName;
-		}
-
-		private static Regex typeRemoveRegex = new Regex(@"(`[0-9]+)|(, [^, \]]+)+");
+		protected Regex typeRemoveRegex = new Regex(@"(`[0-9]+)|(, [^, \]]+)+");
 
 		/// <summary>
 		/// Replace a class name.
@@ -688,7 +497,7 @@ namespace DebugTrace {
 		///
 		/// <param name="typeName">a class name</param>
 		/// <returns>the replaced ckass name</returns>
-		private static string ReplaceTypeName(string typeName) {
+		protected string ReplaceTypeName(string typeName) {
 			typeName = typeRemoveRegex.Replace(typeName, "");
 
 			if (defaultNameSpace != "" && typeName.StartsWith(defaultNameSpace))
@@ -700,11 +509,10 @@ namespace DebugTrace {
 		/// Appends a character representation for logging to the string buffer.
 		/// </summary>
 		///
-		/// <param name="state">the indent state</param>
-		/// <param name="strings">the string list</param>
 		/// <param name="buff">the string buffer</param>
 		/// <param name="ch">a character</param>
-		private static void Append(State state, IList<string> strings, StringBuilder buff, char ch) {
+		/// <param name="enclosure">the enclosure character</param>
+		protected void Append(StringBuilder buff, char ch, char enclosure) {
 			switch (ch) {
 			case '\0': buff.Append(@"\0"); break; // 00 NUL
 			case '\a': buff.Append(@"\a"); break; // 07 BEL
@@ -714,14 +522,15 @@ namespace DebugTrace {
 			case '\v': buff.Append(@"\v"); break; // 0B VT
 			case '\f': buff.Append(@"\f"); break; // 0C FF
 			case '\r': buff.Append(@"\r"); break; // 0D CR
-			case '"' : buff.Append(@"\"""); break; // "
-			case '\'': buff.Append(@"\'"); break; // '
 			case '\\': buff.Append(@"\\"); break; // \
 			default:
 				if (ch < ' ' || ch == '\u007F')
 					buff.Append(string.Format(@"\u{0:X4}", (ushort)ch));
-				else
+				else {
+					if (ch == enclosure)
+						buff.Append('\\');
 					buff.Append(ch);
+				}
 				break;
 			}
 		}
@@ -734,59 +543,16 @@ namespace DebugTrace {
 		/// <param name="strings">the string list</param>
 		/// <param name="buff">the string buffer</param>
 		/// <param name="str">a string object</param>
-		private static void Append(State state, IList<string> strings, StringBuilder buff, string str) {
+		protected void Append(StringBuilder buff, string str) {
 			buff.Append('"');
 			for (int index = 0; index < str.Length; ++index) {
 				if (index >= stringLimit) {
 					buff.Append(limitString);
 					break;
 				}
-				Append(state, strings, buff, str[index]);
+				Append(buff, str[index], '"');
 			}
 			buff.Append('"');
-		}
-
-		/// <summary>
-		/// Appends a byte array representation for logging to the string buffer.
-		/// </summary>
-		///
-		/// <param name="state">the indent state</param>
-		/// <param name="strings">the string list</param>
-		/// <param name="buff">the string buffer</param>
-		/// <param name="bytes">a byte array</param>
-		private static void Append(State state, IList<string> strings, StringBuilder buff, byte[] bytes) {
-			var multiLine = bytes.Length > 16 && byteArrayLimit > 16;
-
-			buff.Append('{');
-			if (multiLine) {
-				LineFeed(state, strings, buff);
-				UpDataNest(state);
-			}
-
-			int offset = 0;
-			for (int index = 0; index < bytes.Length; ++index) {
-				if (offset > 0) buff.Append(" ");
-
-				if (index >= byteArrayLimit) {
-					buff.Append(limitString);
-					break;
-				}
-
-				buff.Append(string.Format("{0:X2}", bytes[index]));
-				++offset;
-
-				if (multiLine && offset == 16) {
-					LineFeed(state, strings, buff);
-					offset = 0;
-				}
-			}
-
-			if (multiLine) {
-				if (buff.Length > 0)
-					LineFeed(state, strings, buff);
-				DownDataNest(state);
-			}
-			buff.Append('}');
 		}
 
 		/// <summary>
@@ -797,7 +563,7 @@ namespace DebugTrace {
 		/// <param name="strings">the string list</param>
 		/// <param name="buff">the string buffer</param>
 		/// <param name="collection">a Collection object</param>
-		private static void Append(State state, IList<string> strings, StringBuilder buff, ICollection collection) {
+		protected void Append(State state, IList<string> strings, StringBuilder buff, ICollection collection) {
 			var multiLine = !isSingleLine(collection);
 
 			buff.Append('{');
@@ -839,7 +605,7 @@ namespace DebugTrace {
 		/// <param name="strings">the string list</param>
 		/// <param name="buff">the string buffer</param>
 		/// <param name="dictionary">a IDictionary</param>
-		private static void Append(State state, IList<string> strings, StringBuilder buff, IDictionary dictionary) {
+		protected void Append(State state, IList<string> strings, StringBuilder buff, IDictionary dictionary) {
 			var multiLine = !isSingleLine(dictionary);
 
 			buff.Append('{');
@@ -882,7 +648,7 @@ namespace DebugTrace {
 		///
 		/// <param name="obj">an object</param>
 		/// <returns>true if this class or super classes without object class has ToString method; false otherwise</returns>
-		private static bool HasToString(Type type) {
+		protected bool HasToString(Type type) {
 			var result = false;
 
 			try {
@@ -894,7 +660,7 @@ namespace DebugTrace {
 					type = type.BaseType;
 				}
 			}
-			catch (Exception e) {
+			catch (Exception) {
 			}
 
 			return result;
@@ -907,7 +673,7 @@ namespace DebugTrace {
 		/// <param name="state">the indent state</param>
 		/// <param name="strings">the string list</param>
 		/// <param name="obj">an object</param>
-		private static void AppendReflectString(State state, IList<string> strings, StringBuilder buff, object obj) {
+		protected void AppendReflectString(State state, IList<string> strings, StringBuilder buff, object obj) {
 			var type = obj.GetType();
 			var extended = type.BaseType != typeof(object) && type.BaseType != typeof(ValueType);
 			var isTuple = type.Name.StartsWith("Tuple`") || type.Name.StartsWith("ValueTuple`");
@@ -935,7 +701,7 @@ namespace DebugTrace {
 		/// <param name="obj">an object</param>
 		/// <param name="type">the type of the object</param>
 		/// <param name="extended">the type is extended type</param>
-		private static void AppendReflectStringSub(State state, IList<string> strings, StringBuilder buff, object obj, Type type, bool extended, bool multiLine) {
+		protected void AppendReflectStringSub(State state, IList<string> strings, StringBuilder buff, object obj, Type type, bool extended, bool multiLine) {
 			Type baseType = type.BaseType;
 			if (baseType != typeof(object) && baseType != typeof(ValueType))
 				// Call for the base type
@@ -1017,7 +783,7 @@ namespace DebugTrace {
 		/// <param name="value">the output value</param>
 		/// <param name="isElement">whether the value is an element of the collection</param>
 		/// <returns>true if the value should be output on one line, false otherwise</returns>
-		private static bool isSingleLine(object value, bool isElement = false) {
+		protected bool isSingleLine(object value, bool isElement = false) {
 			if (value == null) return true;
 			var type = value.GetType();
 			if (singleLineTypes.Contains(type)) return true;
@@ -1054,7 +820,7 @@ namespace DebugTrace {
 					if (!isSingleLine(propertyInfo.GetValue(value), !isTuple))
 						return false;
 				}
-				catch (Exception e) {
+				catch (Exception) {
 					return false;
 				}
 			}
@@ -1066,7 +832,7 @@ namespace DebugTrace {
 					if (!isSingleLine(fieldInfo.GetValue(value), !isTuple))
 						return false;
 				}
-				catch (Exception e) {
+				catch (Exception) {
 					return false;
 				}
 			}
@@ -1075,10 +841,20 @@ namespace DebugTrace {
 		}
 
 		/// <summary>
+		/// Append a timestamp to the head of the string.
+		/// </summary>
+		///
+		/// <param name="string ">a string</param>
+		/// <returns>a string appended a timestamp string</returns>
+		public static String AppendDateTime(string str) {
+			return string.Format(dateTimeFormat, DateTime.Now) + " " + str;
+		}
+
+		/// <summary>
 		/// Returns the last log string output.
 		/// </summary>
 		///
 		/// <returns>the last log string output.</returns>
-		public static string LastLog {get => lastLog;}
+		public string LastLog {get => lastLog;}
 	}
 }
