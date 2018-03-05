@@ -30,7 +30,7 @@ namespace DebugTraceExample {
 		}
 
 		static void Sub3() {
-	/**/Trace.Enter();
+		/**/Trace.Enter();
 		{var value =        true  ; /**/Trace.Print("value", value);}
 		{var value = (sbyte)  -1  ; /**/Trace.Print("value", value);}
 		{var value = (byte)    1  ; /**/Trace.Print("value", value);}
@@ -58,6 +58,9 @@ namespace DebugTraceExample {
 		{var value =     '\u0001' ; /**/Trace.Print("value", value);}
 		{var value =     '\u007F' ; /**/Trace.Print("value", value);}
 		{var value = "あ\0\a\b\t\n\v\f\r\"'\\\u007F"; /**/Trace.Print("value", value);}
+		{var value = @"aa\bb\cc"; /**/Trace.Print("value", value);}
+		{var value = "aa/bb/cc"; /**/Trace.Print("value", value);}
+		{var value = "aa\\bb\\cc\n"; /**/Trace.Print("value", value);}
 		{var value = (1, 2)       ; /**/Trace.Print("value", value);}
 		{var value = (10, "abc", 1.1F); /**/Trace.Print("value", value);}
 		{var value = ((10, 20), "abc", 1.1F); /**/Trace.Print("value", value);}
@@ -168,12 +171,12 @@ namespace DebugTraceExample {
 				{4, new Contact(4, "Sasha" , "Apple", new DateTime(1993, 4, 5))},
 			};
 		/**/Trace.Print("contacts", contacts);
-		/**/Trace.Print("(points, point3s, contacts)", () => (points, point3s, contacts));
+		/**/Trace.Print("(points, point3s, contacts)", () => ((points, point3s, contacts)));
 		}
 
-	/**/Trace.Print(() => "aaa" + "bbb");
+		/**/Trace.Print(() => "aaa" + "bbb");
 
-	/**/Trace.Leave();
+		/**/Trace.Leave();
 		}
 
 		public readonly struct  Point3 {

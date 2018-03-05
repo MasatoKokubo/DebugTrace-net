@@ -16,19 +16,19 @@ namespace DebugTrace {
 	/// <since>1.0.0</since>
 	/// <author>Masato Kokubo</author>
 	public class Resource {
-		internal static Assembly selfAssembly = Assembly.GetExecutingAssembly();
-		internal static DirectoryInfo selfDirInfo = new FileInfo(selfAssembly.Location).Directory;
-		internal FileInfo fileInfo;
-		internal IDictionary<string, string> values = new Dictionary<string, string>();
+		internal static Assembly SelfAssembly {get;} = Assembly.GetExecutingAssembly();
+		private static DirectoryInfo selfDirInfo = new FileInfo(SelfAssembly.Location).Directory;
+		public FileInfo FileInfo {get; private set;}
+		private IDictionary<string, string> values = new Dictionary<string, string>();
 
 		public Resource(String baseName) {
-			fileInfo = new FileInfo(Path.Combine(selfDirInfo.FullName, baseName + ".properties"));
-			if (!fileInfo.Exists)
+			FileInfo = new FileInfo(Path.Combine(selfDirInfo.FullName, baseName + ".properties"));
+			if (!FileInfo.Exists)
 				return;
 
 			var lineBuff = new StringBuilder();
 			var eof = false;
-			using (var reader = new StreamReader(fileInfo.FullName, new UTF8Encoding())) {
+			using (var reader = new StreamReader(FileInfo.FullName, new UTF8Encoding())) {
 				while (!eof) {
 					while (true) {
 						var line = reader.ReadLine();

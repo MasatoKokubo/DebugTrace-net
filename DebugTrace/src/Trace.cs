@@ -26,6 +26,43 @@ namespace DebugTrace {
 	/// <since>1.0.0</since>
 	/// <author>Masato Kokubo</author>
 	public abstract class Trace : ITrace {
+		public static string   LogLevel                {get; private set;} // Log Level
+		public static string   EnterString             {get; private set;} // string at enter
+		public static string   LeaveString             {get; private set;} // string at leave
+		public static string   ThreadBoundaryString    {get; private set;} // string of threads boundary
+		public static string   ClassBoundaryString     {get; private set;} // string of classes boundary
+		public static string   CodeIndentString        {get; private set;} // string of method call indent
+		public static string   DataIndentString        {get; private set;} // string of data indent
+		public static string   LimitString             {get; private set;} // string to represent that it has exceeded the limit
+		public static string   DefaultNameSpaceString  {get; private set;} // string replacing the default package part
+		public static string   NonPrintString          {get; private set;} // string of value in the case of properties that do not display the value
+		public static string   CyclicReferenceString   {get; private set;} // string to represent that the cyclic reference occurs
+		public static string   VarNameValueSeparator   {get; private set;} // Separator between the variable name and value
+		public static string   KeyValueSeparator       {get; private set;} // Separator between the key and value for IDictionary obj
+		public static string   FieldNameValueSeparator {get; private set;} // Separator between the field name and value
+		public static string   PrintSuffixFormat       {get; private set;} // Format string of Print suffix
+		public static string   DateTimeFormat          {get; private set;} // Format string of a DateTime and a string
+		public static int      CollectionLimit         {get; private set;} // Limit of ICollection elements to output
+		public static int      ByteArrayLimit          {get; private set;} // Limit of byte array elements to output
+		public static int      StringLimit             {get; private set;} // Limit of string characters to output
+		public static string[] NonPrintProperties      {get; private set;} // Non Print properties (<class name>#<property name>)
+		public static string   DefaultNameSpace        {get; private set;} // Default package part
+		public static string[] ReflectionClasses       {get; private set;} // List of class names that output content in reflection even if ToString method is implemented
+
+		// Array of indent strings
+		protected static string[] indentStrings;
+
+		// Array of data indent strings
+		protected static string[] dataIndentStrings;
+
+		// Logger
+		protected static ILogger logger;
+
+		/// <summary>
+		/// Returns whether tracing is IsEnabled.
+		/// </summary>
+		public bool IsEnabled {get {return logger.IsEnabled;}}
+
 		// Set of classes that dose not output the type name
 		protected abstract ISet<Type> NoOutputTypes {get;}
 
@@ -56,44 +93,6 @@ namespace DebugTrace {
 			typeof(Guid          ), typeof(Guid          []), typeof(Guid          [,]), typeof(Guid          [][]),
 		};
 
-		protected static Resource resource = new Resource("DebugTrace");
-
-		protected static string   logLevel                 = resource.GetString ("LogLevel"               , "default"); // Log Level
-		protected static string   enterString              = resource.GetString ("EnterString"            , "Enter {0}.{1} ({2}:{3:D})"); // string at enter
-		protected static string   leaveString              = resource.GetString ("LeaveString"            , "Leave {0}.{1} ({2}:{3:D})"); // string at leave
-		protected static string   threadBoundaryString     = resource.GetString ("ThreadBoundaryString"   , "______________________________ Thread {0} ______________________________"); // string of threads boundary
-		protected static string   classBoundaryString      = resource.GetString ("ClassBoundaryString"    , "____ {0} ____"); // string of classes boundary
-		protected static string   codeIndentString         = resource.GetString ("CodeIndentString"       , "| ");            // string of method call indent
-		protected static string   dataIndentString         = resource.GetString ("DataIndentString"       , "  ");            // string of data indent
-		protected static string   limitString              = resource.GetString ("LimitString"            , "...");           // string to represent that it has exceeded the limit
-		protected static string   defaultNameSpaceString   = resource.GetString ("DefaultNameSpaceString" , "...");           // string replacing the default package part
-		protected static string   nonPrintString           = resource.GetString ("NonPrintString"         , "***");           // string of value in the case of properties that do not display the value
-		protected static string   cyclicReferenceString    = resource.GetString ("CyclicReferenceString"  , " *** cyclic reference *** "); // string to represent that the cyclic reference occurs
-		protected static string   varNameValueSeparator    = resource.GetString ("VarNameValueSeparator"  , " = ");           // Separator between the variable name and value
-		protected static string   keyValueSeparator        = resource.GetString ("KeyValueSeparator"      , ": ");            // Separator between the key and value for IDictionary obj
-		protected static string   fieldNameValueSeparator  = resource.GetString ("FieldNameValueSeparator", ": ");            // Separator between the field name and value
-		protected static string   printSuffixFormat        = resource.GetString ("PrintSuffixFormat"      , " ({2}:{3:D})");  // Format string of Print suffix
-		protected static string   dateTimeFormat           = resource.GetString ("DateTimeFormat"         , "{0:G}");         // Format string of a DateTime and a string
-		protected static int      collectionLimit          = resource.GetInt    ("CollectionLimit"        , 512);             // Limit of ICollection elements to output
-		protected static int      byteArrayLimit           = resource.GetInt    ("ByteArrayLimit"         , 8192);            // Limit of byte array elements to output
-		protected static int      stringLimit              = resource.GetInt    ("StringLimit"            , 8192);            // Limit of string characters to output
-		protected static string[] nonPrintProperties       = resource.GetStrings("NonPrintProperties"     , new string[0]);   // Non Print properties (<class name>#<property name>)
-		protected static string   defaultNameSpace         = resource.GetString ("DefaultNameSpace"       , "");              // Default package part
-		protected static string[] reflectionClasses        = resource.GetStrings("ReflectionClasses"      , new string[0]);   // List of class names that output content in reflection even if ToString method is implemented
-	//	protected static Dictionary<string, string> dictionaryNameIDictionary = Dictionary<string, string>(); // Name to dictionaryNmae dictionary 
-
-		// Array of indent strings
-		protected static readonly string[] indentStrings = new string[64];
-
-		// Array of data indent strings
-		protected static readonly string[] dataIndentStrings = new string[64];
-
-		// Logger
-		protected static ILogger logger;
-
-		// Whether tracing is enabled
-		protected static bool enabled;
-
 		// Dictionary of thread id to the indent state
 		protected readonly IDictionary<int, State> states = new Dictionary<int, State>();
 
@@ -103,12 +102,53 @@ namespace DebugTrace {
 		// Reflected objects
 		protected readonly ICollection<object> reflectedObjects = new List<object>();
 
-		protected string lastLog = "";
+		/// <summary>
+		/// Returns the last log string output.
+		/// </summary>
+		public string LastLog {get; private set;} = "";
 
 		/// <summary>
 		/// class constructor
 		/// </summary>
 		static Trace() {
+			InitClass();
+		}
+
+		/// <summary>
+		/// Initializes this class.
+		/// </summary>
+		public static void InitClass() {
+			Resource resource = new Resource("DebugTrace");
+
+			LogLevel                 = resource.GetString ("LogLevel"               , "default");
+			EnterString              = resource.GetString ("EnterString"            , "Enter {0}.{1} ({2}:{3:D})");
+			LeaveString              = resource.GetString ("LeaveString"            , "Leave {0}.{1} ({2}:{3:D})");
+			ThreadBoundaryString     = resource.GetString ("ThreadBoundaryString"   , "______________________________ Thread {0} ______________________________");
+			ClassBoundaryString      = resource.GetString ("ClassBoundaryString"    , "____ {0} ____");
+			CodeIndentString         = resource.GetString ("CodeIndentString"       , "| ");
+			DataIndentString         = resource.GetString ("DataIndentString"       , "  ");
+			LimitString              = resource.GetString ("LimitString"            , "...");
+			DefaultNameSpaceString   = resource.GetString ("DefaultNameSpaceString" , "...");
+			NonPrintString           = resource.GetString ("NonPrintString"         , "***");
+			CyclicReferenceString    = resource.GetString ("CyclicReferenceString"  , " *** cyclic reference *** ");
+			VarNameValueSeparator    = resource.GetString ("VarNameValueSeparator"  , " = ");
+			KeyValueSeparator        = resource.GetString ("KeyValueSeparator"      , ": ");
+			FieldNameValueSeparator  = resource.GetString ("FieldNameValueSeparator", ": ");
+			PrintSuffixFormat        = resource.GetString ("PrintSuffixFormat"      , " ({2}:{3:D})");
+			DateTimeFormat           = resource.GetString ("DateTimeFormat"         , "{0:G}");
+			CollectionLimit          = resource.GetInt    ("CollectionLimit"        , 512);
+			ByteArrayLimit           = resource.GetInt    ("ByteArrayLimit"         , 8192);
+			StringLimit              = resource.GetInt    ("StringLimit"            , 8192);
+			NonPrintProperties       = resource.GetStrings("NonPrintProperties"     , new string[0]);
+			DefaultNameSpace         = resource.GetString ("DefaultNameSpace"       , "");
+			ReflectionClasses        = resource.GetStrings("ReflectionClasses"      , new string[0]);
+
+			// Array of indent strings
+			indentStrings = new string[64];
+
+			// Array of data indent strings
+			dataIndentStrings = new string[64];
+
 			string loggerName = null;
 			try {
 				loggerName = resource.GetString("Logger", null);
@@ -126,28 +166,26 @@ namespace DebugTrace {
 				logger = new Console.Error();
 
 			// Set a logging level
-			logger.Level = logLevel;
-			enabled = logger.IsEnabled;
+			logger.Level = LogLevel;
 
 			// make code indent strings
 			indentStrings[0] = "";
 			for (var index = 1; index < indentStrings.Length; ++index)
-				indentStrings[index] = indentStrings[index - 1] + codeIndentString;
+				indentStrings[index] = indentStrings[index - 1] + CodeIndentString;
 
 			// make data indent strings
 			dataIndentStrings[0] = "";
 			for (var index = 1; index < dataIndentStrings.Length; ++index)
-				dataIndentStrings[index] = dataIndentStrings[index - 1] + dataIndentString;
+				dataIndentStrings[index] = dataIndentStrings[index - 1] + DataIndentString;
 
 			// output version log
 			var versionAttribute = (AssemblyInformationalVersionAttribute)
-				Attribute.GetCustomAttribute(Resource.selfAssembly, typeof(AssemblyInformationalVersionAttribute));
+				Attribute.GetCustomAttribute(Resource.SelfAssembly, typeof(AssemblyInformationalVersionAttribute));
 			logger.Log($"DebugTrace-net {versionAttribute?.InformationalVersion}");
-			logger.Log($"  properties: {resource.fileInfo.FullName}");
+			logger.Log($"  properties: {resource.FileInfo.FullName}");
 			logger.Log($"  Logger: {logger.GetType().FullName}");
 		}
 
-		/// <summary>
 		/// Returns the indent state of the current thread.
 		/// </summary>
 		///
@@ -165,13 +203,6 @@ namespace DebugTrace {
 
 			return state;
 		}
-
-		/// <summary>
-		/// Returns whether tracing is enabled.
-		/// </summary>
-		///
-		/// <returns>true if tracing is enabled; false otherwise</returns>
-		public bool IsEnabled {get => enabled;}
 
 		/// <summary>
 		/// Returns a string corresponding to the current indent.
@@ -226,7 +257,7 @@ namespace DebugTrace {
 			if (threadId !=  beforeThreadId) {
 				// Thread changing
 				logger.Log(""); // Line break
-				logger.Log(string.Format(threadBoundaryString, threadId));
+				logger.Log(string.Format(ThreadBoundaryString, threadId));
 				logger.Log(""); // Line break
 
 				beforeThreadId = threadId;
@@ -244,7 +275,7 @@ namespace DebugTrace {
 		/// Resets the nest level
 		/// </summary>
 		public void ResetNest() {
-			if (!enabled) return;
+			if (!IsEnabled) return;
 
 			lock (states) {
 				GetCurrentState().Reset();
@@ -255,7 +286,7 @@ namespace DebugTrace {
 		/// Call this method at entrance of your methods.
 		/// </summary>
 		public void Enter() {
-			if (!enabled) return;
+			if (!IsEnabled) return;
 
 			lock (states) {
 				PrintStart(); // Common start processing of output
@@ -264,8 +295,8 @@ namespace DebugTrace {
 				if (state.BeforeNestLevel > state.NestLevel)
 					logger.Log(GetIndentString(state)); // Line break
 
-				lastLog = GetIndentString(state) + GetCallerInfo(enterString);
-				logger.Log(lastLog);
+				LastLog = GetIndentString(state) + GetCallerInfo(EnterString);
+				logger.Log(LastLog);
 
 				UpNest(state);
 
@@ -277,7 +308,7 @@ namespace DebugTrace {
 		/// Call this method at exit of your methods.
 		/// </summary>
 		public void Leave() {
-			if (!enabled) return;
+			if (!IsEnabled) return;
 
 			lock (states) {
 				PrintStart(); // Common start processing of output
@@ -285,8 +316,8 @@ namespace DebugTrace {
 				var state = GetCurrentState();
 				DownNest(state);
 
-				lastLog = GetIndentString(state) + GetCallerInfo(leaveString);
-				logger.Log(lastLog);
+				LastLog = GetIndentString(state) + GetCallerInfo(LeaveString);
+				logger.Log(LastLog);
 
 				PrintEnd(); // Common end processing of output
 			}
@@ -311,7 +342,7 @@ namespace DebugTrace {
 		///
 		/// <param name="message">a message</param>
 		public void Print(string message) {
-			if (!enabled) return;
+			if (!IsEnabled) return;
 			PrintSub(message);
 		}
 
@@ -321,7 +352,7 @@ namespace DebugTrace {
 		///
 		/// <param name="messageSupplier">a message supplier</param>
 		public void Print(Func<string> messageSupplier) {
-			if (!enabled) return;
+			if (!IsEnabled) return;
 			PrintSub(messageSupplier());
 		}
 
@@ -335,7 +366,7 @@ namespace DebugTrace {
 				var lastLog = "";
 				if (message != "") {
 					var element = GetStackTraceElement();
-					var suffix = string.Format(printSuffixFormat,
+					var suffix = string.Format(PrintSuffixFormat,
 						ReplaceTypeName(element.TypeName),
 						element.MethodName,
 						element.FileName,
@@ -364,13 +395,13 @@ namespace DebugTrace {
 				var strings = new List<string>();
 				var buff = new StringBuilder();
 
-				buff.Append(name).Append(varNameValueSeparator);
+				buff.Append(name).Append(VarNameValueSeparator);
 				var normalizedName = name.Substring(name.LastIndexOf('.') + 1).Trim();
 				normalizedName = normalizedName.Substring(normalizedName.LastIndexOf(' ') + 1);
 				Append(state, strings, buff, value, false);
 
 				var element = GetStackTraceElement();
-				var suffix = string.Format(printSuffixFormat,
+				var suffix = string.Format(PrintSuffixFormat,
 					element.TypeName,
 					element.MethodName,
 					element.FileName,
@@ -379,7 +410,7 @@ namespace DebugTrace {
 				LineFeed(state, strings, buff);
 
 				strings.ForEach(str => logger.Log(str));
-				lastLog = string.Join("\n", strings);
+				LastLog = string.Join("\n", strings);
 
 				PrintEnd(); // Common end processing of output
 			}
@@ -449,7 +480,7 @@ namespace DebugTrace {
 		/// <param name="name">the name of the value</param>
 		/// <param name="value">the value to output (accept null)</param>
 		public void Print(string name, object value) {
-			if (!enabled) return;
+			if (!IsEnabled) return;
 			PrintSub(name, value);
 		}
 
@@ -461,7 +492,7 @@ namespace DebugTrace {
 		/// <param name="name">the name of the value</param>
 		/// <param name="valueSupplier">the supplier of value to output</param>
 		public void Print<T>(string name, Func<T> valueSupplier) {
-			if (!enabled) return;
+			if (!IsEnabled) return;
 			PrintSub(name, valueSupplier());
 		}
 
@@ -500,8 +531,8 @@ namespace DebugTrace {
 		protected string ReplaceTypeName(string typeName) {
 			typeName = typeRemoveRegex.Replace(typeName, "");
 
-			if (defaultNameSpace != "" && typeName.StartsWith(defaultNameSpace))
-				typeName = defaultNameSpaceString + typeName.Substring(defaultNameSpace.Length);
+			if (DefaultNameSpace != "" && typeName.StartsWith(DefaultNameSpace))
+				typeName = DefaultNameSpaceString + typeName.Substring(DefaultNameSpace.Length);
 			return typeName;
 		}
 
@@ -512,27 +543,39 @@ namespace DebugTrace {
 		/// <param name="buff">the string buffer</param>
 		/// <param name="ch">a character</param>
 		/// <param name="enclosure">the enclosure character</param>
-		protected void Append(StringBuilder buff, char ch, char enclosure) {
-			switch (ch) {
-			case '\0': buff.Append(@"\0"); break; // 00 NUL
-			case '\a': buff.Append(@"\a"); break; // 07 BEL
-			case '\b': buff.Append(@"\b"); break; // 08 BS
-			case '\t': buff.Append(@"\t"); break; // 09 HT
-			case '\n': buff.Append(@"\n"); break; // 0A LF
-			case '\v': buff.Append(@"\v"); break; // 0B VT
-			case '\f': buff.Append(@"\f"); break; // 0C FF
-			case '\r': buff.Append(@"\r"); break; // 0D CR
-			case '\\': buff.Append(@"\\"); break; // \
-			default:
-				if (ch < ' ' || ch == '\u007F')
-					buff.Append(string.Format(@"\u{0:X4}", (ushort)ch));
-				else {
-					if (ch == enclosure)
-						buff.Append('\\');
-					buff.Append(ch);
+		/// <param name="escape">escape characters if true, dose not escape characters otherwise</param>
+		/// <returns>true if successful, false otherwise<returns>
+		protected bool Append(StringBuilder buff, char ch, char enclosure, bool escape) {
+			if (escape) {
+				// escape
+				switch (ch) {
+				case '\0': buff.Append(@"\0"); break; // 00 NUL
+				case '\a': buff.Append(@"\a"); break; // 07 BEL
+				case '\b': buff.Append(@"\b"); break; // 08 BS
+				case '\t': buff.Append(@"\t"); break; // 09 HT
+				case '\n': buff.Append(@"\n"); break; // 0A LF
+				case '\v': buff.Append(@"\v"); break; // 0B VT
+				case '\f': buff.Append(@"\f"); break; // 0C FF
+				case '\r': buff.Append(@"\r"); break; // 0D CR
+				case '\\': buff.Append(@"\\"); break; // \
+				default:
+					if (ch < ' ' || ch == '\u007F')
+						buff.Append(string.Format(@"\u{0:X4}", (ushort)ch));
+					else {
+						if (ch == enclosure)
+							buff.Append('\\');
+						buff.Append(ch);
+					}
+					break;
 				}
-				break;
+			} else {
+				// dose not escape
+				if (ch < ' ' || ch == '\u007F' || ch == enclosure)
+					return false;
+				else
+					buff.Append(ch);
 			}
+			return true;
 		}
 
 		/// <summary>
@@ -543,16 +586,28 @@ namespace DebugTrace {
 		/// <param name="strings">the string list</param>
 		/// <param name="buff">the string buffer</param>
 		/// <param name="str">a string object</param>
-		protected void Append(StringBuilder buff, string str) {
+		/// <returns>true if successful, false otherwise<returns>
+		protected bool Append(StringBuilder buff, string str, bool escape) {
+			var beforeLength = buff.Length;
+			var needAtChar = false;
 			buff.Append('"');
 			for (int index = 0; index < str.Length; ++index) {
-				if (index >= stringLimit) {
-					buff.Append(limitString);
+				if (index >= StringLimit) {
+					buff.Append(LimitString);
 					break;
 				}
-				Append(buff, str[index], '"');
+				var ch = str[index];
+				if (!Append(buff, ch, '"', escape)) {
+					buff.Length = beforeLength;
+					return false;
+				}
+				if (!escape && ch == '\\')
+					needAtChar = true;
 			}
 			buff.Append('"');
+			if (needAtChar)
+				buff.Insert(beforeLength, '@');
+			return true;
 		}
 
 		/// <summary>
@@ -579,17 +634,17 @@ namespace DebugTrace {
 						buff.Append(", ");
 				}
 
-				if (index < collectionLimit)
+				if (index < CollectionLimit)
 					Append(state, strings, buff, element, true);
 				else
-					buff.Append(limitString);
+					buff.Append(LimitString);
 
 				if (multiLine) {
 					buff.Append(",");
 					LineFeed(state, strings, buff);
 				}
 
-				if (index++ >= collectionLimit) break;
+				if (index++ >= CollectionLimit) break;
 			}
 
 			if (multiLine)
@@ -622,19 +677,19 @@ namespace DebugTrace {
 						buff.Append(", ");
 				}
 
-				if (index < collectionLimit) {
+				if (index < CollectionLimit) {
 					Append(state, strings, buff, key, true);
-					buff.Append(keyValueSeparator);
+					buff.Append(KeyValueSeparator);
 					Append(state, strings, buff, value, true);
 				} else
-					buff.Append(limitString);
+					buff.Append(LimitString);
 
 				if (multiLine) {
 					buff.Append(",");
 					LineFeed(state, strings, buff);
 				}
 
-				if (index++ >= collectionLimit) break;
+				if (index++ >= CollectionLimit) break;
 			}
 
 			if (multiLine)
@@ -711,7 +766,7 @@ namespace DebugTrace {
 			var isTuple = type.Name.StartsWith("Tuple`") || type.Name.StartsWith("ValueTuple`");
 
 			if (extended) {
-				buff.Append(string.Format(classBoundaryString, ReplaceTypeName(type.FullName)));
+				buff.Append(string.Format(ClassBoundaryString, ReplaceTypeName(type.FullName)));
 				LineFeed(state, strings, buff);
 			}
 
@@ -731,10 +786,10 @@ namespace DebugTrace {
 
 				var fieldName = fieldInfo.Name;
 				if (!isTuple)
-					buff.Append(fieldName).Append(fieldNameValueSeparator);
+					buff.Append(fieldName).Append(FieldNameValueSeparator);
 
-				if (value != null && nonPrintProperties.Contains(typeNamePrefix + fieldName))
-					buff.Append(nonPrintString);
+				if (value != null && NonPrintProperties.Contains(typeNamePrefix + fieldName))
+					buff.Append(NonPrintString);
 				else
 					Append(state, strings, buff, value, false);
 
@@ -761,10 +816,10 @@ namespace DebugTrace {
 
 				var propertyName = propertyInfo.Name;
 				if (!isTuple)
-					buff.Append(propertyName).Append(fieldNameValueSeparator);
+					buff.Append(propertyName).Append(FieldNameValueSeparator);
 
-				if (value != null && nonPrintProperties.Contains(typeNamePrefix + propertyName))
-					buff.Append(nonPrintString);
+				if (value != null && NonPrintProperties.Contains(typeNamePrefix + propertyName))
+					buff.Append(NonPrintString);
 				else
 					Append(state, strings, buff, value, false);
 
@@ -794,7 +849,7 @@ namespace DebugTrace {
 				var index = 0;
 				foreach (var key in dictinary.Keys) {
 					if (!isSingleLine(key) || !isSingleLine(dictinary[key], true)) return false;
-					if (index++ >= collectionLimit) break;
+					if (index++ >= CollectionLimit) break;
 				}
 				return true;
 			}
@@ -803,7 +858,7 @@ namespace DebugTrace {
 				var index = 0;
 				foreach (var element in values) {
 					if (!isSingleLine(element, true)) return false;
-					if (index++ >= collectionLimit) break;
+					if (index++ >= CollectionLimit) break;
 				}
 				return true;
 			}
@@ -847,14 +902,7 @@ namespace DebugTrace {
 		/// <param name="string ">a string</param>
 		/// <returns>a string appended a timestamp string</returns>
 		public static String AppendDateTime(string str) {
-			return string.Format(dateTimeFormat, DateTime.Now) + " " + str;
+			return string.Format(DateTimeFormat, DateTime.Now) + " " + str;
 		}
-
-		/// <summary>
-		/// Returns the last log string output.
-		/// </summary>
-		///
-		/// <returns>the last log string output.</returns>
-		public string LastLog {get => lastLog;}
 	}
 }

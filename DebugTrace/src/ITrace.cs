@@ -24,6 +24,13 @@ namespace DebugTrace {
 		bool IsEnabled {get;}
 
 		/// <summary>
+		/// Returns the last log string output.
+		/// </summary>
+		///
+		/// <returns>the last log string output.</returns>
+		string LastLog {get;}
+
+		/// <summary>
 		/// Resets the nest level
 		/// </summary>
 		void ResetNest();
@@ -69,11 +76,5 @@ namespace DebugTrace {
 		/// <param name="valueSupplier">the supplier of value to output</param>
 		void Print<T>(string name, Func<T> valueSupplier);
 
-		/// <summary>
-		/// Returns the last log string output.
-		/// </summary>
-		///
-		/// <returns>the last log string output.</returns>
-		string LastLog {get;}
 	}
 }

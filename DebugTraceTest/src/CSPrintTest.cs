@@ -46,7 +46,7 @@ namespace DebugTraceTest {
 		[DataRow("\r"    , "v = \"\\r\" ")]
 		[DataRow("\""    , "v = \"\\\"\" ")]
 		[DataRow("'"     , "v = \"'\" ")]
-		[DataRow("\\"    , "v = \"\\\\\" ")]
+		[DataRow("\\"    , "v = @\"\\\" ")]
 		[DataRow("\u0001", "v = \"\\u0001\" ")]
 		[DataRow("\u007F", "v = \"\\u007F\" ")]
 		public void CSPrintString(string v, string expect) {

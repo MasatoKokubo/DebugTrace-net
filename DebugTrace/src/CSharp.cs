@@ -98,7 +98,7 @@ namespace DebugTrace {
 
 				switch (value) {
 				case bool         boolValue: buff.Append(boolValue ? "true" : "false"); break;
-				case char         charValue: buff.Append('\''); Append(buff, charValue, '\''); buff.Append('\''); break;
+				case char         charValue: buff.Append('\''); Append(buff, charValue, '\'', true); buff.Append('\''); break;
 				case sbyte       sbyteValue: buff.Append(sbyteValue  ); break;
 				case byte         byteValue: buff.Append(byteValue   ); break;
 				case short       shortValue: buff.Append(shortValue  ); break;
@@ -110,8 +110,11 @@ namespace DebugTrace {
 				case float       floatValue: buff.Append(floatValue  ).Append('f' ); break;
 				case double     doubleValue: buff.Append(doubleValue ).Append('d' ); break;
 				case decimal   decimalValue: buff.Append(decimalValue).Append('m' ); break;
-				case DateTime      dateTime: buff.Append(string.Format(dateTimeFormat, dateTime)); break;
-				case string     stringValue: Append(buff, stringValue); break;
+				case DateTime      dateTime: buff.Append(string.Format(DateTimeFormat, dateTime)); break;
+				case string     stringValue:
+					if (!Append(buff, stringValue, false))
+						Append(buff, stringValue, true);
+					break;
 				case IDictionary dictionary: Append(state, strings, buff, dictionary); break;
 				case ICollection collection: Append(state, strings, buff, collection); break;
 				case Enum         enumValue: buff.Append(enumValue); break;
@@ -128,7 +131,7 @@ namespace DebugTrace {
 						// Use Reflection
 						if (reflectedObjects.Any(obj => value == obj))
 							// Cyclic reference
-							buff.Append(cyclicReferenceString).Append(value);
+							buff.Append(CyclicReferenceString).Append(value);
 						else {
 							// Use Reflection
 							reflectedObjects.Add(value);
