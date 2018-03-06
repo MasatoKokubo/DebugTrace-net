@@ -36,6 +36,7 @@ namespace DebugTrace {
 		public static string   LimitString             {get; private set;} // string to represent that it has exceeded the limit
 		public static string   DefaultNameSpaceString  {get; private set;} // string replacing the default package part
 		public static string   NonPrintString          {get; private set;} // string of value in the case of properties that do not display the value
+		public static string   UnknownString           {get; private set;} // string representing an unknown value
 		public static string   CyclicReferenceString   {get; private set;} // string to represent that the cyclic reference occurs
 		public static string   VarNameValueSeparator   {get; private set;} // Separator between the variable name and value
 		public static string   KeyValueSeparator       {get; private set;} // Separator between the key and value for IDictionary obj
@@ -130,12 +131,13 @@ namespace DebugTrace {
 			LimitString              = resource.GetString ("LimitString"            , "...");
 			DefaultNameSpaceString   = resource.GetString ("DefaultNameSpaceString" , "...");
 			NonPrintString           = resource.GetString ("NonPrintString"         , "***");
-			CyclicReferenceString    = resource.GetString ("CyclicReferenceString"  , " *** cyclic reference *** ");
+			UnknownString            = resource.GetString ("UnknownString"          , "<Unknown>");
+			CyclicReferenceString    = resource.GetString ("CyclicReferenceString"  , "<Cyclic Reference>");
 			VarNameValueSeparator    = resource.GetString ("VarNameValueSeparator"  , " = ");
 			KeyValueSeparator        = resource.GetString ("KeyValueSeparator"      , ": ");
 			FieldNameValueSeparator  = resource.GetString ("FieldNameValueSeparator", ": ");
 			PrintSuffixFormat        = resource.GetString ("PrintSuffixFormat"      , " ({2}:{3:D})");
-			DateTimeFormat           = resource.GetString ("DateTimeFormat"         , "{0:G}");
+			DateTimeFormat           = resource.GetString ("DateTimeFormat"         , "{0:yyyy-MM-dd hh:mm:ss.fff}");
 			CollectionLimit          = resource.GetInt    ("CollectionLimit"        , 512);
 			ByteArrayLimit           = resource.GetInt    ("ByteArrayLimit"         , 8192);
 			StringLimit              = resource.GetInt    ("StringLimit"            , 8192);
