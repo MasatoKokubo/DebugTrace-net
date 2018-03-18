@@ -13,7 +13,7 @@ namespace DebugTraceTest {
 		[DataRow(new bool[] {false, true}, "v = bool[2] {false, true} ")]
 		public void CSPrintBoolArray(bool[] v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 		// char[]
@@ -23,7 +23,7 @@ namespace DebugTraceTest {
 		[DataRow(new char[] {'A', 'B'}, "v = char[2] {'A', 'B'} ")]
 		public void CSPrintCharArray(char[] v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 		// string[]
@@ -33,7 +33,7 @@ namespace DebugTraceTest {
 		[DataRow(new string[] {"A", "B"}, "v = string[2] {\"A\", \"B\"}")]
 		public void CSPrintStringArray(string[] v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 			Trace.Print("Trace.LastLog", Trace.LastLog);
 		}
 
@@ -44,7 +44,7 @@ namespace DebugTraceTest {
 		[DataRow(new sbyte[] {-128, 127}, "v = sbyte[2] {-128, 127} ")]
 		public void CSPrintSByteArray(sbyte[] v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 		// byte[]
@@ -54,7 +54,7 @@ namespace DebugTraceTest {
 		[DataRow(new byte[] {0, 255}, "v = byte[2] {0, 255} ")]
 		public void CSPrintByteArray(byte[] v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 		// short[]
@@ -64,7 +64,7 @@ namespace DebugTraceTest {
 		[DataRow(new short[] {-32768, 32767}, "v = short[2] {-32768, 32767} ")]
 		public void CSPrintShortArray(short[] v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 		// ushort[]
@@ -74,7 +74,7 @@ namespace DebugTraceTest {
 		[DataRow(new ushort[] {0, 65535}, "v = ushort[2] {0, 65535} ")]
 		public void CSPrintUShortArray(ushort[] v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 		// int[]
@@ -84,7 +84,7 @@ namespace DebugTraceTest {
 		[DataRow(new int[] {-2147483648, 2147483647}, "v = int[2] {-2147483648, 2147483647} ")]
 		public void CSPrintIntArray(int[] v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 		// uint[]
@@ -94,7 +94,7 @@ namespace DebugTraceTest {
 		[DataRow(new uint[] {0, 4294967295}, "v = uint[2] {0u, 4294967295u} ")]
 		public void CSPrintUIntArray(uint[] v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 		// long[]
@@ -104,7 +104,7 @@ namespace DebugTraceTest {
 		[DataRow(new long[] {-9223372036854775808L, 9223372036854775807L}, "v = long[2] {-9223372036854775808L, 9223372036854775807L} ")]
 		public void CSPrintLongArray(long[] v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 		// ulong[]
@@ -114,7 +114,7 @@ namespace DebugTraceTest {
 		[DataRow(new ulong[] {0, 18446744073709551615uL}, "v = ulong[2] {0uL, 18446744073709551615uL} ")]
 		public void CSPrintULongArray(ulong[] v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 		// decimal[]
@@ -124,7 +124,7 @@ namespace DebugTraceTest {
 		[DataRow(new string[] {"0", "9876543210.0123456789"}, "v = decimal[2] {0m, 9876543210.0123456789m} ")]
 		public void CSPrintDecimalArray(string[] v, string expect) {
 			Trace.Print("v", v.Select(e => decimal.Parse(e)).ToArray());
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 		// float[]
@@ -134,7 +134,7 @@ namespace DebugTraceTest {
 		[DataRow(new float[] {0f, 3210.012f}, "v = float[2] {0f, 3210.012f} ")]
 		public void CSPrintFloatArray(float[] v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 		// double[]
@@ -143,7 +143,7 @@ namespace DebugTraceTest {
 		[DataRow(new double[] {0, 76543210.0123456}, "v = double[2] {0d, 76543210.0123456d} ")]
 		public void CSPrintDoubleArray(double[] v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 	}

@@ -9,4 +9,10 @@
     <ProjectReference Include="..\DebugTrace\DebugTrace.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="DebugTrace.properties">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

@@ -1,7 +1,7 @@
 // Console.cs
 // (C) 2018 Masato Kokubo
 
-namespace DebugTrace.Logger {
+namespace DebugTrace {
 	/// <summary>
 	/// A logger using System.out or System.err.
 	/// </summary>
@@ -28,6 +28,11 @@ namespace DebugTrace.Logger {
 		/// A logger using System.out.
 		/// </summary>
 		public class Out : Console {
+			public static Out Instance {get;} = new Out();
+
+			private Out() {
+			}
+
 			/// <summary>
 			/// Output the message to the log.
 			/// </summary>
@@ -40,6 +45,11 @@ namespace DebugTrace.Logger {
 		/// A logger using System.err.
 		/// </summary>
 		public class Error : Console {
+			public static Error Instance {get;} = new Error();
+
+			private Error() {
+			}
+
 			/// <summary>
 			/// Output the message to the log.
 			/// </summary>

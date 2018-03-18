@@ -12,8 +12,6 @@ using System.Threading;
 using System.Text.RegularExpressions;
 
 namespace DebugTrace {
-	using DebugTrace.Logger;
-
 	/// <summary>
 	/// A utility class for debugging.
 	/// </summary>
@@ -26,7 +24,6 @@ namespace DebugTrace {
 	/// <since>1.0.0</since>
 	/// <author>Masato Kokubo</author>
 	public abstract class Trace : ITrace {
-		public static string   LogLevel                {get; private set;} // Log Level
 		public static string   EnterString             {get; private set;} // string at enter
 		public static string   LeaveString             {get; private set;} // string at leave
 		public static string   ThreadBoundaryString    {get; private set;} // string of threads boundary
@@ -36,16 +33,16 @@ namespace DebugTrace {
 		public static string   LimitString             {get; private set;} // string to represent that it has exceeded the limit
 		public static string   DefaultNameSpaceString  {get; private set;} // string replacing the default package part
 		public static string   NonPrintString          {get; private set;} // string of value in the case of properties that do not display the value
-		public static string   UnknownString           {get; private set;} // string representing an unknown value
 		public static string   CyclicReferenceString   {get; private set;} // string to represent that the cyclic reference occurs
 		public static string   VarNameValueSeparator   {get; private set;} // Separator between the variable name and value
 		public static string   KeyValueSeparator       {get; private set;} // Separator between the key and value for IDictionary obj
 		public static string   FieldNameValueSeparator {get; private set;} // Separator between the field name and value
 		public static string   PrintSuffixFormat       {get; private set;} // Format string of Print suffix
 		public static string   DateTimeFormat          {get; private set;} // Format string of a DateTime and a string
+		public static int      MaxDataOutputWidth      {get; private set;} // Maximum data output width
 		public static int      CollectionLimit         {get; private set;} // Limit of ICollection elements to output
-		public static int      ByteArrayLimit          {get; private set;} // Limit of byte array elements to output
 		public static int      StringLimit             {get; private set;} // Limit of string characters to output
+		public static int      ReflectionNestLimit     {get; private set;} // Limit of reflection nesting
 		public static string[] NonPrintProperties      {get; private set;} // Non Print properties (<class name>#<property name>)
 		public static string   DefaultNameSpace        {get; private set;} // Default package part
 		public static string[] ReflectionClasses       {get; private set;} // List of class names that output content in reflection even if ToString method is implemented
@@ -56,13 +53,15 @@ namespace DebugTrace {
 		// Array of data indent strings
 		protected static string[] dataIndentStrings;
 
-		// Logger
-		protected static ILogger logger;
+		/// <summary>
+		/// Returns the logger.
+		/// </summary>
+		public static ILogger Logger {get; set;} = Console.Error.Instance; // the logger
 
 		/// <summary>
 		/// Returns whether tracing is IsEnabled.
 		/// </summary>
-		public bool IsEnabled {get {return logger.IsEnabled;}}
+		public bool IsEnabled {get => Logger.IsEnabled;}
 
 		// Set of classes that dose not output the type name
 		protected abstract ISet<Type> NoOutputTypes {get;}
@@ -70,38 +69,17 @@ namespace DebugTrace {
 		// Set of element types of array that dose not output the type name
 		protected abstract ISet<Type> NoOutputElementTypes {get;}
 
+		// Dictionary of type to type name
 		protected abstract IDictionary<Type, string> TypeNameMap {get;}
 
-		// Set of component types of array that output on the single line
-		protected ISet<Type> SingleLineTypes {get;} = new HashSet<Type>() {
-			typeof(bool          ), typeof(bool          []), typeof(bool          [,]), typeof(bool          [][]),
-			typeof(char          ), typeof(char          []), typeof(char          [,]), typeof(char          [][]),
-			typeof(sbyte         ), typeof(sbyte         []), typeof(sbyte         [,]), typeof(sbyte         [][]),
-			typeof(byte          ), typeof(byte          []), typeof(byte          [,]), typeof(byte          [][]),
-			typeof(short         ), typeof(short         []), typeof(short         [,]), typeof(short         [][]),
-			typeof(ushort        ), typeof(ushort        []), typeof(ushort        [,]), typeof(ushort        [][]),
-			typeof(int           ), typeof(int           []), typeof(int           [,]), typeof(int           [][]),
-			typeof(uint          ), typeof(uint          []), typeof(uint          [,]), typeof(uint          [][]),
-			typeof(long          ), typeof(long          []), typeof(long          [,]), typeof(long          [][]),
-			typeof(ulong         ), typeof(ulong         []), typeof(ulong         [,]), typeof(ulong         [][]),
-			typeof(float         ), typeof(float         []), typeof(float         [,]), typeof(float         [][]),
-			typeof(double        ), typeof(double        []), typeof(double        [,]), typeof(double        [][]),
-			typeof(decimal       ), typeof(decimal       []), typeof(decimal       [,]), typeof(decimal       [][]),
-			typeof(string        ), typeof(string        []), typeof(string        [,]), typeof(string        [][]),
-			typeof(DateTime      ), typeof(DateTime      []), typeof(DateTime      [,]), typeof(DateTime      [][]),
-			typeof(DateTimeOffset), typeof(DateTimeOffset[]), typeof(DateTimeOffset[,]), typeof(DateTimeOffset[][]),
-			typeof(TimeSpan      ), typeof(TimeSpan      []), typeof(TimeSpan      [,]), typeof(TimeSpan      [][]),
-			typeof(Guid          ), typeof(Guid          []), typeof(Guid          [,]), typeof(Guid          [][]),
-		};
-
-		// Dictionary of thread id to the indent state
+		// Dictionary of thread id to indent state
 		protected readonly IDictionary<int, State> states = new Dictionary<int, State>();
 
 		// Before thread id
 		protected int beforeThreadId;
 
 		// Reflected objects
-		protected readonly ICollection<object> reflectedObjects = new List<object>();
+		protected readonly IList<object> reflectedObjects = new List<object>();
 
 		/// <summary>
 		/// Returns the last log string output.
@@ -121,7 +99,6 @@ namespace DebugTrace {
 		public static void InitClass() {
 			Resource resource = new Resource("DebugTrace");
 
-			LogLevel                 = resource.GetString ("LogLevel"               , "default");
 			EnterString              = resource.GetString ("EnterString"            , "Enter {0}.{1} ({2}:{3:D})");
 			LeaveString              = resource.GetString ("LeaveString"            , "Leave {0}.{1} ({2}:{3:D})");
 			ThreadBoundaryString     = resource.GetString ("ThreadBoundaryString"   , "______________________________ Thread {0} ______________________________");
@@ -131,16 +108,16 @@ namespace DebugTrace {
 			LimitString              = resource.GetString ("LimitString"            , "...");
 			DefaultNameSpaceString   = resource.GetString ("DefaultNameSpaceString" , "...");
 			NonPrintString           = resource.GetString ("NonPrintString"         , "***");
-			UnknownString            = resource.GetString ("UnknownString"          , "<Unknown>");
-			CyclicReferenceString    = resource.GetString ("CyclicReferenceString"  , "<Cyclic Reference>");
+			CyclicReferenceString    = resource.GetString ("CyclicReferenceString"  , "*** Cyclic Reference ***");
 			VarNameValueSeparator    = resource.GetString ("VarNameValueSeparator"  , " = ");
 			KeyValueSeparator        = resource.GetString ("KeyValueSeparator"      , ": ");
 			FieldNameValueSeparator  = resource.GetString ("FieldNameValueSeparator", ": ");
 			PrintSuffixFormat        = resource.GetString ("PrintSuffixFormat"      , " ({2}:{3:D})");
 			DateTimeFormat           = resource.GetString ("DateTimeFormat"         , "{0:yyyy-MM-dd hh:mm:ss.fff}");
+			MaxDataOutputWidth       = resource.GetInt    ("MaxDataOutputWidth"     , 80);
 			CollectionLimit          = resource.GetInt    ("CollectionLimit"        , 512);
-			ByteArrayLimit           = resource.GetInt    ("ByteArrayLimit"         , 8192);
 			StringLimit              = resource.GetInt    ("StringLimit"            , 8192);
+			ReflectionNestLimit      = resource.GetInt    ("ReflectionNestLimit"    , 4);
 			NonPrintProperties       = resource.GetStrings("NonPrintProperties"     , new string[0]);
 			DefaultNameSpace         = resource.GetString ("DefaultNameSpace"       , "");
 			ReflectionClasses        = resource.GetStrings("ReflectionClasses"      , new string[0]);
@@ -151,24 +128,50 @@ namespace DebugTrace {
 			// Array of data indent strings
 			dataIndentStrings = new string[64];
 
-			string loggerName = null;
-			try {
-				loggerName = resource.GetString("Logger", null);
-				if (loggerName != null) {
-					if (!loggerName.Contains('.'))
-						loggerName = typeof(ILogger).Namespace + '.' + loggerName;
-					logger = (ILogger)Type.GetType(loggerName).GetConstructor(new Type[0]).Invoke(new object[0]);
+			string loggerName = resource.GetString("Logger", null);
+			if (loggerName != null) {
+				Exception e1 = null;
+				Exception e2 = null;
+				ILogger logger = null;
+				if (!loggerName.Split(',')[0].Contains('.'))
+					// Add default namesapce if no namespace
+					loggerName = typeof(ILogger).Namespace + '.' + loggerName;
+				try {
+					logger = (ILogger)Type.GetType(loggerName)
+						.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static)
+						.GetValue(null);
+					if (logger != null)
+						Logger = logger;
+				}
+				catch (Exception e) {
+					e1 = e;
+				}
+				if (logger == null && !loggerName.Contains(',')) {
+					// Try with the class name that added the assembly name
+					loggerName = loggerName + ',' + loggerName;
+					try {
+						logger = (ILogger)Type.GetType(loggerName)
+							.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static)
+							.GetValue(null);
+						if (logger != null)
+							Logger = logger;
+					}
+					catch (Exception e) {
+						e2 = e;
+					}
+				}
+				if (logger == null) {
+					if (e2 != null)
+						System.Console.Error.WriteLine($"DebugTrace-net: {e2.ToString()}({loggerName})");
+					else if (e1 != null)
+						System.Console.Error.WriteLine($"DebugTrace-net: {e1.ToString()}({loggerName})");
 				}
 			}
-			catch (Exception e) {
-				System.Console.Error.WriteLine($"DebugTrace-net: {e.ToString()}({loggerName})");
-			}
 
-			if (logger == null)
-				logger = new Console.Error();
-
-			// Set a logging level
-			logger.Level = LogLevel;
+			// Set the logging level
+			var logLevel = resource.GetString("LogLevel", null);
+			if (logLevel != null)
+				Logger.Level = logLevel;
 
 			// make code indent strings
 			indentStrings[0] = "";
@@ -183,9 +186,9 @@ namespace DebugTrace {
 			// output version log
 			var versionAttribute = (AssemblyInformationalVersionAttribute)
 				Attribute.GetCustomAttribute(Resource.SelfAssembly, typeof(AssemblyInformationalVersionAttribute));
-			logger.Log($"DebugTrace-net {versionAttribute?.InformationalVersion}");
-			logger.Log($"  properties: {resource.FileInfo.FullName}");
-			logger.Log($"  Logger: {logger.GetType().FullName}");
+			Logger.Log($"DebugTrace-net {versionAttribute?.InformationalVersion}");
+			Logger.Log($"  properties: {resource.FileInfo.FullName}");
+			Logger.Log($"  Logger: {Logger.GetType().AssemblyQualifiedName}");
 		}
 
 		/// Returns the indent state of the current thread.
@@ -209,45 +212,15 @@ namespace DebugTrace {
 		/// <summary>
 		/// Returns a string corresponding to the current indent.
 		/// </summary>
-		protected string GetIndentString(State state) {
+		protected string GetIndentString(int nestLevel, int dataNestLevel) {
 			return indentStrings[
-				state.NestLevel < 0 ? 0 :
-				state.NestLevel >= indentStrings.Length ? indentStrings.Length - 1
-					: state.NestLevel]
-				+ dataIndentStrings[
-				state.DataNestLevel < 0 ? 0 :
-				state.DataNestLevel >= dataIndentStrings.Length ? dataIndentStrings.Length - 1
-					: state.DataNestLevel];
-		}
-
-		/// <summary>
-		/// Up the nest level.
-		/// </summary>
-		protected void UpNest(State state) {
-			state.BeforeNestLevel = state.NestLevel;
-			++state.NestLevel;
-		}
-
-		/// <summary>
-		/// Down the nest level.
-		/// </summary>
-		protected void DownNest(State state) {
-			state.BeforeNestLevel = state.NestLevel;
-			--state.NestLevel;
-		}
-
-		/// <summary>
-		/// Up the data nest level.
-		/// </summary>
-		protected void UpDataNest(State state) {
-			++state.DataNestLevel;
-		}
-
-		/// <summary>
-		/// Down the data nest level.
-		/// </summary>
-		protected void DownDataNest(State state) {
-			--state.DataNestLevel;
+				nestLevel < 0 ? 0 :
+				nestLevel >= indentStrings.Length ? indentStrings.Length - 1
+					: nestLevel]
+			+ dataIndentStrings[
+				dataNestLevel < 0 ? 0 :
+				dataNestLevel >= dataIndentStrings.Length ? dataIndentStrings.Length - 1
+					: dataNestLevel];
 		}
 
 		/// <summary>
@@ -258,9 +231,9 @@ namespace DebugTrace {
 			int threadId = thread.ManagedThreadId;
 			if (threadId !=  beforeThreadId) {
 				// Thread changing
-				logger.Log(""); // Line break
-				logger.Log(string.Format(ThreadBoundaryString, threadId));
-				logger.Log(""); // Line break
+				Logger.Log(""); // Line break
+				Logger.Log(string.Format(ThreadBoundaryString, threadId));
+				Logger.Log(""); // Line break
 
 				beforeThreadId = threadId;
 			}
@@ -295,12 +268,12 @@ namespace DebugTrace {
 
 				var state = GetCurrentState();
 				if (state.BeforeNestLevel > state.NestLevel)
-					logger.Log(GetIndentString(state)); // Line break
+					Logger.Log(GetIndentString(state.NestLevel, 0)); // Line break
 
-				LastLog = GetIndentString(state) + GetCallerInfo(EnterString);
-				logger.Log(LastLog);
+				LastLog = GetIndentString(state.NestLevel, 0) + GetCallerInfo(EnterString);
+				Logger.Log(LastLog);
 
-				UpNest(state);
+				state.UpNest();
 
 				PrintEnd(); // Common end processing of output
 			}
@@ -316,10 +289,10 @@ namespace DebugTrace {
 				PrintStart(); // Common start processing of output
 
 				var state = GetCurrentState();
-				DownNest(state);
+				state.DownNest();
 
-				LastLog = GetIndentString(state) + GetCallerInfo(LeaveString);
-				logger.Log(LastLog);
+				LastLog = GetIndentString(state.NestLevel, 0) + GetCallerInfo(LeaveString);
+				Logger.Log(LastLog);
 
 				PrintEnd(); // Common end processing of output
 			}
@@ -365,7 +338,7 @@ namespace DebugTrace {
 			lock (states) {
 				PrintStart(); // Common start processing of output
 
-				var lastLog = "";
+				LastLog = "";
 				if (message != "") {
 					var element = GetStackTraceElement();
 					var suffix = string.Format(PrintSuffixFormat,
@@ -373,9 +346,9 @@ namespace DebugTrace {
 						element.MethodName,
 						element.FileName,
 						element.LineNumber);
-					lastLog = GetIndentString(GetCurrentState()) + message + suffix;
+					LastLog = GetIndentString(GetCurrentState().NestLevel, 0) + message + suffix;
 				}
-				logger.Log(lastLog);
+				Logger.Log(LastLog);
 
 				PrintEnd(); // Common end processing of output
 			}
@@ -394,13 +367,12 @@ namespace DebugTrace {
 				reflectedObjects.Clear();
 
 				var state = GetCurrentState();
-				var strings = new List<string>();
-				var buff = new StringBuilder();
+				var buff = new LogBuffer();
 
 				buff.Append(name).Append(VarNameValueSeparator);
 				var normalizedName = name.Substring(name.LastIndexOf('.') + 1).Trim();
 				normalizedName = normalizedName.Substring(normalizedName.LastIndexOf(' ') + 1);
-				Append(state, strings, buff, value, false);
+				Append(buff, value, false);
 
 				var element = GetStackTraceElement();
 				var suffix = string.Format(PrintSuffixFormat,
@@ -409,10 +381,11 @@ namespace DebugTrace {
 					element.FileName,
 					element.LineNumber);
 				buff.Append(suffix);
-				LineFeed(state, strings, buff);
+				buff.LineFeed();
 
-				strings.ForEach(str => logger.Log(str));
-				LastLog = string.Join("\n", strings);
+				foreach ((int dataNestLevel, string line) in buff.Lines)
+					Logger.Log(GetIndentString(state.NestLevel, dataNestLevel) + line);
+				LastLog = string.Join("\n", buff.Lines);
 
 				PrintEnd(); // Common end processing of output
 			}
@@ -464,18 +437,6 @@ namespace DebugTrace {
 		}
 
 		/// <summary>
-		/// Line Feed.
-		/// </summary>
-		///
-		/// <param name="state">the indent state</param>
-		/// <param name="strings">the string list</param>
-		/// <param name="buff">the string buffer</param>
-		protected void LineFeed(State state, IList<string> strings, StringBuilder buff) {
-			strings.Add(GetIndentString(GetCurrentState()) + buff.ToString());
-			buff.Clear();
-		}
-
-		/// <summary>
 		/// Outputs the name and value to the log.
 		/// </summary>
 		///
@@ -502,13 +463,86 @@ namespace DebugTrace {
 		/// Appends the value for logging to the string buffer.
 		/// </summary>
 		///
-		/// <param name="state">the indent state</param>
-		/// <param name="strings">the string list</param>
-		/// <param name="buff">the string buffer</param>
+		/// <param name="buff">the logging buffer</param>
 		/// <param name="value">the value object</param>
 		/// <param name="isElement">true if the value is element of a container class, false otherwise</param>
-		/// 
-		protected abstract void Append(State state, IList<string> strings, StringBuilder buff, object value, bool isElement);
+		/// <returns>isMultiLine">true if output multiple lines, false otherwise</returns>
+		protected bool Append(LogBuffer buff, object value, bool isElement) {
+			bool isMultiLine = false;
+
+			if (value == null) {
+				buff.Append("null");
+			} else {
+				var type = value.GetType();
+
+				var typeName = GetTypeName(type, value, isElement);
+
+				switch (value) {
+				case bool       boolValue: buff.Append(typeName); Append(buff,    boolValue); break;
+				case char       charValue: buff.Append(typeName); Append(buff,    charValue); break;
+				case sbyte     sbyteValue: buff.Append(typeName); Append(buff,   sbyteValue); break;
+				case byte       byteValue: buff.Append(typeName); Append(buff,    byteValue); break;
+				case short     shortValue: buff.Append(typeName); Append(buff,   shortValue); break;
+				case ushort   ushortValue: buff.Append(typeName); Append(buff,  ushortValue); break;
+				case int         intValue: buff.Append(typeName); Append(buff,     intValue); break;
+				case uint       uintValue: buff.Append(typeName); Append(buff,    uintValue); break;
+				case long       longValue: buff.Append(typeName); Append(buff,    longValue); break;
+				case ulong     ulongValue: buff.Append(typeName); Append(buff,   ulongValue); break;
+				case float     floatValue: buff.Append(typeName); Append(buff,   floatValue); break;
+				case double   doubleValue: buff.Append(typeName); Append(buff,  doubleValue); break;
+				case decimal decimalValue: buff.Append(typeName); Append(buff, decimalValue); break;
+				case DateTime    dateTime: buff.Append(typeName); Append(buff,     dateTime); break;
+
+				case string   stringValue:
+					buff.Append(typeName);
+					AppendString(buff, stringValue, false);
+					break;
+
+				case IDictionary dictionary:
+					isMultiLine = AppendDictionary(buff, dictionary, false);
+					break;
+
+				case ICollection collection:
+					isMultiLine = AppendCollection(buff, collection, false);
+					break;
+
+				case Enum enumValue: buff.Append(typeName); buff.Append(enumValue); break;
+
+				default:
+					// Other
+				//	bool isReflection = reflectionClasses.Contains(type.FullName); // TODO
+					bool isReflection = true;
+				//	if (!isReflection && !HasToString(type)) {
+				//		isReflection = true;
+				//		reflectionClasses.Add(type.FullName);
+				//	}
+
+					if (isReflection) {
+						// Use Reflection
+						if (reflectedObjects.Any(obj => object.ReferenceEquals(value, obj)))
+							// Cyclic reference
+							buff.Append(CyclicReferenceString);
+
+						else if (reflectedObjects.Count > ReflectionNestLimit)
+							// Over reflection level limitation
+							buff.Append(LimitString);
+
+						else {
+							// Use Reflection
+							reflectedObjects.Add(value);
+							isMultiLine = AppendUsedReflection(buff, value, false);
+							reflectedObjects.RemoveAt(reflectedObjects.Count - 1);
+						}
+					} else {
+						// Use ToString method
+						buff.Append(value);
+					}
+					break;
+				}
+			}
+
+			return isMultiLine;
+		}
 
 		/// <summary>
 		/// Returns the type name to be output to the log.<br>
@@ -538,16 +572,31 @@ namespace DebugTrace {
 			return typeName;
 		}
 
+		protected abstract void Append(LogBuffer buff, bool     value);
+		protected abstract void Append(LogBuffer buff, char     value);
+		protected abstract void Append(LogBuffer buff, sbyte    value);
+		protected abstract void Append(LogBuffer buff, byte     value);
+		protected abstract void Append(LogBuffer buff, short    value);
+		protected abstract void Append(LogBuffer buff, ushort   value);
+		protected abstract void Append(LogBuffer buff, int      value);
+		protected abstract void Append(LogBuffer buff, uint     value);
+		protected abstract void Append(LogBuffer buff, long     value);
+		protected abstract void Append(LogBuffer buff, ulong    value);
+		protected abstract void Append(LogBuffer buff, float    value);
+		protected abstract void Append(LogBuffer buff, double   value);
+		protected abstract void Append(LogBuffer buff, decimal  value);
+		protected abstract void Append(LogBuffer buff, DateTime value);
+
 		/// <summary>
 		/// Appends a character representation for logging to the string buffer.
 		/// </summary>
 		///
-		/// <param name="buff">the string buffer</param>
+		/// <param name="buff">the logging buffer</param>
 		/// <param name="ch">a character</param>
 		/// <param name="enclosure">the enclosure character</param>
 		/// <param name="escape">escape characters if true, dose not escape characters otherwise</param>
 		/// <returns>true if successful, false otherwise<returns>
-		protected bool Append(StringBuilder buff, char ch, char enclosure, bool escape) {
+		protected bool AppendChar(LogBuffer buff, char ch, char enclosure, bool escape) {
 			if (escape) {
 				// escape
 				switch (ch) {
@@ -584,13 +633,11 @@ namespace DebugTrace {
 		/// Appends a CharSequence representation for logging to the string buffer.
 		/// </summary>
 		///
-		/// <param name="state">the indent state</param>
-		/// <param name="strings">the string list</param>
-		/// <param name="buff">the string buffer</param>
+		/// <param name="buff">the logging buffer</param>
 		/// <param name="str">a string object</param>
-		/// <returns>true if successful, false otherwise<returns>
-		protected bool Append(StringBuilder buff, string str, bool escape) {
-			var beforeLength = buff.Length;
+		/// <param name="escape">escape characters if true, dose not escape characters otherwise</param>
+		protected void AppendString(LogBuffer buff, string str, bool escape) {
+			buff.Save(); // Save current point
 			var needAtChar = false;
 			buff.Append('"');
 			for (int index = 0; index < str.Length; ++index) {
@@ -599,104 +646,181 @@ namespace DebugTrace {
 					break;
 				}
 				var ch = str[index];
-				if (!Append(buff, ch, '"', escape)) {
-					buff.Length = beforeLength;
-					return false;
+				if (!AppendChar(buff, ch, '"', escape)) {
+					buff.Restore(); // Restore saved point
+					buff.PopSave(); // Pop saveed point
+					AppendString(buff, str, true);
+					return;
 				}
 				if (!escape && ch == '\\')
 					needAtChar = true;
 			}
 			buff.Append('"');
 			if (needAtChar)
-				buff.Insert(beforeLength, '@');
-			return true;
-		}
-
-		/// <summary>
-		/// Appends a Collection representation for logging to the string buffer.
-		/// </summary>
-		///
-		/// <param name="state">the indent state</param>
-		/// <param name="strings">the string list</param>
-		/// <param name="buff">the string buffer</param>
-		/// <param name="collection">a Collection object</param>
-		protected void Append(State state, IList<string> strings, StringBuilder buff, ICollection collection) {
-			var multiLine = !isSingleLine(collection);
-
-			buff.Append('{');
-			var index = 0;
-			foreach (var element in collection) {
-				if (index == 0) { 
-					if (multiLine) {
-						LineFeed(state, strings, buff);
-						UpDataNest(state);
-					}
-				} else {
-					if (!multiLine)
-						buff.Append(", ");
-				}
-
-				if (index < CollectionLimit)
-					Append(state, strings, buff, element, true);
-				else
-					buff.Append(LimitString);
-
-				if (multiLine) {
-					buff.Append(",");
-					LineFeed(state, strings, buff);
-				}
-
-				if (index++ >= CollectionLimit) break;
-			}
-
-			if (multiLine)
-				DownDataNest(state);
-			buff.Append('}');
+				buff.Insert(buff.PeekSave().builderLength, '@');
+			buff.PopSave(); // Pop saveed point
 		}
 
 		/// <summary>
 		/// Appends a IDictionary representation for logging to the string buffer.
 		/// </summary>
 		///
-		/// <param name="state">the indent state</param>
 		/// <param name="strings">the string list</param>
 		/// <param name="buff">the string buffer</param>
 		/// <param name="dictionary">a IDictionary</param>
-		protected void Append(State state, IList<string> strings, StringBuilder buff, IDictionary dictionary) {
-			var multiLine = !isSingleLine(dictionary);
-
+		/// <param name="isMultiLine">output multiple lines if true, single line otherwise</param>
+		/// <returns>false if outputed on a single line, otherwise true</returns>
+		protected bool AppendDictionary(LogBuffer buff, IDictionary dictionary, bool isMultiLine) {
+			buff.Save(); // Save current point
+			buff.Append(GetTypeName(dictionary.GetType(), dictionary, false));
 			buff.Append('{');
 			var index = 0;
+
+			bool lineFeeded = false;
+			bool success = true;
 			foreach (var key in dictionary.Keys) {
-				var value = dictionary[key];
-				if (index == 0) {
-					if (multiLine) {
-						LineFeed(state, strings, buff);
-						UpDataNest(state);
+				if (isMultiLine) {
+					if (index == 0) {
+						buff.LineFeed();
+						if (!lineFeeded) {
+							buff.UpNest();
+							lineFeeded = true;
+						}
 					}
-				} else {
-					if (!multiLine)
-						buff.Append(", ");
 				}
 
-				if (index < CollectionLimit) {
-					Append(state, strings, buff, key, true);
-					buff.Append(KeyValueSeparator);
-					Append(state, strings, buff, value, true);
-				} else
-					buff.Append(LimitString);
-
-				if (multiLine) {
-					buff.Append(",");
-					LineFeed(state, strings, buff);
+				if (index >= CollectionLimit) {
+					buff.Append(LimitString).Append(", ");
+					break;
 				}
 
-				if (index++ >= CollectionLimit) break;
+				var value = dictionary[key];
+
+				buff.Save(); // Save current point
+				bool elementIsMultiLine = Append(buff, key, false);
+				buff.Append(KeyValueSeparator);
+				elementIsMultiLine |= Append(buff, value, false);
+
+				if (elementIsMultiLine || buff.Length > MaxDataOutputWidth) {
+					if (!isMultiLine) {
+						success = false; // can not be outputed on a single line
+						buff.PopSave(); // Pop saveed point
+						break;
+					}
+
+					if (buff.PeekSave().builderLength > 0) {
+						buff.Restore(); // Restore saved point
+						buff.LineFeed();
+						elementIsMultiLine = Append(buff, key, false);
+						buff.Append(KeyValueSeparator);
+						elementIsMultiLine |= Append(buff, value, false);
+					}
+				}
+				buff.PopSave(); // Pop saveed point
+
+				buff.Append(", ");
+				if (elementIsMultiLine)
+					buff.LineFeed();
+
+				++index;
 			}
 
-			if (multiLine)
-				DownDataNest(state);
+			if (!success) {
+				buff.Restore(); // Restore saved point
+				buff.PopSave(); // Pop saveed point
+				AppendDictionary(buff, dictionary, true);
+				return true;
+			}
+
+			if (dictionary.Count > 0 && !lineFeeded)
+				buff.Length -= 2;
+
+			if (lineFeeded) {
+				if (buff.Length > 0)
+					buff.LineFeed();
+				buff.DownNest();
+			}
 			buff.Append('}');
+
+			buff.PopSave(); // Pop saveed point
+			return isMultiLine;
+		}
+
+		/// <summary>
+		/// Appends a Collection representation for logging to the string buffer.
+		/// </summary>
+		///
+		/// <param name="buff">the logging buffer</param>
+		/// <param name="collection">a Collection object</param>
+		/// <param name="isMultiLine">output multiple lines if true, single line otherwise</param>
+		/// <returns>false if outputed on a single line, otherwise true</returns>
+		protected bool AppendCollection(LogBuffer buff, ICollection collection, bool isMultiLine) {
+			buff.Save(); // Save current point
+			buff.Append(GetTypeName(collection.GetType(), collection, false));
+			buff.Append('{');
+			var index = 0;
+
+			bool lineFeeded = false;
+			bool success = true;
+			foreach (var element in collection) {
+				if (isMultiLine) {
+					if (index == 0) {
+						buff.LineFeed();
+						if (!lineFeeded) {
+							buff.UpNest();
+							lineFeeded = true;
+						}
+					}
+				}
+
+				if (index >= CollectionLimit) {
+					buff.Append(LimitString).Append(", ");
+					break;
+				}
+
+				buff.Save(); // Save current point
+				bool elementIsMultiLine = Append(buff, element, true);
+				if (elementIsMultiLine || buff.Length > MaxDataOutputWidth) {
+					if (!isMultiLine) {
+						success = false;
+						buff.PopSave(); // Pop saveed point
+						break;
+					}
+
+					if (buff.PeekSave().builderLength > 0) {
+						buff.Restore(); // Restore saved point
+						buff.LineFeed();
+						elementIsMultiLine = Append(buff, element, true);
+					}
+				}
+				buff.PopSave(); // Pop saveed point
+
+				buff.Append(", ");
+				if (elementIsMultiLine)
+					buff.LineFeed();
+
+				++index;
+			}
+
+			if (!success) {
+				buff.Restore(); // Restore saved point
+				buff.PopSave(); // Pop saveed point
+				AppendCollection(buff, collection, true);
+				return true;
+			}
+
+			if (collection.Count > 0 && !lineFeeded)
+				buff.Length -= 2;
+
+			if (lineFeeded) {
+				if (buff.Length > 0)
+					buff.LineFeed();
+				buff.DownNest();
+			}
+			buff.Append('}');
+
+			buff.PopSave(); // Pop saveed point
+			return isMultiLine;
 		}
 
 		/// <summary>
@@ -727,56 +851,73 @@ namespace DebugTrace {
 		/// Returns a string representation of the obj uses reflection.
 		/// </summary>
 		///
-		/// <param name="state">the indent state</param>
-		/// <param name="strings">the string list</param>
+		/// <param name="buff">the logging buffer</param>
 		/// <param name="obj">an object</param>
-		protected void AppendReflectString(State state, IList<string> strings, StringBuilder buff, object obj) {
+		/// <param name="isMultiLine">output multiple lines if true, single line otherwise</param>
+		/// <returns>false if can not be outputed on a single line, otherwise true</returns>
+		protected bool AppendUsedReflection(LogBuffer buff, object obj, bool isMultiLine) {
+			buff.Save(); // Save current point
 			var type = obj.GetType();
-			var extended = type.BaseType != typeof(object) && type.BaseType != typeof(ValueType);
+			buff.Append(GetTypeName(type, obj, false));
+			var isExtended = type.BaseType != typeof(object) && type.BaseType != typeof(ValueType);
 			var isTuple = type.Name.StartsWith("Tuple`") || type.Name.StartsWith("ValueTuple`");
-			var multiLine = !isSingleLine(obj);
 
 			buff.Append(isTuple ? '(' : '{');
-			if (multiLine) {
-				LineFeed(state, strings, buff);
-				UpDataNest(state);
+			if (isMultiLine) {
+				buff.LineFeed();
+				buff.UpNest();
 			}
 
-			AppendReflectStringSub(state, strings, buff, obj, type, extended, multiLine);
+			if (!AppendUsedReflectionSub(buff, obj, type, isExtended, isMultiLine)) {
+				buff.Restore(); // Restore saved point
+				buff.PopSave(); // Pop saveed point
+				return AppendUsedReflection(buff, obj, true);
+			}
 
-			if (multiLine)
-				DownDataNest(state);
+			if (isMultiLine) {
+				if (buff.Length > 0)
+					buff.LineFeed();
+				buff.DownNest();
+			}
 			buff.Append(isTuple ? ')' : '}');
+
+			buff.PopSave(); // Pop saveed point
+			return isMultiLine;
 		}
 
 		/// <summary>
 		/// Returns a string representation of the obj uses reflection.
 		/// </summary>
 		///
-		/// <param name="state">the indent state</param>
-		/// <param name="strings">the string list</param>
+		/// <param name="buff">the logging buffer</param>
 		/// <param name="obj">an object</param>
 		/// <param name="type">the type of the object</param>
-		/// <param name="extended">the type is extended type</param>
-		protected void AppendReflectStringSub(State state, IList<string> strings, StringBuilder buff, object obj, Type type, bool extended, bool multiLine) {
+		/// <param name="isExtended">if true, the type is isExtended type</param>
+		/// <param name="isMultiLine">output multiple lines if true, single line otherwise</param>
+		/// <returns>false if can not be outputed on a single line, otherwise true</returns>
+		protected bool AppendUsedReflectionSub(LogBuffer buff, object obj, Type type, bool isExtended, bool isMultiLine) {
 			Type baseType = type.BaseType;
 			if (baseType != typeof(object) && baseType != typeof(ValueType))
 				// Call for the base type
-				AppendReflectStringSub(state, strings, buff, obj, baseType, extended, multiLine);
+				AppendUsedReflectionSub(buff, obj, baseType, isExtended, isMultiLine);
 
 			var typeNamePrefix = type.FullName + "#";
 			var isTuple = type.Name.StartsWith("Tuple`") || type.Name.StartsWith("ValueTuple`");
 
-			if (extended) {
+			if (isExtended) {
+				if (!isMultiLine) return false; // can not be outputed on a single line
+
+				if (buff.Length > 0)
+					buff.LineFeed();
 				buff.Append(string.Format(ClassBoundaryString, ReplaceTypeName(type.FullName)));
-				LineFeed(state, strings, buff);
+				buff.LineFeed();
 			}
 
 			// field
 			var fieldInfos = type.GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
 			int fieldIndex = 0;
 			foreach (var fieldInfo in fieldInfos) {
-				if (!multiLine && fieldIndex > 0) buff.Append(", ");
+				var fieldName = fieldInfo.Name;
 
 				object value = null;
 				try {
@@ -786,19 +927,31 @@ namespace DebugTrace {
 					value = e.ToString();
 				}
 
-				var fieldName = fieldInfo.Name;
-				if (!isTuple)
-					buff.Append(fieldName).Append(FieldNameValueSeparator);
-
-				if (value != null && NonPrintProperties.Contains(typeNamePrefix + fieldName))
-					buff.Append(NonPrintString);
-				else
-					Append(state, strings, buff, value, false);
-
-				if (multiLine) {
-					buff.Append(",");
-					LineFeed(state, strings, buff);
+				if (buff.Length > MaxDataOutputWidth) {
+					if (!isMultiLine) return false; // can not be outputed on a single line
+					buff.LineFeed();
 				}
+
+				buff.Save(); // Save current point
+				bool elementIsMultiLine = AppendReflectValue(buff, type, isTuple, fieldName, value);
+				if (elementIsMultiLine || buff.Length > MaxDataOutputWidth) {
+					if (!isMultiLine) {
+						buff.PopSave(); // Pop saveed point
+						return false;
+					}
+
+					if (buff.PeekSave().builderLength > 0) {
+						buff.Restore(); // Restore saved point
+						buff.LineFeed();
+						elementIsMultiLine = AppendReflectValue(buff, type, isTuple, fieldName, value);
+					}
+				}
+				buff.PopSave(); // Pop saveed point
+
+				buff.Append(", ");
+				if (elementIsMultiLine)
+					buff.LineFeed();
+
 				++fieldIndex;
 			}
 
@@ -806,7 +959,7 @@ namespace DebugTrace {
 			var propertyInfos = type.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
 			int propertyIndex = 0;
 			foreach (var propertyInfo in propertyInfos) {
-				if (!multiLine && propertyIndex > 0) buff.Append(", ");
+				var propertyName = propertyInfo.Name;
 
 				object value = null;
 				try {
@@ -816,86 +969,50 @@ namespace DebugTrace {
 					value = e.ToString();
 				}
 
-				var propertyName = propertyInfo.Name;
-				if (!isTuple)
-					buff.Append(propertyName).Append(FieldNameValueSeparator);
+				buff.Save(); // Save current point
+				bool elementIsMultiLine = AppendReflectValue(buff, type, isTuple, propertyName, value);
+				if (elementIsMultiLine || buff.Length > MaxDataOutputWidth) {
+					if (!isMultiLine) {
+						buff.PopSave(); // Pop saveed point
+						return false;
+					}
 
-				if (value != null && NonPrintProperties.Contains(typeNamePrefix + propertyName))
-					buff.Append(NonPrintString);
-				else
-					Append(state, strings, buff, value, false);
-
-				if (multiLine) {
-					buff.Append(",");
-					LineFeed(state, strings, buff);
+					if (buff.PeekSave().builderLength > 0) {
+						buff.Restore(); // Restore saved point
+						buff.LineFeed();
+						elementIsMultiLine = AppendReflectValue(buff, type, isTuple, propertyName, value);
+					}
 				}
+				buff.PopSave(); // Pop saveed point
+
+				buff.Append(", ");
+				if (elementIsMultiLine)
+					buff.LineFeed();
+
 				++propertyIndex;
 			}
-		}
 
-		/// <summary>
-		/// Returns whether the value should be output on one line.
-		/// </summary>
-		///
-		/// <param name="value">the output value</param>
-		/// <param name="isElement">whether the value is an element of the collection</param>
-		/// <returns>true if the value should be output on one line, false otherwise</returns>
-		protected bool isSingleLine(object value, bool isElement = false) {
-			if (value == null) return true;
-			var type = value.GetType();
-			if (SingleLineTypes.Contains(type)) return true;
-			if (value is Enum) return true;
-			if (isElement) return false;
-
-			if (value is IDictionary dictinary) {
-				var index = 0;
-				foreach (var key in dictinary.Keys) {
-					if (!isSingleLine(key) || !isSingleLine(dictinary[key], true)) return false;
-					if (index++ >= CollectionLimit) break;
-				}
-				return true;
-			}
-
-			if (value is IEnumerable values) {
-				var index = 0;
-				foreach (var element in values) {
-					if (!isSingleLine(element, true)) return false;
-					if (index++ >= CollectionLimit) break;
-				}
-				return true;
-			}
-
-			if (type.BaseType != typeof(object) && type.BaseType != typeof(ValueType))
-				return false;
-
-			var isTuple = type.Name.StartsWith("Tuple`") || type.Name.StartsWith("ValueTuple`");
-
-			// property
-			var propertyInfos = type.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
-			foreach (var propertyInfo in propertyInfos) {
-				try {
-					if (!isSingleLine(propertyInfo.GetValue(value), !isTuple))
-						return false;
-				}
-				catch (Exception) {
-					return false;
-				}
-			}
-
-			// field
-			var fieldInfos = type.GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
-			foreach (var fieldInfo in fieldInfos) {
-				try {
-					if (!isSingleLine(fieldInfo.GetValue(value), !isTuple))
-						return false;
-				}
-				catch (Exception) {
-					return false;
-				}
-			}
+			if (!isMultiLine && fieldIndex + propertyIndex > 0)
+				buff.Length -= 2;
 
 			return true;
 		}
+
+		/// <summary>
+		/// AppendReflectValue
+		/// </summary>
+		private bool AppendReflectValue(LogBuffer buff, Type classType, bool isTuple, string name, object value) {
+			if (!isTuple)
+				buff.Append(name).Append(FieldNameValueSeparator);
+
+			if (value != null && NonPrintProperties.Contains(classType.FullName + '#' + name)) {
+				buff.Append(NonPrintString);
+				return false;
+			}
+
+			return Append(buff, value, false);
+		}
+
 
 		/// <summary>
 		/// Append a timestamp to the head of the string.

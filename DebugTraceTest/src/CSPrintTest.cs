@@ -11,7 +11,7 @@ namespace DebugTraceTest {
 		[DataRow(true , "v = true ")]
 		public void CSPrintBool(bool v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 		// char
@@ -31,7 +31,7 @@ namespace DebugTraceTest {
 		[DataRow('\u007F', "v = '\\u007F' ")]
 		public void CSPrintChar(char v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 		// string
@@ -51,7 +51,7 @@ namespace DebugTraceTest {
 		[DataRow("\u007F", "v = \"\\u007F\" ")]
 		public void CSPrintString(string v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 			Trace.Print("Trace.LastLog", Trace.LastLog);
 		}
 
@@ -64,7 +64,7 @@ namespace DebugTraceTest {
 		[DataRow((sbyte) 127, "v = sbyte 127 ")]
 		public void CSPrintSByte(sbyte v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 		// byte
@@ -74,7 +74,7 @@ namespace DebugTraceTest {
 		[DataRow((byte)255, "v = byte 255 ")]
 		public void CSPrintByte(byte v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 		// short
@@ -86,7 +86,7 @@ namespace DebugTraceTest {
 		[DataRow((short) 32767, "v = short 32767 ")]
 		public void CSPrintShort(short v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 		// ushort
@@ -96,7 +96,7 @@ namespace DebugTraceTest {
 		[DataRow((ushort)65535, "v = ushort 65535 ")]
 		public void CSPrintUShort(ushort v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 		// int
@@ -108,7 +108,7 @@ namespace DebugTraceTest {
 		[DataRow( 2147483647, "v = 2147483647 ")]
 		public void CSPrintInt(int v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 		// uint
@@ -118,7 +118,7 @@ namespace DebugTraceTest {
 		[DataRow(4294967295u, "v = 4294967295u ")]
 		public void CSPrintUInt(uint v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 		// long
@@ -130,7 +130,7 @@ namespace DebugTraceTest {
 		[DataRow( 9223372036854775807L, "v = 9223372036854775807L ")]
 		public void CSPrintLong(long v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 		// ulong
@@ -140,7 +140,7 @@ namespace DebugTraceTest {
 		[DataRow(18446744073709551615uL, "v = 18446744073709551615uL ")]
 		public void CSPrintULong(ulong v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 		// decimal
@@ -155,7 +155,7 @@ namespace DebugTraceTest {
 		[DataRow( "9876543210.0123456789", "v = 9876543210.0123456789m ")]
 		public void CSPrintDecimal(string v, string expect) {
 			Trace.Print("v", decimal.Parse(v));
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 		// float
@@ -171,7 +171,7 @@ namespace DebugTraceTest {
 		[DataRow( 3210.012f, "v = 3210.012f ")]
 		public void CSPrintFloat(float v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 		// double
@@ -195,7 +195,7 @@ namespace DebugTraceTest {
 		[DataRow( 76543210.0123456, "v = 76543210.0123456d ")]
 		public void CSPrintDouble(double v, string expect) {
 			Trace.Print("v", v);
-			Assert.IsTrue(Trace.LastLog.StartsWith(expect));
+			Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
 		}
 
 	}

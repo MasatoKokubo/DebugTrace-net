@@ -16,7 +16,7 @@ namespace DebugTrace {
 	/// <author>Masato Kokubo</author>
 	public class CSharp : Trace {
 		/// An ITrace object for C#
-		public static ITrace Trace {get;} = new CSharp();
+		public static CSharp Trace {get;} = new CSharp();
 
 		// Set of classes that dose not output the type name
 		protected override ISet<Type> NoOutputTypes {get;} = new HashSet<Type>() {
@@ -56,6 +56,7 @@ namespace DebugTrace {
 			typeof(DateTime),
 		};
 
+		// Dictionary of thread id to indent state
 		protected override IDictionary<Type, string> TypeNameMap {get;} = new Dictionary<Type, string>() {
 			{typeof(bool   ), "bool"   },
 			{typeof(char   ), "char"   },
@@ -74,77 +75,6 @@ namespace DebugTrace {
 		};
 
 		private CSharp() {
-		}
-
-		/// <summary>
-		/// Appends the value for logging to the string buffer.
-		/// </summary>
-		///
-		/// <param name="state">the indent state</param>
-		/// <param name="strings">the string list</param>
-		/// <param name="buff">the string buffer</param>
-		/// <param name="value">the value object</param>
-		/// <param name="isElement">true if the value is element of a container class, false otherwise</param>
-		/// 
-		protected override void Append(State state, IList<string> strings, StringBuilder buff, object value, bool isElement) {
-			if (value == null) {
-				buff.Append("null");
-			} else {
-				var type = value.GetType();
-
-				var typeName = GetTypeName(type, value, isElement);
-				if (typeName != null)
-					buff.Append(typeName);
-
-				switch (value) {
-				case bool         boolValue: buff.Append(boolValue ? "true" : "false"); break;
-				case char         charValue: buff.Append('\''); Append(buff, charValue, '\'', true); buff.Append('\''); break;
-				case sbyte       sbyteValue: buff.Append(sbyteValue  ); break;
-				case byte         byteValue: buff.Append(byteValue   ); break;
-				case short       shortValue: buff.Append(shortValue  ); break;
-				case ushort     ushortValue: buff.Append(ushortValue ); break;
-				case int           intValue: buff.Append(intValue    ); break;
-				case uint         uintValue: buff.Append(uintValue   ).Append('u' ); break;
-				case long         longValue: buff.Append(longValue   ).Append('L' ); break;
-				case ulong       ulongValue: buff.Append(ulongValue  ).Append("uL"); break;
-				case float       floatValue: buff.Append(floatValue  ).Append('f' ); break;
-				case double     doubleValue: buff.Append(doubleValue ).Append('d' ); break;
-				case decimal   decimalValue: buff.Append(decimalValue).Append('m' ); break;
-				case DateTime      dateTime: buff.Append(string.Format(DateTimeFormat, dateTime)); break;
-				case string     stringValue:
-					if (!Append(buff, stringValue, false))
-						Append(buff, stringValue, true);
-					break;
-				case IDictionary dictionary: Append(state, strings, buff, dictionary); break;
-				case ICollection collection: Append(state, strings, buff, collection); break;
-				case Enum         enumValue: buff.Append(enumValue); break;
-				default:
-					// Other
-				//	bool isReflection = reflectionClasses.Contains(type.FullName); // TODO
-					bool isReflection = true;
-				//	if (!isReflection && !HasToString(type)) {
-				//		isReflection = true;
-				//		reflectionClasses.Add(type.FullName);
-				//	}
-
-					if (isReflection) {
-						// Use Reflection
-						if (reflectedObjects.Any(obj => value == obj))
-							// Cyclic reference
-							buff.Append(CyclicReferenceString).Append(value);
-						else {
-							// Use Reflection
-							reflectedObjects.Add(value);
-							AppendReflectString(state, strings, buff, value);
-							reflectedObjects.Remove(reflectedObjects.Count - 1);
-						}
-					} else {
-						// Use ToString method
-						buff.Append(value);
-					}
-					break;
-				}
-			}
 		}
 
 		/// <summary>
@@ -199,5 +129,20 @@ namespace DebugTrace {
 
 			return typeName;
 		}
+
+		protected override void Append(LogBuffer buff, bool     value) {buff.Append(value ? "true" : "false");}
+		protected override void Append(LogBuffer buff, char     value) {buff.Append('\''); AppendChar(buff, value, '\'', true); buff.Append('\'');}
+		protected override void Append(LogBuffer buff, sbyte    value) {buff.Append(value);}
+		protected override void Append(LogBuffer buff, byte     value) {buff.Append(value);}
+		protected override void Append(LogBuffer buff, short    value) {buff.Append(value);}
+		protected override void Append(LogBuffer buff, ushort   value) {buff.Append(value);}
+		protected override void Append(LogBuffer buff, int      value) {buff.Append(value);}
+		protected override void Append(LogBuffer buff, uint     value) {buff.Append(value).Append('u' );}
+		protected override void Append(LogBuffer buff, long     value) {buff.Append(value).Append('L' );}
+		protected override void Append(LogBuffer buff, ulong    value) {buff.Append(value).Append("uL");}
+		protected override void Append(LogBuffer buff, float    value) {buff.Append(value).Append('f' );}
+		protected override void Append(LogBuffer buff, double   value) {buff.Append(value).Append('d' );}
+		protected override void Append(LogBuffer buff, decimal  value) {buff.Append(value).Append('m' );}
+		protected override void Append(LogBuffer buff, DateTime value) {buff.Append(string.Format(DateTimeFormat, value));}
 	}
 }

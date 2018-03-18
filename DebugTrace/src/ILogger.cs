@@ -1,7 +1,7 @@
 // ILogger.cs
 // (C) 2018 Masato Kokubo
 
-namespace DebugTrace.Logger {
+namespace DebugTrace {
 	/// <summary>
 	/// Interface of Logger classes.
 	/// </summary>
