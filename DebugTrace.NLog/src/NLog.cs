@@ -23,7 +23,7 @@ namespace DebugTrace {
 			};
 
 		// NLog Logger
-		private global::NLog.Logger logger = global::NLog.LogManager.GetLogger(typeof(DebugTrace.Trace).FullName);
+		private global::NLog.Logger logger = global::NLog.LogManager.GetLogger(typeof(ILogger).Namespace);
 
 		private static string defaultLevelStr = "Debug";
 		private string levelStr = defaultLevelStr;

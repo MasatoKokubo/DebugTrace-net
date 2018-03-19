@@ -25,7 +25,7 @@ namespace DebugTrace {
 			};
 
 		// Log4net Logger
-		private log4net.Core.ILogger logger = LogManager.GetLogger(typeof(DebugTrace.Trace)).Logger;
+		private log4net.Core.ILogger logger = LogManager.GetLogger(typeof(ILogger).Namespace).Logger;
 
 		private static string defaultLevelStr = "Debug";
 		private string levelStr = defaultLevelStr;

@@ -1015,13 +1015,14 @@ namespace DebugTrace {
 
 
 		/// <summary>
-		/// Append a timestamp to the head of the string.
+		/// Returns current DateTime string.
 		/// </summary>
 		///
-		/// <param name="string ">a string</param>
-		/// <returns>a string appended a timestamp string</returns>
-		public static String AppendDateTime(string str) {
-			return string.Format(DateTimeFormat, DateTime.Now) + " " + str;
+		/// <returns>current timestamp string</returns>
+		public static string DateTimeString {
+			get {
+				return string.Format(DateTimeFormat, DateTime.Now);
+			}
 		}
 	}
 }
