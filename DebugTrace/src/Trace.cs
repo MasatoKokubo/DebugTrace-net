@@ -191,18 +191,22 @@ namespace DebugTrace {
 			Logger.Log($"  Logger: {Logger.GetType().AssemblyQualifiedName}");
 		}
 
+		/// <summary>
 		/// Returns the indent state of the current thread.
 		/// </summary>
 		///
 		/// <returns>the indent state of the current thread</returns>
-		private protected State GetCurrentState() {
+		/// <param name="threadId">the thread id</returns>
+		private protected State GetCurrentState(int threadId = -1) {
 			State state;
-			int threadId = Thread.CurrentThread.ManagedThreadId;
+			if (threadId == -1)
+				threadId = Thread.CurrentThread.ManagedThreadId;
 
 			if (states.ContainsKey(threadId)) {
 				state = states[threadId];
 			} else {
 				state = new State();
+				state.ThreadId = threadId;
 				states[threadId] = state;
 			}
 
@@ -226,24 +230,16 @@ namespace DebugTrace {
 		/// <summary>
 		/// Common start processing of output.
 		/// </summary>
-		protected void PrintStart() {
-			var thread = Thread.CurrentThread;
-			int threadId = thread.ManagedThreadId;
-			if (threadId !=  beforeThreadId) {
+		/// <param name="state">the state</param>
+		protected void PrintStart(State state) {
+			if (state.ThreadId !=  beforeThreadId) {
 				// Thread changing
 				Logger.Log(""); // Line break
-				Logger.Log(string.Format(ThreadBoundaryString, threadId));
+				Logger.Log(string.Format(ThreadBoundaryString, state.ThreadId));
 				Logger.Log(""); // Line break
 
-				beforeThreadId = threadId;
+				beforeThreadId = state.ThreadId;
 			}
-		}
-
-		/// <summary>
-		/// Common end processing of output.
-		/// </summary>
-		protected void PrintEnd() {
-			beforeThreadId = Thread.CurrentThread.ManagedThreadId;
 		}
 
 		/// <summary>
@@ -260,13 +256,15 @@ namespace DebugTrace {
 		/// <summary>
 		/// Call this method at entrance of your methods.
 		/// </summary>
-		public void Enter() {
-			if (!IsEnabled) return;
+		/// <returns>current thread id</returns>
+		public int Enter() {
+			if (!IsEnabled) return -1;
 
 			lock (states) {
-				PrintStart(); // Common start processing of output
-
 				var state = GetCurrentState();
+
+				PrintStart(state); // Common start processing of output
+
 				if (state.BeforeNestLevel > state.NestLevel)
 					Logger.Log(GetIndentString(state.NestLevel, 0)); // Line break
 
@@ -275,26 +273,25 @@ namespace DebugTrace {
 
 				state.UpNest();
 
-				PrintEnd(); // Common end processing of output
+				return state.ThreadId;
 			}
 		}
 
 		/// <summary>
 		/// Call this method at exit of your methods.
 		/// </summary>
-		public void Leave() {
+		/// <param name="threadId">the thread id</param>
+		public void Leave(int threadId = -1) {
 			if (!IsEnabled) return;
 
 			lock (states) {
-				PrintStart(); // Common start processing of output
+				var state = GetCurrentState(threadId);
+				PrintStart(state); // Common start processing of output
 
-				var state = GetCurrentState();
 				state.DownNest();
 
 				LastLog = GetIndentString(state.NestLevel, 0) + GetCallerInfo(LeaveString);
 				Logger.Log(LastLog);
-
-				PrintEnd(); // Common end processing of output
 			}
 		}
 
@@ -336,7 +333,8 @@ namespace DebugTrace {
 		/// </summary>
 		protected void PrintSub(string message) {
 			lock (states) {
-				PrintStart(); // Common start processing of output
+				var state = GetCurrentState();
+				PrintStart(state); // Common start processing of output
 
 				LastLog = "";
 				if (message != "") {
@@ -346,11 +344,9 @@ namespace DebugTrace {
 						element.MethodName,
 						element.FileName,
 						element.LineNumber);
-					LastLog = GetIndentString(GetCurrentState().NestLevel, 0) + message + suffix;
+					LastLog = GetIndentString(state.NestLevel, 0) + message + suffix;
 				}
 				Logger.Log(LastLog);
-
-				PrintEnd(); // Common end processing of output
 			}
 		}
 
@@ -362,11 +358,11 @@ namespace DebugTrace {
 		/// <param name="value">the value to output (accept null)</param>
 		protected void PrintSub(string name, object value) {
 			lock (states) {
-				PrintStart(); // Common start processing of output
+				var state = GetCurrentState();
+				PrintStart(state); // Common start processing of output
 
 				reflectedObjects.Clear();
 
-				var state = GetCurrentState();
 				var buff = new LogBuffer();
 
 				buff.Append(name).Append(VarNameValueSeparator);
@@ -386,8 +382,6 @@ namespace DebugTrace {
 				foreach ((int dataNestLevel, string line) in buff.Lines)
 					Logger.Log(GetIndentString(state.NestLevel, dataNestLevel) + line);
 				LastLog = string.Join("\n", buff.Lines);
-
-				PrintEnd(); // Common end processing of output
 			}
 		}
 

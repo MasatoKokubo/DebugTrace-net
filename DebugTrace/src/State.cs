@@ -16,6 +16,7 @@ namespace DebugTrace {
 	/// <since>1.0.0</since>
 	/// <author>Masato Kokubo</author>
 	public class State {
+		public int ThreadId        {get; set;} // The thread id
 		public int NestLevel       {get; set;} // The nest level
 		public int BeforeNestLevel {get; private set;} // The before nest level
 
@@ -26,7 +27,8 @@ namespace DebugTrace {
 
 		public override string ToString() {
 			return "(State)["
-				+ "NestLevel: " + NestLevel
+				+ "ThreadId: " + ThreadId
+				+ ", NestLevel: " + NestLevel
 				+ ", BeforeNestLevel: " + BeforeNestLevel
 				+ "]";
 		}

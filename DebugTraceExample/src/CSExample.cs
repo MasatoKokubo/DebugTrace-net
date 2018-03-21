@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using static DebugTrace.CSharp; // <- for Debugging
 
 namespace DebugTraceExample {
@@ -8,6 +10,8 @@ namespace DebugTraceExample {
 			Trace.Enter();
 			try {
 				Sub1();
+				var task = AsyncMethod();
+				task.Wait();
 			}
 			catch (Exception e) {
 				Trace.Print("e.ToString()", e.ToString()); // <- for Debugging
@@ -230,14 +234,24 @@ namespace DebugTraceExample {
 			public int Z {get;}
 
 			public Point3(int x, int y, int z) {
-				X = x;
-				Y = y;
-				Z = z;
+				X = x; Y = y; Z = z;
 			}
 
 			public override string ToString() {
 				return "(X: " + X + ", Y: " + Y + ", Z: " + Z + ")";
 			}
+		}
+
+		private static async Task<int> AsyncMethod() {
+			var threadId = Trace.Enter(); // <- for Debugging
+			var task = await Task.Run<int>(() => {
+				Trace.Enter(); // <- for Debugging
+				Thread.Sleep(500);
+				Trace.Leave(); // <- for Debugging
+				return 0;
+			});
+			Trace.Leave(threadId); // <- for Debugging
+			return task;
 		}
 	}
 
@@ -246,8 +260,7 @@ namespace DebugTraceExample {
 		public int Y {get;}
 
 		public Point(int x, int y) {
-			X = x;
-			Y = y;
+			X = x; Y = y;
 		}
 	}
 
@@ -256,8 +269,7 @@ namespace DebugTraceExample {
 		public Point Corner {get;}
 
 		public Rectangle(Point origin, Point corner) {
-			Origin = origin;
-			Corner = corner;
+			Origin = origin; Corner = corner;
 		}
 	}
 
@@ -274,8 +286,7 @@ namespace DebugTraceExample {
 		public string LastName;
 
 		public ContactBase(int id, string firstName, string lastName) : base(id) {
-			FirstName = firstName;
-			LastName  = lastName ;
+			FirstName = firstName; LastName  = lastName ;
 		}
 	}
 
@@ -297,9 +308,7 @@ namespace DebugTraceExample {
 		}
 
 		public Node(T item, Node<T> left, Node<T> right) {
-			Item = item;
-			Left = left;
-			Right = right;
+			Item = item; Left = left; Right = right;
 		}
 	}
 }

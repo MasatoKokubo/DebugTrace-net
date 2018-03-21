@@ -38,12 +38,14 @@ namespace DebugTrace {
 		/// <summary>
 		/// Call this method at entrance of your methods.
 		/// </summary>
-		void Enter();
+		/// <returns>current thread id</returns>
+		int Enter();
 
 		/// <summary>
 		/// Call this method at exit of your methods.
 		/// </summary>
-		void Leave();
+		/// <param name="threadId">the thread id</param>
+		void Leave(int threadId = -1);
 
 		/// <summary>
 		/// Outputs the message to the log.
