@@ -73,10 +73,8 @@ namespace DebugTrace {
 		/// Outputs the name and value to the log.
 		/// </summary>
 		///
-		/// <param name="">T> type of the value</param>
 		/// <param name="name">the name of the value</param>
 		/// <param name="valueSupplier">the supplier of value to output</param>
-		void Print<T>(string name, Func<T> valueSupplier);
-
+		void Print(string name, Func<object> valueSupplier);
 	}
 }

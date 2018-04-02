@@ -32,8 +32,6 @@ namespace DebugTrace {
 			typeof(double  ),
 			typeof(decimal ),
 			typeof(string  ),
-			typeof(char[]  ),
-			typeof(byte[]  ),
 			typeof(DateTime),
 		};
 
@@ -53,8 +51,6 @@ namespace DebugTrace {
 			typeof(double  ),
 			typeof(decimal ),
 			typeof(string  ),
-			typeof(char[]  ),
-			typeof(byte[]  ),
 			typeof(DateTime),
 		};
 
@@ -80,7 +76,7 @@ namespace DebugTrace {
 		}
 
 		/// <summary>
-		/// Returns the type name to be output to the log.<br>
+		/// Returns the type name of the array to be output to the log.<br>
 		/// If dose not output, returns null.
 		/// </summary>
 		///
@@ -89,44 +85,18 @@ namespace DebugTrace {
 		/// <param name="isElement">true if the value is element of a container class, false otherwise</param>
 		/// <param name="nest">current nest count</param>
 		/// <returns>the type name to be output to the log</returns>
-		protected override string GetTypeName(Type type, object value, bool isElement, int nest = 0) {
-			string typeName = null;
+		protected override string GetArrayTypeName(Type type, object value, bool isElement, int nest) {
+			string typeName = GetTypeName(type.GetElementType(), null, false, nest + 1);
 
-			if (type.IsArray) {
-				// Array
-				typeName = GetTypeName(type.GetElementType(), null, false, nest + 1);
-				if (typeName != null) {
-					var bracket = "(";
-					if (value != null)
-						bracket += "Length:" + ((Array)value).Length;
-					bracket += ')';
-					int braIndex = typeName.IndexOf('[');
-					if (braIndex < 0)
-						braIndex = typeName.Length;
-					typeName = typeName.Substring(0, braIndex) + bracket + typeName.Substring(braIndex) + ' ';
-				}
-			} else if (type.Name.StartsWith("Tuple`")) {
-				// Tuple<X, Y>(x, y)
-				typeName = "Tuple";
-
-			} else if (type.Name.StartsWith("ValueTuple`")) {
-				// (x, y)
-
-			} else {
-				// Not Array
-				var noOutputType = isElement ? NoOutputElementTypes.Contains(type) : NoOutputTypes.Contains(type);
-				if (nest > 0 || !noOutputType) {
-					// Output the type name
-					if (TypeNameMap.ContainsKey(type)) {
-						typeName = TypeNameMap[type];
-					} else {
-						typeName = ReplaceTypeName(type.FullName);
-						if (value is ICollection collection)
-							typeName += " Count:" + collection.Count;
-					}
-				}
-				if (typeName != null && nest == 0)
-					typeName += ' ';
+			if (typeName != null) {
+				var bracket = "(";
+				if (value != null)
+					bracket += "Length:" + ((Array)value).Length;
+				bracket += ')';
+				int braIndex = typeName.IndexOf('[');
+				if (braIndex < 0)
+					braIndex = typeName.Length;
+				typeName = typeName.Substring(0, braIndex) + bracket + typeName.Substring(braIndex) + ' ';
 			}
 
 			return typeName;
