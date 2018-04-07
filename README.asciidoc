@@ -1,3 +1,513 @@
 = DebugTrace-net
 
-`DebugTrace-net` is a .NET library that outputs trace logs when debugging .NET programs.
+link:README_ja.asciidoc[[Japanese]]
+
+`DebugTrace-net` is a library that outputs trace logs when debugging .NET programs. It corresponds to https://docs.microsoft.com/en-us/dotnet/standard/net-standard[.NET Standard 2.0]. +
+By embedding `[blue]#Trace.Enter()#` and `[blue]#Trace.Leave()#` at the start and end of methods, you can output the execution status of the program under development to the log.
+
+=== 1. Features
+
+* Automatically outputs caller's [blue]#class name#, [blue]#method name#, source [blue]#file name# and [blue]#line number#.
+* Automatically [blue]#indents# the log with nesting methods and objects.
+* Automatically [blue]#breaks# at the output of values.
+* Automatically output logs when [blue]#changing threads#.
+* Uses reflection to output objects of classes that do not implement `[blue]#ToString#` method.
+* You can customize the output content in `[blue]#DebugTrace.properties#`.
+* There is [blue]#no dependency library# if you output to the console
+* You can use the following logging library.
+    ** https://logging.apache.org/log4net/[log4net]
+    ** http://nlog-project.org/[NLog]
+
+=== 2. Install
+
+Search `[blue]#DebugTrace#` packege on NuGet and install it. +
+If you output logs using https://logging.apache.org/log4net/[log4net] or http://nlog-project.org/[NLog],
+install `[blue]#DebugTrace.Log4net#` or `[blue]#DebugTrace.NLog#` package.
+`[blue]#DebugTrace.Log4net#` and `[blue]#DebugTrace.NLog#` package corresponds to .NET Framework 4.7 instead of https://docs.microsoft.com/en-us/dotnet/standard/net-standard[.NET Standard].
+
+=== 3. How to use
+
+Do the following for debug target and related methods.
+
+. Insert `[blue]#Trace.Enter()#` at the beginning of methods.
+. Insert `[blue]#Trace.Leave()#` at the end of methods or just before the `[blue]#return#` statements.
+. Insert `[blue]#Trace.Print("foo", foo)#` or `[blue]#Trace.Print(nameof(foo), foo)#` to output arguments, local variables and return value to the log if necessary.
+
+The following are examples of C# and Visual Basic source used DebugTrace-net methods and the log of when it has been executed.
+
+[source,csharp]
+.ReadmeExample.cs
+----
+using System;
+using static DebugTrace.CSharp; // for Debugging
+
+namespace Readme {
+    /// <summary>ReadmeExample</summary>
+    public class ReadmeExample {
+        public static void Main(string[] args) {
+            Trace.Enter(); // for Debugging
+
+            var contact = new Contact(1, "Akane", "Apple", new DateTime(1991, 2, 3));
+            Trace.Print(nameof(contact), contact); // for Debugging
+
+            Trace.Leave(); // for Debugging
+        }
+    }
+
+    /// <summary>Entity</summary>
+    public class Entity {
+        public int ID;
+
+        public Entity(int id) {
+            ID = id;
+        }
+    }
+
+    /// <summary>ContactBase</summary>
+    public class ContactBase : Entity {
+        public string FirstName;
+        public string LastName;
+
+        public ContactBase(int id, string firstName, string lastName) : base(id) {
+            FirstName = firstName; LastName  = lastName ;
+        }
+    }
+
+    /// <summary>Contact</summary>
+    public class Contact : ContactBase {
+        public DateTime Birthday;
+
+        public Contact(int id, string firstName, string lastName, DateTime birthday) : base(id, firstName, lastName) {
+            Birthday  = birthday ;
+        }
+    }
+}
+----
+
+.Console output / C#
+----
+2018-03-28 01:10:51.413 ______________________________ Thread 1 ______________________________
+2018-03-28 01:10:51.413
+2018-03-28 01:10:51.473 Enter Readme.ReadmeExample.Main(String[] args) (ReadmeExample.cs:8)
+2018-03-28 01:10:51.500 | contact = Readme.Contact {
+2018-03-28 01:10:51.500 |   ____ Readme.Entity ____
+2018-03-28 01:10:51.501 |   ID: 1,
+2018-03-28 01:10:51.501 |   ____ Readme.ContactBase ____
+2018-03-28 01:10:51.501 |   FirstName: "Akane", LastName: "Apple",
+2018-03-28 01:10:51.501 |   ____ Readme.Contact ____
+2018-03-28 01:10:51.501 |   Birthday: 1991-02-03 12:00:00.000,
+2018-03-28 01:10:51.501 | } (ReadmeExample.cs:11)
+2018-03-28 01:10:51.509 Leave Readme.ReadmeExample.Main(String[] args) (ReadmeExample.cs:13)
+----
+
+[source,vb.net]
+.ReadmeExample.vb
+----
+Imports System
+Imports DebugTrace.VisualBasic ' for Debugging
+
+Namespace Global.Readme
+    ''' <summary>ReadmeExample</summary>
+    Public Class ReadmeExample
+        Public Shared Sub Main(args As String())
+            Trace.Enter() ' for Debugging
+
+            Dim contact = New Contact(1, "Akane", "Apple", New DateTime(1991, 2, 3))
+            Trace.Print(NameOf(contact), contact) ' for Debugging
+
+            Trace.Leave() ' for Debugging
+        End Sub
+    End Class
+
+    ''' <summary>Entity</summary>
+    Public Class Entity
+        Public Property ID As Integer
+
+        Public Sub New(id_ As Integer)
+            ID = id_
+        End Sub
+    End Class
+
+    ''' <summary>ContactBase</summary>
+    Public Class ContactBase : Inherits Entity
+        Public Property FirstName As String
+        Public Property LastName As String
+
+        Public Sub New(id_ As Integer, firstName_ As String, lastName_ As String)
+            MyBase.New(id_)
+            FirstName = firstName_ : LastName = lastName_
+        End Sub
+    End Class
+
+    ''' <summary>Contact</summary>
+    Public Class Contact : Inherits ContactBase
+        Public Birthday As DateTime
+
+        Public Sub New(id_ As Integer, firstName_ As String, lastName_ As String, birthday_ As DateTime)
+            MyBase.New(id_, firstName_, lastName_)
+            Birthday = birthday_
+        End Sub
+    End Class
+End Namespace
+----
+
+.Console output / Visual Basic
+----
+2018-03-28 02:30:08.528 ______________________________ Thread 1 ______________________________
+2018-03-28 02:30:08.528
+2018-03-28 02:30:08.591 Enter Readme.ReadmeExample.Main(String[] args) (ReadmeExample.vb:8)
+2018-03-28 02:30:08.619 | contact = Readme.Contact {
+2018-03-28 02:30:08.619 |   ____ Readme.Entity ____
+2018-03-28 02:30:08.619 |   ID: 1,
+2018-03-28 02:30:08.619 |   ____ Readme.ContactBase ____
+2018-03-28 02:30:08.619 |   FirstName: "Akane", LastName: "Apple",
+2018-03-28 02:30:08.620 |   ____ Readme.Contact ____
+2018-03-28 02:30:08.620 |   Birthday: 1991-02-03 12:00:00.000,
+2018-03-28 02:30:08.620 | } (ReadmeExample.vb:11)
+2018-03-28 02:30:08.627 Leave Readme.ReadmeExample.Main(String[] args) (ReadmeExample.vb:13)
+----
+
+=== 3. Interfaces and Classes
+
+There are mainly the following interfaces and classes.
+
+[options="header", width="100%"]
+.Interfaces and Classes
+|===
+|Name                              |Super Class or Implemented Interfaces|Description
+|`[blue]#DebugTrace.ITrace#`       |_None_                      |Trace processing interface
+|`[blue]#DebugTrace.Trace#`        |`[blue]#DebugTrace.ITrace#` |Trace processing abstract class
+|`[blue]#DebugTrace.CSharp#`       |`[blue]#DebugTrace.Trace#`  |Trace processing class for C#
+|`[blue]#DebugTrace.VisualBasic#`  |`[blue]#DebugTrace.Trace#`  |Trace processing class for VisualBasic
+|`[blue]#DebugTrace.ILogger#`      |_None_                      |Log output interface
+|`[blue]#DebugTrace.Console#`      |`[blue]#DebugTrace.ILogger#`|Abstract class that outputs logs to the console
+|`[blue]#DebugTrace.Console+Out#`  |`[blue]#DebugTrace.Console#`|Class outputting logs to standard output
+|`[blue]#DebugTrace.Console+Error#`|`[blue]#DebugTrace.Console#`|Class outputting logs to standard error output
+|===
+
+=== 4. Properties of DebugTrace.CSharp class and DebugTrace.VisualBasic class
+
+`[blue]#DebugTrace.CSharp#` and `[blue]#DebugTrace.VisualBasic#` class has `[blue]#Trace#` property as an instance of its own type.
+
+=== 5. Properties and methods of ITrace interface
+
+It has the following properties and methods.
+
+[options="header", width="60%"]
+.Properties
+|===
+|Name|Description
+|`[blue]#IsEnabled#`
+|`true` if log output is enabled, `false` otherwise (`get` only)
+
+|`[blue]#LastLog#`
+|Last log string outputted (`get` only)
+
+|===
+
+[options="header"]
+.Methods
+|===
+|Name|Arguments|Return Value|Description
+|`[blue]#ResetNest#`
+|_None_
+|_None_
+|Initializes the nesting level for the current thread.
+
+|`[blue]#Enter#`
+|_None_
+|`[blue]#int#` thread ID
+|Outputs method start to log.
+
+|`[blue]#Leave#`
+|`[blue]#int threadId#`: the thread ID (default: `-1`)
+|_None_
+|Outputs method end to the log.
+
+|`[blue]#Print#`
+|`[blue]#string message#`: the message
+|_None_
+|Outputs the message to the log.
+
+|`[blue]#Print#`
+|`[blue]#Func<string> messageSupplier#`: the function to return a message
+|_None_
+|Gets a message from `[blue]#messageSupplier#` and output it to the log.
+
+|`[blue]#Print#`
+|`[blue]#string name#`: the name of the value +
+`[blue]#object value#`: the value
+|_None_
+|Outputs to the log in the form of `"Name = Value"`
+
+|`[blue]#Print#`
+|`[blue]#string name#`: the name of the value +
+`[blue]#Func<object> valueSupplier#`:  the function to return a value
+|_None_
+|Gets a value from `[blue]#valueSupplier#` and output it to the log in the form of `"Name = Value"`.
+
+|===
+
+=== 6. Properties of *DebugTrace.properties* file
+
+DebugTrace reads the `DebugTrace.properties` file in the same directory as DebugTrace.dll at startup.
+You can specify following properties in the `DebugTrace.properties` file.  
+
+[options="header"]
+.DebugTrace.properties
+|===
+|Property Name|Value to be set|Default Value
+
+|`[blue]#Logger#`
+| Logger DebugTrace uses +
+ +
+`[blue]#Log4net#`: use Log4net +
+`[blue]#NLog#`: use NLog +
+`[blue]#Console+Out#`: Output to the console (stdout) +
+`[blue]#Console+Error#`: Output to the console (stderr)
+|`[blue]#Console+Error#`
+
+|`[blue]#LogLevel#`
+|Log level at log output +
+ +
+`Lo4jnet`: `[blue]#All#`, `[blue]#Debug#`, `[blue]#Info#`, `[blue]#Warn#`, `[blue]#Error#`, `[blue]#Fatal#`, `[blue]#Off#` +
+`NLog`: `[blue]#Trace#`, `[blue]#Debug#`, `[blue]#Info#`, `[blue]#Warn#`, `[blue]#Error#`, `[blue]#Off#` +
+|`[blue]#Debug#`
+
+|`[blue]#EnterString#`
+|The string output by `[blue]#enter#` method +
+ +
+`[Teal]#parameters#:` +
+`{0}`: The class name of the caller +
+`{1}`: The method name of the caller +
+`{2}`: The file name of the caller +
+`{3}`: The line number of the caller
+|`Enter {0}.{1} ({2}:{3:D})`
+
+|`[blue]#LeaveString#`
+|The string output by `[blue]#leave#` method +
+ +
+`[Teal]#parameters#:` +
+`{0}`: The class name of the caller +
+`{1}`: The method name of the caller +
+`{2}`: The file name of the caller +
+`{3}`: The line number of the caller
+|`Leave {0}.{1} ({2}:{3:D})`
+
+|`[blue]#ThreadBoundaryString#`
+|The string output in the threads boundary. +
+ +
+`[Teal]#parameter#:` +
+`{0}`: The thread ID
+|`\____\__\__\__\__\__\__\__\__\__\__\__\__\__ Thread {0} \__\__\__\__\__\__\__\__\__\__\__\__\__\____`
+
+|`[blue]#ClassBoundaryString#`
+|The string output in the classes boundary. +
+ +
+`[Teal]#parameter#:` +
+`{0}`: The class name
+|`\\____ {0} \____`
+
+|`[blue]#CodeIndentString#`
+|The string of one code indent +
+[.small]#`\s` is change to a space character#
+|`\s\s`
+
+|`[blue]#DataIndentString#`
+|The string of one data indent +
+[.small]#`\s` is change to a space character#
+|`\s\s`
+
+|`[blue]#LimitString#`
+|The string to represent that it has exceeded the limit
+|`\...`
+
+|`[blue]#DefaultNameSpaceString#` +
+|The string replacing the default namespace part
+|`\...`
+
+|`[blue]#NonPrintString#` +
+|The string of value in the case of properties that do not print the value
+|`\***`
+
+|`[blue]#CyclicReferenceString#`
+|The string to represent that the cyclic reference occurs
+|`\*\** Cyclic Reference \***`
+
+|`[blue]#VarNameValueSeparator#`
+|The separator string between the variable name and value +
+[.small]#`\s` is change to a space character#
+|`\s=\s`
+
+|`[blue]#KeyValueSeparator#`
+|The separator string between the key and value for Map object +
+[.small]#`\s` is change to a space character#
+|`:\s`
+
+|`[blue]#FieldNameValueSeparator#`
+|The separator string between the field name and value +
+[.small]#`\s` is change to a space character#
+|`:\s`
+
+|`[blue]#PrintSuffixFormat#`
+|Output format of `[blue]#print#` method suffix +
+[.small]#`\s` is change to a space character# +
+ +
+`[Teal]#parameters#:` +
+`{0}`: The class name of the caller +
+`{1}`: The method name of the caller +
+`{2}`: The file name of the caller +
+`{3}`: The line number of the caller
+|`\s({2}:{3:D})`
+
+|`[blue]#DateTimeFormat#`
+|Output format of date and time +
+ +
+`[Teal]#parameter#:` +
+`{0}`: The `DateTime` object +
+|`{0:yyyy-MM-dd hh:mm:ss.fff}`
+
+|`[blue]#MaxDataOutputWidth#`
+|Maximum output width of data
+|80
+
+|`[blue]#CollectionLimit#`
+|Limit value of `ICollection` elements to output
+|512
+
+|`[blue]#StringLimit#`
+|Limit value of String characters to output
+|8192
+
+|`[blue]#ReflectionNestLimit#`
+|Limit value of reflection nest
+|4
+
+|`[blue]#NonPrintProperties#` +
+|Properties not to be output +
+value +
+ +
+`[Teal]#format#:` +
+`<full class name>#<property name>,` +
+`<full class name>#<property name>,` +
+`\...`
+|_<empty list>_
+
+|`[blue]#DefaultNameSpace#` +
+|Default namespace of your java source
+|_<none>_
+
+|`[blue]#ReflectionClasses#` +
+|Classe names that output content by reflection even if `[blue]#ToString#` method is implemented
+|_<empty list>_
+
+|===
+
+==== 6.1. *NonPrintProperties*, *NonPrintString*
+
+DebugTrace use reflection to output object contents if the `[blue]#ToString#` method is not implemented.
+If there are other object references, the contents of objects are also output.
+However, if there is circular reference, it will automatically detect and suspend output.
+You can suppress output by specifying the `[blue]#NonPrintProperties#` property and
+can specify multiple values of this property separated by commas.  
+The value of the property specified by `[blue]#NonPrintProperties#` are output as the string specified by `[blue]#NonPrintString#` (default: `\***`).
+
+.Example of NonPrintProperties
+----
+NonPrintProperties = DebugTraceExample.Node#Parent
+----
+
+.Example of NonPrintProperties (Multiple specifications)
+----
+NonPrintProperties = \
+    DebugTraceExample.Node#Parent,\
+    DebugTraceExample.Node#Left,\
+    DebugTraceExample.Node#Right
+----
+
+=== 7. Examples of using logging libraries
+
+You can output logs using the following libraries besides console output.
+
+[options="header", width="60%"]
+.logging Libraries
+|===
+|Library Name|Required package  |API
+|log4net     |DebugTrace.Log4net|.NET Framework 4.7
+|NLog        |DebugTrace.NLog   |.NET Framework 4.7
+|===
+
+To use them, add the above package from NuGet.
+
+The logger name of DebugTrace is `[blue]#DebugTrace#`.   
+
+==== 7-1. log4net
+
+[source,properties]
+.Example of DebugTrace.properties
+----
+# DebugTrace.properties
+Logger = Log4net
+----
+
+[source,csharp]
+.Additional example of AssemblyInfo.cs
+----
+[assembly: log4net.Config.XmlConfigurator(ConfigFile=@"Log4net.config", Watch=true)]
+----
+
+[source,xml]
+.Example of Log4net.config
+----
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <log4net>
+    <appender name="A" type="log4net.Appender.FileAppender">
+      <File value="C:/Logs/DebugTrace/Log4net.log" />
+      <AppendToFile value="true" />
+      <layout type="log4net.Layout.PatternLayout">
+        <ConversionPattern value="%date [%thread] %-5level %logger %message%n" />
+      </layout>
+    </appender>
+    <root>
+      <level value="DEBUG" />
+      <appender-ref ref="A" />
+    </root>
+  </log4net>
+</configuration>
+----
+
+==== 7-2. NLog
+
+[source,properties]
+.Example of DebugTrace.properties
+----
+# DebugTrace.properties
+Logger = NLog
+----
+
+[source,xml]
+.Example of NLog.config
+----
+<?xml version="1.0" encoding="utf-8" ?>
+<nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.nlog-project.org/schemas/NLog.xsd NLog.xsd"
+      autoReload="true"
+      throwExceptions="false"
+      internalLogLevel="Off" internalLogFile="C:/Logs/DebugTrace/NLog-internal.log">
+  <targets>
+    <target xsi:type="File" name="f" fileName="C:/Logs/DebugTrace/NLog.log"
+            layout="${longdate} [${threadid}] ${uppercase:${level}} ${logger} ${message}" />
+  </targets>
+  <rules>
+    <logger name="*" minlevel="Debug" writeTo="f" />
+  </rules>
+</nlog>
+----
+
+=== 8. License
+
+link:LICENSE.txt[The MIT License (MIT)]
+
+[gray]#_(C) 2018 Masato Kokubo_#

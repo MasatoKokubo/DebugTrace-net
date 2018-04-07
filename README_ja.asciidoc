@@ -1,0 +1,512 @@
+= DebugTrace-net
+
+link:README.asciidoc[[English]]
+
+DebugTrace-netは、.NETプログラムのデバッグ時にトレースログを出力するライブラリで、 https://docs.microsoft.com/ja-jp/dotnet/standard/net-standard[.NET Standard 2.0]に対応しています。 +
+メソッドの開始と終了箇所に`[blue]#Trace.Enter()#`および`[blue]#Trace.Leave()#`を埋め込む事で、開発中のプログラムの実行状況をログに出力する事ができます。
+
+=== 1. 特徴
+
+* コール元の[blue]#クラス名#、[blue]#メソッド名#、[blue]#ソースファイル名#および[blue]#行番号#を自動的に出力。
+* メソッドやオブジェクトのネストで、ログを自動的に[blue]#インデント#。
+* 値の出力で自動的に[blue]#改行#。
+* [blue]#スレッドの切り替え時#に自動的にログを出力。
+* `[blue]#ToString#`メソッドを実装していないクラスのオブジェクトでもリフレクションを使用して内容を出力。
+* `[blue]#DebugTrace.properties#`で、出力内容のカスタマイズが可能。
+* [blue]#依存するライブラリがない# (コンソールに出力する場合)。
+* 各種ロギング・ライブラリを使用可能。
+    ** https://logging.apache.org/log4net/[log4net]
+    ** http://nlog-project.org/[NLog]
+
+=== 2. インストール
+NuGetから`[blue]#DebugTrace#`パッケージを検索してインストールしてください。 +
+https://logging.apache.org/log4net/[log4net]または http://nlog-project.org/[NLog]を使用してログを出力する場合は、`[blue]#DebugTrace.Log4net#`または`[blue]#DebugTrace.NLog#`をインストールしてください。 +
+`[blue]#DebugTrace.Log4net#`および`[blue]#DebugTrace.NLog#`は、(https://docs.microsoft.com/ja-jp/dotnet/standard/net-standard[.NET Standard]ではなく).NET Framework 4.7に対応しています。
+
+=== 3. 使用方法
+
+デバッグ対象および関連するメソッドに対して以下を行います。
+
+. メソッドの先頭に`[blue]#Trace.Enter()#`を挿入する。
+. メソッドの終了(または`[blue]#return#`文の直前)に`[blue]#Trace.Leave()#`を挿入する。
+. 必要に応じて変数をログに出力する`[blue]#Trace.Print("foo", foo)#`または`[blue]#Trace.Print(nameof(foo), foo)#`を挿入する。
+
+以下は、DebugTrace-netを使用したC#, Visual Basicの例とそれを実行した際のログです。
+
+[source,csharp]
+.ReadmeExample.cs
+----
+using System;
+using static DebugTrace.CSharp; // for Debugging
+
+namespace Readme {
+    /// <summary>ReadmeExample</summary>
+    public class ReadmeExample {
+        public static void Main(string[] args) {
+            Trace.Enter(); // for Debugging
+
+            var contact = new Contact(1, "Akane", "Apple", new DateTime(1991, 2, 3));
+            Trace.Print(nameof(contact), contact); // for Debugging
+
+            Trace.Leave(); // for Debugging
+        }
+    }
+
+    /// <summary>Entity</summary>
+    public class Entity {
+        public int ID;
+
+        public Entity(int id) {
+            ID = id;
+        }
+    }
+
+    /// <summary>ContactBase</summary>
+    public class ContactBase : Entity {
+        public string FirstName;
+        public string LastName;
+
+        public ContactBase(int id, string firstName, string lastName) : base(id) {
+            FirstName = firstName; LastName  = lastName ;
+        }
+    }
+
+    /// <summary>Contact</summary>
+    public class Contact : ContactBase {
+        public DateTime Birthday;
+
+        public Contact(int id, string firstName, string lastName, DateTime birthday) : base(id, firstName, lastName) {
+            Birthday  = birthday ;
+        }
+    }
+}
+----
+
+.コンソール出力 / C#
+----
+2018-03-28 01:10:51.413 ______________________________ Thread 1 ______________________________
+2018-03-28 01:10:51.413
+2018-03-28 01:10:51.473 Enter Readme.ReadmeExample.Main(String[] args) (ReadmeExample.cs:8)
+2018-03-28 01:10:51.500 | contact = Readme.Contact {
+2018-03-28 01:10:51.500 |   ____ Readme.Entity ____
+2018-03-28 01:10:51.501 |   ID: 1,
+2018-03-28 01:10:51.501 |   ____ Readme.ContactBase ____
+2018-03-28 01:10:51.501 |   FirstName: "Akane", LastName: "Apple",
+2018-03-28 01:10:51.501 |   ____ Readme.Contact ____
+2018-03-28 01:10:51.501 |   Birthday: 1991-02-03 12:00:00.000,
+2018-03-28 01:10:51.501 | } (ReadmeExample.cs:11)
+2018-03-28 01:10:51.509 Leave Readme.ReadmeExample.Main(String[] args) (ReadmeExample.cs:13)
+----
+
+[source,vb.net]
+.ReadmeExample.vb
+----
+Imports System
+Imports DebugTrace.VisualBasic ' for Debugging
+
+Namespace Global.Readme
+    ''' <summary>ReadmeExample</summary>
+    Public Class ReadmeExample
+        Public Shared Sub Main(args As String())
+            Trace.Enter() ' for Debugging
+
+            Dim contact = New Contact(1, "Akane", "Apple", New DateTime(1991, 2, 3))
+            Trace.Print(NameOf(contact), contact) ' for Debugging
+
+            Trace.Leave() ' for Debugging
+        End Sub
+    End Class
+
+    ''' <summary>Entity</summary>
+    Public Class Entity
+        Public Property ID As Integer
+
+        Public Sub New(id_ As Integer)
+            ID = id_
+        End Sub
+    End Class
+
+    ''' <summary>ContactBase</summary>
+    Public Class ContactBase : Inherits Entity
+        Public Property FirstName As String
+        Public Property LastName As String
+
+        Public Sub New(id_ As Integer, firstName_ As String, lastName_ As String)
+            MyBase.New(id_)
+            FirstName = firstName_ : LastName = lastName_
+        End Sub
+    End Class
+
+    ''' <summary>Contact</summary>
+    Public Class Contact : Inherits ContactBase
+        Public Birthday As DateTime
+
+        Public Sub New(id_ As Integer, firstName_ As String, lastName_ As String, birthday_ As DateTime)
+            MyBase.New(id_, firstName_, lastName_)
+            Birthday = birthday_
+        End Sub
+    End Class
+End Namespace
+----
+
+.コンソール出力 / Visual Basic
+----
+2018-03-28 02:30:08.528 ______________________________ Thread 1 ______________________________
+2018-03-28 02:30:08.528
+2018-03-28 02:30:08.591 Enter Readme.ReadmeExample.Main(String[] args) (ReadmeExample.vb:8)
+2018-03-28 02:30:08.619 | contact = Readme.Contact {
+2018-03-28 02:30:08.619 |   ____ Readme.Entity ____
+2018-03-28 02:30:08.619 |   ID: 1,
+2018-03-28 02:30:08.619 |   ____ Readme.ContactBase ____
+2018-03-28 02:30:08.619 |   FirstName: "Akane", LastName: "Apple",
+2018-03-28 02:30:08.620 |   ____ Readme.Contact ____
+2018-03-28 02:30:08.620 |   Birthday: 1991-02-03 12:00:00.000,
+2018-03-28 02:30:08.620 | } (ReadmeExample.vb:11)
+2018-03-28 02:30:08.627 Leave Readme.ReadmeExample.Main(String[] args) (ReadmeExample.vb:13)
+----
+
+=== 3. インタフェース、クラス
+
+主に以下のインタフェース、クラスがあります。
+
+[options="header", width="100%"]
+.インタフェース、クラス
+|===
+|名前                              |スーパークラス、実装するインタフェース|説明
+|`[blue]#DebugTrace.ITrace#`       |なし                        |Trace処理のインタフェース
+|`[blue]#DebugTrace.Trace#`        |`[blue]#DebugTrace.ITrace#` |Trace処理の抽象クラス
+|`[blue]#DebugTrace.CSharp#`       |`[blue]#DebugTrace.Trace#`  |C#用のTrace処理のクラス
+|`[blue]#DebugTrace.VisualBasic#`  |`[blue]#DebugTrace.Trace#`  |VisualBasic用のTrace処理のクラス
+|`[blue]#DebugTrace.ILogger#`      |なし                        |ログ出力のインタフェース
+|`[blue]#DebugTrace.Console#`      |`[blue]#DebugTrace.ILogger#`|ログをコンソール出力する抽象クラス
+|`[blue]#DebugTrace.Console+Out#`  |`[blue]#DebugTrace.Console#`|ログを標準出力に出力するクラス
+|`[blue]#DebugTrace.Console+Error#`|`[blue]#DebugTrace.Console#`|ログを標準エラー出力に出力するクラス
+|===
+
+=== 4. DebugTrace.CSharpおよびDebugTrace.VisualBasicクラスのプロパティ
+
+`[blue]#DebugTrace.CSharp#`クラスと`[blue]#DebugTrace.VisualBasic#`クラスには自身の型のインスタンスとして`[blue]#Trace#`プロパティがあります。
+
+=== 5. ITraceインタフェースのプロパティおよびメソッド
+
+以下のプロパティおよびメソッドがあります。
+
+[options="header", width="60%"]
+.プロパティ
+|===
+|名前|説明
+|`[blue]#IsEnabled#`
+|ログ出力が有効なら`true`、そうでなければ`false` (`get`のみ)
+
+|`[blue]#LastLog#`
+|最後に出力したログ文字列 (`get`のみ)
+
+|===
+
+[options="header"]
+.メソッド
+|===
+|名 前|引 数|戻り値|説明
+|`[blue]#ResetNest#`
+|なし
+|なし
+|現在のスレッドのネストレベルを初期化する
+
+|`[blue]#Enter#`
+|なし
+|`[blue]#int#` スレッドID
+|メソッドの開始をログに出力する
+
+|`[blue]#Leave#`
+|`[blue]#int threadId#`: スレッドID (デフォルト: `-1`)
+|なし
+|メソッドの終了をログに出力する
+
+|`[blue]#Print#`
+|`[blue]#string message#`: メッセージ
+|なし
+|メッセージをログに出力する
+
+|`[blue]#Print#`
+|`[blue]#Func<string> messageSupplier#`: メッセージを返す関数
+|なし
+|`[blue]#messageSupplier#`からメッセージを取得してログに出力する
+
+|`[blue]#Print#`
+|`[blue]#string name#`: 値の名前 +
+`[blue]#object value#`: 値
+|なし
+|`<値の名前> = <値>` +
+の形式でログに出力する
+
+|`[blue]#Print#`
+|`[blue]#string name#`: 値の名前 +
+`[blue]#Func<object> valueSupplier#`: 値を返す関数
+|なし
+|`[blue]#valueSupplier#`から値を取得して +
+`<値の名前> = <値>` +
+の形式でログに出力する
+
+|===
+
+=== 6. *DebugTrace.properties* ファイルのプロパティ
+
+DebugTrace は、DebugTrace.dllと同一ディレクトリにある`DebugTrace.properties`ファイルを起動時に読み込みます。
+`DebugTrace.properties` ファイルには以下のプロパティを指定できます。
+
+[options="header"]
+.DebugTrace.properties
+|===
+|プロパティ名|設定する値|デフォルト値
+|`[blue]#Logger#`
+| DebugTrace が使用するロガー +
+ +
+`[blue]#Log4net#`: log4netを使用 +
+`[blue]#NLog#`: NLogを使用 +
+`[blue]#Console+Out#`: コンソール(標準出力)へ出力 +
+`[blue]#Console+Error#`: コンソール(標準エラー出力)へ出力
+|`[blue]#Console+Error#`
+
+|`[blue]#LogLevel#`
+|ログ出力時のログレベル +
+ +
+`Lo4jnet`: `[blue]#All#`, `[blue]#Debug#`, `[blue]#Info#`, `[blue]#Warn#`, `[blue]#Error#`, `[blue]#Fatal#`, `[blue]#Off#` +
+`NLog`: `[blue]#Trace#`, `[blue]#Debug#`, `[blue]#Info#`, `[blue]#Warn#`, `[blue]#Error#`, `[blue]#Off#` +
+|`[blue]#Debug#`
+
+|`[blue]#EnterString#`
+|`[blue]#Enter#`メソッドで出力される文字列 +
+ +
+`[Teal]#パラメータ#:` +
+`{0}`: 呼出側のクラス名 +
+`{1}`: 呼出側のメソッド名 +
+`{2}`: 呼出側のファイル名 +
+`{3}`: 呼出側の行番号
+|`Enter {0}.{1} ({2}:{3:D})`
+
+|`[blue]#LeaveString#`
+|`[blue]#Leave#`メソッドでで出力される文字列 +
+ +
+`[Teal]#パラメータ#:` +
+`{0}`: 呼出側のクラス名 +
+`{1}`: 呼出側のメソッド名 +
+`{2}`: 呼出側のファイル名 +
+`{3}`: 呼出側の行番号
+|`Leave {0}.{1} ({2}:{3:D})`
+
+|`[blue]#ThreadBoundaryString#`
+|スレッド境界で出力される文字列 +
+ +
+`[Teal]#パラメータ#:` +
+`{0}`: スレッドID
+|`\____\__\__\__\__\__\__\__\__\__\__\__\__\__ Thread {0} \__\__\__\__\__\__\__\__\__\__\__\__\__\____`
+
+|`[blue]#ClassBoundaryString#`
+|クラス境界での出力文字列 +
+ +
+`[Teal]#パラメータ#:` +
+`{0}`: クラス名
+|`\\____ {0} \____`
+
+|`[blue]#CodeIndentString#`
+|コードのインデント文字列 +
+[.small]#`\s`は空白文字に置き換えられます#
+|`\|\s`
+
+|`[blue]#DataIndentString#`
+|データのインデント文字列 +
+[.small]#`\s`は空白文字に置き換えられます#
+|`\s\s`
+
+|`[blue]#LimitString#`
+|制限を超えた場合の出力文字列
+|`\...`
+
+|`[blue]#DefaultNameSpaceString#` +
+|デフォルトの名前空間を置き換える文字列
+|`\...`
+
+|`[blue]#NonPrintString#`
+|出力しないプロパティ値の文字列
+|`\***`
+
+|`[blue]#CyclicReferenceString#`
+|循環参照時の出力文字列
+|`\*\** Cyclic Reference \***`
+
+|`[blue]#VarNameValueSeparator#`
+|変数名と値のセパレータ +
+[.small]#`\s`は空白文字に置き換えられます#
+|`\s=\s`
+
+|`[blue]#KeyValueSeparator#`
+|マップのキーと値のセパレータ +
+[.small]#`\s`は空白文字に置き換えられます#
+|`:\s`
+
+|`[blue]#FieldNameValueSeparator#`
+|フィールド名と値のセパレータ +
+[.small]#`\s`は空白文字に置き換えられます#
+|`:\s`
+
+|`[blue]#PrintSuffixFormat#`
+|`[blue]#print#`メソッドで付加される文字列 +
+[.small]#`\s`は空白文字に置き換えられます# +
+ +
+`[Teal]#パラメータ#:` +
+`{0}`: 呼出側のクラス名 +
+`{1}`: 呼出側のメソッド名 +
+`{2}`: 呼出側のファイル名 +
+`{3}`: 呼出側の行番号 +
+|`\s({2}:{3:D})`
+
+|`[blue]#DateTimeFormat#`
+|`日時の出力フォーマット +
+ +
+`[Teal]#パラメータ#:` +
+`{0}`: `DateTime`オブジェクト
+|`{0:yyyy-MM-dd hh:mm:ss.fff}`
+
+|`[blue]#MaxDataOutputWidth#`
+|データの出力幅の最大値
+|80
+
+|`[blue]#CollectionLimit#`
+|`ICollection`要素の出力数の限界値
+|512
+
+|`[blue]#StringLimit#`
+|`string`の出力文字数の制限
+|8192
+
+|`[blue]#ReflectionNestLimit#`
+|リフレクションのネストの限界値
+|4
+
+|`[blue]#NonPrintProperties#`
+|出力しないプロパティの配列 +
+ +
+`[Teal]#値のフォーマット#:` +
+`<フルクラス名>#<プロパティ名>,` +
+`<フルクラス名>#<プロパティ名>,` +
+`\...`
+|_<空配列>_
+
+|`[blue]#DefaultNameSpace#`
+|デフォルトの名前空間
+|_<なし>_
+
+|`[blue]#ReflectionClasses#`
+|`[blue]#ToString#`メソッドを実装していてもリフレクションで内容を出力するクラス名のセット
+|_<空セット>_
+
+|===
+
+==== 6.1. *NonPrintProperties*, *NonPrintString*
+
+DebugTrace は、`[blue]#ToString#`メソッドが実装されていない場合は、リフレクションを使用してオブジェクト内容を出力します。
+他のオブジェクトの参照があれば、そのオブジェクトの内容も出力します。
+ただし循環参照がある場合は、自動的に検出して出力を中断します。  
+`[blue]#NonPrintProperties#`プロパティを指定して出力を抑制する事もできます。
+このプロパティの値は、カンマ区切りで複数指定できます。  
+`[blue]#NonPrintProperties#`で指定されたプロパティの値は、`[blue]#NonPrintString#`で指定された文字列(デフォルト: `\***`)で出力されます。
+
+.NonPrintPropertiesの例
+----
+NonPrintProperties = DebugTraceExample.Node#Parent
+----
+
+.NonPrintProperties(複数指定)の例
+----
+NonPrintProperties = \
+    DebugTraceExample.Node#Parent,\
+    DebugTraceExample.Node#Left,\
+    DebugTraceExample.Node#Right
+----
+
+=== 7. ロギング・ライブラリの使用
+
+コンソール出力以外に以下のライブラリを使用してログ出力が可能です。
+
+[options="header", width="60%"]
+.ロギング・ライブラリ
+|===
+|ライブラリ名|必要なパッケージ  |API
+|log4net     |DebugTrace.Log4net|.NET Framework 4.7
+|NLog        |DebugTrace.NLog   |.NET Framework 4.7
+|===
+
+使用する場合は、上記パッケージをNuGetから追加してください。
+
+ロギング・ライブラリを使用する際のDebugTraceのロガー名は、`[blue]#DebugTrace#`です。
+
+==== 7-1. log4net
+
+[source,properties]
+.DebugTrace.propertiesの例
+----
+# DebugTrace.properties
+Logger = Log4net
+----
+
+[source,csharp]
+.AssemblyInfo.csの追加例
+----
+[assembly: log4net.Config.XmlConfigurator(ConfigFile=@"Log4net.config", Watch=true)]
+----
+
+[source,xml]
+.Log4net.configの例
+----
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <log4net>
+    <appender name="A" type="log4net.Appender.FileAppender">
+      <File value="C:/Logs/DebugTrace/Log4net.log" />
+      <AppendToFile value="true" />
+      <layout type="log4net.Layout.PatternLayout">
+        <ConversionPattern value="%date [%thread] %-5level %logger %message%n" />
+      </layout>
+    </appender>
+    <root>
+      <level value="DEBUG" />
+      <appender-ref ref="A" />
+    </root>
+  </log4net>
+</configuration>
+----
+
+==== 7-2. NLog
+
+[source,properties]
+.DebugTrace.propertiesの例
+----
+# DebugTrace.properties
+Logger = NLog
+----
+
+[source,xml]
+.NLog.configの例
+----
+<?xml version="1.0" encoding="utf-8" ?>
+<nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.nlog-project.org/schemas/NLog.xsd NLog.xsd"
+      autoReload="true"
+      throwExceptions="false"
+      internalLogLevel="Off" internalLogFile="C:/Logs/DebugTrace/NLog-internal.log">
+  <targets>
+    <target xsi:type="File" name="f" fileName="C:/Logs/DebugTrace/NLog.log"
+            layout="${longdate} [${threadid}] ${uppercase:${level}} ${logger} ${message}" />
+  </targets>
+  <rules>
+    <logger name="*" minlevel="Debug" writeTo="f" />
+  </rules>
+</nlog>
+----
+
+=== 8. ライセンス
+
+link:LICENSE.txt[MIT ライセンス(MIT)]
+
+_(C) 2018 Masato Kokubo_
