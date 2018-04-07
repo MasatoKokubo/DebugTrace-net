@@ -2,34 +2,34 @@
 
 link:README.asciidoc[[English]]
 
-*DebugTrace-net*は、.NETプログラムのデバッグ時にトレースログを出力するライブラリで、 https://docs.microsoft.com/ja-jp/dotnet/standard/net-standard[.NET Standard 2.0]に対応しています。 +
-メソッドの開始と終了箇所に `Trace.Enter()`および`Trace.Leave()`を埋め込む事で、開発中のプログラムの実行状況をログに出力する事ができます。
+*DebugTrace-net* は、.NETプログラムのデバッグ時にトレースログを出力するライブラリで、 https://docs.microsoft.com/ja-jp/dotnet/standard/net-standard[.NET Standard 2.0]に対応しています。 +
+メソッドの開始と終了箇所に `Trace.Enter()` および `Trace.Leave()` を埋め込む事で、開発中のプログラムの実行状況をログに出力する事ができます。
 
 === 1. 特徴
 
-* コール元の*クラス名*、*メソッド名*、*ソースファイル名*および*行番号*を自動的に出力。
-* メソッドやオブジェクトのネストで、ログを*自動的にインデント*。
-* 値の出力で*自動的に改行*。
-* *スレッドの切り替え時*に自動的にログを出力。
-* `ToString`メソッドを実装していないクラスのオブジェクトでも*リフレクション*を使用して内容を出力。
-* `DebugTrace.properties`で、出力内容のカスタマイズが可能。
+* コール元の *クラス名* 、 *メソッド名* 、 *ソースファイル名* および *行番号* を自動的に出力。
+* メソッドやオブジェクトのネストで、ログを *自動的にインデント* 。
+* 値の出力で *自動的に改行* 。
+* *スレッドの切り替え時* に自動的にログを出力。
+* `ToString` メソッドを実装していないクラスのオブジェクトでも *リフレクション* を使用して内容を出力。
+* `DebugTrace.properties` で、出力内容のカスタマイズが可能。
 * 依存するライブラリがない (コンソールに出力する場合)。
 * 各種ロギング・ライブラリを使用可能。
     ** https://logging.apache.org/log4net/[log4net]
     ** http://nlog-project.org/[NLog]
 
 === 2. インストール
-NuGetから`DebugTrace`パッケージを検索してインストールしてください。 +
-https://logging.apache.org/log4net/[log4net]または http://nlog-project.org/[NLog]を使用してログを出力する場合は、`DebugTrace.Log4net`または`DebugTrace.NLog`をインストールしてください。 +
-`DebugTrace.Log4net`および`DebugTrace.NLog`は、(https://docs.microsoft.com/ja-jp/dotnet/standard/net-standard[.NET Standard]ではなく).NET Framework 4.7に対応しています。
+NuGetから `DebugTrace` パッケージを検索してインストールしてください。 +
+https://logging.apache.org/log4net/[log4net]または http://nlog-project.org/[NLog]を使用してログを出力する場合は、 `DebugTrace.Log4net` または `DebugTrace.NLog` をインストールしてください。 +
+`DebugTrace.Log4net` および `DebugTrace.NLog` は、(https://docs.microsoft.com/ja-jp/dotnet/standard/net-standard[.NET Standard]ではなく).NET Framework 4.7に対応しています。
 
 === 3. 使用方法
 
 デバッグ対象および関連するメソッドに対して以下を行います。
 
-. メソッドの先頭に`Trace.Enter()`を挿入する。
-. メソッドの終了(または`return`文の直前)に`Trace.Leave()`を挿入する。
-. 必要に応じて変数をログに出力する`Trace.Print("foo", foo)`または`Trace.Print(nameof(foo), foo)`を挿入する。
+. メソッドの先頭に `Trace.Enter()` を挿入する。
+. メソッドの終了(または `return` 文の直前)に `Trace.Leave()` を挿入する。
+. 必要に応じて変数をログに出力する `Trace.Print("foo", foo)` または `Trace.Print(nameof(foo), foo)` を挿入する。
 
 以下は、DebugTrace-netを使用したC#, Visual Basicの例とそれを実行した際のログです。
 
@@ -185,7 +185,7 @@ End Namespace
 
 === 4. DebugTrace.CSharpおよびDebugTrace.VisualBasicクラスのプロパティ
 
-`DebugTrace.CSharp`クラスと`DebugTrace.VisualBasic`クラスには自身の型のインスタンスとして`Trace`プロパティがあります。
+`DebugTrace.CSharp` クラスと `DebugTrace.VisualBasic` クラスには自身の型のインスタンスとして `Trace` プロパティがあります。
 
 === 5. ITraceインタフェースのプロパティおよびメソッド
 
@@ -196,10 +196,10 @@ End Namespace
 |===
 |名前|説明
 |`IsEnabled`
-|ログ出力が有効なら`true`、そうでなければ`false` (`get`のみ)
+|ログ出力が有効なら `true` 、そうでなければ `false`  (`get` のみ)
 
 |`LastLog`
-|最後に出力したログ文字列 (`get`のみ)
+|最後に出力したログ文字列 (`get` のみ)
 
 |===
 
@@ -230,7 +230,7 @@ End Namespace
 |`Print`
 |`Func<string> messageSupplier`: メッセージを返す関数
 |なし
-|`messageSupplier`からメッセージを取得してログに出力する
+|`messageSupplier` からメッセージを取得してログに出力する
 
 |`Print`
 |`string name`: 値の名前 +
@@ -243,7 +243,7 @@ End Namespace
 |`string name`: 値の名前 +
 `Func<object> valueSupplier`: 値を返す関数
 |なし
-|`valueSupplier`から値を取得して +
+|`valueSupplier` から値を取得して +
 `<値の名前> = <値>` +
 の形式でログに出力する
 
@@ -251,7 +251,7 @@ End Namespace
 
 === 6. *DebugTrace.properties* ファイルのプロパティ
 
-DebugTrace は、DebugTrace.dllと同一ディレクトリにある`DebugTrace.properties`ファイルを起動時に読み込みます。
+DebugTrace は、DebugTrace.dllと同一ディレクトリにある `DebugTrace.properties` ファイルを起動時に読み込みます。
 `DebugTrace.properties` ファイルには以下のプロパティを指定できます。
 
 [options="header"]
@@ -275,7 +275,7 @@ DebugTrace は、DebugTrace.dllと同一ディレクトリにある`DebugTrace.p
 |`Debug`
 
 |`EnterString`
-|`Enter`メソッドで出力される文字列 +
+|`Enter` メソッドで出力される文字列 +
  +
 _パラメータ:_ +
 `{0}`: 呼出側のクラス名 +
@@ -285,7 +285,7 @@ _パラメータ:_ +
 |`Enter {0}.{1} ({2}:{3:D})`
 
 |`LeaveString`
-|`Leave`メソッドでで出力される文字列 +
+|`Leave` メソッドでで出力される文字列 +
  +
 _パラメータ:_ +
 `{0}`: 呼出側のクラス名 +
@@ -372,7 +372,7 @@ _パラメータ:_ +
 |80
 
 |`CollectionLimit`
-|`ICollection`要素の出力数の限界値
+|`ICollection` 要素の出力数の限界値
 |512
 
 |`StringLimit`
@@ -404,12 +404,12 @@ _パラメータ:_ +
 
 ==== 6.1. *NonPrintProperties*, *NonPrintString*
 
-DebugTrace は、`ToString`メソッドが実装されていない場合は、リフレクションを使用してオブジェクト内容を出力します。
+DebugTrace は、 `ToString` メソッドが実装されていない場合は、リフレクションを使用してオブジェクト内容を出力します。
 他のオブジェクトの参照があれば、そのオブジェクトの内容も出力します。
 ただし循環参照がある場合は、自動的に検出して出力を中断します。  
-`NonPrintProperties`プロパティを指定して出力を抑制する事もできます。
+`NonPrintProperties` プロパティを指定して出力を抑制する事もできます。
 このプロパティの値は、カンマ区切りで複数指定できます。  
-`NonPrintProperties`で指定されたプロパティの値は、`NonPrintString`で指定された文字列(デフォルト: `\***`)で出力されます。
+`NonPrintProperties` で指定されたプロパティの値は、 `NonPrintString` で指定された文字列(デフォルト: `\***`)で出力されます。
 
 .NonPrintPropertiesの例
 ----
@@ -438,7 +438,7 @@ NonPrintProperties = \
 
 使用する場合は、上記パッケージをNuGetから追加してください。
 
-ロギング・ライブラリを使用する際のDebugTraceのロガー名は、`DebugTrace`です。
+ロギング・ライブラリを使用する際のDebugTraceのロガー名は、 `DebugTrace` です。
 
 ==== 7-1. log4net
 
