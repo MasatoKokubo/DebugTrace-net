@@ -2,34 +2,34 @@
 
 link:README.asciidoc[[English]]
 
-DebugTrace-netは、.NETプログラムのデバッグ時にトレースログを出力するライブラリで、 https://docs.microsoft.com/ja-jp/dotnet/standard/net-standard[.NET Standard 2.0]に対応しています。 +
-メソッドの開始と終了箇所に`[blue]#Trace.Enter()#`および`[blue]#Trace.Leave()#`を埋め込む事で、開発中のプログラムの実行状況をログに出力する事ができます。
+*DebugTrace-net*は、.NETプログラムのデバッグ時にトレースログを出力するライブラリで、 https://docs.microsoft.com/ja-jp/dotnet/standard/net-standard[.NET Standard 2.0]に対応しています。 +
+メソッドの開始と終了箇所に `Trace.Enter()`および`Trace.Leave()`を埋め込む事で、開発中のプログラムの実行状況をログに出力する事ができます。
 
 === 1. 特徴
 
-* コール元の[blue]#クラス名#、[blue]#メソッド名#、[blue]#ソースファイル名#および[blue]#行番号#を自動的に出力。
-* メソッドやオブジェクトのネストで、ログを自動的に[blue]#インデント#。
-* 値の出力で自動的に[blue]#改行#。
-* [blue]#スレッドの切り替え時#に自動的にログを出力。
-* `[blue]#ToString#`メソッドを実装していないクラスのオブジェクトでもリフレクションを使用して内容を出力。
-* `[blue]#DebugTrace.properties#`で、出力内容のカスタマイズが可能。
-* [blue]#依存するライブラリがない# (コンソールに出力する場合)。
+* コール元の*クラス名*、*メソッド名*、*ソースファイル名*および*行番号*を自動的に出力。
+* メソッドやオブジェクトのネストで、ログを*自動的にインデント*。
+* 値の出力で*自動的に改行*。
+* *スレッドの切り替え時*に自動的にログを出力。
+* `ToString`メソッドを実装していないクラスのオブジェクトでも*リフレクション*を使用して内容を出力。
+* `DebugTrace.properties`で、出力内容のカスタマイズが可能。
+* 依存するライブラリがない (コンソールに出力する場合)。
 * 各種ロギング・ライブラリを使用可能。
     ** https://logging.apache.org/log4net/[log4net]
     ** http://nlog-project.org/[NLog]
 
 === 2. インストール
-NuGetから`[blue]#DebugTrace#`パッケージを検索してインストールしてください。 +
-https://logging.apache.org/log4net/[log4net]または http://nlog-project.org/[NLog]を使用してログを出力する場合は、`[blue]#DebugTrace.Log4net#`または`[blue]#DebugTrace.NLog#`をインストールしてください。 +
-`[blue]#DebugTrace.Log4net#`および`[blue]#DebugTrace.NLog#`は、(https://docs.microsoft.com/ja-jp/dotnet/standard/net-standard[.NET Standard]ではなく).NET Framework 4.7に対応しています。
+NuGetから`DebugTrace`パッケージを検索してインストールしてください。 +
+https://logging.apache.org/log4net/[log4net]または http://nlog-project.org/[NLog]を使用してログを出力する場合は、`DebugTrace.Log4net`または`DebugTrace.NLog`をインストールしてください。 +
+`DebugTrace.Log4net`および`DebugTrace.NLog`は、(https://docs.microsoft.com/ja-jp/dotnet/standard/net-standard[.NET Standard]ではなく).NET Framework 4.7に対応しています。
 
 === 3. 使用方法
 
 デバッグ対象および関連するメソッドに対して以下を行います。
 
-. メソッドの先頭に`[blue]#Trace.Enter()#`を挿入する。
-. メソッドの終了(または`[blue]#return#`文の直前)に`[blue]#Trace.Leave()#`を挿入する。
-. 必要に応じて変数をログに出力する`[blue]#Trace.Print("foo", foo)#`または`[blue]#Trace.Print(nameof(foo), foo)#`を挿入する。
+. メソッドの先頭に`Trace.Enter()`を挿入する。
+. メソッドの終了(または`return`文の直前)に`Trace.Leave()`を挿入する。
+. 必要に応じて変数をログに出力する`Trace.Print("foo", foo)`または`Trace.Print(nameof(foo), foo)`を挿入する。
 
 以下は、DebugTrace-netを使用したC#, Visual Basicの例とそれを実行した際のログです。
 
@@ -173,19 +173,19 @@ End Namespace
 .インタフェース、クラス
 |===
 |名前                              |スーパークラス、実装するインタフェース|説明
-|`[blue]#DebugTrace.ITrace#`       |なし                        |Trace処理のインタフェース
-|`[blue]#DebugTrace.Trace#`        |`[blue]#DebugTrace.ITrace#` |Trace処理の抽象クラス
-|`[blue]#DebugTrace.CSharp#`       |`[blue]#DebugTrace.Trace#`  |C#用のTrace処理のクラス
-|`[blue]#DebugTrace.VisualBasic#`  |`[blue]#DebugTrace.Trace#`  |VisualBasic用のTrace処理のクラス
-|`[blue]#DebugTrace.ILogger#`      |なし                        |ログ出力のインタフェース
-|`[blue]#DebugTrace.Console#`      |`[blue]#DebugTrace.ILogger#`|ログをコンソール出力する抽象クラス
-|`[blue]#DebugTrace.Console+Out#`  |`[blue]#DebugTrace.Console#`|ログを標準出力に出力するクラス
-|`[blue]#DebugTrace.Console+Error#`|`[blue]#DebugTrace.Console#`|ログを標準エラー出力に出力するクラス
+|`DebugTrace.ITrace`       |なし                        |Trace処理のインタフェース
+|`DebugTrace.Trace`        |`DebugTrace.ITrace` |Trace処理の抽象クラス
+|`DebugTrace.CSharp`       |`DebugTrace.Trace`  |C#用のTrace処理のクラス
+|`DebugTrace.VisualBasic`  |`DebugTrace.Trace`  |VisualBasic用のTrace処理のクラス
+|`DebugTrace.ILogger`      |なし                        |ログ出力のインタフェース
+|`DebugTrace.Console`      |`DebugTrace.ILogger`|ログをコンソール出力する抽象クラス
+|`DebugTrace.Console+Out`  |`DebugTrace.Console`|ログを標準出力に出力するクラス
+|`DebugTrace.Console+Error`|`DebugTrace.Console`|ログを標準エラー出力に出力するクラス
 |===
 
 === 4. DebugTrace.CSharpおよびDebugTrace.VisualBasicクラスのプロパティ
 
-`[blue]#DebugTrace.CSharp#`クラスと`[blue]#DebugTrace.VisualBasic#`クラスには自身の型のインスタンスとして`[blue]#Trace#`プロパティがあります。
+`DebugTrace.CSharp`クラスと`DebugTrace.VisualBasic`クラスには自身の型のインスタンスとして`Trace`プロパティがあります。
 
 === 5. ITraceインタフェースのプロパティおよびメソッド
 
@@ -195,10 +195,10 @@ End Namespace
 .プロパティ
 |===
 |名前|説明
-|`[blue]#IsEnabled#`
+|`IsEnabled`
 |ログ出力が有効なら`true`、そうでなければ`false` (`get`のみ)
 
-|`[blue]#LastLog#`
+|`LastLog`
 |最後に出力したログ文字列 (`get`のみ)
 
 |===
@@ -207,43 +207,43 @@ End Namespace
 .メソッド
 |===
 |名 前|引 数|戻り値|説明
-|`[blue]#ResetNest#`
+|`ResetNest`
 |なし
 |なし
 |現在のスレッドのネストレベルを初期化する
 
-|`[blue]#Enter#`
+|`Enter`
 |なし
-|`[blue]#int#` スレッドID
+|`int` スレッドID
 |メソッドの開始をログに出力する
 
-|`[blue]#Leave#`
-|`[blue]#int threadId#`: スレッドID (デフォルト: `-1`)
+|`Leave`
+|`int threadId`: スレッドID (デフォルト: `-1`)
 |なし
 |メソッドの終了をログに出力する
 
-|`[blue]#Print#`
-|`[blue]#string message#`: メッセージ
+|`Print`
+|`string message`: メッセージ
 |なし
 |メッセージをログに出力する
 
-|`[blue]#Print#`
-|`[blue]#Func<string> messageSupplier#`: メッセージを返す関数
+|`Print`
+|`Func<string> messageSupplier`: メッセージを返す関数
 |なし
-|`[blue]#messageSupplier#`からメッセージを取得してログに出力する
+|`messageSupplier`からメッセージを取得してログに出力する
 
-|`[blue]#Print#`
-|`[blue]#string name#`: 値の名前 +
-`[blue]#object value#`: 値
+|`Print`
+|`string name`: 値の名前 +
+`object value`: 値
 |なし
 |`<値の名前> = <値>` +
 の形式でログに出力する
 
-|`[blue]#Print#`
-|`[blue]#string name#`: 値の名前 +
-`[blue]#Func<object> valueSupplier#`: 値を返す関数
+|`Print`
+|`string name`: 値の名前 +
+`Func<object> valueSupplier`: 値を返す関数
 |なし
-|`[blue]#valueSupplier#`から値を取得して +
+|`valueSupplier`から値を取得して +
 `<値の名前> = <値>` +
 の形式でログに出力する
 
@@ -258,132 +258,132 @@ DebugTrace は、DebugTrace.dllと同一ディレクトリにある`DebugTrace.p
 .DebugTrace.properties
 |===
 |プロパティ名|設定する値|デフォルト値
-|`[blue]#Logger#`
+|`Logger`
 | DebugTrace が使用するロガー +
  +
-`[blue]#Log4net#`: log4netを使用 +
-`[blue]#NLog#`: NLogを使用 +
-`[blue]#Console+Out#`: コンソール(標準出力)へ出力 +
-`[blue]#Console+Error#`: コンソール(標準エラー出力)へ出力
-|`[blue]#Console+Error#`
+`Log4net`: log4netを使用 +
+`NLog`: NLogを使用 +
+`Console+Out`: コンソール(標準出力)へ出力 +
+`Console+Error`: コンソール(標準エラー出力)へ出力
+|`Console+Error`
 
-|`[blue]#LogLevel#`
+|`LogLevel`
 |ログ出力時のログレベル +
  +
-`Lo4jnet`: `[blue]#All#`, `[blue]#Debug#`, `[blue]#Info#`, `[blue]#Warn#`, `[blue]#Error#`, `[blue]#Fatal#`, `[blue]#Off#` +
-`NLog`: `[blue]#Trace#`, `[blue]#Debug#`, `[blue]#Info#`, `[blue]#Warn#`, `[blue]#Error#`, `[blue]#Off#` +
-|`[blue]#Debug#`
+`Lo4jnet`: `All`, `Debug`, `Info`, `Warn`, `Error`, `Fatal`, `Off` +
+`NLog`: `Trace`, `Debug`, `Info`, `Warn`, `Error`, `Off` +
+|`Debug`
 
-|`[blue]#EnterString#`
-|`[blue]#Enter#`メソッドで出力される文字列 +
+|`EnterString`
+|`Enter`メソッドで出力される文字列 +
  +
-`[Teal]#パラメータ#:` +
+_パラメータ:_ +
 `{0}`: 呼出側のクラス名 +
 `{1}`: 呼出側のメソッド名 +
 `{2}`: 呼出側のファイル名 +
 `{3}`: 呼出側の行番号
 |`Enter {0}.{1} ({2}:{3:D})`
 
-|`[blue]#LeaveString#`
-|`[blue]#Leave#`メソッドでで出力される文字列 +
+|`LeaveString`
+|`Leave`メソッドでで出力される文字列 +
  +
-`[Teal]#パラメータ#:` +
+_パラメータ:_ +
 `{0}`: 呼出側のクラス名 +
 `{1}`: 呼出側のメソッド名 +
 `{2}`: 呼出側のファイル名 +
 `{3}`: 呼出側の行番号
 |`Leave {0}.{1} ({2}:{3:D})`
 
-|`[blue]#ThreadBoundaryString#`
+|`ThreadBoundaryString`
 |スレッド境界で出力される文字列 +
  +
-`[Teal]#パラメータ#:` +
+_パラメータ:_ +
 `{0}`: スレッドID
 |`\____\__\__\__\__\__\__\__\__\__\__\__\__\__ Thread {0} \__\__\__\__\__\__\__\__\__\__\__\__\__\____`
 
-|`[blue]#ClassBoundaryString#`
+|`ClassBoundaryString`
 |クラス境界での出力文字列 +
  +
-`[Teal]#パラメータ#:` +
+_パラメータ:_ +
 `{0}`: クラス名
 |`\\____ {0} \____`
 
-|`[blue]#CodeIndentString#`
+|`CodeIndentString`
 |コードのインデント文字列 +
-[.small]#`\s`は空白文字に置き換えられます#
+`\s` _は空白文字に置き換えられます_
 |`\|\s`
 
-|`[blue]#DataIndentString#`
+|`DataIndentString`
 |データのインデント文字列 +
-[.small]#`\s`は空白文字に置き換えられます#
+`\s` _は空白文字に置き換えられます_
 |`\s\s`
 
-|`[blue]#LimitString#`
+|`LimitString`
 |制限を超えた場合の出力文字列
 |`\...`
 
-|`[blue]#DefaultNameSpaceString#` +
+|`DefaultNameSpaceString` +
 |デフォルトの名前空間を置き換える文字列
 |`\...`
 
-|`[blue]#NonPrintString#`
+|`NonPrintString`
 |出力しないプロパティ値の文字列
 |`\***`
 
-|`[blue]#CyclicReferenceString#`
+|`CyclicReferenceString`
 |循環参照時の出力文字列
 |`\*\** Cyclic Reference \***`
 
-|`[blue]#VarNameValueSeparator#`
+|`VarNameValueSeparator`
 |変数名と値のセパレータ +
-[.small]#`\s`は空白文字に置き換えられます#
+`\s` _は空白文字に置き換えられます_
 |`\s=\s`
 
-|`[blue]#KeyValueSeparator#`
+|`KeyValueSeparator`
 |マップのキーと値のセパレータ +
-[.small]#`\s`は空白文字に置き換えられます#
+`\s` _は空白文字に置き換えられます_
 |`:\s`
 
-|`[blue]#FieldNameValueSeparator#`
+|`FieldNameValueSeparator`
 |フィールド名と値のセパレータ +
-[.small]#`\s`は空白文字に置き換えられます#
+`\s` _は空白文字に置き換えられます_
 |`:\s`
 
-|`[blue]#PrintSuffixFormat#`
-|`[blue]#print#`メソッドで付加される文字列 +
-[.small]#`\s`は空白文字に置き換えられます# +
+|`PrintSuffixFormat`
+|`print`メソッドで付加される文字列 +
+`\s` _は空白文字に置き換えられます_ +
  +
-`[Teal]#パラメータ#:` +
+_パラメータ:_ +
 `{0}`: 呼出側のクラス名 +
 `{1}`: 呼出側のメソッド名 +
 `{2}`: 呼出側のファイル名 +
 `{3}`: 呼出側の行番号 +
 |`\s({2}:{3:D})`
 
-|`[blue]#DateTimeFormat#`
+|`DateTimeFormat`
 |`日時の出力フォーマット +
  +
-`[Teal]#パラメータ#:` +
+_パラメータ:_ +
 `{0}`: `DateTime`オブジェクト
 |`{0:yyyy-MM-dd hh:mm:ss.fff}`
 
-|`[blue]#MaxDataOutputWidth#`
+|`MaxDataOutputWidth`
 |データの出力幅の最大値
 |80
 
-|`[blue]#CollectionLimit#`
+|`CollectionLimit`
 |`ICollection`要素の出力数の限界値
 |512
 
-|`[blue]#StringLimit#`
+|`StringLimit`
 |`string`の出力文字数の制限
 |8192
 
-|`[blue]#ReflectionNestLimit#`
+|`ReflectionNestLimit`
 |リフレクションのネストの限界値
 |4
 
-|`[blue]#NonPrintProperties#`
+|`NonPrintProperties`
 |出力しないプロパティの配列 +
  +
 `[Teal]#値のフォーマット#:` +
@@ -392,24 +392,24 @@ DebugTrace は、DebugTrace.dllと同一ディレクトリにある`DebugTrace.p
 `\...`
 |_<空配列>_
 
-|`[blue]#DefaultNameSpace#`
+|`DefaultNameSpace`
 |デフォルトの名前空間
 |_<なし>_
 
-|`[blue]#ReflectionClasses#`
-|`[blue]#ToString#`メソッドを実装していてもリフレクションで内容を出力するクラス名のセット
+|`ReflectionClasses`
+|`ToString`メソッドを実装していてもリフレクションで内容を出力するクラス名のセット
 |_<空セット>_
 
 |===
 
 ==== 6.1. *NonPrintProperties*, *NonPrintString*
 
-DebugTrace は、`[blue]#ToString#`メソッドが実装されていない場合は、リフレクションを使用してオブジェクト内容を出力します。
+DebugTrace は、`ToString`メソッドが実装されていない場合は、リフレクションを使用してオブジェクト内容を出力します。
 他のオブジェクトの参照があれば、そのオブジェクトの内容も出力します。
 ただし循環参照がある場合は、自動的に検出して出力を中断します。  
-`[blue]#NonPrintProperties#`プロパティを指定して出力を抑制する事もできます。
+`NonPrintProperties`プロパティを指定して出力を抑制する事もできます。
 このプロパティの値は、カンマ区切りで複数指定できます。  
-`[blue]#NonPrintProperties#`で指定されたプロパティの値は、`[blue]#NonPrintString#`で指定された文字列(デフォルト: `\***`)で出力されます。
+`NonPrintProperties`で指定されたプロパティの値は、`NonPrintString`で指定された文字列(デフォルト: `\***`)で出力されます。
 
 .NonPrintPropertiesの例
 ----
@@ -438,7 +438,7 @@ NonPrintProperties = \
 
 使用する場合は、上記パッケージをNuGetから追加してください。
 
-ロギング・ライブラリを使用する際のDebugTraceのロガー名は、`[blue]#DebugTrace#`です。
+ロギング・ライブラリを使用する際のDebugTraceのロガー名は、`DebugTrace`です。
 
 ==== 7-1. log4net
 

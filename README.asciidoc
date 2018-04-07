@@ -2,36 +2,36 @@
 
 link:README_ja.asciidoc[[Japanese]]
 
-`DebugTrace-net` is a library that outputs trace logs when debugging .NET programs. It corresponds to https://docs.microsoft.com/en-us/dotnet/standard/net-standard[.NET Standard 2.0]. +
-By embedding `[blue]#Trace.Enter()#` and `[blue]#Trace.Leave()#` at the start and end of methods, you can output the execution status of the program under development to the log.
+*DebugTrace-net* is a library that outputs trace logs when debugging .NET programs. It corresponds to https://docs.microsoft.com/en-us/dotnet/standard/net-standard[.NET Standard 2.0]. +
+By embedding `Trace.Enter()` and `Trace.Leave()` at the start and end of methods, you can output the execution status of the program under development to the log.
 
 === 1. Features
 
-* Automatically outputs caller's [blue]#class name#, [blue]#method name#, source [blue]#file name# and [blue]#line number#.
-* Automatically [blue]#indents# the log with nesting methods and objects.
-* Automatically [blue]#breaks# at the output of values.
-* Automatically output logs when [blue]#changing threads#.
-* Uses reflection to output objects of classes that do not implement `[blue]#ToString#` method.
-* You can customize the output content in `[blue]#DebugTrace.properties#`.
-* There is [blue]#no dependency library# if you output to the console
+* Automatically outputs caller's *class name*, *method name*, *source file name* and *line number*.
+* *Automatically indents* the log with nesting methods and objects.
+* *Automatically breaks* at the output of values.
+* Automatically output logs when *changing threads*.
+* Uses *reflection* to output objects of classes that do not implement `ToString` method.
+* You can customize the output content in `DebugTrace.properties`.
+* There is *no dependency library* if you output to the console
 * You can use the following logging library.
     ** https://logging.apache.org/log4net/[log4net]
     ** http://nlog-project.org/[NLog]
 
 === 2. Install
 
-Search `[blue]#DebugTrace#` packege on NuGet and install it. +
+Search `DebugTrace` packege on NuGet and install it. +
 If you output logs using https://logging.apache.org/log4net/[log4net] or http://nlog-project.org/[NLog],
-install `[blue]#DebugTrace.Log4net#` or `[blue]#DebugTrace.NLog#` package.
-`[blue]#DebugTrace.Log4net#` and `[blue]#DebugTrace.NLog#` package corresponds to .NET Framework 4.7 instead of https://docs.microsoft.com/en-us/dotnet/standard/net-standard[.NET Standard].
+install `DebugTrace.Log4net` or `DebugTrace.NLog` package.
+`DebugTrace.Log4net` and `DebugTrace.NLog` package corresponds to .NET Framework 4.7 instead of https://docs.microsoft.com/en-us/dotnet/standard/net-standard[.NET Standard].
 
 === 3. How to use
 
 Do the following for debug target and related methods.
 
-. Insert `[blue]#Trace.Enter()#` at the beginning of methods.
-. Insert `[blue]#Trace.Leave()#` at the end of methods or just before the `[blue]#return#` statements.
-. Insert `[blue]#Trace.Print("foo", foo)#` or `[blue]#Trace.Print(nameof(foo), foo)#` to output arguments, local variables and return value to the log if necessary.
+. Insert `Trace.Enter()` at the beginning of methods.
+. Insert `Trace.Leave()` at the end of methods or just before the `return` statements.
+. Insert `Trace.Print("foo", foo)` or `Trace.Print(nameof(foo), foo)` to output arguments, local variables and return value to the log if necessary.
 
 The following are examples of C# and Visual Basic source used DebugTrace-net methods and the log of when it has been executed.
 
@@ -175,19 +175,19 @@ There are mainly the following interfaces and classes.
 .Interfaces and Classes
 |===
 |Name                              |Super Class or Implemented Interfaces|Description
-|`[blue]#DebugTrace.ITrace#`       |_None_                      |Trace processing interface
-|`[blue]#DebugTrace.Trace#`        |`[blue]#DebugTrace.ITrace#` |Trace processing abstract class
-|`[blue]#DebugTrace.CSharp#`       |`[blue]#DebugTrace.Trace#`  |Trace processing class for C#
-|`[blue]#DebugTrace.VisualBasic#`  |`[blue]#DebugTrace.Trace#`  |Trace processing class for VisualBasic
-|`[blue]#DebugTrace.ILogger#`      |_None_                      |Log output interface
-|`[blue]#DebugTrace.Console#`      |`[blue]#DebugTrace.ILogger#`|Abstract class that outputs logs to the console
-|`[blue]#DebugTrace.Console+Out#`  |`[blue]#DebugTrace.Console#`|Class outputting logs to standard output
-|`[blue]#DebugTrace.Console+Error#`|`[blue]#DebugTrace.Console#`|Class outputting logs to standard error output
+|`DebugTrace.ITrace`       |_None_                      |Trace processing interface
+|`DebugTrace.Trace`        |`DebugTrace.ITrace` |Trace processing abstract class
+|`DebugTrace.CSharp`       |`DebugTrace.Trace`  |Trace processing class for C#
+|`DebugTrace.VisualBasic`  |`DebugTrace.Trace`  |Trace processing class for VisualBasic
+|`DebugTrace.ILogger`      |_None_                      |Log output interface
+|`DebugTrace.Console`      |`DebugTrace.ILogger`|Abstract class that outputs logs to the console
+|`DebugTrace.Console+Out`  |`DebugTrace.Console`|Class outputting logs to standard output
+|`DebugTrace.Console+Error`|`DebugTrace.Console`|Class outputting logs to standard error output
 |===
 
 === 4. Properties of DebugTrace.CSharp class and DebugTrace.VisualBasic class
 
-`[blue]#DebugTrace.CSharp#` and `[blue]#DebugTrace.VisualBasic#` class has `[blue]#Trace#` property as an instance of its own type.
+`DebugTrace.CSharp` and `DebugTrace.VisualBasic` class has `Trace` property as an instance of its own type.
 
 === 5. Properties and methods of ITrace interface
 
@@ -197,10 +197,10 @@ It has the following properties and methods.
 .Properties
 |===
 |Name|Description
-|`[blue]#IsEnabled#`
+|`IsEnabled`
 |`true` if log output is enabled, `false` otherwise (`get` only)
 
-|`[blue]#LastLog#`
+|`LastLog`
 |Last log string outputted (`get` only)
 
 |===
@@ -209,42 +209,42 @@ It has the following properties and methods.
 .Methods
 |===
 |Name|Arguments|Return Value|Description
-|`[blue]#ResetNest#`
+|`ResetNest`
 |_None_
 |_None_
 |Initializes the nesting level for the current thread.
 
-|`[blue]#Enter#`
+|`Enter`
 |_None_
-|`[blue]#int#` thread ID
+|`int` thread ID
 |Outputs method start to log.
 
-|`[blue]#Leave#`
-|`[blue]#int threadId#`: the thread ID (default: `-1`)
+|`Leave`
+|`int threadId`: the thread ID (default: `-1`)
 |_None_
 |Outputs method end to the log.
 
-|`[blue]#Print#`
-|`[blue]#string message#`: the message
+|`Print`
+|`string message`: the message
 |_None_
 |Outputs the message to the log.
 
-|`[blue]#Print#`
-|`[blue]#Func<string> messageSupplier#`: the function to return a message
+|`Print`
+|`Func<string> messageSupplier`: the function to return a message
 |_None_
-|Gets a message from `[blue]#messageSupplier#` and output it to the log.
+|Gets a message from `messageSupplier` and output it to the log.
 
-|`[blue]#Print#`
-|`[blue]#string name#`: the name of the value +
-`[blue]#object value#`: the value
+|`Print`
+|`string name`: the name of the value +
+`object value`: the value
 |_None_
 |Outputs to the log in the form of `"Name = Value"`
 
-|`[blue]#Print#`
-|`[blue]#string name#`: the name of the value +
-`[blue]#Func<object> valueSupplier#`:  the function to return a value
+|`Print`
+|`string name`: the name of the value +
+`Func<object> valueSupplier`:  the function to return a value
 |_None_
-|Gets a value from `[blue]#valueSupplier#` and output it to the log in the form of `"Name = Value"`.
+|Gets a value from `valueSupplier` and output it to the log in the form of `"Name = Value"`.
 
 |===
 
@@ -258,24 +258,24 @@ You can specify following properties in the `DebugTrace.properties` file.
 |===
 |Property Name|Value to be set|Default Value
 
-|`[blue]#Logger#`
+|`Logger`
 | Logger DebugTrace uses +
  +
-`[blue]#Log4net#`: use Log4net +
-`[blue]#NLog#`: use NLog +
-`[blue]#Console+Out#`: Output to the console (stdout) +
-`[blue]#Console+Error#`: Output to the console (stderr)
-|`[blue]#Console+Error#`
+`Log4net`: use Log4net +
+`NLog`: use NLog +
+`Console+Out`: Output to the console (stdout) +
+`Console+Error`: Output to the console (stderr)
+|`Console+Error`
 
-|`[blue]#LogLevel#`
+|`LogLevel`
 |Log level at log output +
  +
-`Lo4jnet`: `[blue]#All#`, `[blue]#Debug#`, `[blue]#Info#`, `[blue]#Warn#`, `[blue]#Error#`, `[blue]#Fatal#`, `[blue]#Off#` +
-`NLog`: `[blue]#Trace#`, `[blue]#Debug#`, `[blue]#Info#`, `[blue]#Warn#`, `[blue]#Error#`, `[blue]#Off#` +
-|`[blue]#Debug#`
+`Lo4jnet`: `All`, `Debug`, `Info`, `Warn`, `Error`, `Fatal`, `Off` +
+`NLog`: `Trace`, `Debug`, `Info`, `Warn`, `Error`, `Off` +
+|`Debug`
 
-|`[blue]#EnterString#`
-|The string output by `[blue]#enter#` method +
+|`EnterString`
+|The string output by `enter` method +
  +
 `[Teal]#parameters#:` +
 `{0}`: The class name of the caller +
@@ -284,8 +284,8 @@ You can specify following properties in the `DebugTrace.properties` file.
 `{3}`: The line number of the caller
 |`Enter {0}.{1} ({2}:{3:D})`
 
-|`[blue]#LeaveString#`
-|The string output by `[blue]#leave#` method +
+|`LeaveString`
+|The string output by `leave` method +
  +
 `[Teal]#parameters#:` +
 `{0}`: The class name of the caller +
@@ -294,123 +294,123 @@ You can specify following properties in the `DebugTrace.properties` file.
 `{3}`: The line number of the caller
 |`Leave {0}.{1} ({2}:{3:D})`
 
-|`[blue]#ThreadBoundaryString#`
+|`ThreadBoundaryString`
 |The string output in the threads boundary. +
  +
-`[Teal]#parameter#:` +
+_parameters:_ +
 `{0}`: The thread ID
 |`\____\__\__\__\__\__\__\__\__\__\__\__\__\__ Thread {0} \__\__\__\__\__\__\__\__\__\__\__\__\__\____`
 
-|`[blue]#ClassBoundaryString#`
+|`ClassBoundaryString`
 |The string output in the classes boundary. +
  +
-`[Teal]#parameter#:` +
+_parameters:_ +
 `{0}`: The class name
 |`\\____ {0} \____`
 
-|`[blue]#CodeIndentString#`
+|`CodeIndentString`
 |The string of one code indent +
-[.small]#`\s` is change to a space character#
-|`\s\s`
+`\s` _is change to a space character_
+|`\|\s`
 
-|`[blue]#DataIndentString#`
+|`DataIndentString`
 |The string of one data indent +
-[.small]#`\s` is change to a space character#
+`\s` _is change to a space character_
 |`\s\s`
 
-|`[blue]#LimitString#`
+|`LimitString`
 |The string to represent that it has exceeded the limit
 |`\...`
 
-|`[blue]#DefaultNameSpaceString#` +
+|`DefaultNameSpaceString` +
 |The string replacing the default namespace part
 |`\...`
 
-|`[blue]#NonPrintString#` +
+|`NonPrintString` +
 |The string of value in the case of properties that do not print the value
 |`\***`
 
-|`[blue]#CyclicReferenceString#`
+|`CyclicReferenceString`
 |The string to represent that the cyclic reference occurs
 |`\*\** Cyclic Reference \***`
 
-|`[blue]#VarNameValueSeparator#`
+|`VarNameValueSeparator`
 |The separator string between the variable name and value +
-[.small]#`\s` is change to a space character#
+`\s` _is change to a space character_
 |`\s=\s`
 
-|`[blue]#KeyValueSeparator#`
+|`KeyValueSeparator`
 |The separator string between the key and value for Map object +
-[.small]#`\s` is change to a space character#
+`\s` _is change to a space character_
 |`:\s`
 
-|`[blue]#FieldNameValueSeparator#`
+|`FieldNameValueSeparator`
 |The separator string between the field name and value +
-[.small]#`\s` is change to a space character#
+`\s` _is change to a space character_
 |`:\s`
 
-|`[blue]#PrintSuffixFormat#`
-|Output format of `[blue]#print#` method suffix +
-[.small]#`\s` is change to a space character# +
+|`PrintSuffixFormat`
+|Output format of `print` method suffix +
+`\s` _is change to a space character_ +
  +
-`[Teal]#parameters#:` +
+_parameters:_ +
 `{0}`: The class name of the caller +
 `{1}`: The method name of the caller +
 `{2}`: The file name of the caller +
 `{3}`: The line number of the caller
 |`\s({2}:{3:D})`
 
-|`[blue]#DateTimeFormat#`
+|`DateTimeFormat`
 |Output format of date and time +
  +
-`[Teal]#parameter#:` +
+_parameters:_ +
 `{0}`: The `DateTime` object +
 |`{0:yyyy-MM-dd hh:mm:ss.fff}`
 
-|`[blue]#MaxDataOutputWidth#`
+|`MaxDataOutputWidth`
 |Maximum output width of data
 |80
 
-|`[blue]#CollectionLimit#`
+|`CollectionLimit`
 |Limit value of `ICollection` elements to output
 |512
 
-|`[blue]#StringLimit#`
+|`StringLimit`
 |Limit value of String characters to output
 |8192
 
-|`[blue]#ReflectionNestLimit#`
+|`ReflectionNestLimit`
 |Limit value of reflection nest
 |4
 
-|`[blue]#NonPrintProperties#` +
+|`NonPrintProperties` +
 |Properties not to be output +
 value +
  +
 `[Teal]#format#:` +
-`<full class name>#<property name>,` +
-`<full class name>#<property name>,` +
+`<full class name>#<property name>`, +
+`<full class name>#<property name>`, +
 `\...`
 |_<empty list>_
 
-|`[blue]#DefaultNameSpace#` +
+|`DefaultNameSpace` +
 |Default namespace of your java source
 |_<none>_
 
-|`[blue]#ReflectionClasses#` +
-|Classe names that output content by reflection even if `[blue]#ToString#` method is implemented
+|`ReflectionClasses` +
+|Classe names that output content by reflection even if `ToString` method is implemented
 |_<empty list>_
 
 |===
 
 ==== 6.1. *NonPrintProperties*, *NonPrintString*
 
-DebugTrace use reflection to output object contents if the `[blue]#ToString#` method is not implemented.
+DebugTrace use reflection to output object contents if the `ToString` method is not implemented.
 If there are other object references, the contents of objects are also output.
 However, if there is circular reference, it will automatically detect and suspend output.
-You can suppress output by specifying the `[blue]#NonPrintProperties#` property and
+You can suppress output by specifying the `NonPrintProperties` property and
 can specify multiple values of this property separated by commas.  
-The value of the property specified by `[blue]#NonPrintProperties#` are output as the string specified by `[blue]#NonPrintString#` (default: `\***`).
+The value of the property specified by `NonPrintProperties` are output as the string specified by `NonPrintString` (default: `\***`).
 
 .Example of NonPrintProperties
 ----
@@ -439,7 +439,7 @@ You can output logs using the following libraries besides console output.
 
 To use them, add the above package from NuGet.
 
-The logger name of DebugTrace is `[blue]#DebugTrace#`.   
+The logger name of DebugTrace is `DebugTrace`.   
 
 ==== 7-1. log4net
 
