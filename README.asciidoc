@@ -508,6 +508,6 @@ Logger = NLog
 
 === 8. License
 
-link:LICENSE.txt[The MIT License (MIT)]
+link:LICENSE[The MIT License (MIT)]
 
 [gray]#_(C) 2018 Masato Kokubo_#

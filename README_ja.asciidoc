@@ -507,6 +507,6 @@ Logger = NLog
 
 === 8. ライセンス
 
-link:LICENSE.txt[MIT ライセンス(MIT)]
+link:LICENSE[MIT ライセンス(MIT)]
 
 _(C) 2018 Masato Kokubo_
