@@ -174,12 +174,12 @@ There are mainly the following interfaces and classes.
 [options="header", width="100%"]
 .Interfaces and Classes
 |===
-|Name                              |Super Class or Implemented Interfaces|Description
-|`DebugTrace.ITrace`       |_None_                      |Trace processing interface
-|`DebugTrace.Trace`        |`DebugTrace.ITrace` |Trace processing abstract class
+|Name     |Super Class or Implemented Interfaces|Description
+|`DebugTrace.ITrace`       |_None_              |Trace processing interface
+|`DebugTrace.TraceBase`    |`DebugTrace.ITrace` |Trace processing base class
 |`DebugTrace.CSharp`       |`DebugTrace.Trace`  |Trace processing class for C#
 |`DebugTrace.VisualBasic`  |`DebugTrace.Trace`  |Trace processing class for VisualBasic
-|`DebugTrace.ILogger`      |_None_                      |Log output interface
+|`DebugTrace.ILogger`      |_None_              |Log output interface
 |`DebugTrace.Console`      |`DebugTrace.ILogger`|Abstract class that outputs logs to the console
 |`DebugTrace.Console+Out`  |`DebugTrace.Console`|Class outputting logs to standard output
 |`DebugTrace.Console+Error`|`DebugTrace.Console`|Class outputting logs to standard error output
@@ -259,7 +259,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 |Property Name|Value to be set|Default Value
 
 |`Logger`
-| Logger DebugTrace uses +
+| *Logger* DebugTrace uses +
  +
 `Log4net`: use Log4net +
 `NLog`: use NLog +
@@ -268,7 +268,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 |`Console+Error`
 
 |`LogLevel`
-|Log level at log output +
+|*Log level* at log output +
  +
 `Lo4jnet`: `All`, `Debug`, `Info`, `Warn`, `Error`, `Fatal`, `Off` +
 `NLog`: `Trace`, `Debug`, `Info`, `Warn`, `Error`, `Off` +
@@ -295,57 +295,53 @@ You can specify following properties in the `DebugTrace.properties` file.
 |`Leave {0}.{1} ({2}:{3:D})`
 
 |`ThreadBoundaryString`
-|The string output in the threads boundary. +
+|The string output in the *threads boundary*. +
  +
 _parameters:_ +
 `{0}`: The thread ID
 |`\____\__\__\__\__\__\__\__\__\__\__\__\__\__ Thread {0} \__\__\__\__\__\__\__\__\__\__\__\__\__\____`
 
 |`ClassBoundaryString`
-|The string output in the classes boundary. +
+|The string output in the *classes boundary*. +
  +
 _parameters:_ +
 `{0}`: The class name
 |`\\____ {0} \____`
 
 |`CodeIndentString`
-|The string of one code indent +
+|The string of one *code indent* +
 `\s` _is change to a space character_
 |`\|\s`
 
 |`DataIndentString`
-|The string of one data indent +
+|The string of one *data indent* +
 `\s` _is change to a space character_
 |`\s\s`
 
 |`LimitString`
-|The string to represent that it has exceeded the limit
+|The *string* to represent that it has exceeded the *limit*
 |`\...`
 
 |`DefaultNameSpaceString` +
-|The string replacing the default namespace part
+|The string replacing the default *namespace* part
 |`\...`
 
 |`NonPrintString` +
-|The string of value in the case of properties that do not print the value
+|The string of value in the case of properties that *do not print* the value
 |`\***`
 
 |`CyclicReferenceString`
-|The string to represent that the cyclic reference occurs
+|The string to represent that the *cyclic reference* occurs
 |`\*\** Cyclic Reference \***`
 
 |`VarNameValueSeparator`
-|The separator string between the variable name and value +
+|The separator string between the *variable name and value* +
 `\s` _is change to a space character_
 |`\s=\s`
 
 |`KeyValueSeparator`
-|The separator string between the key and value for Map object +
-`\s` _is change to a space character_
-|`:\s`
-
-|`FieldNameValueSeparator`
-|The separator string between the field name and value +
+|The separator string between the *key and value* for Map object
+and between the *property/field name and value*
 `\s` _is change to a space character_
 |`:\s`
 
@@ -361,45 +357,45 @@ _parameters:_ +
 |`\s({2}:{3:D})`
 
 |`DateTimeFormat`
-|Output format of date and time +
+|Output format of *date and time* +
  +
 _parameters:_ +
 `{0}`: The `DateTime` object +
 |`{0:yyyy-MM-dd hh:mm:ss.fff}`
 
 |`MaxDataOutputWidth`
-|Maximum output width of data
+|*Maximum* output *width of data*
 |80
 
 |`CollectionLimit`
-|Limit value of `ICollection` elements to output
+|*Limit* value of `ICollection` elements to output
 |512
 
 |`StringLimit`
-|Limit value of String characters to output
+|*Limit* value of `string` characters to output
 |8192
 
 |`ReflectionNestLimit`
-|Limit value of reflection nest
+|*Limit* value of *reflection nest*
 |4
 
 |`NonPrintProperties` +
-|Properties not to be output +
+|Properties and fields *not to be output* +
 value +
  +
 `[Teal]#format#:` +
-`<full class name>#<property name>`, +
-`<full class name>#<property name>`, +
+`<full class name>.<property or field name>`, +
+`<full class name>.<property or field name>`, +
 `\...`
-|_<empty list>_
+|_Empty_
 
 |`DefaultNameSpace` +
-|Default namespace of your java source
-|_<none>_
+|Default *namespace* of your java source
+|_None_
 
 |`ReflectionClasses` +
-|Classe names that output content by reflection even if `ToString` method is implemented
-|_<empty list>_
+|*Classe names* that output content by *reflection* even if `ToString` method is implemented
+|_Empty_
 
 |===
 

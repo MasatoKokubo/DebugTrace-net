@@ -14,7 +14,7 @@ namespace DebugTrace {
 	///
 	/// <since>1.0.0</since>
 	/// <author>Masato Kokubo</author>
-	public class VisualBasic : Trace {
+	public class VisualBasic : TraceBase {
 		/// An ITrace object for Visual Basic
 		public static VisualBasic Trace {get;} = new VisualBasic();
 

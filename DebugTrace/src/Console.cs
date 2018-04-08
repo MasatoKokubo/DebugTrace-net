@@ -37,7 +37,7 @@ namespace DebugTrace {
 			/// Output the message to the log.
 			/// </summary>
 			public override void Log(string message) {
-				System.Console.Out.WriteLine(Trace.DateTimeString + ' ' + message);
+				System.Console.Out.WriteLine(TraceBase.DateTimeString + ' ' + message);
 			}
 		}
 
@@ -54,7 +54,7 @@ namespace DebugTrace {
 			/// Output the message to the log.
 			/// </summary>
 			public override void Log(string message) {
-				System.Console.Error.WriteLine(Trace.DateTimeString + ' ' + message);
+				System.Console.Error.WriteLine(TraceBase.DateTimeString + ' ' + message);
 			}
 		}
 	}

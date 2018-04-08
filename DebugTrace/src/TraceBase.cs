@@ -23,7 +23,9 @@ namespace DebugTrace {
 	///
 	/// <since>1.0.0</since>
 	/// <author>Masato Kokubo</author>
-	public abstract class Trace : ITrace {
+	public abstract class TraceBase : ITrace {
+		public static Resource Resource {get; private set;}
+
 		public static string   EnterString             {get; private set;} // string at enter
 		public static string   LeaveString             {get; private set;} // string at leave
 		public static string   ThreadBoundaryString    {get; private set;} // string of threads boundary
@@ -35,8 +37,7 @@ namespace DebugTrace {
 		public static string   NonPrintString          {get; private set;} // string of value in the case of properties that do not display the value
 		public static string   CyclicReferenceString   {get; private set;} // string to represent that the cyclic reference occurs
 		public static string   VarNameValueSeparator   {get; private set;} // Separator between the variable name and value
-		public static string   KeyValueSeparator       {get; private set;} // Separator between the key and value for IDictionary obj
-		public static string   FieldNameValueSeparator {get; private set;} // Separator between the field name and value
+		public static string   KeyValueSeparator       {get; private set;} // Separator between the key and value for IDictionary object or property/field and value
 		public static string   PrintSuffixFormat       {get; private set;} // Format string of Print suffix
 		public static string   DateTimeFormat          {get; private set;} // Format string of a DateTime and a string
 		public static int      MaxDataOutputWidth      {get; private set;} // Maximum data output width
@@ -89,7 +90,7 @@ namespace DebugTrace {
 		/// <summary>
 		/// class constructor
 		/// </summary>
-		static Trace() {
+		static TraceBase() {
 			InitClass();
 		}
 
@@ -97,30 +98,29 @@ namespace DebugTrace {
 		/// Initializes this class.
 		/// </summary>
 		public static void InitClass() {
-			var resource = new Resource("DebugTrace");
+			Resource = new Resource("DebugTrace");
 
-			EnterString              = resource.GetString (nameof(EnterString            ), "Enter {0}.{1} ({2}:{3:D})");
-			LeaveString              = resource.GetString (nameof(LeaveString            ), "Leave {0}.{1} ({2}:{3:D})");
-			ThreadBoundaryString     = resource.GetString (nameof(ThreadBoundaryString   ), "______________________________ Thread {0} ______________________________");
-			ClassBoundaryString      = resource.GetString (nameof(ClassBoundaryString    ), "____ {0} ____");
-			CodeIndentString         = resource.GetString (nameof(CodeIndentString       ), "| ");
-			DataIndentString         = resource.GetString (nameof(DataIndentString       ), "  ");
-			LimitString              = resource.GetString (nameof(LimitString            ), "...");
-			DefaultNameSpaceString   = resource.GetString (nameof(DefaultNameSpaceString ), "...");
-			NonPrintString           = resource.GetString (nameof(NonPrintString         ), "***");
-			CyclicReferenceString    = resource.GetString (nameof(CyclicReferenceString  ), "*** Cyclic Reference ***");
-			VarNameValueSeparator    = resource.GetString (nameof(VarNameValueSeparator  ), " = ");
-			KeyValueSeparator        = resource.GetString (nameof(KeyValueSeparator      ), ": ");
-			FieldNameValueSeparator  = resource.GetString (nameof(FieldNameValueSeparator), ": ");
-			PrintSuffixFormat        = resource.GetString (nameof(PrintSuffixFormat      ), " ({2}:{3:D})");
-			DateTimeFormat           = resource.GetString (nameof(DateTimeFormat         ), "{0:yyyy-MM-dd hh:mm:ss.fff}");
-			MaxDataOutputWidth       = resource.GetInt    (nameof(MaxDataOutputWidth     ), 80);
-			CollectionLimit          = resource.GetInt    (nameof(CollectionLimit        ), 512);
-			StringLimit              = resource.GetInt    (nameof(StringLimit            ), 8192);
-			ReflectionNestLimit      = resource.GetInt    (nameof(ReflectionNestLimit    ), 4);
-			NonPrintProperties       = resource.GetStrings(nameof(NonPrintProperties     ), new string[0]);
-			DefaultNameSpace         = resource.GetString (nameof(DefaultNameSpace       ), "");
-			ReflectionClasses        = new HashSet<string>(resource.GetStrings(nameof(ReflectionClasses), new string[0]));
+			EnterString              = Resource.GetString (nameof(EnterString            ), Resource.Unescape(@"Enter {0}.{1} ({2}:{3:D})"));
+			LeaveString              = Resource.GetString (nameof(LeaveString            ), Resource.Unescape(@"Leave {0}.{1} ({2}:{3:D})"));
+			ThreadBoundaryString     = Resource.GetString (nameof(ThreadBoundaryString   ), Resource.Unescape(@"______________________________ Thread {0} ______________________________"));
+			ClassBoundaryString      = Resource.GetString (nameof(ClassBoundaryString    ), Resource.Unescape(@"____ {0} ____"));
+			CodeIndentString         = Resource.GetString (nameof(CodeIndentString       ), Resource.Unescape(@"|\s"));
+			DataIndentString         = Resource.GetString (nameof(DataIndentString       ), Resource.Unescape(@"\s\s"));
+			LimitString              = Resource.GetString (nameof(LimitString            ), Resource.Unescape(@"..."));
+			DefaultNameSpaceString   = Resource.GetString (nameof(DefaultNameSpaceString ), Resource.Unescape(@"..."));
+			NonPrintString           = Resource.GetString (nameof(NonPrintString         ), Resource.Unescape(@"***"));
+			CyclicReferenceString    = Resource.GetString (nameof(CyclicReferenceString  ), Resource.Unescape(@"*** Cyclic Reference ***"));
+			VarNameValueSeparator    = Resource.GetString (nameof(VarNameValueSeparator  ), Resource.Unescape(@"\s=\s"));
+			KeyValueSeparator        = Resource.GetString (nameof(KeyValueSeparator      ), Resource.Unescape(@":\s"));
+			PrintSuffixFormat        = Resource.GetString (nameof(PrintSuffixFormat      ), Resource.Unescape(@"\s({2}:{3:D})"));
+			DateTimeFormat           = Resource.GetString (nameof(DateTimeFormat         ), Resource.Unescape(@"{0:yyyy-MM-dd hh:mm:ss.fff}"));
+			MaxDataOutputWidth       = Resource.GetInt    (nameof(MaxDataOutputWidth     ), 80);
+			CollectionLimit          = Resource.GetInt    (nameof(CollectionLimit        ), 512);
+			StringLimit              = Resource.GetInt    (nameof(StringLimit            ), 8192);
+			ReflectionNestLimit      = Resource.GetInt    (nameof(ReflectionNestLimit    ), 4);
+			NonPrintProperties       = Resource.GetStrings(nameof(NonPrintProperties     ), new string[0]);
+			DefaultNameSpace         = Resource.GetString (nameof(DefaultNameSpace       ), "");
+			ReflectionClasses        = new HashSet<string>(Resource.GetStrings(nameof(ReflectionClasses), new string[0]));
 			ReflectionClasses.Add(typeof(Tuple).FullName); // Tuple
 			ReflectionClasses.Add(typeof(ValueTuple).FullName); // ValueTuple
 
@@ -130,7 +130,7 @@ namespace DebugTrace {
 			// Array of data indent strings
 			dataIndentStrings = new string[64];
 
-			string loggerName = resource.GetString("Logger", null);
+			string loggerName = Resource.GetString("Logger", null);
 			if (loggerName != null) {
 				Exception e1 = null;
 				Exception e2 = null;
@@ -171,7 +171,7 @@ namespace DebugTrace {
 			}
 
 			// Set the logging level
-			var logLevel = resource.GetString("LogLevel", null);
+			var logLevel = Resource.GetString("LogLevel", null);
 			if (logLevel != null)
 				Logger.Level = logLevel;
 
@@ -189,7 +189,7 @@ namespace DebugTrace {
 			var versionAttribute = (AssemblyInformationalVersionAttribute)
 				Attribute.GetCustomAttribute(Resource.SelfAssembly, typeof(AssemblyInformationalVersionAttribute));
 			Logger.Log($"DebugTrace-net {versionAttribute?.InformationalVersion}");
-			Logger.Log($"  properties: {resource.FileInfo.FullName}");
+			Logger.Log($"  properties: {Resource.FileInfo.FullName}");
 			Logger.Log($"  Logger: {Logger.GetType().AssemblyQualifiedName}");
 		}
 
@@ -381,11 +381,17 @@ namespace DebugTrace {
 				buff.Append(suffix);
 				buff.LineFeed();
 
-				foreach ((int dataNestLevel, string line) in buff.Lines)
-					Logger.Log(GetIndentString(state.NestLevel, dataNestLevel) + line);
-				LastLog = string.Join("\n", buff.Lines);
+				var lastLogBuff = new StringBuilder();
+				foreach ((int dataNestLevel, string line) in buff.Lines) {
+					var log = GetIndentString(state.NestLevel, dataNestLevel) + line;
+					Logger.Log(log);
+					lastLogBuff.Append(log).Append('\n');
+				}
+				LastLog = lastLogBuff.ToString();
 			}
 		}
+
+		private static string thisClassFullName = typeof(TraceBase).FullName + '.';
 
 		/// <summary>
 		/// Returns a caller stack trace element.
@@ -395,7 +401,7 @@ namespace DebugTrace {
 		protected StackTraceElement GetStackTraceElement() {
 			var elements = Environment.StackTrace.Split('\n')
 				.Select(str => str.Trim())
-				.Where(str => str != "" && !str.Contains("DebugTrace.Trace.") && !str.Contains("StackTrace"))
+				.Where(str => str != "" && !str.Contains(thisClassFullName) && !str.Contains("StackTrace"))
 				.Select(str => {
 					//  0  1            2  3             4
 					// "at Class.Method() in filePath:line N"
@@ -944,26 +950,19 @@ namespace DebugTrace {
 			}
 
 			// field
-			var fieldInfos = type.GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
+			var fieldInfos = type.GetFields(
+				  BindingFlags.DeclaredOnly
+				| BindingFlags.Public
+				| BindingFlags.Instance);
 			int fieldIndex = 0;
 			foreach (var fieldInfo in fieldInfos) {
-				var fieldName = fieldInfo.Name;
-
-				object value = null;
-				try {
-					value = fieldInfo.GetValue(obj);
-				}
-				catch (Exception e) {
-					value = e.ToString();
-				}
-
 				if (buff.Length > MaxDataOutputWidth) {
 					if (!isMultiLine) return false; // can not be outputed on a single line
 					buff.LineFeed();
 				}
 
 				buff.Save(); // Save current point
-				bool elementIsMultiLine = AppendReflectValue(buff, type, fieldName, value);
+				bool elementIsMultiLine = AppendReflectValue(buff, type, obj, fieldInfo);
 				if (elementIsMultiLine || buff.Length > MaxDataOutputWidth) {
 					if (!isMultiLine) {
 						buff.PopSave(); // Pop saveed point
@@ -973,7 +972,7 @@ namespace DebugTrace {
 					if (buff.PeekSave().builderLength > 0) {
 						buff.Restore(); // Restore saved point
 						buff.LineFeed();
-						elementIsMultiLine = AppendReflectValue(buff, type, fieldName, value);
+						elementIsMultiLine = AppendReflectValue(buff, type, obj, fieldInfo);
 					}
 				}
 				buff.PopSave(); // Pop saveed point
@@ -986,21 +985,14 @@ namespace DebugTrace {
 			}
 
 			// property
-			var propertyInfos = type.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
+			var propertyInfos = type.GetProperties(
+					  BindingFlags.DeclaredOnly
+					| BindingFlags.Public
+					| BindingFlags.Instance);
 			int propertyIndex = 0;
 			foreach (var propertyInfo in propertyInfos) {
-				var propertyName = propertyInfo.Name;
-
-				object value = null;
-				try {
-					value = propertyInfo.GetValue(obj);
-				}
-				catch (Exception e) {
-					value = e.ToString();
-				}
-
 				buff.Save(); // Save current point
-				bool elementIsMultiLine = AppendReflectValue(buff, type, propertyName, value);
+				bool elementIsMultiLine = AppendReflectValue(buff, type, obj, propertyInfo);
 				if (elementIsMultiLine || buff.Length > MaxDataOutputWidth) {
 					if (!isMultiLine) {
 						buff.PopSave(); // Pop saveed point
@@ -1010,7 +1002,7 @@ namespace DebugTrace {
 					if (buff.PeekSave().builderLength > 0) {
 						buff.Restore(); // Restore saved point
 						buff.LineFeed();
-						elementIsMultiLine = AppendReflectValue(buff, type, propertyName, value);
+						elementIsMultiLine = AppendReflectValue(buff, type, obj, propertyInfo);
 					}
 				}
 				buff.PopSave(); // Pop saveed point
@@ -1028,12 +1020,27 @@ namespace DebugTrace {
 			return true;
 		}
 
-		// AppendReflectValue
-		private bool AppendReflectValue(LogBuffer buff, Type type, string name, object value) {
+		// AppendReflectValue / MemberInfo
+		private bool AppendReflectValue(LogBuffer buff, Type type, object obj, MemberInfo memberInfo) {
 			if (!IsTuple(type))
-				buff.Append(name).Append(FieldNameValueSeparator);
+				buff.Append(memberInfo.Name).Append(KeyValueSeparator);
 
-			if (value != null && NonPrintProperties.Contains(GetFullTypeName(type) + '#' + name)) {
+			object value = null;
+			try {
+				switch (memberInfo) {
+				case FieldInfo fieldInfo:
+					value = fieldInfo.GetValue(obj);
+					break;
+				case PropertyInfo propertyInfo:
+					value = propertyInfo.GetValue(obj);
+					break;
+				}
+			}
+			catch (Exception e) {
+				value = e.ToString();
+			}
+
+			if (value != null && NonPrintProperties.Contains(GetFullTypeName(type) + '.' + memberInfo.Name)) {
 				buff.Append(NonPrintString);
 				return false;
 			}

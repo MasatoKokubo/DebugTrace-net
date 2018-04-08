@@ -56,29 +56,34 @@ namespace DebugTrace {
 					if (equalIndex < 1) continue; // not "name = value" format
 
 					var name = str.Substring(0, equalIndex).Trim();
-					var value = str.Substring(equalIndex + 1).Trim();
-					if (value == "")  continue; // name not exist
+					var value = Unescape(str.Substring(equalIndex + 1).Trim());
 
-					var buff = new StringBuilder();
-					var escape = false;
-					foreach (var ch in value) {
-						if (escape) {
-							switch (ch) {
-							case 't' : buff.Append('\t'); break; // 09 HT
-							case 'n' : buff.Append('\n'); break; // 0A LF
-							case 'r' : buff.Append('\r'); break; // 0D CR
-							case 's' : buff.Append(' ' ); break; // SPACE
-							case '\\': buff.Append('\\'); break; // \
-							}
-						} else if (ch == '\\') {
-							escape = true;
-						} else {
-							buff.Append(ch);
-						}
-					}
-					values[name] = buff.ToString();
+					if (value != "")
+						values[name] = value;
 				}
 			}
+		}
+
+		public static string Unescape(string escapedString) {
+			var buff = new StringBuilder();
+			var escape = false;
+			foreach (var ch in escapedString) {
+				if (escape) {
+					switch (ch) {
+					case 't' : buff.Append('\t'); break; // 09 HT
+					case 'n' : buff.Append('\n'); break; // 0A LF
+					case 'r' : buff.Append('\r'); break; // 0D CR
+					case 's' : buff.Append(' ' ); break; // SPACE
+					default  : buff.Append(ch  ); break; // others
+					}
+					escape = false;
+				} else if (ch == '\\') {
+					escape = true;
+				} else {
+					buff.Append(ch);
+				}
+			}
+			return buff.ToString();
 		}
 
 		public string GetString(string name, string defaultValue) {

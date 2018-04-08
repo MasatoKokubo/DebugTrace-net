@@ -172,12 +172,12 @@ End Namespace
 [options="header", width="100%"]
 .インタフェース、クラス
 |===
-|名前                              |スーパークラス、実装するインタフェース|説明
-|`DebugTrace.ITrace`       |なし                        |Trace処理のインタフェース
-|`DebugTrace.Trace`        |`DebugTrace.ITrace` |Trace処理の抽象クラス
+|名前    |スーパークラス、実装するインタフェース|説明
+|`DebugTrace.ITrace`       |_なし_              |Trace処理のインタフェース
+|`DebugTrace.TraceBase`    |`DebugTrace.ITrace` |Trace処理のベースクラス
 |`DebugTrace.CSharp`       |`DebugTrace.Trace`  |C#用のTrace処理のクラス
 |`DebugTrace.VisualBasic`  |`DebugTrace.Trace`  |VisualBasic用のTrace処理のクラス
-|`DebugTrace.ILogger`      |なし                        |ログ出力のインタフェース
+|`DebugTrace.ILogger`      |_なし_              |ログ出力のインタフェース
 |`DebugTrace.Console`      |`DebugTrace.ILogger`|ログをコンソール出力する抽象クラス
 |`DebugTrace.Console+Out`  |`DebugTrace.Console`|ログを標準出力に出力するクラス
 |`DebugTrace.Console+Error`|`DebugTrace.Console`|ログを標準エラー出力に出力するクラス
@@ -268,7 +268,7 @@ DebugTrace は、DebugTrace.dllと同一ディレクトリにある `DebugTrace.
 |`Console+Error`
 
 |`LogLevel`
-|ログ出力時のログレベル +
+|ログ出力時の*ログレベル* +
  +
 `Lo4jnet`: `All`, `Debug`, `Info`, `Warn`, `Error`, `Fatal`, `Off` +
 `NLog`: `Trace`, `Debug`, `Info`, `Warn`, `Error`, `Off` +
@@ -295,57 +295,53 @@ _パラメータ:_ +
 |`Leave {0}.{1} ({2}:{3:D})`
 
 |`ThreadBoundaryString`
-|スレッド境界で出力される文字列 +
+|*スレッド境界*で出力される文字列 +
  +
 _パラメータ:_ +
 `{0}`: スレッドID
 |`\____\__\__\__\__\__\__\__\__\__\__\__\__\__ Thread {0} \__\__\__\__\__\__\__\__\__\__\__\__\__\____`
 
 |`ClassBoundaryString`
-|クラス境界での出力文字列 +
+|*クラス境界*での出力文字列 +
  +
 _パラメータ:_ +
 `{0}`: クラス名
 |`\\____ {0} \____`
 
 |`CodeIndentString`
-|コードのインデント文字列 +
+|*コードのインデント*文字列 +
 `\s` _は空白文字に置き換えられます_
 |`\|\s`
 
 |`DataIndentString`
-|データのインデント文字列 +
+|*データのインデント*文字列 +
 `\s` _は空白文字に置き換えられます_
 |`\s\s`
 
 |`LimitString`
-|制限を超えた場合の出力文字列
+|*制限*を超えた場合の出力*文字列*
 |`\...`
 
 |`DefaultNameSpaceString` +
-|デフォルトの名前空間を置き換える文字列
+|デフォルトの*名前空間*を置き換える文字列
 |`\...`
 
 |`NonPrintString`
-|出力しないプロパティ値の文字列
+|*出力しない*プロパティ値の文字列
 |`\***`
 
 |`CyclicReferenceString`
-|循環参照時の出力文字列
+|*循環参照*時の出力文字列
 |`\*\** Cyclic Reference \***`
 
 |`VarNameValueSeparator`
-|変数名と値のセパレータ +
+|*変数名と値*のセパレータ +
 `\s` _は空白文字に置き換えられます_
 |`\s=\s`
 
 |`KeyValueSeparator`
-|マップのキーと値のセパレータ +
-`\s` _は空白文字に置き換えられます_
-|`:\s`
-
-|`FieldNameValueSeparator`
-|フィールド名と値のセパレータ +
+|マップの*キーと値*のセパレータ + 
+*プロパティ名/フィールド名と値*のセパレータ +
 `\s` _は空白文字に置き換えられます_
 |`:\s`
 
@@ -361,7 +357,7 @@ _パラメータ:_ +
 |`\s({2}:{3:D})`
 
 |`DateTimeFormat`
-|`日時の出力フォーマット +
+|`*日時*の出力フォーマット +
  +
 _パラメータ:_ +
 `{0}`: `DateTime`オブジェクト
@@ -372,33 +368,33 @@ _パラメータ:_ +
 |80
 
 |`CollectionLimit`
-|`ICollection` 要素の出力数の限界値
+|`ICollection` 要素の出力数の*限界値*
 |512
 
 |`StringLimit`
-|`string`の出力文字数の制限
+|`string`の出力文字数の*制限*
 |8192
 
 |`ReflectionNestLimit`
-|リフレクションのネストの限界値
+|*リフレクション*のネストの*限界値*
 |4
 
 |`NonPrintProperties`
-|出力しないプロパティの配列 +
+|*出力しない*プロパティおよびフィールドの配列 +
  +
 `[Teal]#値のフォーマット#:` +
-`<フルクラス名>#<プロパティ名>,` +
-`<フルクラス名>#<プロパティ名>,` +
+`<フルクラス名>.<プロパティ名またはフィールド名>,` +
+`<フルクラス名>.<プロパティ名またはフィールド名>,` +
 `\...`
-|_<空配列>_
+|_空_
 
 |`DefaultNameSpace`
-|デフォルトの名前空間
-|_<なし>_
+|デフォルトの*名前空間*
+|_なし_
 
 |`ReflectionClasses`
-|`ToString`メソッドを実装していてもリフレクションで内容を出力するクラス名のセット
-|_<空セット>_
+|`ToString`メソッドを実装していても*リフレクション*で内容を出力する*クラス名*のセット
+|_空_
 
 |===
 

@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("DebugTrace.Log4net")]
-[assembly: AssemblyDescription("Bridge library that uses Log4net for DebugTrace output.")]
+[assembly: AssemblyDescription("The bridge library that uses Log4net for DebugTrace-net output.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Masato Kokubo")]
 [assembly: AssemblyProduct("DebugTrace.Log4net")]
@@ -32,8 +32,8 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.6.2.0")]
-[assembly: AssemblyFileVersion("0.6.2.0")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
 
 // read Log4Net Configuration file
 [assembly: log4net.Config.XmlConfigurator(ConfigFile=@"Log4net.config", Watch=true)] // added

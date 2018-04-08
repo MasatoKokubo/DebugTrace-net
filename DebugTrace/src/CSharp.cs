@@ -14,7 +14,7 @@ namespace DebugTrace {
 	///
 	/// <since>1.0.0</since>
 	/// <author>Masato Kokubo</author>
-	public class CSharp : Trace {
+	public class CSharp : TraceBase {
 		/// An ITrace object for C#
 		public static CSharp Trace {get;} = new CSharp();
 
