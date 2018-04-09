@@ -409,15 +409,15 @@ DebugTrace は、 `ToString` メソッドが実装されていない場合は、
 
 .NonPrintPropertiesの例
 ----
-NonPrintProperties = DebugTraceExample.Node#Parent
+NonPrintProperties = DebugTraceExample.Node.Parent
 ----
 
 .NonPrintProperties(複数指定)の例
 ----
 NonPrintProperties = \
-    DebugTraceExample.Node#Parent,\
-    DebugTraceExample.Node#Left,\
-    DebugTraceExample.Node#Right
+    DebugTraceExample.Node.Parent,\
+    DebugTraceExample.Node.Left,\
+    DebugTraceExample.Node.Right
 ----
 
 === 7. ロギング・ライブラリの使用

@@ -410,15 +410,15 @@ The value of the property specified by `NonPrintProperties` are output as the st
 
 .Example of NonPrintProperties
 ----
-NonPrintProperties = DebugTraceExample.Node#Parent
+NonPrintProperties = DebugTraceExample.Node.Parent
 ----
 
 .Example of NonPrintProperties (Multiple specifications)
 ----
 NonPrintProperties = \
-    DebugTraceExample.Node#Parent,\
-    DebugTraceExample.Node#Left,\
-    DebugTraceExample.Node#Right
+    DebugTraceExample.Node.Parent,\
+    DebugTraceExample.Node.Left,\
+    DebugTraceExample.Node.Right
 ----
 
 === 7. Examples of using logging libraries
