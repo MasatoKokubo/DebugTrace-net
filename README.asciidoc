@@ -327,7 +327,7 @@ _parameters:_ +
 |`\...`
 
 |`NonPrintString` +
-|The string of value in the case of properties that *do not print* the value
+|The string of value in the case of properties that *do not output* the value
 |`\***`
 
 |`CyclicReferenceString`
@@ -341,7 +341,7 @@ _parameters:_ +
 
 |`KeyValueSeparator`
 |The separator string between the *key and value* for Map object
-and between the *property/field name and value*
+and between the *property/field name and value* +
 `\s` _is change to a space character_
 |`:\s`
 
