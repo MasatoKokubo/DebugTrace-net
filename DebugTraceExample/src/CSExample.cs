@@ -144,7 +144,7 @@ namespace DebugTraceExample {
 				var points = new Point[] {point, new Point(3, 4), new Point(5, 6)};
 				Trace.Print("points", points); // for Debugging
 
-				var point3s = new Point3[] {point3, new Point3(10, 20, -20), new Point3(100, 200, -200)};
+				var point3s = new object[] {point3, new Point3(10, 20, -20), new Point3(100, 200, -200)};
 				Trace.Print("point3s", point3s); // for Debugging
 
 				var contacts = new Contact[] {

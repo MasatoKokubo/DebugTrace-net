@@ -40,7 +40,8 @@ Namespace DebugTraceExample
 			With Nothing : Dim value As String = "A" : Trace.Print("value", value) : End With
 
 			With Nothing : Dim value As Boolean() = {False, True} : Trace.Print("value", value) : End With
-			Trace.Leave()
-		End Sub
+            With Nothing : Dim value As Object() = {1, 2, 3} : Trace.Print("value", value) : End With
+            Trace.Leave()
+        End Sub
 	End Module
 End Namespace

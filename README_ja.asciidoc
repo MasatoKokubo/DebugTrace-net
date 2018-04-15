@@ -260,7 +260,7 @@ DebugTrace は、DebugTrace.dllと同一ディレクトリにある `DebugTrace.
 |プロパティ名|設定する値|デフォルト値
 |`Logger`
 | DebugTrace が使用するロガー +
- +
+以下のいずれか +
 `Log4net`: log4netを使用 +
 `NLog`: NLogを使用 +
 `Console+Out`: コンソール(標準出力)へ出力 +
@@ -269,9 +269,8 @@ DebugTrace は、DebugTrace.dllと同一ディレクトリにある `DebugTrace.
 
 |`LogLevel`
 |ログ出力時の *ログレベル* +
- +
-`Lo4jnet`: `All`, `Debug`, `Info`, `Warn`, `Error`, `Fatal`, `Off` +
-`NLog`: `Trace`, `Debug`, `Info`, `Warn`, `Error`, `Off` +
+以下のいずれか +
+`Trace`, `Debug`, `Info`, `Warn`, `Error`, `Fatal` +
 |`Debug`
 
 |`EnterString`

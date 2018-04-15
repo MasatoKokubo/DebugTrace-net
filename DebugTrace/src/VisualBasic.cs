@@ -56,6 +56,7 @@ namespace DebugTrace {
 
 		// Dictionary of thread id to indent state
 		protected override IDictionary<Type, string> TypeNameMap {get;} = new Dictionary<Type, string>() {
+			{typeof(object ), "Object"  },
 			{typeof(bool   ), "Boolean" },
 			{typeof(char   ), "Char"    },
 			{typeof(sbyte  ), "SByte"   },
@@ -91,7 +92,7 @@ namespace DebugTrace {
 			if (typeName != null) {
 				var bracket = "(";
 				if (value != null)
-					bracket += "Length:" + ((Array)value).Length;
+					bracket += "Length: " + ((Array)value).Length;
 				bracket += ')';
 				int braIndex = typeName.IndexOf('[');
 				if (braIndex < 0)

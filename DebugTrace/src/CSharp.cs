@@ -52,8 +52,9 @@ namespace DebugTrace {
 			typeof(DateTime),
 		};
 
-		// Dictionary of thread id to indent state
+		// Dictionary of type to type name
 		protected override IDictionary<Type, string> TypeNameMap {get;} = new Dictionary<Type, string>() {
+			{typeof(object ), "object" },
 			{typeof(bool   ), "bool"   },
 			{typeof(char   ), "char"   },
 			{typeof(sbyte  ), "sbyte"  },
@@ -67,7 +68,7 @@ namespace DebugTrace {
 			{typeof(float  ), "float"  },
 			{typeof(double ), "double" },
 			{typeof(decimal), "decimal"},
-			{typeof(string ), "string"},
+			{typeof(string ), "string" },
 		};
 
 		private CSharp() {

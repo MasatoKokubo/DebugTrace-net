@@ -15,13 +15,12 @@ namespace DebugTrace {
 	public class Log4net : ILogger {
 		private static readonly Dictionary<string, Level> levelDictinary = 
 			new Dictionary<string, Level>() {
-				{"All"  , log4net.Core.Level.All  },
+				{"Trace", log4net.Core.Level.Trace},
 				{"Debug", log4net.Core.Level.Debug},
 				{"Info" , log4net.Core.Level.Info },
 				{"Warn" , log4net.Core.Level.Warn },
 				{"Error", log4net.Core.Level.Error},
 				{"Fatal", log4net.Core.Level.Fatal},
-				{"Off"  , log4net.Core.Level.Off  },
 			};
 
 		// Log4net Logger

@@ -260,7 +260,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 
 |`Logger`
 | *Logger* DebugTrace uses +
- +
+One of the following. +
 `Log4net`: use Log4net +
 `NLog`: use NLog +
 `Console+Out`: Output to the console (stdout) +
@@ -269,9 +269,8 @@ You can specify following properties in the `DebugTrace.properties` file.
 
 |`LogLevel`
 |*Log level* at log output +
- +
-`Lo4jnet`: `All`, `Debug`, `Info`, `Warn`, `Error`, `Fatal`, `Off` +
-`NLog`: `Trace`, `Debug`, `Info`, `Warn`, `Error`, `Off` +
+One of the following. +
+`Trace`, `Debug`, `Info`, `Warn`, `Error` or `Fatal` +
 |`Debug`
 
 |`EnterString`

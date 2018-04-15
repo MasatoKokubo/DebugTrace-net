@@ -19,7 +19,6 @@ namespace DebugTrace {
 				{"Warn" , global::NLog.LogLevel.Warn },
 				{"Error", global::NLog.LogLevel.Error},
 				{"Fatal", global::NLog.LogLevel.Fatal},
-				{"Off"  , global::NLog.LogLevel.Off  },
 			};
 
 		// NLog Logger

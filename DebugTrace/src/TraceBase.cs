@@ -189,8 +189,9 @@ namespace DebugTrace {
 			var versionAttribute = (AssemblyInformationalVersionAttribute)
 				Attribute.GetCustomAttribute(Resource.SelfAssembly, typeof(AssemblyInformationalVersionAttribute));
 			Logger.Log($"DebugTrace-net {versionAttribute?.InformationalVersion}");
-			Logger.Log($"  properties: {Resource.FileInfo.FullName}");
-			Logger.Log($"  Logger: {Logger.GetType().AssemblyQualifiedName}");
+			Logger.Log($"  Properties file: {Resource.FileInfo.FullName}");
+		//	Logger.Log($"  Logger: {Logger.GetType().AssemblyQualifiedName}");
+			Logger.Log($"  Logger wrapper: {Logger.GetType().FullName}");
 		}
 
 		/// <summary>
