@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Masato Kokubo</Authors>
     <Company>Masato Kokubo</Company>
-    <Version>1.0.1</Version>
+    <Version>1.1.0</Version>
     <Description>DebugTrace-net is a library that outputs trace logs when debugging .NET programs.</Description>
     <Copyright>(C) 2018 Masato Kokubo</Copyright>
     <PackageLicenseUrl>https://github.com/MasatoKokubo/DebugTrace-net/blob/master/LICENSE</PackageLicenseUrl>
@@ -14,8 +14,8 @@
     <Product>DebugTrace-net</Product>
     <AssemblyName>DebugTrace</AssemblyName>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>1.0.1.0</AssemblyVersion>
-    <FileVersion>1.0.1.0</FileVersion>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

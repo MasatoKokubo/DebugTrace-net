@@ -26,27 +26,27 @@ namespace DebugTrace {
 	public abstract class TraceBase : ITrace {
 		public static Resource Resource {get; private set;}
 
-		public static string   EnterString             {get; private set;} // string at enter
-		public static string   LeaveString             {get; private set;} // string at leave
-		public static string   ThreadBoundaryString    {get; private set;} // string of threads boundary
-		public static string   ClassBoundaryString     {get; private set;} // string of classes boundary
-		public static string   CodeIndentString        {get; private set;} // string of method call indent
-		public static string   DataIndentString        {get; private set;} // string of data indent
-		public static string   LimitString             {get; private set;} // string to represent that it has exceeded the limit
-		public static string   DefaultNameSpaceString  {get; private set;} // string replacing the default package part
-		public static string   NonPrintString          {get; private set;} // string of value in the case of properties that do not display the value
-		public static string   CyclicReferenceString   {get; private set;} // string to represent that the cyclic reference occurs
-		public static string   VarNameValueSeparator   {get; private set;} // Separator between the variable name and value
-		public static string   KeyValueSeparator       {get; private set;} // Separator between the key and value for IDictionary object or property/field and value
-		public static string   PrintSuffixFormat       {get; private set;} // Format string of Print suffix
-		public static string   DateTimeFormat          {get; private set;} // Format string of a DateTime and a string
-		public static int      MaxDataOutputWidth      {get; private set;} // Maximum data output width
-		public static int      CollectionLimit         {get; private set;} // Limit of ICollection elements to output
-		public static int      StringLimit             {get; private set;} // Limit of string characters to output
-		public static int      ReflectionNestLimit     {get; private set;} // Limit of reflection nesting
-		public static string[] NonPrintProperties      {get; private set;} // Non Print properties (<class name>#<property name>)
-		public static string   DefaultNameSpace        {get; private set;} // Default package part
-		public static ISet<string> ReflectionClasses   {get; private set;} // Class names that output content in reflection even if ToString method is implemented
+		public static string   EnterString             {get; set;} // string at enter
+		public static string   LeaveString             {get; set;} // string at leave
+		public static string   ThreadBoundaryString    {get; set;} // string of threads boundary
+		public static string   ClassBoundaryString     {get; set;} // string of classes boundary
+		public static string   CodeIndentString        {get; set;} // string of method call indent
+		public static string   DataIndentString        {get; set;} // string of data indent
+		public static string   LimitString             {get; set;} // string to represent that it has exceeded the limit
+		public static string   DefaultNameSpaceString  {get; set;} // string replacing the default package part
+		public static string   NonPrintString          {get; set;} // string of value in the case of properties that do not display the value
+		public static string   CyclicReferenceString   {get; set;} // string to represent that the cyclic reference occurs
+		public static string   VarNameValueSeparator   {get; set;} // Separator between the variable name and value
+		public static string   KeyValueSeparator       {get; set;} // Separator between the key and value for IDictionary object or property/field and value
+		public static string   PrintSuffixFormat       {get; set;} // Format string of Print suffix
+		public static string   DateTimeFormat          {get; set;} // Format string of a DateTime and a string
+		public static int      MaxDataOutputWidth      {get; set;} // Maximum data output width
+		public static int      CollectionLimit         {get; set;} // Limit of ICollection elements to output
+		public static int      StringLimit             {get; set;} // Limit of string characters to output
+		public static int      ReflectionNestLimit     {get; set;} // Limit of reflection nesting
+		public static string[] NonPrintProperties      {get; set;} // Non Print properties (<class name>#<property name>)
+		public static string   DefaultNameSpace        {get; set;} // Default package part
+		public static ISet<string> ReflectionClasses   {get; set;} // Class names that output content in reflection even if ToString method is implemented
 
 		// Array of indent strings
 		protected static string[] indentStrings;
@@ -190,7 +190,6 @@ namespace DebugTrace {
 				Attribute.GetCustomAttribute(Resource.SelfAssembly, typeof(AssemblyInformationalVersionAttribute));
 			Logger.Log($"DebugTrace-net {versionAttribute?.InformationalVersion}");
 			Logger.Log($"  Properties file: {Resource.FileInfo.FullName}");
-		//	Logger.Log($"  Logger: {Logger.GetType().AssemblyQualifiedName}");
 			Logger.Log($"  Logger wrapper: {Logger.GetType().FullName}");
 		}
 
@@ -537,7 +536,7 @@ namespace DebugTrace {
 						}
 					} else {
 						// Use ToString method
-						buff.Append(value);
+						buff.Append(typeName).Append(value);
 					}
 					break;
 				}
@@ -545,8 +544,6 @@ namespace DebugTrace {
 
 			return isMultiLine;
 		}
-
-	//	protected Regex typeRemoveRegex = new Regex(@"(`[0-9]+)|(, [^, \]]+)+");
 
 		/// <summary>
 		/// Returns the type name to be output to the log.<br>
@@ -564,13 +561,9 @@ namespace DebugTrace {
 				return GetArrayTypeName(type, value, isElement, nest);
 
 			} else {
-				string typeName = GetFullTypeName(type);
+				string typeName = GetTypeName(type);
 
-				if (typeName == "System.Tuple") {
-					// Tuple<X, Y>(x, y)
-					typeName = "Tuple";
-
-				} else if (typeName == "System.ValueTuple") {
+				if (typeName.StartsWith("ValueTuple")) {
 					// (x, y)
 					typeName = "";
 
@@ -597,6 +590,48 @@ namespace DebugTrace {
 		}
 
 		protected abstract string GetArrayTypeName(Type type, object value, bool isElement, int nest);
+
+		// GetTypeName
+		private string GetTypeName(Type type) {
+			var builder = new StringBuilder();
+			AppendTypeName(builder, type);
+			return  builder.ToString();
+		}
+
+		// AppendTypeName
+		private void AppendTypeName(StringBuilder builder, Type type) {
+			var typeName = GetFullTypeName(type);
+			if (typeName == "System.Tuple")
+				typeName = "Tuple";
+			else if (typeName == "System.ValueTuple")
+				typeName = "ValueTuple";
+			builder.Append(typeName);
+
+			var genericTypes = type.GenericTypeArguments;
+			if (genericTypes.Length > 0) {
+				var delimiter = "";
+				builder.Append('<');
+				foreach (var genericType in genericTypes) {
+					builder.Append(delimiter);
+					AppendTypeName(builder, genericType);
+					delimiter = ", ";
+				}
+				builder.Append('>');
+			}
+		}
+
+		// GetFullTypeName
+		private string GetFullTypeName(Type type) {
+			if (TypeNameMap.ContainsKey(type))
+				return TypeNameMap[type];
+
+			string typeName = type.Namespace + '.' + type.Name;
+			var backquoteIndex = typeName.IndexOf('`');
+			if (backquoteIndex >= 0)
+				typeName = typeName.Substring(0, backquoteIndex);
+
+			return typeName;
+		}
 
 		/// <summary>
 		/// Replace a class name.
@@ -939,14 +974,14 @@ namespace DebugTrace {
 				// Call for the base type
 				AppendUsedReflectionSub(buff, obj, baseType, isExtended, isMultiLine);
 
-			var typeNamePrefix = type.FullName + "#";
+			var typeNamePrefix = type.Namespace + '.' + type.Name + "#";
 
 			if (isExtended) {
 				if (!isMultiLine) return false; // can not be outputed on a single line
 
 				if (buff.Length > 0)
 					buff.LineFeed();
-				buff.Append(string.Format(ClassBoundaryString, ReplaceTypeName(type.FullName)));
+				buff.Append(string.Format(ClassBoundaryString, ReplaceTypeName(type.Namespace + '.' + type.Name)));
 				buff.LineFeed();
 			}
 
@@ -1047,15 +1082,6 @@ namespace DebugTrace {
 			}
 
 			return Append(buff, value, false);
-		}
-
-		// GetFullTypeName
-		private static string GetFullTypeName(Type type) {
-			string typeName = type.FullName;
-			var backquoteIndex = typeName.IndexOf('`');
-			if (backquoteIndex >= 0)
-				typeName = typeName.Substring(0, backquoteIndex);
-			return typeName;
 		}
 
 		// IsTuple

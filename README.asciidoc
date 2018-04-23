@@ -31,7 +31,7 @@ Do the following for debug target and related methods.
 
 . Insert `Trace.Enter()` at the beginning of methods.
 . Insert `Trace.Leave()` at the end of methods or just before the `return` statements.
-. Insert `Trace.Print("foo", foo)` or `Trace.Print(nameof(foo), foo)` to output arguments, local variables and return value to the log if necessary.
+. Insert `Trace.Print("foo", foo)` to output arguments, local variables and return value to the log if necessary.
 
 The following are examples of C# and Visual Basic source used DebugTrace-net methods and the log of when it has been executed.
 
@@ -48,7 +48,7 @@ namespace Readme {
             Trace.Enter(); // for Debugging
 
             var contact = new Contact(1, "Akane", "Apple", new DateTime(1991, 2, 3));
-            Trace.Print(nameof(contact), contact); // for Debugging
+            Trace.Print("contact", contact); // for Debugging
 
             Trace.Leave(); // for Debugging
         }
@@ -268,9 +268,10 @@ One of the following. +
 |`Console+Error`
 
 |`LogLevel`
-|*Log level* at log output +
+|*Log level* to use +
 One of the following. +
-`Trace`, `Debug`, `Info`, `Warn`, `Error` or `Fatal` +
+*Log4net*: `All`, `Finest`, `Verbose`, `Finer`, `Trace`, `Fine`, `Debug`, `Info`, `Notice`, `Warn`, `Error`, `Severe`, `Critical`, `Alert`, `Fatal`, `Emergency`, `Off`, +
+*NLog*: `Trace`, `Debug`, `Info`, `Warn`, `Error`, `Fatal`, `Off`, +
 |`Debug`
 
 |`EnterString`

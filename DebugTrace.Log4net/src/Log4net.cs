@@ -1,6 +1,5 @@
 // Log4net.cs
 // (C) 2018 Masato Kokubo
-using System;
 using System.Collections.Generic;
 using log4net;
 using log4net.Core;
@@ -15,18 +14,29 @@ namespace DebugTrace {
 	public class Log4net : ILogger {
 		private static readonly Dictionary<string, Level> levelDictinary = 
 			new Dictionary<string, Level>() {
-				{"Trace", log4net.Core.Level.Trace},
-				{"Debug", log4net.Core.Level.Debug},
-				{"Info" , log4net.Core.Level.Info },
-				{"Warn" , log4net.Core.Level.Warn },
-				{"Error", log4net.Core.Level.Error},
-				{"Fatal", log4net.Core.Level.Fatal},
+				{"ALL"      , log4net.Core.Level.All      },
+				{"FINEST"   , log4net.Core.Level.Finest   },
+				{"VERBOSE"  , log4net.Core.Level.Verbose  },
+				{"FINER"    , log4net.Core.Level.Finer    },
+				{"TRACE"    , log4net.Core.Level.Trace    },
+				{"FINE"     , log4net.Core.Level.Fine     },
+				{"DEBUG"    , log4net.Core.Level.Debug    },
+				{"INFO"     , log4net.Core.Level.Info     },
+				{"NOTICE"   , log4net.Core.Level.Notice   },
+				{"WARN"     , log4net.Core.Level.Warn     },
+				{"ERROR"    , log4net.Core.Level.Error    },
+				{"SEVERE"   , log4net.Core.Level.Severe   },
+				{"CRITICAL" , log4net.Core.Level.Critical },
+				{"ALERT"    , log4net.Core.Level.Alert    },
+				{"FATAL"    , log4net.Core.Level.Fatal    },
+				{"EMERGENCY", log4net.Core.Level.Emergency},
+				{"OFF"      , log4net.Core.Level.Off      },
 			};
 
 		// Log4net Logger
 		private log4net.Core.ILogger logger = LogManager.GetLogger(typeof(ILogger).Namespace).Logger;
 
-		private static string defaultLevelStr = "Debug";
+		private static string defaultLevelStr = "DEBUG";
 		private string levelStr = defaultLevelStr;
 		private Level level = levelDictinary[defaultLevelStr];
 
@@ -41,11 +51,12 @@ namespace DebugTrace {
 		public string Level {
 			get => levelStr;
 			set {
-				if (!levelDictinary.ContainsKey(value))
-					new ArgumentException(value);
-
-				level = levelDictinary[value];
-				levelStr = value;
+				var upperValue = value.ToUpper();
+				if (levelDictinary.ContainsKey(upperValue)) {
+					level = levelDictinary[upperValue];
+					levelStr = value;
+				} else
+					System.Console.Error.WriteLine($"LogLevel: \"{value}\" is unknown.");
 			}
 		}
 

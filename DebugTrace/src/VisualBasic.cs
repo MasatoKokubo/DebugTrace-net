@@ -89,7 +89,7 @@ namespace DebugTrace {
 		protected override string GetArrayTypeName(Type type, object value, bool isElement, int nest) {
 			string typeName = GetTypeName(type.GetElementType(), null, false, nest + 1);
 
-			if (typeName != null) {
+			if (typeName.Length > 0) {
 				var bracket = "(";
 				if (value != null)
 					bracket += "Length: " + ((Array)value).Length;

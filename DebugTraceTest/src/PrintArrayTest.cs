@@ -5,7 +5,7 @@ using static DebugTrace.CSharp;
 
 namespace DebugTraceTest {
 	[TestClass]
-	public class CSPrintArrayTest {
+	public class PrintArrayTest {
 		// bool[]
 		[DataTestMethod]
 		[DataRow(new bool[] {}, "v = bool[0] {} ")]

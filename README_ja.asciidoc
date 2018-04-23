@@ -29,7 +29,7 @@ https://logging.apache.org/log4net/[log4net]または http://nlog-project.org/[N
 
 . メソッドの先頭に `Trace.Enter()` を挿入する。
 . メソッドの終了(または `return` 文の直前)に `Trace.Leave()` を挿入する。
-. 必要に応じて変数をログに出力する `Trace.Print("foo", foo)` または `Trace.Print(nameof(foo), foo)` を挿入する。
+. 必要に応じて変数をログに出力する `Trace.Print("foo", foo)` を挿入する。
 
 以下は、DebugTrace-netを使用したC#, Visual Basicの例とそれを実行した際のログです。
 
@@ -46,7 +46,7 @@ namespace Readme {
             Trace.Enter(); // for Debugging
 
             var contact = new Contact(1, "Akane", "Apple", new DateTime(1991, 2, 3));
-            Trace.Print(nameof(contact), contact); // for Debugging
+            Trace.Print("contact", contact); // for Debugging
 
             Trace.Leave(); // for Debugging
         }
@@ -268,9 +268,10 @@ DebugTrace は、DebugTrace.dllと同一ディレクトリにある `DebugTrace.
 |`Console+Error`
 
 |`LogLevel`
-|ログ出力時の *ログレベル* +
+|使用する *ログレベル* +
 以下のいずれか +
-`Trace`, `Debug`, `Info`, `Warn`, `Error`, `Fatal` +
+*Log4net*: `All`, `Finest`, `Verbose`, `Finer`, `Trace`, `Fine`, `Debug`, `Info`, `Notice`, `Warn`, `Error`, `Severe`, `Critical`, `Alert`, `Fatal`, `Emergency`, `Off`, +
+*NLog*: `Trace`, `Debug`, `Info`, `Warn`, `Error`, `Fatal`, `Off`, +
 |`Debug`
 
 |`EnterString`

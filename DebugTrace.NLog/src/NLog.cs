@@ -1,6 +1,5 @@
 // NLog.cs
 // (C) 2018 Masato Kokubo
-using System;
 using System.Collections.Generic;
 
 namespace DebugTrace {
@@ -13,18 +12,19 @@ namespace DebugTrace {
 	public class NLog : ILogger {
 		private static readonly Dictionary<string, global::NLog.LogLevel> levelDictinary = 
 			new Dictionary<string, global::NLog.LogLevel>() {
-				{"Trace", global::NLog.LogLevel.Trace},
-				{"Debug", global::NLog.LogLevel.Debug},
-				{"Info" , global::NLog.LogLevel.Info },
-				{"Warn" , global::NLog.LogLevel.Warn },
-				{"Error", global::NLog.LogLevel.Error},
-				{"Fatal", global::NLog.LogLevel.Fatal},
+				{"TRACE", global::NLog.LogLevel.Trace},
+				{"DEBUG", global::NLog.LogLevel.Debug},
+				{"INFO" , global::NLog.LogLevel.Info },
+				{"WARN" , global::NLog.LogLevel.Warn },
+				{"ERROR", global::NLog.LogLevel.Error},
+				{"FATAL", global::NLog.LogLevel.Fatal},
+				{"OFF"  , global::NLog.LogLevel.Off  },
 			};
 
 		// NLog Logger
 		private global::NLog.Logger logger = global::NLog.LogManager.GetLogger(typeof(ILogger).Namespace);
 
-		private static string defaultLevelStr = "Debug";
+		private static string defaultLevelStr = "DEBUG";
 		private string levelStr = defaultLevelStr;
 		private global::NLog.LogLevel level = levelDictinary[defaultLevelStr];
 
@@ -39,11 +39,12 @@ namespace DebugTrace {
 		public string Level {
 			get => levelStr;
 			set {
-				if (!levelDictinary.ContainsKey(value))
-					new ArgumentException(value);
-
-				level = levelDictinary[value];
-				levelStr = value;
+				var upperValue = value.ToUpper();
+				if (levelDictinary.ContainsKey(upperValue)) {
+					level = levelDictinary[upperValue];
+					levelStr = value;
+				} else
+					System.Console.Error.WriteLine($"LogLevel: \"{value}\" is unknown.");
 			}
 		}
 

@@ -8,7 +8,7 @@ namespace Readme {
             Trace.Enter(); // for Debugging
 
             var contact = new Contact(1, "Akane", "Apple", new DateTime(1991, 2, 3));
-            Trace.Print(nameof(contact), contact); // for Debugging
+            Trace.Print("contact", contact); // for Debugging
 
             Trace.Leave(); // for Debugging
         }

@@ -8,7 +8,7 @@ Namespace Global.Readme
             Trace.Enter() ' for Debugging
 
             Dim contact = New Contact(1, "Akane", "Apple", New DateTime(1991, 2, 3))
-            Trace.Print(NameOf(contact), contact) ' for Debugging
+            Trace.Print("contact", contact) ' for Debugging
 
             Trace.Leave() ' for Debugging
         End Sub

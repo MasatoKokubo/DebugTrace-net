@@ -4,7 +4,7 @@ using static DebugTrace.CSharp;
 
 namespace DebugTraceTest {
 	[TestClass]
-	public class CSPrintTest {
+	public class PrintTest {
 		// bool
 		[DataTestMethod]
 		[DataRow(false, "v = false ")]

@@ -14,6 +14,6 @@ namespace DebugTraceTest {
 		public int Y {get;}
 		public int Z {get;}
 		public Point3(int x, int y, int z) {X = x; Y = y; Z = z;}
-		public override string ToString() {return $"({X}, {Y}), {Z})";}
+		public override string ToString() {return $"({X}, {Y}, {Z})";}
 	}
 }
