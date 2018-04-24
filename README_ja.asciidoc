@@ -361,7 +361,7 @@ _パラメータ:_ +
  +
 _パラメータ:_ +
 `{0}`: `DateTime` オブジェクト
-|`{0:yyyy-MM-dd hh:mm:ss.fff}`
+|`{0:yyyy-MM-dd HH:mm:ss.fff}`
 
 |`MaxDataOutputWidth`
 |データの出力幅の最大値

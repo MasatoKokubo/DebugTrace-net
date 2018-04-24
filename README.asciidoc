@@ -361,7 +361,7 @@ _parameters:_ +
  +
 _parameters:_ +
 `{0}`: The `DateTime` object +
-|`{0:yyyy-MM-dd hh:mm:ss.fff}`
+|`{0:yyyy-MM-dd HH:mm:ss.fff}`
 
 |`MaxDataOutputWidth`
 |*Maximum* output *width of data*

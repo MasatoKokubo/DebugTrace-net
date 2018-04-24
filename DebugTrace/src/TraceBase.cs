@@ -113,7 +113,7 @@ namespace DebugTrace {
 			VarNameValueSeparator    = Resource.GetString (nameof(VarNameValueSeparator  ), Resource.Unescape(@"\s=\s"));
 			KeyValueSeparator        = Resource.GetString (nameof(KeyValueSeparator      ), Resource.Unescape(@":\s"));
 			PrintSuffixFormat        = Resource.GetString (nameof(PrintSuffixFormat      ), Resource.Unescape(@"\s({2}:{3:D})"));
-			DateTimeFormat           = Resource.GetString (nameof(DateTimeFormat         ), Resource.Unescape(@"{0:yyyy-MM-dd hh:mm:ss.fff}"));
+			DateTimeFormat           = Resource.GetString (nameof(DateTimeFormat         ), Resource.Unescape(@"{0:yyyy-MM-dd HH:mm:ss.fff}"));
 			MaxDataOutputWidth       = Resource.GetInt    (nameof(MaxDataOutputWidth     ), 80);
 			CollectionLimit          = Resource.GetInt    (nameof(CollectionLimit        ), 512);
 			StringLimit              = Resource.GetInt    (nameof(StringLimit            ), 8192);
