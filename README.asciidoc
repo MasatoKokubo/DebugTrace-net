@@ -103,7 +103,6 @@ namespace Readme {
 [source,vb.net]
 .ReadmeExample.vb
 ----
-Imports System
 Imports DebugTrace.VisualBasic ' for Debugging
 
 Namespace Global.Readme
@@ -167,7 +166,36 @@ End Namespace
 2018-03-28 02:30:08.627 Leave Readme.ReadmeExample.Main(String[] args) (ReadmeExample.vb:13)
 ----
 
-=== 3. Interfaces and Classes
+==== 3.1 If using or Imports System.Diagnostics
+
+If you are `using` or `Impors System.Diagnostics`, since the `DebugTrace.CSharp.Trace` (`DebugTrace.VisualBaisc.Trace`) property and `System.Diagnostics.Trace` class overlap, you can not use `Trace` property directly. +
+In that case, use `using DebugTrace` (`Imports DebugTrace`) instead of `using static DebugTrace.CSharp` (`Imports DebugTrace.VisualBasic`) and `CSharp.Trace` (`VisualBasic.Trace`) instead of `Trace`.
+
+[source,csharp]
+.ReadmeExample.cs
+----
+using System.Diagnostics;
+using DebugTrace; // for Debugging
+
+namespace Readme {
+    public class ReadmeExample {
+        public static void Main(string[] args) {
+            CSharp.Trace.Enter(); // for Debugging
+----
+
+[source,vb.net]
+.ReadmeExample.vb
+----
+Imports System.Diagnostics
+Imports DebugTrace ' for Debugging
+
+Namespace Global.Readme
+    Public Class ReadmeExample
+        Public Shared Sub Main(args As String())
+            VisualBasic.Trace.Enter() ' for Debugging
+----
+
+=== 4. Interfaces and Classes
 
 There are mainly the following interfaces and classes.
 
@@ -185,11 +213,11 @@ There are mainly the following interfaces and classes.
 |`DebugTrace.Console+Error`|`DebugTrace.Console`|Class outputting logs to standard error output
 |===
 
-=== 4. Properties of DebugTrace.CSharp class and DebugTrace.VisualBasic class
+=== 5. Properties of DebugTrace.CSharp class and DebugTrace.VisualBasic class
 
 `DebugTrace.CSharp` and `DebugTrace.VisualBasic` class has `Trace` property as an instance of its own type.
 
-=== 5. Properties and methods of ITrace interface
+=== 6. Properties and methods of ITrace interface
 
 It has the following properties and methods.
 
@@ -250,7 +278,7 @@ It has the following properties and methods.
 
 |===
 
-=== 6. Properties of *DebugTrace.properties* file
+=== 7. Properties of *DebugTrace.properties* file
 
 DebugTrace reads the `DebugTrace.properties` file in the same directory as DebugTrace.dll at startup.
 You can specify following properties in the `DebugTrace.properties` file.  
@@ -335,7 +363,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 |`CodeIndentString`
 |The string of one code indent +
 [.small]#*Setting Example:*# +
-`CodeIndentString = \|\s` [.small .blue]#⯇*Default*# +
+`CodeIndentString = &#x7c;\s` [.small .blue]#⯇*Default*# +
 [.small .blue]#`\s` is replaced to a space character# +
 
 |`DataIndentString`
@@ -446,7 +474,7 @@ and between the property/field name and value +
 
 |===
 
-==== 6.1. *NonPrintProperties*, *NonPrintString*
+==== 7.1. *NonPrintProperties*, *NonPrintString*
 
 DebugTrace use reflection to output object contents if the `ToString` method is not implemented.
 If there are other object references, the contents of objects are also output.
@@ -468,7 +496,7 @@ NonPrintProperties = \
     DebugTraceExample.Node.Right
 ----
 
-=== 7. Examples of using logging libraries
+=== 8. Examples of using logging libraries
 
 You can output logs using the following libraries besides console output.
 
@@ -484,7 +512,7 @@ To use them, add the above package from NuGet.
 
 The logger name of DebugTrace is `DebugTrace`.   
 
-==== 7-1. log4net
+==== 8-1. log4net
 
 [source,properties]
 .Example of DebugTrace.properties
@@ -520,7 +548,7 @@ Logger = Log4net
 </configuration>
 ----
 
-==== 7-2. NLog
+==== 8-2. NLog
 
 [source,properties]
 .Example of DebugTrace.properties
@@ -549,7 +577,7 @@ Logger = NLog
 </nlog>
 ----
 
-=== 8. License
+=== 9. License
 
 link:LICENSE[The MIT License (MIT)]
 

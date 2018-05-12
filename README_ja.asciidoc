@@ -101,7 +101,6 @@ namespace Readme {
 [source,vb.net]
 .ReadmeExample.vb
 ----
-Imports System
 Imports DebugTrace.VisualBasic ' for Debugging
 
 Namespace Global.Readme
@@ -165,7 +164,36 @@ End Namespace
 2018-03-28 02:30:08.627 Leave Readme.ReadmeExample.Main(String[] args) (ReadmeExample.vb:13)
 ----
 
-=== 3. インタフェース、クラス
+==== 3.1 using System.Diagnostics(Imports System.Diagnostics)を行っている場合
+
+`System.Diagnostics` 名前空間を `using`(`Imports`) している場合は、 `DebugTrace.CSharp.Trace`(`DebugTrace.VisualBaisc.Trace`) プロパティと `System.Diagnostics.Trace` クラスが重なるため、`Trace` プロパティを直接使用できません。 +
+その場合は、`using static DebugTrace.CSharp`(`Imports DebugTrace.VisualBasic`)ではなく `using DebugTrace` (`Imports DebugTrace`)、および `Trace` ではなく `CSharp.Trace`(`VisualBasic.Trace`)を使用してください。
+
+[source,csharp]
+.ReadmeExample.cs
+----
+using System.Diagnostics;
+using DebugTrace; // for Debugging
+
+namespace Readme {
+    public class ReadmeExample {
+        public static void Main(string[] args) {
+            CSharp.Trace.Enter(); // for Debugging
+----
+
+[source,vb.net]
+.ReadmeExample.vb
+----
+Imports System.Diagnostics
+Imports DebugTrace ' for Debugging
+
+Namespace Global.Readme
+    Public Class ReadmeExample
+        Public Shared Sub Main(args As String())
+            VisualBasic.Trace.Enter() ' for Debugging
+----
+
+=== 4. インタフェース、クラス
 
 主に以下のインタフェース、クラスがあります。
 
@@ -183,11 +211,11 @@ End Namespace
 |`DebugTrace.Console+Error`|`DebugTrace.Console`|ログを標準エラー出力に出力するクラス
 |===
 
-=== 4. DebugTrace.CSharpおよびDebugTrace.VisualBasicクラスのプロパティ
+=== 5. DebugTrace.CSharpおよびDebugTrace.VisualBasicクラスのプロパティ
 
 `DebugTrace.CSharp` クラスと `DebugTrace.VisualBasic` クラスには自身の型のインスタンスとして `Trace` プロパティがあります。
 
-=== 5. ITraceインタフェースのプロパティおよびメソッド
+=== 6. ITraceインタフェースのプロパティおよびメソッド
 
 以下のプロパティおよびメソッドがあります。
 
@@ -251,7 +279,7 @@ End Namespace
 
 |===
 
-=== 6. *DebugTrace.properties* ファイルのプロパティ
+=== 7. *DebugTrace.properties* ファイルのプロパティ
 
 DebugTrace は、DebugTrace.dllと同一ディレクトリにある `DebugTrace.properties` ファイルを起動時に読み込みます。
 `DebugTrace.properties` ファイルには以下のプロパティを指定できます。
@@ -335,14 +363,14 @@ DebugTrace は、DebugTrace.dllと同一ディレクトリにある `DebugTrace.
 |`CodeIndentString`
 |コードのインデント文字列 +
 [.small]#*設定例:*# +
-`CodeIndentString = \|\s` [.small .blue]#⯇*デフォルト*# +
-[.small .blue]#`\s`は空白文字に置き換えられる# +
+`CodeIndentString = &#x7c;\s` [.small .blue]#⯇*デフォルト*# +
+[.small .blue]#`\s` は空白文字に置き換えられる# +
 
 |`DataIndentString`
 |データのインデント 文字列 +
 [.small]#*設定例:*# +
 `DataIndentString = \s\s` [.small .blue]#⯇*デフォルト*# +
-[.small .blue]#`\s`は空白文字に置き換えられる# +
+[.small .blue]#`\s` は空白文字に置き換えられる# +
 
 |`LimitString`
 |制限を超えた場合の出力文字列 +
@@ -368,19 +396,19 @@ NonPrintString = `\***` [.small .blue]#⯇*デフォルト*# +
 |変数名と値のセパレータ +
 [.small]#*設定例:*# +
 `VarNameValueSeparator = \s=\s` [.small .blue]#⯇*デフォルト*# +
-[.small .blue]#`\s`は空白文字に置き換えられる# +
+[.small .blue]#`\s` は空白文字に置き換えられる# +
 
 |`KeyValueSeparator`
 |辞書のキーと値のセパレータまたはプロパティ名/フィールド名と値 のセパレータ +
 [.small]#*設定例:*# +
 `KeyValueSeparator = :\s` [.small .blue]#⯇*デフォルト*# +
-[.small .blue]#`\s`は空白文字に置き換えられる# +
+[.small .blue]#`\s` は空白文字に置き換えられる# +
 
 |`PrintSuffixFormat`
 |`print` メソッドで付加される文字列 +
 [.small]#*設定例:*# +
 `PrintSuffixFormat = \s({2}:{3:D})` [.small .blue]#⯇*デフォルト*# +
-[.small .blue]#`\s`は空白文字に置き換えられる# +
+[.small .blue]#`\s` は空白文字に置き換えられる# +
 [.small]#*パラメータ:*# +
 `{0}`: 呼出側のクラス名 +
 `{1}`: 呼出側のメソッド名 +
@@ -445,7 +473,7 @@ NonPrintString = `\***` [.small .blue]#⯇*デフォルト*# +
 
 |===
 
-==== 6.1. *NonPrintProperties*, *NonPrintString*
+==== 7.1. *NonPrintProperties*, *NonPrintString*
 
 DebugTrace は、 `ToString` メソッドが実装されていない場合は、リフレクションを使用してオブジェクト内容を出力します。
 他のオブジェクトの参照があれば、そのオブジェクトの内容も出力します。
@@ -467,7 +495,7 @@ NonPrintProperties = \
     DebugTraceExample.Node.Right
 ----
 
-=== 7. ロギング・ライブラリの使用
+=== 8. ロギング・ライブラリの使用
 
 コンソール出力以外に以下のライブラリを使用してログ出力が可能です。
 
@@ -483,7 +511,7 @@ NonPrintProperties = \
 
 ロギング・ライブラリを使用する際のDebugTraceのロガー名は、 `DebugTrace` です。
 
-==== 7-1. log4net
+==== 8-1. log4net
 
 [source,properties]
 .DebugTrace.propertiesの例
@@ -519,7 +547,7 @@ Logger = Log4net
 </configuration>
 ----
 
-==== 7-2. NLog
+==== 8-2. NLog
 
 [source,properties]
 .DebugTrace.propertiesの例
@@ -548,7 +576,7 @@ Logger = NLog
 </nlog>
 ----
 
-=== 8. ライセンス
+=== 9. ライセンス
 
 link:LICENSE[MIT ライセンス(MIT)]
 

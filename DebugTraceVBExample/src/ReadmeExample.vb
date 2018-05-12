@@ -1,5 +1,4 @@
-﻿Imports System
-Imports DebugTrace.VisualBasic ' for Debugging
+﻿Imports DebugTrace.VisualBasic ' for Debugging
 
 Namespace Global.Readme
     ''' <summary>ReadmeExample</summary>
