@@ -198,5 +198,12 @@ namespace DebugTraceTest {
             Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
         }
 
+        // Guid
+        [DataTestMethod]
+        [DataRow("CE8BF46B-723B-44B4-BBF5-288B6C736127", "v = System.Guid ce8bf46b-723b-44b4-bbf5-288b6c736127 ")]
+        public void CSPrintGuid(string v, string expect) {
+            Trace.Print("v", new Guid(v));
+            Assert.IsTrue(Trace.LastLog.IndexOf(expect) >= 0);
+        }
     }
 }

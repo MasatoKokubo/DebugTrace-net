@@ -32,7 +32,7 @@ namespace DebugTraceTest {
             {nameof(TraceBase.ReflectionNestLimit    ), "2"},
             {nameof(TraceBase.NonPrintProperties     ), "DebugTraceTest.Point.X, DebugTraceTest.Point.Y"},
             {nameof(TraceBase.DefaultNameSpace       ), "DebugTraceTest"},
-            {nameof(TraceBase.ReflectionClasses      ), "DebugTraceTest.Point3"},
+            {nameof(TraceBase.ReflectionClasses      ), "DebugTraceTest.Point3,System.DateTime"},
         };
 
         // emptyProperties
@@ -90,21 +90,43 @@ namespace DebugTraceTest {
             Assert.AreEqual(TraceBase.CollectionLimit    .ToString(),            testProperties[nameof(TraceBase.CollectionLimit        )]);
             Assert.AreEqual(TraceBase.StringLimit        .ToString(),            testProperties[nameof(TraceBase.StringLimit            )]);
             Assert.AreEqual(TraceBase.ReflectionNestLimit.ToString(),            testProperties[nameof(TraceBase.ReflectionNestLimit    )]);
-            AssertAreEqual<string>(TraceBase.NonPrintProperties,                 testProperties[nameof(TraceBase.NonPrintProperties     )].Split(',').Select(s => s.Trim()).ToArray());
+            AssertAreEqual (TraceBase.NonPrintProperties     ,                   testProperties[nameof(TraceBase.NonPrintProperties     )].Split(',').Select(s => s.Trim()).ToArray());
             Assert.AreEqual(TraceBase.DefaultNameSpace       ,                   testProperties[nameof(TraceBase.DefaultNameSpace       )]);
-            Assert.IsTrue  (TraceBase.ReflectionClasses.Contains(                testProperties[nameof(TraceBase.ReflectionClasses      )]));
+
+            var reflectionClasses = new HashSet<string>(testProperties[nameof(TraceBase.ReflectionClasses)].Split(',').Select(s => s.Trim()));
+            reflectionClasses.Add(typeof(Tuple).FullName); // Tuple
+            reflectionClasses.Add(typeof(ValueTuple).FullName); // ValueTuple
+            AssertAreEqual(TraceBase.ReflectionClasses, reflectionClasses);
         }
 
         // AssertAreEqual
         private static void AssertAreEqual<T>(T[] array1, T[] array2) {
             if (array1 == null) {
                 if (array2 == null) return;
-                Assert.Fail();
+                Assert.Fail($"array1 == null, array2 != null");
             }
-            if (array2 == null) Assert.Fail();
-            if (array1.Length != array2.Length) Assert.Fail();
+            if (array2 == null)
+                Assert.Fail($"array1 != null, array2 == null");
+            if (array1.Length != array2.Length)
+                Assert.Fail($"array1.Length = {array1.Length}, array2.Length = {array2.Length}");
             for (var index = 0; index < array1.Length; ++index)
-                if (!array1[index].Equals(array2[index])) Assert.Fail();
+                if (!array1[index].Equals(array2[index]))
+                    Assert.Fail($"array1[{index}] = {array1[index]}, array2[{index}] = {array2[index]}");
+        }
+
+        // AssertAreEqual
+        private static void AssertAreEqual<T>(IEnumerable<T> enumerable1, IEnumerable<T> enumerable2) {
+            if (enumerable1 == null) {
+                if (enumerable2 == null) return;
+                Assert.Fail($"enumerable1 == null, enumerable2 != null");
+            }
+            if (enumerable2 == null)
+                Assert.Fail($"enumerable1 != null, enumerable2 == null");
+            if (enumerable1.Count() != enumerable2.Count())
+                Assert.Fail($"enumerable1.Count() = {enumerable1.Count()}, enumerable2.Count() = {enumerable2.Count()}");
+            for (var index = 0; index < enumerable1.Count(); ++index)
+                if (!enumerable1.ElementAt(index).Equals(enumerable1.ElementAt(index)))
+                    Assert.Fail($"enumerable1.ElementAt({index}) = {enumerable1.ElementAt(index)}, enumerable2.ElementAt({index}) = {enumerable1.ElementAt(index)}");
         }
 
         // EnterString
@@ -192,12 +214,16 @@ namespace DebugTraceTest {
         [TestMethod]
         public void ReflectionClasses() {
             var rectangle = new Rectangle(1, 2, 3, 4);
-            Trace.Print("rectangle", rectangle);
+            Trace.Print("rectangle", rectangle); // use ToString method
             Assert.IsTrue(Trace.LastLog.IndexOf(rectangle.ToString()) >= 0);
 
             var point3 = new Point3(1, 2, 3);
-            Trace.Print("point3", point3);
+            Trace.Print("point3", point3); // use reflection
             Assert.IsTrue(Trace.LastLog.IndexOf("X" + TraceBase.KeyValueSeparator + point3.X) >=  0);
+
+            var dateTime = DateTime.Now;
+            Trace.Print("dateTime", dateTime); // use reflection
+            Assert.IsTrue(Trace.LastLog.IndexOf(TraceBase.KeyValueSeparator) >=  0);
         }
 
     }

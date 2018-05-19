@@ -76,7 +76,7 @@ namespace DebugTrace {
         // Dictionary of thread id to indent state
         protected readonly IDictionary<int, State> states = new Dictionary<int, State>();
 
-        // Before thread id
+        // Previous thread id
         protected int beforeThreadId;
 
         // Reflected objects
@@ -267,11 +267,13 @@ namespace DebugTrace {
 
                 PrintStart(state); // Common start processing of output
 
-                if (state.BeforeNestLevel > state.NestLevel)
-                    Logger.Log(GetIndentString(state.NestLevel, 0)); // Line break
+                if (state.PreviousNestLevel > state.NestLevel)
+                    Logger.Log(GetIndentString(state.NestLevel, 0)); // Empty Line
 
                 LastLog = GetIndentString(state.NestLevel, 0) + GetCallerInfo(EnterString);
                 Logger.Log(LastLog);
+
+                state.PreviousLineCount = 1;
 
                 state.UpNest();
 
@@ -290,10 +292,15 @@ namespace DebugTrace {
                 var state = GetCurrentState(threadId);
                 PrintStart(state); // Common start processing of output
 
+                if (state.PreviousLineCount > 1)
+                    Logger.Log(GetIndentString(state.NestLevel, 0)); // Empty Line
+
                 state.DownNest();
 
                 LastLog = GetIndentString(state.NestLevel, 0) + GetCallerInfo(LeaveString);
                 Logger.Log(LastLog);
+
+                state.PreviousLineCount = 1;
             }
         }
 
@@ -338,7 +345,10 @@ namespace DebugTrace {
                 var state = GetCurrentState();
                 PrintStart(state); // Common start processing of output
 
-                LastLog = "";
+                if (state.PreviousLineCount > 1)
+                    Logger.Log(GetIndentString(state.NestLevel, 0)); // Empty Line
+
+                LastLog = GetIndentString(state.NestLevel, 0);
                 if (message != "") {
                     var element = GetStackTraceElement();
                     var suffix = string.Format(PrintSuffixFormat,
@@ -346,9 +356,11 @@ namespace DebugTrace {
                         element.MethodName,
                         element.FileName,
                         element.LineNumber);
-                    LastLog = GetIndentString(state.NestLevel, 0) + message + suffix;
+                    LastLog += message + suffix;
                 }
                 Logger.Log(LastLog);
+
+                state.PreviousLineCount = 1;
             }
         }
 
@@ -381,6 +393,9 @@ namespace DebugTrace {
                 buff.Append(suffix);
                 buff.LineFeed();
 
+                if (state.PreviousLineCount > 1 || buff.Lines.Count > 1)
+                    Logger.Log(GetIndentString(state.NestLevel, 0)); // Empty Line
+
                 var lastLogBuff = new StringBuilder();
                 foreach ((int dataNestLevel, string line) in buff.Lines) {
                     var log = GetIndentString(state.NestLevel, dataNestLevel) + line;
@@ -388,6 +403,8 @@ namespace DebugTrace {
                     lastLogBuff.Append(log).Append('\n');
                 }
                 LastLog = lastLogBuff.ToString();
+
+                state.PreviousLineCount = buff.Lines.Count;
             }
         }
 
@@ -469,77 +486,66 @@ namespace DebugTrace {
         /// <param name="isElement">true if the value is element of a container class, false otherwise</param>
         /// <returns>isMultiLine">true if output multiple lines, false otherwise</returns>
         protected bool Append(LogBuffer buff, object value, bool isElement) {
-            bool isMultiLine = false;
-
             if (value == null) {
                 buff.Append("null");
-            } else {
-                var type = value.GetType();
+                return  false;
+            }
 
-                var typeName = GetTypeName(type, value, isElement);
+            var type = value.GetType();
+
+            var typeName = GetTypeName(type, value, isElement);
+            var fullTypeName = GetFullTypeName(type);
+            bool isReflection = ReflectionClasses.Contains(fullTypeName);
+            if (!isReflection) {
 
                 switch (value) {
-                case bool       boolValue: buff.Append(typeName); Append(buff,    boolValue); break;
-                case char       charValue: buff.Append(typeName); Append(buff,    charValue); break;
-                case sbyte     sbyteValue: buff.Append(typeName); Append(buff,   sbyteValue); break;
-                case byte       byteValue: buff.Append(typeName); Append(buff,    byteValue); break;
-                case short     shortValue: buff.Append(typeName); Append(buff,   shortValue); break;
-                case ushort   ushortValue: buff.Append(typeName); Append(buff,  ushortValue); break;
-                case int         intValue: buff.Append(typeName); Append(buff,     intValue); break;
-                case uint       uintValue: buff.Append(typeName); Append(buff,    uintValue); break;
-                case long       longValue: buff.Append(typeName); Append(buff,    longValue); break;
-                case ulong     ulongValue: buff.Append(typeName); Append(buff,   ulongValue); break;
-                case float     floatValue: buff.Append(typeName); Append(buff,   floatValue); break;
-                case double   doubleValue: buff.Append(typeName); Append(buff,  doubleValue); break;
-                case decimal decimalValue: buff.Append(typeName); Append(buff, decimalValue); break;
-                case DateTime    dateTime: buff.Append(typeName); Append(buff,     dateTime); break;
-
-                case string   stringValue:
-                    buff.Append(typeName);
-                    AppendString(buff, stringValue, false);
-                    break;
-
-                case IDictionary dictionary:
-                    isMultiLine = AppendDictionary(buff, dictionary, false);
-                    break;
-
-                case ICollection collection:
-                    isMultiLine = AppendCollection(buff, collection, false);
-                    break;
-
-                case Enum enumValue: buff.Append(typeName); buff.Append(enumValue); break;
-
+                case bool       boolValue: buff.Append(typeName); Append(buff,    boolValue); return false;
+                case char       charValue: buff.Append(typeName); Append(buff,    charValue); return false;
+                case sbyte     sbyteValue: buff.Append(typeName); Append(buff,   sbyteValue); return false;
+                case byte       byteValue: buff.Append(typeName); Append(buff,    byteValue); return false;
+                case short     shortValue: buff.Append(typeName); Append(buff,   shortValue); return false;
+                case ushort   ushortValue: buff.Append(typeName); Append(buff,  ushortValue); return false;
+                case int         intValue: buff.Append(typeName); Append(buff,     intValue); return false;
+                case uint       uintValue: buff.Append(typeName); Append(buff,    uintValue); return false;
+                case long       longValue: buff.Append(typeName); Append(buff,    longValue); return false;
+                case ulong     ulongValue: buff.Append(typeName); Append(buff,   ulongValue); return false;
+                case float     floatValue: buff.Append(typeName); Append(buff,   floatValue); return false;
+                case double   doubleValue: buff.Append(typeName); Append(buff,  doubleValue); return false;
+                case decimal decimalValue: buff.Append(typeName); Append(buff, decimalValue); return false;
+                case DateTime    dateTime: buff.Append(typeName); Append(buff,     dateTime); return false;
+                case string   stringValue: buff.Append(typeName); return AppendString(buff, stringValue, false);
+                case IDictionary dictionary: return AppendDictionary(buff, dictionary, false);
+                case ICollection collection: return AppendCollection(buff, collection, false);
+                case Enum       enumValue: buff.Append(typeName); buff.Append(enumValue); return false;
                 default:
-                    // Other
-                    var fullTypeName = GetFullTypeName(type);
-                    bool isReflection = ReflectionClasses.Contains(fullTypeName);
-                    if (!isReflection && !HasToString(type)) {
+                    if (!HasToString(type)) {
                         isReflection = true;
                         ReflectionClasses.Add(fullTypeName);
                     }
-
-                    if (isReflection) {
-                        // Use Reflection
-                        if (reflectedObjects.Any(obj => object.ReferenceEquals(value, obj)))
-                            // Cyclic reference
-                            buff.Append(CyclicReferenceString);
-
-                        else if (reflectedObjects.Count > ReflectionNestLimit)
-                            // Over reflection level limitation
-                            buff.Append(LimitString);
-
-                        else {
-                            // Use Reflection
-                            reflectedObjects.Add(value);
-                            isMultiLine = AppendUsedReflection(buff, value, false);
-                            reflectedObjects.RemoveAt(reflectedObjects.Count - 1);
-                        }
-                    } else {
-                        // Use ToString method
-                        buff.Append(typeName).Append(value);
-                    }
                     break;
                 }
+            }
+
+            bool isMultiLine = false;
+            if (isReflection) {
+                // Use Reflection
+                if (reflectedObjects.Any(obj => object.ReferenceEquals(value, obj)))
+                    // Cyclic reference
+                    buff.Append(CyclicReferenceString);
+
+                else if (reflectedObjects.Count > ReflectionNestLimit)
+                    // Over reflection level limitation
+                    buff.Append(LimitString);
+
+                else {
+                    // Use Reflection
+                    reflectedObjects.Add(value);
+                    isMultiLine = AppendUsedReflection(buff, value, false);
+                    reflectedObjects.RemoveAt(reflectedObjects.Count - 1);
+                }
+            } else {
+                // Use ToString method
+                buff.Append(typeName).Append(value);
             }
 
             return isMultiLine;
@@ -709,7 +715,8 @@ namespace DebugTrace {
         /// <param name="buff">the logging buffer</param>
         /// <param name="str">a string object</param>
         /// <param name="escape">escape characters if true, dose not escape characters otherwise</param>
-        protected void AppendString(LogBuffer buff, string str, bool escape) {
+        /// <returns>always false</returns>
+        protected bool AppendString(LogBuffer buff, string str, bool escape) {
             buff.Save(); // Save current point
             var needAtChar = false;
             buff.Append('"');
@@ -722,8 +729,7 @@ namespace DebugTrace {
                 if (!AppendChar(buff, ch, '"', escape)) {
                     buff.Restore(); // Restore saved point
                     buff.PopSave(); // Pop saveed point
-                    AppendString(buff, str, true);
-                    return;
+                    return AppendString(buff, str, true);
                 }
                 if (!escape && ch == '\\')
                     needAtChar = true;
@@ -732,6 +738,7 @@ namespace DebugTrace {
             if (needAtChar)
                 buff.Insert(buff.PeekSave().builderLength, '@');
             buff.PopSave(); // Pop saveed point
+            return false;
         }
 
         /// <summary>
@@ -896,18 +903,27 @@ namespace DebugTrace {
             return isMultiLine;
         }
 
+        private static readonly Type[] zeroTypes = new Type[0];
+        private static readonly ParameterModifier[] zeroParameterModifiers = new ParameterModifier[0];
+
         /// <summary>
         /// Returns true, if this class or super classes without object class has ToString method.
         /// </summary>
         ///
-        /// <param name="obj">an object</param>
-        /// <returns>true if this class or super classes without object class has ToString method; false otherwise</returns>
+        /// <param name="type">the type</param>
+        /// <returns>true if the type or it base types without object and ValueType class has ToString method; false otherwise</returns>
         protected bool HasToString(Type type) {
             var result = false;
 
             try {
                 while (type != typeof(object) && type != typeof(ValueType)) {
-                    if (type.GetMethod("ToString", BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance) != null) {
+                    if (type.GetMethod(
+                            "ToString", // name
+                            BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance, // bindingAttr
+                            null, // binder
+                            zeroTypes, // types
+                            zeroParameterModifiers // modifiers
+                        ) != null) {
                         result = true;
                         break;
                     }
