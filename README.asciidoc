@@ -47,7 +47,10 @@ namespace Readme {
         public static void Main(string[] args) {
             Trace.Enter(); // for Debugging
 
-            var contact = new Contact(1, "Akane", "Apple", new DateTime(1991, 2, 3));
+            var contact = new [] {
+                new Contact(1, "Akane" , "Apple", new DateTime(1991, 2, 3)),
+                new Contact(2, "Yukari", "Apple", new DateTime(1992, 3, 4))
+            };
             Trace.Print("contact", contact); // for Debugging
 
             Trace.Leave(); // for Debugging
@@ -86,20 +89,30 @@ namespace Readme {
 
 .Console output / C#
 ----
-2018-05-19 15:40:03.089 ______________________________ Thread 1 ______________________________
-2018-05-19 15:40:03.090
-2018-05-19 15:40:03.154 Enter Readme.ReadmeExample.Main(String[] args) (ReadmeExample.cs:8)
-2018-05-19 15:40:03.199 |
-2018-05-19 15:40:03.201 | contact = Readme.Contact {
-2018-05-19 15:40:03.201 |   ____ Readme.Entity ____
-2018-05-19 15:40:03.201 |   ID: 1,
-2018-05-19 15:40:03.201 |   ____ Readme.ContactBase ____
-2018-05-19 15:40:03.201 |   FirstName: "Akane", LastName: "Apple",
-2018-05-19 15:40:03.201 |   ____ Readme.Contact ____
-2018-05-19 15:40:03.201 |   Birthday: 1991-02-03 00:00:00.000,
-2018-05-19 15:40:03.201 | } (ReadmeExample.cs:11)
-2018-05-19 15:40:03.202 |
-2018-05-19 15:40:03.207 Leave Readme.ReadmeExample.Main(String[] args) (ReadmeExample.cs:13)
+2018-05-26 12:47:41.234 ______________________________ Thread 1 ______________________________
+2018-05-26 12:47:41.234
+2018-05-26 12:47:41.297 Enter Readme.ReadmeExample1.Main(String[] args) (ReadmeExample.cs:8)
+2018-05-26 12:47:41.322 |
+2018-05-26 12:47:41.323 | contact = Readme.Contact[2] {
+2018-05-26 12:47:41.323 |   Readme.Contact {
+2018-05-26 12:47:41.323 |     ____ Readme.Entity ____
+2018-05-26 12:47:41.324 |     ID: 1,
+2018-05-26 12:47:41.324 |     ____ Readme.ContactBase ____
+2018-05-26 12:47:41.324 |     FirstName: "Akane", LastName: "Apple",
+2018-05-26 12:47:41.324 |     ____ Readme.Contact ____
+2018-05-26 12:47:41.324 |     Birthday: 1991-02-03 00:00:00.000,
+2018-05-26 12:47:41.324 |   },
+2018-05-26 12:47:41.324 |   Readme.Contact {
+2018-05-26 12:47:41.324 |     ____ Readme.Entity ____
+2018-05-26 12:47:41.324 |     ID: 2,
+2018-05-26 12:47:41.324 |     ____ Readme.ContactBase ____
+2018-05-26 12:47:41.324 |     FirstName: "Yukari", LastName: "Apple",
+2018-05-26 12:47:41.324 |     ____ Readme.Contact ____
+2018-05-26 12:47:41.325 |     Birthday: 1992-03-04 00:00:00.000,
+2018-05-26 12:47:41.325 |   },
+2018-05-26 12:47:41.325 | } (ReadmeExample.cs:14)
+2018-05-26 12:47:41.326 |
+2018-05-26 12:47:41.329 Leave Readme.ReadmeExample1.Main(String[] args) (ReadmeExample.cs:16)
 ----
 
 [source,vb.net]
@@ -113,7 +126,10 @@ Namespace Global.Readme
         Public Shared Sub Main(args As String())
             Trace.Enter() ' for Debugging
 
-            Dim contact = New Contact(1, "Akane", "Apple", New DateTime(1991, 2, 3))
+            Dim contact = New Contact() {
+                New Contact(1, "Akane", "Apple", New DateTime(1991, 2, 3)),
+                New Contact(2, "Yukari", "Apple", New DateTime(1992, 3, 4))
+            }
             Trace.Print(NameOf(contact), contact) ' for Debugging
 
             Trace.Leave() ' for Debugging
@@ -154,20 +170,30 @@ End Namespace
 
 .Console output / Visual Basic
 ----
-2018-05-19 15:40:32.366 ______________________________ Thread 1 ______________________________
-2018-05-19 15:40:32.367
-2018-05-19 15:40:32.452 Enter Readme.ReadmeExample.Main(String[] args) (ReadmeExample.vb:7)
-2018-05-19 15:40:32.481 |
-2018-05-19 15:40:32.482 | contact = Readme.Contact {
-2018-05-19 15:40:32.482 |   ____ Readme.Entity ____
-2018-05-19 15:40:32.483 |   ID: 1,
-2018-05-19 15:40:32.483 |   ____ Readme.ContactBase ____
-2018-05-19 15:40:32.483 |   FirstName: "Akane", LastName: "Apple",
-2018-05-19 15:40:32.483 |   ____ Readme.Contact ____
-2018-05-19 15:40:32.483 |   Birthday: 1991-02-03 00:00:00.000,
-2018-05-19 15:40:32.483 | } (ReadmeExample.vb:10)
-2018-05-19 15:40:32.484 |
-2018-05-19 15:40:32.487 Leave Readme.ReadmeExample.Main(String[] args) (ReadmeExample.vb:12)
+2018-05-26 12:55:04.154 ______________________________ Thread 1 ______________________________
+2018-05-26 12:55:04.154
+2018-05-26 12:55:04.215 Enter Readme.ReadmeExample.Main(String[] args) (ReadmeExample.vb:7)
+2018-05-26 12:55:04.241 |
+2018-05-26 12:55:04.243 | contact = Readme.Contact(Length: 2) {
+2018-05-26 12:55:04.243 |   Readme.Contact {
+2018-05-26 12:55:04.243 |     ____ Readme.Entity ____
+2018-05-26 12:55:04.243 |     ID: 1,
+2018-05-26 12:55:04.243 |     ____ Readme.ContactBase ____
+2018-05-26 12:55:04.243 |     FirstName: "Akane", LastName: "Apple",
+2018-05-26 12:55:04.243 |     ____ Readme.Contact ____
+2018-05-26 12:55:04.243 |     Birthday: 1991-02-03 00:00:00.000,
+2018-05-26 12:55:04.244 |   },
+2018-05-26 12:55:04.244 |   Readme.Contact {
+2018-05-26 12:55:04.244 |     ____ Readme.Entity ____
+2018-05-26 12:55:04.244 |     ID: 2,
+2018-05-26 12:55:04.244 |     ____ Readme.ContactBase ____
+2018-05-26 12:55:04.244 |     FirstName: "Yukari", LastName: "Apple",
+2018-05-26 12:55:04.244 |     ____ Readme.Contact ____
+2018-05-26 12:55:04.244 |     Birthday: 1992-03-04 00:00:00.000,
+2018-05-26 12:55:04.244 |   },
+2018-05-26 12:55:04.244 | } (ReadmeExample.vb:13)
+2018-05-26 12:55:04.245 |
+2018-05-26 12:55:04.249 Leave Readme.ReadmeExample.Main(String[] args) (ReadmeExample.vb:15)
 ----
 
 ==== 3.1 If using or Imports System.Diagnostics
@@ -294,7 +320,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 
 |`Logger`
 |Logger DebugTrace uses +
-[.small]#*Setting Examples:*# +
+[.small]#*Examples:*# +
 `Logger = Console+Out` [.small .blue]#Output to the console (stdout)# +
 `Logger = Console+Error` [.small .blue]#Output to the console (stderr)# [.small .blue]#⯇*Default*# + 
 `Logger = Log4net` [.small .blue]#use Log4net# +
@@ -302,7 +328,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 
 |`LogLevel`
 |Log level to use +
-[.small]#*Setting Examples when use Log4net:*# +
+[.small]#*Examples when use Log4net:*# +
 `LogLevel = All` +
 `LogLevel = Finest` +
 `LogLevel = Verbose` +
@@ -320,7 +346,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 `LogLevel = Fatal` +
 `LogLevel = Emergency` +
 `LogLevel = Off` +
-[.small]#*Setting Examples when use NLog:*# +
+[.small]#*Examples when use NLog:*# +
 `LogLevel = Trace` +
 `LogLevel = Debug` [.small .blue]#⯇*Default*# +
 `LogLevel = Info` +
@@ -331,9 +357,9 @@ You can specify following properties in the `DebugTrace.properties` file.
 
 |`EnterString`
 |The string output by `enter` method +
-[.small]#*Setting Example:*# +
+[.small]#*Example:*# +
 `EnterString = Enter {0}.{1} ({2}:{3:D})` [.small .blue]#⯇*Default*# +
-[.small]#*parameters:*# +
+[.small]#*Parameters:*# +
 `{0}`: The class name of the caller +
 `{1}`: The method name of the caller +
 `{2}`: The file name of the caller +
@@ -341,9 +367,9 @@ You can specify following properties in the `DebugTrace.properties` file.
 
 |`LeaveString`
 |The string output by `leave` method +
-[.small]#*Setting Example:*# +
+[.small]#*Example:*# +
 `LeaveString = Leave {0}.{1} ({2}:{3:D})` [.small .blue]#⯇*Default*# +
-[.small]#*parameters:*# +
+[.small]#*Parameters:*# +
 `{0}`: The class name of the caller +
 `{1}`: The method name of the caller +
 `{2}`: The file name of the caller +
@@ -351,107 +377,116 @@ You can specify following properties in the `DebugTrace.properties` file.
 
 |`ThreadBoundaryString`
 |The string output in the threads boundary. +
-[.small]#*Setting Example:*# +
+[.small]#*Example:*# +
 [.small]#`ThreadBoundaryString = \____\__\__\__\__\__\__\__\__\__\__\__\__\__ Thread {0} \__\__\__\__\__\__\__\__\__\__\__\__\__\____`# +
 [.small .blue]#⯅*Default*# +
-[.small]#*parameter:*# +
+[.small]#*Parameter:*# +
 `{0}`: The thread ID +
 
 |`ClassBoundaryString`
 |The string output in the classes boundary. +
-[.small]#*Setting Example:*# +
+[.small]#*Example:*# +
 `ClassBoundaryString = \\____ {0} \____` [.small .blue]#⯇*Default*# +
-[.small]#*parameter:*# +
+[.small]#*Parameter:*# +
 `{0}`: The class name +
 
 |`CodeIndentString`
 |The string of one code indent +
-[.small]#*Setting Example:*# +
+[.small]#*Example:*# +
 `CodeIndentString = &#x7c;\s` [.small .blue]#⯇*Default*# +
 [.small .blue]#`\s` is replaced to a space character# +
 
 |`DataIndentString`
 |The string of one data indent +
-[.small]#*Setting Example:*# +
+[.small]#*Example:*# +
 `DataIndentString = \s\s` [.small .blue]#⯇*Default*# +
 [.small .blue]#`\s` is replaced to a space character# +
 
 |`LimitString`
 |The string to represent that it has exceeded the limit +
-[.small]#*Setting Example:*# +
+[.small]#*Example:*# +
 `LimitString = \...` [.small .blue]#⯇*Default*# +
 
 |`DefaultNameSpaceString` +
 |The string replacing the default namespace part +
-[.small]#*Setting Example:*# +
+[.small]#*Example:*# +
 `DefaultNameSpaceString = \...` [.small .blue]#⯇*Default*# +
 
 |`NonPrintString` +
 |The string of value in the case of properties that do not output the value +
-[.small]#*Setting Example:*# +
+[.small]#*Example:*# +
 `NonPrintString = \***` [.small .blue]#⯇*Default*# +
 
 |`CyclicReferenceString`
 |The string to represent that the cyclic reference occurs +
-[.small]#*Setting Example:*# +
+[.small]#*Example:*# +
 `CyclicReferenceString = \*\** Cyclic Reference \***` [.small .blue]#⯇*Default*#
 
 |`VarNameValueSeparator`
 |The separator string between the variable name and value +
-[.small]#*Setting Example:*# +
+[.small]#*Example:*# +
 `VarNameValueSeparator = \s=\s` [.small .blue]#⯇*Default*# +
 [.small .blue]#`\s` is replaced to a space character# +
 
 |`KeyValueSeparator`
 |The separator string between the key and value for Map object +
 and between the property/field name and value +
-[.small]#*Setting Example:*# +
+[.small]#*Example:*# +
 `KeyValueSeparator = :\s` [.small .blue]#⯇*Default*# +
 [.small .blue]#`\s` is replaced to a space character# +
 
 |`PrintSuffixFormat`
 |Output format of `print` method suffix +
-[.small]#*Setting Example:*# +
+[.small]#*Example:*# +
 `PrintSuffixFormat = \s({2}:{3:D})` [.small .blue]#⯇*Default*# +
 [.small .blue]#`\s` is replaced to a space character# +
-[.small]#*parameters:*# +
+[.small]#*Parameters:*# +
 `{0}`: The class name of the caller +
 `{1}`: The method name of the caller +
 `{2}`: The file name of the caller +
 `{3}`: The line number of the caller +
 
 |`DateTimeFormat`
-|Output format of date and time +
-[.small]#*Setting Example:*# +
-`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff}` [.small .blue]#⯇*Default*# +
-[.small]#*parameter:*# +
+|Output format of DateTime +
+[.small]#*Example:*# +
+`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffK}` [.small .blue]#⯇*Default*# +
+[.small]#*Parameter:*# +
+`{0}`: The `DateTime` object +
+
+|`LogDateTimeFormat` +
+ +
+[.gray]#_since 1.3.0_#
+|Output format of date and time when outputting logs +
+[.small]#*Example:*# +
+`LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff}` [.small .blue]#⯇*Default*# +
+[.small]#*Parameter:*# +
 `{0}`: The `DateTime` object +
 
 |`MaxDataOutputWidth`
 |Maximum output width of data* +
-[.small]#*Setting Example:*# +
+[.small]#*Example:*# +
 `MaxDataOutputWidth = 80` [.small .blue]#⯇*Default*# +
 
 |`CollectionLimit`
 |*Limit* value of `ICollection` elements to output +
-[.small]#*Setting Example:*# +
+[.small]#*Example:*# +
 `CollectionLimit = 512` [.small .blue]#⯇*Default*# +
 
 |`StringLimit`
 |*Limit* value of `string` characters to output +
-[.small]#*Setting Example:*# +
+[.small]#*Example:*# +
 `StringLimit = 8192` [.small .blue]#⯇*Default*# +
 
 |`ReflectionNestLimit`
 |Limit value of reflection nest +
-[.small]#*Setting Example:*# +
+[.small]#*Example:*# +
 `ReflectionNestLimit = 4` [.small .blue]#⯇*Default*# +
 
 |`NonPrintProperties` +
 |Properties and fields not to be output value +
-[.small]#*Setting Example (One value):*# +
+[.small]#*Example (One value):*# +
 `NonPrintProperties = DebugTraceExample.Node.Parent` +
-[.small]#*Setting Example (Multiple values):*# +
+[.small]#*Example (Multiple values):*# +
 `NonPrintProperties = \` +
   `DebugTraceExample.Node.Parent,\` +
   `DebugTraceExample.Node.Left,\` +
@@ -462,15 +497,15 @@ and between the property/field name and value +
 
 |`DefaultNameSpace` +
 |Default namespace of your java source +
-[.small]#*Setting Example:*# +
+[.small]#*Example:*# +
 `DefaultNameSpace = DebugTraceExample` +
 [.small .blue]#The default value is unspecified#
 
 |`ReflectionClasses` +
 |Classe names that output content by reflection even if `ToString` method is implemented
-[.small]#*Setting Example (One value):*# +
+[.small]#*Example (One value):*# +
 `ReflectionClasses = DebugTraceExample.Point` +
-[.small]#*Setting Example (Multiple values):*# +
+[.small]#*Example (Multiple values):*# +
 `ReflectionClasses = \` +
   `DebugTraceExample.Point,\` +
   `DebugTraceExample.Rectangle` +

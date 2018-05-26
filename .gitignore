@@ -291,3 +291,4 @@ README.md
 DebugTraceExample/DebugTrace.properties
 DebugTraceTest/DebugTrace.properties
 DebugTraceVBExample/DebugTrace.properties
+*.db

@@ -26,20 +26,21 @@ namespace DebugTrace {
     public abstract class TraceBase : ITrace {
         public static Resource Resource {get; private set;}
 
-        public static string   EnterString             {get; set;} // string at enter
-        public static string   LeaveString             {get; set;} // string at leave
-        public static string   ThreadBoundaryString    {get; set;} // string of threads boundary
-        public static string   ClassBoundaryString     {get; set;} // string of classes boundary
-        public static string   CodeIndentString        {get; set;} // string of method call indent
-        public static string   DataIndentString        {get; set;} // string of data indent
-        public static string   LimitString             {get; set;} // string to represent that it has exceeded the limit
-        public static string   DefaultNameSpaceString  {get; set;} // string replacing the default package part
-        public static string   NonPrintString          {get; set;} // string of value in the case of properties that do not display the value
-        public static string   CyclicReferenceString   {get; set;} // string to represent that the cyclic reference occurs
+        public static string   EnterString             {get; set;} // Enter string
+        public static string   LeaveString             {get; set;} // Leave string
+        public static string   ThreadBoundaryString    {get; set;} // Threads boundary string
+        public static string   ClassBoundaryString     {get; set;} // Classes boundary string
+        public static string   CodeIndentString        {get; set;} // Method call indent string
+        public static string   DataIndentString        {get; set;} // Data indent string
+        public static string   LimitString             {get; set;} // String to represent that it has exceeded the limit
+        public static string   DefaultNameSpaceString  {get; set;} // String replacing the default package part
+        public static string   NonPrintString          {get; set;} // String of value in the case of properties that do not display the value
+        public static string   CyclicReferenceString   {get; set;} // String to represent that the cyclic reference occurs
         public static string   VarNameValueSeparator   {get; set;} // Separator between the variable name and value
         public static string   KeyValueSeparator       {get; set;} // Separator between the key and value for IDictionary object or property/field and value
         public static string   PrintSuffixFormat       {get; set;} // Format string of Print suffix
-        public static string   DateTimeFormat          {get; set;} // Format string of a DateTime and a string
+        public static string   DateTimeFormat          {get; set;} // DateTime format string
+        public static string   LogDateTimeFormat       {get; set;} // DateTime format string when the log was output
         public static int      MaxDataOutputWidth      {get; set;} // Maximum data output width
         public static int      CollectionLimit         {get; set;} // Limit of ICollection elements to output
         public static int      StringLimit             {get; set;} // Limit of string characters to output
@@ -113,7 +114,8 @@ namespace DebugTrace {
             VarNameValueSeparator    = Resource.GetString (nameof(VarNameValueSeparator  ), Resource.Unescape(@"\s=\s"));
             KeyValueSeparator        = Resource.GetString (nameof(KeyValueSeparator      ), Resource.Unescape(@":\s"));
             PrintSuffixFormat        = Resource.GetString (nameof(PrintSuffixFormat      ), Resource.Unescape(@"\s({2}:{3:D})"));
-            DateTimeFormat           = Resource.GetString (nameof(DateTimeFormat         ), Resource.Unescape(@"{0:yyyy-MM-dd HH:mm:ss.fff}"));
+            DateTimeFormat           = Resource.GetString (nameof(DateTimeFormat         ), Resource.Unescape(@"{0:yyyy-MM-dd HH:mm:ss.fffK}"));
+            LogDateTimeFormat        = Resource.GetString (nameof(LogDateTimeFormat      ), Resource.Unescape(@"{0:yyyy-MM-dd HH:mm:ss.fff}"));
             MaxDataOutputWidth       = Resource.GetInt    (nameof(MaxDataOutputWidth     ), 80);
             CollectionLimit          = Resource.GetInt    (nameof(CollectionLimit        ), 512);
             StringLimit              = Resource.GetInt    (nameof(StringLimit            ), 8192);
@@ -1112,7 +1114,7 @@ namespace DebugTrace {
         /// <returns>current timestamp string</returns>
         public static string DateTimeString {
             get {
-                return string.Format(DateTimeFormat, DateTime.Now);
+                return string.Format(LogDateTimeFormat, DateTime.Now);
             }
         }
     }

@@ -7,7 +7,10 @@ namespace Readme {
         public static void _Main(string[] args) {
             Trace.Enter(); // for Debugging
 
-            var contact = new Contact(1, "Akane", "Apple", new DateTime(1991, 2, 3));
+            var contact = new [] {
+                new Contact(1, "Akane" , "Apple", new DateTime(1991, 2, 3)),
+                new Contact(2, "Yukari", "Apple", new DateTime(1992, 3, 4))
+            };
             Trace.Print("contact", contact); // for Debugging
 
             Trace.Leave(); // for Debugging

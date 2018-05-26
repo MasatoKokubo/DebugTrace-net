@@ -100,21 +100,6 @@ namespace DebugTraceTest {
         }
 
         // AssertAreEqual
-        private static void AssertAreEqual<T>(T[] array1, T[] array2) {
-            if (array1 == null) {
-                if (array2 == null) return;
-                Assert.Fail($"array1 == null, array2 != null");
-            }
-            if (array2 == null)
-                Assert.Fail($"array1 != null, array2 == null");
-            if (array1.Length != array2.Length)
-                Assert.Fail($"array1.Length = {array1.Length}, array2.Length = {array2.Length}");
-            for (var index = 0; index < array1.Length; ++index)
-                if (!array1[index].Equals(array2[index]))
-                    Assert.Fail($"array1[{index}] = {array1[index]}, array2[{index}] = {array2[index]}");
-        }
-
-        // AssertAreEqual
         private static void AssertAreEqual<T>(IEnumerable<T> enumerable1, IEnumerable<T> enumerable2) {
             if (enumerable1 == null) {
                 if (enumerable2 == null) return;

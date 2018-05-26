@@ -6,7 +6,10 @@ Namespace Global.Readme
         Public Shared Sub _Main(args As String())
             Trace.Enter() ' for Debugging
 
-            Dim contact = New Contact(1, "Akane", "Apple", New DateTime(1991, 2, 3))
+            Dim contact = New Contact() {
+                New Contact(1, "Akane", "Apple", New DateTime(1991, 2, 3)),
+                New Contact(2, "Yukari", "Apple", New DateTime(1992, 3, 4))
+            }
             Trace.Print("contact", contact) ' for Debugging
 
             Trace.Leave() ' for Debugging

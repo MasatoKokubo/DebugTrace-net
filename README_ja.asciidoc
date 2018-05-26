@@ -45,7 +45,10 @@ namespace Readme {
         public static void Main(string[] args) {
             Trace.Enter(); // for Debugging
 
-            var contact = new Contact(1, "Akane", "Apple", new DateTime(1991, 2, 3));
+            var contact = new [] {
+                new Contact(1, "Akane" , "Apple", new DateTime(1991, 2, 3)),
+                new Contact(2, "Yukari", "Apple", new DateTime(1992, 3, 4))
+            };
             Trace.Print("contact", contact); // for Debugging
 
             Trace.Leave(); // for Debugging
@@ -84,20 +87,30 @@ namespace Readme {
 
 .コンソール出力 / C#
 ----
-2018-05-19 15:40:03.089 ______________________________ Thread 1 ______________________________
-2018-05-19 15:40:03.090
-2018-05-19 15:40:03.154 Enter Readme.ReadmeExample.Main(String[] args) (ReadmeExample.cs:8)
-2018-05-19 15:40:03.199 |
-2018-05-19 15:40:03.201 | contact = Readme.Contact {
-2018-05-19 15:40:03.201 |   ____ Readme.Entity ____
-2018-05-19 15:40:03.201 |   ID: 1,
-2018-05-19 15:40:03.201 |   ____ Readme.ContactBase ____
-2018-05-19 15:40:03.201 |   FirstName: "Akane", LastName: "Apple",
-2018-05-19 15:40:03.201 |   ____ Readme.Contact ____
-2018-05-19 15:40:03.201 |   Birthday: 1991-02-03 00:00:00.000,
-2018-05-19 15:40:03.201 | } (ReadmeExample.cs:11)
-2018-05-19 15:40:03.202 |
-2018-05-19 15:40:03.207 Leave Readme.ReadmeExample.Main(String[] args) (ReadmeExample.cs:13)
+2018-05-26 12:47:41.234 ______________________________ Thread 1 ______________________________
+2018-05-26 12:47:41.234
+2018-05-26 12:47:41.297 Enter Readme.ReadmeExample1.Main(String[] args) (ReadmeExample.cs:8)
+2018-05-26 12:47:41.322 |
+2018-05-26 12:47:41.323 | contact = Readme.Contact[2] {
+2018-05-26 12:47:41.323 |   Readme.Contact {
+2018-05-26 12:47:41.323 |     ____ Readme.Entity ____
+2018-05-26 12:47:41.324 |     ID: 1,
+2018-05-26 12:47:41.324 |     ____ Readme.ContactBase ____
+2018-05-26 12:47:41.324 |     FirstName: "Akane", LastName: "Apple",
+2018-05-26 12:47:41.324 |     ____ Readme.Contact ____
+2018-05-26 12:47:41.324 |     Birthday: 1991-02-03 00:00:00.000,
+2018-05-26 12:47:41.324 |   },
+2018-05-26 12:47:41.324 |   Readme.Contact {
+2018-05-26 12:47:41.324 |     ____ Readme.Entity ____
+2018-05-26 12:47:41.324 |     ID: 2,
+2018-05-26 12:47:41.324 |     ____ Readme.ContactBase ____
+2018-05-26 12:47:41.324 |     FirstName: "Yukari", LastName: "Apple",
+2018-05-26 12:47:41.324 |     ____ Readme.Contact ____
+2018-05-26 12:47:41.325 |     Birthday: 1992-03-04 00:00:00.000,
+2018-05-26 12:47:41.325 |   },
+2018-05-26 12:47:41.325 | } (ReadmeExample.cs:14)
+2018-05-26 12:47:41.326 |
+2018-05-26 12:47:41.329 Leave Readme.ReadmeExample1.Main(String[] args) (ReadmeExample.cs:16)
 ----
 
 [source,vb.net]
@@ -111,7 +124,10 @@ Namespace Global.Readme
         Public Shared Sub Main(args As String())
             Trace.Enter() ' for Debugging
 
-            Dim contact = New Contact(1, "Akane", "Apple", New DateTime(1991, 2, 3))
+            Dim contact = New Contact() {
+                New Contact(1, "Akane", "Apple", New DateTime(1991, 2, 3)),
+                New Contact(2, "Yukari", "Apple", New DateTime(1992, 3, 4))
+            }
             Trace.Print(NameOf(contact), contact) ' for Debugging
 
             Trace.Leave() ' for Debugging
@@ -152,20 +168,30 @@ End Namespace
 
 .コンソール出力 / Visual Basic
 ----
-2018-05-19 15:40:32.366 ______________________________ Thread 1 ______________________________
-2018-05-19 15:40:32.367
-2018-05-19 15:40:32.452 Enter Readme.ReadmeExample.Main(String[] args) (ReadmeExample.vb:7)
-2018-05-19 15:40:32.481 |
-2018-05-19 15:40:32.482 | contact = Readme.Contact {
-2018-05-19 15:40:32.482 |   ____ Readme.Entity ____
-2018-05-19 15:40:32.483 |   ID: 1,
-2018-05-19 15:40:32.483 |   ____ Readme.ContactBase ____
-2018-05-19 15:40:32.483 |   FirstName: "Akane", LastName: "Apple",
-2018-05-19 15:40:32.483 |   ____ Readme.Contact ____
-2018-05-19 15:40:32.483 |   Birthday: 1991-02-03 00:00:00.000,
-2018-05-19 15:40:32.483 | } (ReadmeExample.vb:10)
-2018-05-19 15:40:32.484 |
-2018-05-19 15:40:32.487 Leave Readme.ReadmeExample.Main(String[] args) (ReadmeExample.vb:12)
+2018-05-26 12:55:04.154 ______________________________ Thread 1 ______________________________
+2018-05-26 12:55:04.154
+2018-05-26 12:55:04.215 Enter Readme.ReadmeExample.Main(String[] args) (ReadmeExample.vb:7)
+2018-05-26 12:55:04.241 |
+2018-05-26 12:55:04.243 | contact = Readme.Contact(Length: 2) {
+2018-05-26 12:55:04.243 |   Readme.Contact {
+2018-05-26 12:55:04.243 |     ____ Readme.Entity ____
+2018-05-26 12:55:04.243 |     ID: 1,
+2018-05-26 12:55:04.243 |     ____ Readme.ContactBase ____
+2018-05-26 12:55:04.243 |     FirstName: "Akane", LastName: "Apple",
+2018-05-26 12:55:04.243 |     ____ Readme.Contact ____
+2018-05-26 12:55:04.243 |     Birthday: 1991-02-03 00:00:00.000,
+2018-05-26 12:55:04.244 |   },
+2018-05-26 12:55:04.244 |   Readme.Contact {
+2018-05-26 12:55:04.244 |     ____ Readme.Entity ____
+2018-05-26 12:55:04.244 |     ID: 2,
+2018-05-26 12:55:04.244 |     ____ Readme.ContactBase ____
+2018-05-26 12:55:04.244 |     FirstName: "Yukari", LastName: "Apple",
+2018-05-26 12:55:04.244 |     ____ Readme.Contact ____
+2018-05-26 12:55:04.244 |     Birthday: 1992-03-04 00:00:00.000,
+2018-05-26 12:55:04.244 |   },
+2018-05-26 12:55:04.244 | } (ReadmeExample.vb:13)
+2018-05-26 12:55:04.245 |
+2018-05-26 12:55:04.249 Leave Readme.ReadmeExample.Main(String[] args) (ReadmeExample.vb:15)
 ----
 
 ==== 3.1 using System.Diagnostics(Imports System.Diagnostics)を行っている場合
@@ -422,7 +448,16 @@ NonPrintString = `\***` [.small .blue]#⯇*デフォルト*# +
 |`DateTimeFormat`
 |日時の出力フォーマット +
 [.small]#*設定例:*# +
-`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff}` [.small .blue]#⯇*デフォルト*# +
+`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffK}` [.small .blue]#⯇*デフォルト*# +
+[.small]#*パラメータ:*# +
+`{0}`: `DateTime` オブジェクト +
+
+|`LogDateTimeFormat` +
+ +
+[.gray]#_1.3.0~_#
+|ログ出力時の日時の出力フォーマット +
+[.small]#*設定例:*# +
+`LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff}` [.small .blue]#⯇*デフォルト*# +
 [.small]#*パラメータ:*# +
 `{0}`: `DateTime` オブジェクト +
 
