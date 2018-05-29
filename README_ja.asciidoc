@@ -322,7 +322,7 @@ DebugTrace は、DebugTrace.dllと同一ディレクトリにある `DebugTrace.
 | DebugTrace が使用するロガー +
 [.small]#*設定例:*# +
 `Logger = Console+Out` [.small .blue]#コンソール(標準出力)へ出力# + 
-`Logger = Console+Error` [.small .blue]#コンソール(標準エラー出力)へ出力#  [.small .blue]#⯇*デフォルト*# + 
+`Logger = Console+Error` [.small .blue]#コンソール(標準エラー出力)へ出力# [.small .blue]#*_(デフォルト)_*# + 
 `Logger = Log4net` [.small .blue]#log4netを使用# + 
 `Logger = NLog` [.small .blue]#NLogを使用# +
 
@@ -335,7 +335,7 @@ DebugTrace は、DebugTrace.dllと同一ディレクトリにある `DebugTrace.
 `LogLevel = Finer` +
 `LogLevel = Trace` +
 `LogLevel = Fine` +
-`LogLevel = Debug`  [.small .blue]#⯇*デフォルト*# +
+`LogLevel = Debug`  [.small .blue]#*_(デフォルト)_*# +
 `LogLevel = Info` +
 `LogLevel = Notice` +
 `LogLevel = Warn` +
@@ -348,7 +348,7 @@ DebugTrace は、DebugTrace.dllと同一ディレクトリにある `DebugTrace.
 `LogLevel = Off` +
 [.small]#*NLogを使用する際の設定例:*# +
 `LogLevel = Trace` +
-`LogLevel = Debug`  [.small .blue]#⯇*デフォルト*# +
+`LogLevel = Debug`  [.small .blue]#*_(デフォルト)_*# +
 `LogLevel = Info` +
 `LogLevel = Warn` +
 `LogLevel = Error` +
@@ -358,7 +358,7 @@ DebugTrace は、DebugTrace.dllと同一ディレクトリにある `DebugTrace.
 |`EnterString`
 |`Enter` メソッドで出力される文字列 +
 [.small]#*設定例:*# +
-`EnterString = 開始 {0}.{1} ({2}:{3:D})` [.small .blue]#⯇*デフォルト*# +
+`EnterString = 開始 {0}.{1} ({2}:{3:D})` [.small .blue]#*_(デフォルト)_*# +
 [.small]#*パラメータ:*# +
 `{0}`: 呼出側のクラス名 +
 `{1}`: 呼出側のメソッド名 +
@@ -368,7 +368,7 @@ DebugTrace は、DebugTrace.dllと同一ディレクトリにある `DebugTrace.
 |`LeaveString`
 |`Leave` メソッドでで出力される文字列 +
 [.small]#*設定例:*# +
-`LeaveString = 終了 {0}.{1} ({2}:{3:D})` [.small .blue]#⯇*デフォルト*# +
+`LeaveString = 終了 {0}.{1} ({2}:{3:D})` [.small .blue]#*_(デフォルト)_*# +
 [.small]#*パラメータ:*# +
 `{0}`: 呼出側のクラス名 +
 `{1}`: 呼出側のメソッド名 +
@@ -386,58 +386,58 @@ DebugTrace は、DebugTrace.dllと同一ディレクトリにある `DebugTrace.
 |`ClassBoundaryString`
 |クラス境界での出力文字列 +
 [.small]#*設定例:*# +
-`ClassBoundaryString = \\____ {0} \____` [.small .blue]#⯇*デフォルト*# +
+`ClassBoundaryString = \\____ {0} \____` [.small .blue]#*_(デフォルト)_*# +
 [.small]#*パラメータ:*# +
 `{0}`: クラス名 +
 
 |`CodeIndentString`
 |コードのインデント文字列 +
 [.small]#*設定例:*# +
-`CodeIndentString = &#x7c;\s` [.small .blue]#⯇*デフォルト*# +
+`CodeIndentString = &#x7c;\s` [.small .blue]#*_(デフォルト)_*# +
 [.small .blue]#`\s` は空白文字に置き換えられる# +
 
 |`DataIndentString`
 |データのインデント 文字列 +
 [.small]#*設定例:*# +
-`DataIndentString = \s\s` [.small .blue]#⯇*デフォルト*# +
+`DataIndentString = \s\s` [.small .blue]#*_(デフォルト)_*# +
 [.small .blue]#`\s` は空白文字に置き換えられる# +
 
 |`LimitString`
 |制限を超えた場合の出力文字列 +
 [.small]#*設定例:*# +
-`LimitString = \...` [.small .blue]#⯇*デフォルト*# +
+`LimitString = \...` [.small .blue]#*_(デフォルト)_*# +
 
 |`DefaultNameSpaceString` +
 |デフォルトの名前空間を置き換える文字列 +
 [.small]#*設定例:*# +
-DefaultNameSpaceString = `\...` [.small .blue]#⯇*デフォルト*# +
+DefaultNameSpaceString = `\...` [.small .blue]#*_(デフォルト)_*# +
 
 |`NonPrintString`
 |出力しないプロパティ値の文字列 +
 [.small]#*設定例:*# +
-NonPrintString = `\***` [.small .blue]#⯇*デフォルト*# +
+NonPrintString = `\***` [.small .blue]#*_(デフォルト)_*# +
 
 |`CyclicReferenceString`
 |循環参照時の出力文字列 +
 [.small]#*設定例:*# +
-`CyclicReferenceString = \*\** Cyclic Reference \***` [.small .blue]#⯇*デフォルト*# +
+`CyclicReferenceString = \*\** Cyclic Reference \***` [.small .blue]#*_(デフォルト)_*# +
 
 |`VarNameValueSeparator`
 |変数名と値のセパレータ +
 [.small]#*設定例:*# +
-`VarNameValueSeparator = \s=\s` [.small .blue]#⯇*デフォルト*# +
+`VarNameValueSeparator = \s=\s` [.small .blue]#*_(デフォルト)_*# +
 [.small .blue]#`\s` は空白文字に置き換えられる# +
 
 |`KeyValueSeparator`
 |辞書のキーと値のセパレータまたはプロパティ名/フィールド名と値 のセパレータ +
 [.small]#*設定例:*# +
-`KeyValueSeparator = :\s` [.small .blue]#⯇*デフォルト*# +
+`KeyValueSeparator = :\s` [.small .blue]#*_(デフォルト)_*# +
 [.small .blue]#`\s` は空白文字に置き換えられる# +
 
 |`PrintSuffixFormat`
 |`print` メソッドで付加される文字列 +
 [.small]#*設定例:*# +
-`PrintSuffixFormat = \s({2}:{3:D})` [.small .blue]#⯇*デフォルト*# +
+`PrintSuffixFormat = \s({2}:{3:D})` [.small .blue]#*_(デフォルト)_*# +
 [.small .blue]#`\s` は空白文字に置き換えられる# +
 [.small]#*パラメータ:*# +
 `{0}`: 呼出側のクラス名 +
@@ -448,7 +448,7 @@ NonPrintString = `\***` [.small .blue]#⯇*デフォルト*# +
 |`DateTimeFormat`
 |日時の出力フォーマット +
 [.small]#*設定例:*# +
-`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffK}` [.small .blue]#⯇*デフォルト*# +
+`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffK}` [.small .blue]#*_(デフォルト)_*# +
 [.small]#*パラメータ:*# +
 `{0}`: `DateTime` オブジェクト +
 
@@ -457,29 +457,29 @@ NonPrintString = `\***` [.small .blue]#⯇*デフォルト*# +
 [.gray]#_1.3.0~_#
 |ログ出力時の日時の出力フォーマット +
 [.small]#*設定例:*# +
-`LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff}` [.small .blue]#⯇*デフォルト*# +
+`LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff}` [.small .blue]#*_(デフォルト)_*# +
 [.small]#*パラメータ:*# +
 `{0}`: `DateTime` オブジェクト +
 
 |`MaxDataOutputWidth`
 |データの出力幅の最大値 +
 [.small]#*設定例:*# +
-`MaxDataOutputWidth = 80` [.small .blue]#⯇*デフォルト*# +
+`MaxDataOutputWidth = 80` [.small .blue]#*_(デフォルト)_*# +
 
 |`CollectionLimit`
 |`ICollection` 要素の出力数の限界値 +
 [.small]#*設定例:*# +
-`CollectionLimit = 512` [.small .blue]#⯇*デフォルト*# +
+`CollectionLimit = 512` [.small .blue]#*_(デフォルト)_*# +
 
 |`StringLimit`
 |`string` の出力文字数の制限 +
 [.small]#*設定例:*# +
-`StringLimit = 8192` [.small .blue]#⯇*デフォルト*# +
+`StringLimit = 8192` [.small .blue]#*_(デフォルト)_*# +
 
 |`ReflectionNestLimit`
 |リフレクションのネストの限界値 +
 [.small]#*設定例:*# +
-`ReflectionNestLimit = 4` [.small .blue]#⯇*デフォルト*# +
+`ReflectionNestLimit = 4` [.small .blue]#*_(デフォルト)_*# +
 
 |`NonPrintProperties`
 |出力しないプロパティおよびフィールドの配列 +
