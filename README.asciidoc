@@ -575,6 +575,8 @@ Logger = Log4net
     <appender name="A" type="log4net.Appender.FileAppender">
       <File value="C:/Logs/DebugTrace/Log4net.log" />
       <AppendToFile value="true" />
+      <ImmediateFlush value="true" />
+      <lockingModel type="log4net.Appender.FileAppender+MinimalLock" />
       <layout type="log4net.Layout.PatternLayout">
         <ConversionPattern value="%date [%thread] %-5level %logger %message%n" />
       </layout>
@@ -607,7 +609,7 @@ Logger = NLog
       throwExceptions="false"
       internalLogLevel="Off" internalLogFile="C:/Logs/DebugTrace/NLog-internal.log">
   <targets>
-    <target xsi:type="File" name="f" fileName="C:/Logs/DebugTrace/NLog.log"
+    <target xsi:type="File" name="f" fileName="C:/Logs/DebugTrace/NLog.log" encoding="utf-8"
             layout="${longdate} [${threadid}] ${uppercase:${level}} ${logger} ${message}" />
   </targets>
   <rules>
