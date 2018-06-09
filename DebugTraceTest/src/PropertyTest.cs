@@ -118,14 +118,14 @@ namespace DebugTraceTest {
         [TestMethod]
         public void EnterString() {
             Trace.Enter();
-            Assert.IsTrue(Trace.LastLog.IndexOf("_Enter_") >= 0);
+            StringAssert.Contains(Trace.LastLog, "_Enter_");
         }
 
         // LeaveString
         [TestMethod]
         public void LeaveString() {
             Trace.Leave();
-            Assert.IsTrue(Trace.LastLog.IndexOf("_Leave_") >= 0);
+            StringAssert.Contains(Trace.LastLog, "_Leave_");
         }
 
         // CodeIndentString
@@ -133,7 +133,7 @@ namespace DebugTraceTest {
         public void CodeIndentString() {
             Trace.Enter();
             Trace.Enter();
-            Assert.IsTrue(Trace.LastLog.IndexOf(TraceBase.CodeIndentString) >= 0);
+            StringAssert.Contains(Trace.LastLog, TraceBase.CodeIndentString);
             Trace.Leave();
             Trace.Leave();
         }
@@ -142,31 +142,31 @@ namespace DebugTraceTest {
         [TestMethod]
         public void DataIndentString() {
             Trace.Print("contact", new Contact(1, "Akane", "Apple", new DateTime(2018, 4, 1)));
-            Assert.IsTrue(Trace.LastLog.IndexOf(TraceBase.DataIndentString) >= 0);
+            StringAssert.Contains(Trace.LastLog, TraceBase.DataIndentString);
         }
 
         // LimitString / CollectionLimit
         [TestMethod]
         public void LimitString() {
             Trace.Print("value", new int[TraceBase.CollectionLimit]);
-            Assert.IsTrue(Trace.LastLog.IndexOf(", 0}") >= 0);
+            StringAssert.Contains(Trace.LastLog, ", 0}");
 
             Trace.Print("value", new int[TraceBase.CollectionLimit + 1]);
-            Assert.IsTrue(Trace.LastLog.IndexOf(", 0, " + TraceBase.LimitString + "}") >= 0);
+            StringAssert.Contains(Trace.LastLog, ", 0, " + TraceBase.LimitString + "}");
         }
 
         // DefaultNameSpaceString / DefaultNameSpace
         [TestMethod]
         public void DefaultNameSpaceString() {
             Trace.Print("point", new Point(1, 2));
-            Assert.IsTrue(Trace.LastLog.IndexOf(TraceBase.DefaultNameSpaceString + ".Point") >= 0);
+            StringAssert.Contains(Trace.LastLog, TraceBase.DefaultNameSpaceString + ".Point");
         }
 
         // NonPrintString
         [TestMethod]
         public void NonPrintString() {
             Trace.Print("point", new Point(1, 2));
-            Assert.IsTrue(Trace.LastLog.IndexOf(TraceBase.NonPrintString) >= 0);
+            StringAssert.Contains(Trace.LastLog, TraceBase.NonPrintString);
         }
 
         // CyclicReferenceString
@@ -177,7 +177,7 @@ namespace DebugTraceTest {
             node1.Left = node2;
             node1.Right = node2;
             Trace.Print("node1", node1);
-            Assert.IsTrue(Trace.LastLog.IndexOf(TraceBase.CyclicReferenceString) >= 0);
+            StringAssert.Contains(Trace.LastLog, TraceBase.CyclicReferenceString);
         }
 
         // VarNameValueSeparator
@@ -185,14 +185,14 @@ namespace DebugTraceTest {
         public void VarNameValueSeparator() {
             var value = 1;
             Trace.Print("value", value);
-            Assert.IsTrue(Trace.LastLog.IndexOf("value" + TraceBase.VarNameValueSeparator + value) >= 0);
+            StringAssert.Contains(Trace.LastLog, "value" + TraceBase.VarNameValueSeparator + value);
         }
 
         // KeyValueSeparator
         [TestMethod]
         public void KeyValueSeparator() {
             Trace.Print("value", new Dictionary<int, int>() {{1, 2}});
-            Assert.IsTrue(Trace.LastLog.IndexOf("1" + TraceBase.KeyValueSeparator + "2") >= 0);
+            StringAssert.Contains(Trace.LastLog, "1" + TraceBase.KeyValueSeparator + "2");
         }
 
         // ReflectionClasses
@@ -200,15 +200,15 @@ namespace DebugTraceTest {
         public void ReflectionClasses() {
             var rectangle = new Rectangle(1, 2, 3, 4);
             Trace.Print("rectangle", rectangle); // use ToString method
-            Assert.IsTrue(Trace.LastLog.IndexOf(rectangle.ToString()) >= 0);
+            StringAssert.Contains(Trace.LastLog, rectangle.ToString());
 
             var point3 = new Point3(1, 2, 3);
             Trace.Print("point3", point3); // use reflection
-            Assert.IsTrue(Trace.LastLog.IndexOf("X" + TraceBase.KeyValueSeparator + point3.X) >=  0);
+            StringAssert.Contains(Trace.LastLog, "X" + TraceBase.KeyValueSeparator + point3.X);
 
             var dateTime = DateTime.Now;
             Trace.Print("dateTime", dateTime); // use reflection
-            Assert.IsTrue(Trace.LastLog.IndexOf(TraceBase.KeyValueSeparator) >=  0);
+            StringAssert.Contains(Trace.LastLog, TraceBase.KeyValueSeparator);
         }
 
     }

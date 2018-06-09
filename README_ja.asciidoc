@@ -311,8 +311,9 @@ Namespace Global.Readme
 
 === 7. *DebugTrace.properties* ファイルのプロパティ
 
-DebugTrace は、DebugTrace.dllと同一ディレクトリにある `DebugTrace.properties` ファイルを起動時に読み込みます。
-`DebugTrace.properties` ファイルには以下のプロパティを指定できます。
+DebugTrace は、カレントディレクトリにある `DebugTrace.properties` ファイルを起動時に読み込みます。
+[.small]#(バージョン 1.4.0より、それより前のバージョンでは、DebugTrace.dllと同一ディレクトリにある `DebugTrace.properties` を読み込む)# +
+`DebugTrace.properties` ファイルでは以下のプロパティを指定できます。
 
 [options="header", cols="2,8"]
 .DebugTrace.properties
@@ -512,7 +513,19 @@ NonPrintString = `\***` [.small .blue]#*_(デフォルト)_*# +
 
 |===
 
-==== 7.1. *NonPrintProperties*, *NonPrintString*
+==== 7.1. DebugTrace.propertiesファイルの追加
+
+以下の手順でプロジェクトに `DebugTrace.properties` ファイルを追加します。
+
+. プロジェクトのコンテキストメニューから `追加` - `新しい項目...` を選択する。
+
+. ダイアログで、 `テキスト ファイル` を選択し、名前を `DebugTrace.properties` にして `追加` ボタンをクリックする。 +
+
+. 追加された `DebugTrace.properties` のコンテキストメニューから `プロパティ` を選択する。
+
+. `プロパティ` の `*詳細*` セクションにある `出力ディレクトリにコピー` の設定値を `新しい場合はコピーする` または `常にコピーする` に変更する。
+
+==== 7.2. *NonPrintProperties*, *NonPrintString*
 
 DebugTrace は、 `ToString` メソッドが実装されていない場合は、リフレクションを使用してオブジェクト内容を出力します。
 他のオブジェクトの参照があれば、そのオブジェクトの内容も出力します。

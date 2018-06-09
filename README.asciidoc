@@ -310,7 +310,8 @@ It has the following properties and methods.
 
 === 7. Properties of *DebugTrace.properties* file
 
-DebugTrace reads the `DebugTrace.properties` file in the same directory as DebugTrace.dll at startup.
+DebugTrace reads the `DebugTrace.properties` file in the current directory at startup
+[.small]#(since 1.4.0, Reads the the file in the same directory as DebugTrace.dll in earlier versions)#. +
 You can specify following properties in the `DebugTrace.properties` file.  
 
 [options="header", cols="2,8"]
@@ -513,7 +514,20 @@ and between the property/field name and value +
 
 |===
 
-==== 7.1. *NonPrintProperties*, *NonPrintString*
+==== 7.1. Adding *DebugTrace.properties* file
+
+You can add the `DebugTrace.properties` file to your projects in the following steps.
+
+1. Select `Add` - `New Item ...` from the context menu of the project.
+
+1. Select `Text File` in the dialog window, set the `Name:` to `DebugTrace.properties` and click `Add` button.
+
+1. Select `Properties` from context menu of the added `DebugTrace.properties`.
+
+1. Change setting of `Copy to Output Directory` in the `*Advanced*` section of the `Properties` to `Copy if newer` or `Copy always`.
+
+
+==== 7.2. *NonPrintProperties*, *NonPrintString*
 
 DebugTrace use reflection to output object contents if the `ToString` method is not implemented.
 If there are other object references, the contents of objects are also output.

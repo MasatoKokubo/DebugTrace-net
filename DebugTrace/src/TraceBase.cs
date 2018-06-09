@@ -189,7 +189,7 @@ namespace DebugTrace {
 
             // output version log
             var versionAttribute = (AssemblyInformationalVersionAttribute)
-                Attribute.GetCustomAttribute(Resource.SelfAssembly, typeof(AssemblyInformationalVersionAttribute));
+                Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(), typeof(AssemblyInformationalVersionAttribute));
             Logger.Log($"DebugTrace-net {versionAttribute?.InformationalVersion}");
             Logger.Log($"  Properties file: {Resource.FileInfo.FullName}");
             Logger.Log($"  Logger wrapper: {Logger.GetType().FullName}");
@@ -564,12 +564,13 @@ namespace DebugTrace {
         /// <param name="nest">current nest count</param>
         /// <returns>the type name to be output to the log</returns>
         protected string GetTypeName(Type type, object value, bool isElement, int nest = 0) {
+            var typeName = "";
             if (type.IsArray) {
                 // Array
-                return GetArrayTypeName(type, value, isElement, nest);
+                typeName = GetArrayTypeName(type, value, isElement, nest);
 
             } else {
-                string typeName = GetTypeName(type);
+                typeName = GetTypeName(type);
 
                 if (typeName.StartsWith("ValueTuple")) {
                     // (x, y)
@@ -590,11 +591,12 @@ namespace DebugTrace {
                                 typeName += " Count:" + collection.Count;
                         }
                     }
-                    if (typeName != "" && nest == 0)
-                        typeName += ' ';
                 }
-                return typeName;
             }
+
+            if (typeName != "" && nest == 0)
+                typeName += ' ';
+            return typeName;
         }
 
         protected abstract string GetArrayTypeName(Type type, object value, bool isElement, int nest);
@@ -1045,6 +1047,9 @@ namespace DebugTrace {
                     | BindingFlags.Instance);
             int propertyIndex = 0;
             foreach (var propertyInfo in propertyInfos) {
+                var parameterInfos = propertyInfo.GetIndexParameters();
+                if (parameterInfos.Length > 0) continue; // Not support indexed properties
+
                 buff.Save(); // Save current point
                 bool elementIsMultiLine = AppendReflectValue(buff, type, obj, propertyInfo);
                 if (elementIsMultiLine || buff.Length > MaxDataOutputWidth) {

@@ -97,7 +97,7 @@ namespace DebugTrace {
                 int braIndex = typeName.IndexOf('[');
                 if (braIndex < 0)
                     braIndex = typeName.Length;
-                typeName = typeName.Substring(0, braIndex) + bracket + typeName.Substring(braIndex) + ' ';
+                typeName = typeName.Substring(0, braIndex) + bracket + typeName.Substring(braIndex);
             }
 
             return typeName;

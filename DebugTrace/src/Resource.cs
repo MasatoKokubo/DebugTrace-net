@@ -16,13 +16,12 @@ namespace DebugTrace {
     /// <since>1.0.0</since>
     /// <author>Masato Kokubo</author>
     public class Resource {
-        internal static Assembly SelfAssembly {get;} = Assembly.GetExecutingAssembly();
-        private static DirectoryInfo selfDirInfo = new FileInfo(SelfAssembly.Location).Directory;
+        private static DirectoryInfo currentDirInfo = new DirectoryInfo(".");
         public FileInfo FileInfo {get; private set;}
         private IDictionary<string, string> values = new Dictionary<string, string>();
 
         public Resource(String baseName) {
-            FileInfo = new FileInfo(Path.Combine(selfDirInfo.FullName, baseName + ".properties"));
+            FileInfo = new FileInfo(Path.Combine(currentDirInfo.FullName, baseName + ".properties"));
             if (!FileInfo.Exists)
                 return;
 

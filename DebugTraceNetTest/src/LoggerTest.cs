@@ -108,7 +108,7 @@ namespace DebugTraceNetTest {
 
             // then:
             var lastLog = GetLastLog(log4netFileInfo, beforeLength);
-            Assert.IsTrue(lastLog.Contains($" {level.ToUpper()} "));
+            StringAssert.Contains(lastLog, $" {level.ToUpper()} ");
         }
 
         // GetLastLog
@@ -129,7 +129,6 @@ namespace DebugTraceNetTest {
         [DataRow("WARN"     )]
         [DataRow("ERROR"    )]
         [DataRow("FATAL"    )]
-    //    [DataRow("OFF"      )]
 
         [DataRow("Trace"    )]
         [DataRow("Debug"    )]
@@ -137,7 +136,6 @@ namespace DebugTraceNetTest {
         [DataRow("Warn"     )]
         [DataRow("Error"    )]
         [DataRow("Fatal"    )]
-    //    [DataRow("Off"      )]
 
         [DataRow("trace"    )]
         [DataRow("debug"    )]
@@ -145,7 +143,6 @@ namespace DebugTraceNetTest {
         [DataRow("warn"     )]
         [DataRow("error"    )]
         [DataRow("fatal"    )]
-    //    [DataRow("off"      )]
 
         // NLogLevel
         public void NLogLevel(string level) {
@@ -164,7 +161,7 @@ namespace DebugTraceNetTest {
 
             // then:
             var lastLog = GetLastLog(nLogFileInfo, beforeLength);
-            Assert.IsTrue(lastLog.Contains($" {level.ToUpper()} "));
+            StringAssert.Contains(lastLog, $" {level.ToUpper()} ");
         }
 
     }
