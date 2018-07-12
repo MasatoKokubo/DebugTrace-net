@@ -1,4 +1,6 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static DebugTrace.CSharp;
 
@@ -200,9 +202,9 @@ namespace DebugTraceTest {
 
         // DateTime
         [DataTestMethod]
-        [DataRow(2018, 5, 26, 12, 34, 56, 789, DateTimeKind.Local      , "v = 2018-05-26 12:34:56.789")]
-        [DataRow(2018, 5, 26, 12, 34, 56, 789, DateTimeKind.Unspecified, "v = 2018-05-26 12:34:56.789 (")]
-        [DataRow(2018, 5, 26, 12, 34, 56, 789, DateTimeKind.Utc        , "v = 2018-05-26 12:34:56.789Z (")]
+        [DataRow(2018, 5, 26, 12, 34, 56, 789, DateTimeKind.Local      , "v = 2018-05-26 12:34:56.7890000")]
+        [DataRow(2018, 5, 26, 12, 34, 56, 789, DateTimeKind.Unspecified, "v = 2018-05-26 12:34:56.7890000 (")]
+        [DataRow(2018, 5, 26, 12, 34, 56, 789, DateTimeKind.Utc        , "v = 2018-05-26 12:34:56.7890000Z (")]
         public void PrintDateTime(int year, int month, int day, int hour, int minute, int second,
                 int millisecond, DateTimeKind kind, string expect) {
             var v = new DateTime(year, month, day, hour, minute, second, millisecond, kind);
@@ -228,6 +230,19 @@ namespace DebugTraceTest {
         public void PrintPoint(int x, int y, string expect) {
             Trace.Print("v", new Point(x, y));
             StringAssert.Contains(Trace.LastLog, expect);
+        }
+
+        // Task since 1.4.1
+        [DataTestMethod]
+        [DataRow("Result: ***")]
+        public void PrintTask(string expect) {
+            var task = Task<int>.Run(() => {Thread.Sleep(200); return 1;});
+            Thread.Sleep(10); // wait Running 
+            Assert.AreEqual(TaskStatus.Running, task.Status);
+            Trace.Print("v", task);
+            StringAssert.Contains(Trace.LastLog, expect);
+            Trace.Print("task.Result", task.Result);
+            StringAssert.Contains(Trace.LastLog, "task.Result = 1 (");
         }
     }
 }

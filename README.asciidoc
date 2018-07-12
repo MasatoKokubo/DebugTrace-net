@@ -380,7 +380,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 |The string output in the threads boundary. +
 [.small]#*Example:*# +
 [.small]#`ThreadBoundaryString = \____\__\__\__\__\__\__\__\__\__\__\__\__\__ Thread {0} \__\__\__\__\__\__\__\__\__\__\__\__\__\____`# +
-[.small .blue]#⯅*Default*# +
+[.small .blue]#*_(Default)_*# +
 [.small]#*Parameter:*# +
 `{0}`: The thread ID +
 
@@ -450,7 +450,8 @@ and between the property/field name and value +
 |`DateTimeFormat`
 |Output format of DateTime +
 [.small]#*Example:*# +
-`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffK}` [.small .blue]#*_(Default)_*# +
+`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffffffK}` [.small .blue]#*_(Default since 1.4.1)_*# +
+`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffK}` [.small .blue]#*_(Default before 1.4.1)_*# +
 [.small]#*Parameter:*# +
 `{0}`: The `DateTime` object +
 

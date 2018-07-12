@@ -45,7 +45,7 @@ namespace DebugTrace {
         public static int      CollectionLimit         {get; set;} // Limit of ICollection elements to output
         public static int      StringLimit             {get; set;} // Limit of string characters to output
         public static int      ReflectionNestLimit     {get; set;} // Limit of reflection nesting
-        public static string[] NonPrintProperties      {get; set;} // Non Print properties (<class name>#<property name>)
+        public static List<string> NonPrintProperties  {get; set;} // Non Print properties (<class name>#<property name>)
         public static string   DefaultNameSpace        {get; set;} // Default package part
         public static ISet<string> ReflectionClasses   {get; set;} // Class names that output content in reflection even if ToString method is implemented
 
@@ -114,13 +114,14 @@ namespace DebugTrace {
             VarNameValueSeparator    = Resource.GetString (nameof(VarNameValueSeparator  ), Resource.Unescape(@"\s=\s"));
             KeyValueSeparator        = Resource.GetString (nameof(KeyValueSeparator      ), Resource.Unescape(@":\s"));
             PrintSuffixFormat        = Resource.GetString (nameof(PrintSuffixFormat      ), Resource.Unescape(@"\s({2}:{3:D})"));
-            DateTimeFormat           = Resource.GetString (nameof(DateTimeFormat         ), Resource.Unescape(@"{0:yyyy-MM-dd HH:mm:ss.fffK}"));
+            DateTimeFormat           = Resource.GetString (nameof(DateTimeFormat         ), Resource.Unescape(@"{0:yyyy-MM-dd HH:mm:ss.fffffffK}"));
             LogDateTimeFormat        = Resource.GetString (nameof(LogDateTimeFormat      ), Resource.Unescape(@"{0:yyyy-MM-dd HH:mm:ss.fff}"));
             MaxDataOutputWidth       = Resource.GetInt    (nameof(MaxDataOutputWidth     ), 80);
             CollectionLimit          = Resource.GetInt    (nameof(CollectionLimit        ), 512);
             StringLimit              = Resource.GetInt    (nameof(StringLimit            ), 8192);
             ReflectionNestLimit      = Resource.GetInt    (nameof(ReflectionNestLimit    ), 4);
-            NonPrintProperties       = Resource.GetStrings(nameof(NonPrintProperties     ), new string[0]);
+            NonPrintProperties       = new List<string>(Resource.GetStrings(nameof(NonPrintProperties), new string[0]));
+            NonPrintProperties.Add("System.Threading.Tasks.Task.Result");
             DefaultNameSpace         = Resource.GetString (nameof(DefaultNameSpace       ), "");
             ReflectionClasses        = new HashSet<string>(Resource.GetStrings(nameof(ReflectionClasses), new string[0]));
             ReflectionClasses.Add(typeof(Tuple).FullName); // Tuple
@@ -517,7 +518,7 @@ namespace DebugTrace {
                 case DateTime    dateTime: buff.Append(typeName); Append(buff,     dateTime); return false;
                 case string   stringValue: buff.Append(typeName); return AppendString(buff, stringValue, false);
                 case IDictionary dictionary: return AppendDictionary(buff, dictionary, false);
-                case ICollection collection: return AppendCollection(buff, collection, false);
+                case IEnumerable enumerable: return AppendEnumerable(buff, enumerable, false);
                 case Enum       enumValue: buff.Append(typeName); buff.Append(enumValue); return false;
                 default:
                     if (!HasToString(type)) {
@@ -587,8 +588,13 @@ namespace DebugTrace {
                             typeName = TypeNameMap[type];
                         } else {
                             typeName = ReplaceTypeName(typeName);
-                            if (value is ICollection collection)
-                                typeName += " Count:" + collection.Count;
+                            var count = -1;
+                            try {
+                                count = (int)type.GetProperty("Count").GetValue(value);
+                            }
+                            catch (Exception e) {}
+                            if (count >= 0)
+                                typeName += " Count:" + count;
                         }
                     }
                 }
@@ -831,22 +837,24 @@ namespace DebugTrace {
         }
 
         /// <summary>
-        /// Appends a Collection representation for logging to the string buffer.
+        /// Appends a IEnumerable representation for logging to the string buffer.
         /// </summary>
         ///
         /// <param name="buff">the logging buffer</param>
-        /// <param name="collection">a Collection object</param>
+        /// <param name="enumerable">a IEnumerable object</param>
         /// <param name="isMultiLine">output multiple lines if true, single line otherwise</param>
         /// <returns>false if outputed on a single line, otherwise true</returns>
-        protected bool AppendCollection(LogBuffer buff, ICollection collection, bool isMultiLine) {
+        ///
+        /// <since>1.4.1</since>
+        protected bool AppendEnumerable(LogBuffer buff, IEnumerable enumerable, bool isMultiLine) {
             buff.Save(); // Save current point
-            buff.Append(GetTypeName(collection.GetType(), collection, false));
+            buff.Append(GetTypeName(enumerable.GetType(), enumerable, false));
             buff.Append('{');
             var index = 0;
 
             bool lineFeeded = false;
             bool success = true;
-            foreach (var element in collection) {
+            foreach (var element in enumerable) {
                 if (isMultiLine) {
                     if (index == 0) {
                         buff.LineFeed();
@@ -889,11 +897,11 @@ namespace DebugTrace {
             if (!success) {
                 buff.Restore(); // Restore saved point
                 buff.PopSave(); // Pop saveed point
-                AppendCollection(buff, collection, true);
+                AppendEnumerable(buff, enumerable, true);
                 return true;
             }
 
-            if (collection.Count > 0 && !lineFeeded)
+            if (index > 0 && !lineFeeded)
                 buff.Length -= 2;
 
             if (lineFeeded) {
@@ -1084,6 +1092,11 @@ namespace DebugTrace {
             if (!IsTuple(type))
                 buff.Append(memberInfo.Name).Append(KeyValueSeparator);
 
+            if (NonPrintProperties.Contains(GetFullTypeName(type) + '.' + memberInfo.Name)) {
+                buff.Append(NonPrintString);
+                return false;
+            }
+
             object value = null;
             try {
                 switch (memberInfo) {
@@ -1097,11 +1110,6 @@ namespace DebugTrace {
             }
             catch (Exception e) {
                 value = e.ToString();
-            }
-
-            if (value != null && NonPrintProperties.Contains(GetFullTypeName(type) + '.' + memberInfo.Name)) {
-                buff.Append(NonPrintString);
-                return false;
             }
 
             return Append(buff, value, false);

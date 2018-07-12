@@ -48,5 +48,14 @@ namespace DebugTraceTest {
             Trace.Print("d", d);
             StringAssert.Contains(Trace.LastLog, expect);
         }
+
+        // HashSet<int>
+        [DataTestMethod]
+        [DataRow(new [] {0, 1, 2}, "s = System.Collections.Generic.HashSet<int> Count:3 {0, 1, 2} (")]
+        public void PrintHashSet(int[] e, string expect) {
+            var s = new HashSet<int>(e);
+            Trace.Print("s", s);
+            StringAssert.Contains(Trace.LastLog, expect);
+        }
     }
 }

@@ -380,7 +380,7 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
 |スレッド境界で出力される文字列 +
 [.small]#*設定例:*# +
 [.small]#`ThreadBoundaryString = \____\__\__\__\__\__\__\__\__\__\__\__\__\__ Thread {0} \__\__\__\__\__\__\__\__\__\__\__\__\__\____`# +
-[.small .blue]#⯅*デフォルト*# +
+[.small .blue]#*_(Default)_*# +
 [.small]#*パラメータ:*# +
 `{0}`: スレッドID +
 
@@ -449,7 +449,8 @@ NonPrintString = `\***` [.small .blue]#*_(デフォルト)_*# +
 |`DateTimeFormat`
 |日時の出力フォーマット +
 [.small]#*設定例:*# +
-`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffK}` [.small .blue]#*_(デフォルト)_*# +
+`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffffffK}` [.small .blue]#*_(デフォルト 1.4.1以降)_*# +
+`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffffffK}` [.small .blue]#*_(デフォルト 1.4.1より前)_*# +
 [.small]#*パラメータ:*# +
 `{0}`: `DateTime` オブジェクト +
 

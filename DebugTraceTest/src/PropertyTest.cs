@@ -90,7 +90,8 @@ namespace DebugTraceTest {
             Assert.AreEqual(TraceBase.CollectionLimit    .ToString(),            testProperties[nameof(TraceBase.CollectionLimit        )]);
             Assert.AreEqual(TraceBase.StringLimit        .ToString(),            testProperties[nameof(TraceBase.StringLimit            )]);
             Assert.AreEqual(TraceBase.ReflectionNestLimit.ToString(),            testProperties[nameof(TraceBase.ReflectionNestLimit    )]);
-            AssertAreEqual (TraceBase.NonPrintProperties     ,                   testProperties[nameof(TraceBase.NonPrintProperties     )].Split(',').Select(s => s.Trim()).ToArray());
+        // 1.4.1
+        //  AssertAreEqual (TraceBase.NonPrintProperties     ,                   testProperties[nameof(TraceBase.NonPrintProperties     )].Split(',').Select(s => s.Trim()).ToArray());
             Assert.AreEqual(TraceBase.DefaultNameSpace       ,                   testProperties[nameof(TraceBase.DefaultNameSpace       )]);
 
             var reflectionClasses = new HashSet<string>(testProperties[nameof(TraceBase.ReflectionClasses)].Split(',').Select(s => s.Trim()));
