@@ -323,7 +323,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 |Logger DebugTrace uses +
 [.small]#*Examples:*# +
 `Logger = Console+Out` [.small .blue]#Output to the console (stdout)# +
-`Logger = Console+Error` [.small .blue]#Output to the console (stderr)# [.small .blue]#*_(Default)_*# + 
+`Logger = Console+Error` [.small .blue]#Output to the console (stderr)# [.small .blue]#*_[Default]_*# + 
 `Logger = Log4net` [.small .blue]#use Log4net# +
 `Logger = NLog` [.small .blue]#use NLog# +
 
@@ -336,7 +336,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 `LogLevel = Finer` +
 `LogLevel = Trace` +
 `LogLevel = Fine` +
-`LogLevel = Debug` [.small .blue]#*_(Default)_*# +
+`LogLevel = Debug` [.small .blue]#*_[Default]_*# +
 `LogLevel = Info` +
 `LogLevel = Notice` +
 `LogLevel = Warn` +
@@ -349,7 +349,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 `LogLevel = Off` +
 [.small]#*Examples when use NLog:*# +
 `LogLevel = Trace` +
-`LogLevel = Debug` [.small .blue]#*_(Default)_*# +
+`LogLevel = Debug` [.small .blue]#*_[Default]_*# +
 `LogLevel = Info` +
 `LogLevel = Warn` +
 `LogLevel = Error` +
@@ -359,7 +359,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 |`EnterString`
 |The string output by `enter` method +
 [.small]#*Example:*# +
-`EnterString = Enter {0}.{1} ({2}:{3:D})` [.small .blue]#*_(Default)_*# +
+`EnterString = Enter {0}.{1} ({2}:{3:D})` [.small .blue]#*_[Default]_*# +
 [.small]#*Parameters:*# +
 `{0}`: The class name of the caller +
 `{1}`: The method name of the caller +
@@ -369,7 +369,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 |`LeaveString`
 |The string output by `leave` method +
 [.small]#*Example:*# +
-`LeaveString = Leave {0}.{1} ({2}:{3:D})` [.small .blue]#*_(Default)_*# +
+`LeaveString = Leave {0}.{1} ({2}:{3:D})` [.small .blue]#*_[Default]_*# +
 [.small]#*Parameters:*# +
 `{0}`: The class name of the caller +
 `{1}`: The method name of the caller +
@@ -380,66 +380,66 @@ You can specify following properties in the `DebugTrace.properties` file.
 |The string output in the threads boundary. +
 [.small]#*Example:*# +
 [.small]#`ThreadBoundaryString = \____\__\__\__\__\__\__\__\__\__\__\__\__\__ Thread {0} \__\__\__\__\__\__\__\__\__\__\__\__\__\____`# +
-[.small .blue]#*_(Default)_*# +
+[.small .blue]#*_[Default]_*# +
 [.small]#*Parameter:*# +
 `{0}`: The thread ID +
 
 |`ClassBoundaryString`
 |The string output in the classes boundary. +
 [.small]#*Example:*# +
-`ClassBoundaryString = \\____ {0} \____` [.small .blue]#*_(Default)_*# +
+`ClassBoundaryString = \\____ {0} \____` [.small .blue]#*_[Default]_*# +
 [.small]#*Parameter:*# +
 `{0}`: The class name +
 
 |`CodeIndentString`
 |The string of one code indent +
 [.small]#*Example:*# +
-`CodeIndentString = &#x7c;\s` [.small .blue]#*_(Default)_*# +
+`CodeIndentString = &#x7c;\s` [.small .blue]#*_[Default]_*# +
 [.small .blue]#`\s` is replaced to a space character# +
 
 |`DataIndentString`
 |The string of one data indent +
 [.small]#*Example:*# +
-`DataIndentString = \s\s` [.small .blue]#*_(Default)_*# +
+`DataIndentString = \s\s` [.small .blue]#*_[Default]_*# +
 [.small .blue]#`\s` is replaced to a space character# +
 
 |`LimitString`
 |The string to represent that it has exceeded the limit +
 [.small]#*Example:*# +
-`LimitString = \...` [.small .blue]#*_(Default)_*# +
+`LimitString = \...` [.small .blue]#*_[Default]_*# +
 
 |`DefaultNameSpaceString` +
 |The string replacing the default namespace part +
 [.small]#*Example:*# +
-`DefaultNameSpaceString = \...` [.small .blue]#*_(Default)_*# +
+`DefaultNameSpaceString = \...` [.small .blue]#*_[Default]_*# +
 
 |`NonPrintString` +
 |The string of value in the case of properties that do not output the value +
 [.small]#*Example:*# +
-`NonPrintString = \***` [.small .blue]#*_(Default)_*# +
+`NonPrintString = \***` [.small .blue]#*_[Default]_*# +
 
 |`CyclicReferenceString`
 |The string to represent that the cyclic reference occurs +
 [.small]#*Example:*# +
-`CyclicReferenceString = \*\** Cyclic Reference \***` [.small .blue]#*_(Default)_*#
+`CyclicReferenceString = \*\** Cyclic Reference \***` [.small .blue]#*_[Default]_*#
 
 |`VarNameValueSeparator`
 |The separator string between the variable name and value +
 [.small]#*Example:*# +
-`VarNameValueSeparator = \s=\s` [.small .blue]#*_(Default)_*# +
+`VarNameValueSeparator = \s=\s` [.small .blue]#*_[Default]_*# +
 [.small .blue]#`\s` is replaced to a space character# +
 
 |`KeyValueSeparator`
 |The separator string between the key and value for Map object +
 and between the property/field name and value +
 [.small]#*Example:*# +
-`KeyValueSeparator = :\s` [.small .blue]#*_(Default)_*# +
+`KeyValueSeparator = :\s` [.small .blue]#*_[Default]_*# +
 [.small .blue]#`\s` is replaced to a space character# +
 
 |`PrintSuffixFormat`
 |Output format of `print` method suffix +
 [.small]#*Example:*# +
-`PrintSuffixFormat = \s({2}:{3:D})` [.small .blue]#*_(Default)_*# +
+`PrintSuffixFormat = \s({2}:{3:D})` [.small .blue]#*_[Default]_*# +
 [.small .blue]#`\s` is replaced to a space character# +
 [.small]#*Parameters:*# +
 `{0}`: The class name of the caller +
@@ -450,39 +450,42 @@ and between the property/field name and value +
 |`DateTimeFormat`
 |Output format of DateTime +
 [.small]#*Example:*# +
-`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffffffK}` [.small .blue]#*_(Default since 1.4.1)_*# +
-`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffK}` [.small .blue]#*_(Default before 1.4.1)_*# +
+`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffffffK}` [.small .blue]#*_[Default] (since 1.4.1)_*# +
+`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffK}` [.small .blue]#*_[Default] (before 1.4.1)_*# +
 [.small]#*Parameter:*# +
 `{0}`: The `DateTime` object +
 
 |`LogDateTimeFormat` +
  +
-[.gray]#_since 1.3.0_#
+[.small .blue]#*_(since 1.3.0)_*#
 |Output format of date and time when outputting logs +
 [.small]#*Example:*# +
-`LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff}` [.small .blue]#*_(Default)_*# +
+`LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff} [{1:D2}] {2}` [.small .blue]#*_[Default] (since 1.4.2)_*# +
+`LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff}` [.small .blue]#*_[Default] (before 1.4.2)_*# +
 [.small]#*Parameter:*# +
-`{0}`: The `DateTime` object +
+`{0}`: The `DateTime` of log output +
+`{1}`: The thread ID [.small .blue]#*_(since 1.4.2)_*# +
+`{2}`: The log contents [.small .blue]#*_(since 1.4.2)_*# +
 
 |`MaxDataOutputWidth`
 |Maximum output width of data* +
 [.small]#*Example:*# +
-`MaxDataOutputWidth = 80` [.small .blue]#*_(Default)_*# +
+`MaxDataOutputWidth = 80` [.small .blue]#*_[Default]_*# +
 
 |`CollectionLimit`
 |*Limit* value of `ICollection` elements to output +
 [.small]#*Example:*# +
-`CollectionLimit = 512` [.small .blue]#*_(Default)_*# +
+`CollectionLimit = 512` [.small .blue]#*_[Default]_*# +
 
 |`StringLimit`
 |*Limit* value of `string` characters to output +
 [.small]#*Example:*# +
-`StringLimit = 8192` [.small .blue]#*_(Default)_*# +
+`StringLimit = 8192` [.small .blue]#*_[Default]_*# +
 
 |`ReflectionNestLimit`
 |Limit value of reflection nest +
 [.small]#*Example:*# +
-`ReflectionNestLimit = 4` [.small .blue]#*_(Default)_*# +
+`ReflectionNestLimit = 4` [.small .blue]#*_[Default]_*# +
 
 |`NonPrintProperties` +
 |Properties and fields not to be output value +

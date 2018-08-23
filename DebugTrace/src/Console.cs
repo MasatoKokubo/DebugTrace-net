@@ -1,6 +1,9 @@
 // Console.cs
 // (C) 2018 Masato Kokubo
 
+using System;
+using System.Threading;
+
 namespace DebugTrace {
     /// <summary>
     /// A logger using System.out or System.err.
@@ -37,7 +40,8 @@ namespace DebugTrace {
             /// Output the message to the log.
             /// </summary>
             public override void Log(string message) {
-                System.Console.Out.WriteLine(TraceBase.DateTimeString + ' ' + message);
+                System.Console.Out.WriteLine(string.Format(TraceBase.LogDateTimeFormat,
+                    DateTime.Now, Thread.CurrentThread.ManagedThreadId, message));
             }
         }
 
@@ -54,7 +58,8 @@ namespace DebugTrace {
             /// Output the message to the log.
             /// </summary>
             public override void Log(string message) {
-                System.Console.Error.WriteLine(TraceBase.DateTimeString + ' ' + message);
+                System.Console.Error.WriteLine(string.Format(TraceBase.LogDateTimeFormat,
+                    DateTime.Now, Thread.CurrentThread.ManagedThreadId, message));
             }
         }
     }

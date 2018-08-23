@@ -9,7 +9,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using System.Text.RegularExpressions;
 
 namespace DebugTrace {
     /// <summary>
@@ -115,7 +114,7 @@ namespace DebugTrace {
             KeyValueSeparator        = Resource.GetString (nameof(KeyValueSeparator      ), Resource.Unescape(@":\s"));
             PrintSuffixFormat        = Resource.GetString (nameof(PrintSuffixFormat      ), Resource.Unescape(@"\s({2}:{3:D})"));
             DateTimeFormat           = Resource.GetString (nameof(DateTimeFormat         ), Resource.Unescape(@"{0:yyyy-MM-dd HH:mm:ss.fffffffK}"));
-            LogDateTimeFormat        = Resource.GetString (nameof(LogDateTimeFormat      ), Resource.Unescape(@"{0:yyyy-MM-dd HH:mm:ss.fff}"));
+            LogDateTimeFormat        = Resource.GetString (nameof(LogDateTimeFormat      ), Resource.Unescape(@"{0:yyyy-MM-dd HH:mm:ss.fff} [{1:D2}] {2}"));
             MaxDataOutputWidth       = Resource.GetInt    (nameof(MaxDataOutputWidth     ), 80);
             CollectionLimit          = Resource.GetInt    (nameof(CollectionLimit        ), 512);
             StringLimit              = Resource.GetInt    (nameof(StringLimit            ), 8192);
@@ -1120,15 +1119,5 @@ namespace DebugTrace {
             return type.Name.StartsWith("Tuple`") || type.Name.StartsWith("ValueTuple`");
         }
 
-        /// <summary>
-        /// Returns current DateTime string.
-        /// </summary>
-        ///
-        /// <returns>current timestamp string</returns>
-        public static string DateTimeString {
-            get {
-                return string.Format(LogDateTimeFormat, DateTime.Now);
-            }
-        }
     }
 }
