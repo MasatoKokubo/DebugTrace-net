@@ -101,7 +101,7 @@ namespace DebugTrace {
             Resource = new Resource("DebugTrace");
 
             EnterString              = Resource.GetString (nameof(EnterString            ), Resource.Unescape(@"Enter {0}.{1} ({2}:{3:D})"));
-            LeaveString              = Resource.GetString (nameof(LeaveString            ), Resource.Unescape(@"Leave {0}.{1} ({2}:{3:D})"));
+            LeaveString              = Resource.GetString (nameof(LeaveString            ), Resource.Unescape(@"Leave {0}.{1} ({2}:{3:D}) time: {4}"));
             ThreadBoundaryString     = Resource.GetString (nameof(ThreadBoundaryString   ), Resource.Unescape(@"______________________________ Thread {0} ______________________________"));
             ClassBoundaryString      = Resource.GetString (nameof(ClassBoundaryString    ), Resource.Unescape(@"____ {0} ____"));
             CodeIndentString         = Resource.GetString (nameof(CodeIndentString       ), Resource.Unescape(@"|\s"));
@@ -191,7 +191,7 @@ namespace DebugTrace {
             var versionAttribute = (AssemblyInformationalVersionAttribute)
                 Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(), typeof(AssemblyInformationalVersionAttribute));
             Logger.Log($"DebugTrace-net {versionAttribute?.InformationalVersion}");
-            Logger.Log($"  Properties file: {Resource.FileInfo.FullName}");
+            Logger.Log($"  Referenced properties file: {Resource.FileInfo.FullName}");
             Logger.Log($"  Logger wrapper: {Logger.GetType().FullName}");
         }
 
@@ -297,9 +297,9 @@ namespace DebugTrace {
                 if (state.PreviousLineCount > 1)
                     Logger.Log(GetIndentString(state.NestLevel, 0)); // Empty Line
 
-                state.DownNest();
+                var timeSpan = DateTime.UtcNow - state.DownNest();;
 
-                LastLog = GetIndentString(state.NestLevel, 0) + GetCallerInfo(LeaveString);
+                LastLog = GetIndentString(state.NestLevel, 0) + GetCallerInfo(LeaveString, timeSpan);
                 Logger.Log(LastLog);
 
                 state.PreviousLineCount = 1;
@@ -309,14 +309,15 @@ namespace DebugTrace {
         /// <summary>
         /// Returns a string of the caller information.
         /// </summary>
-        protected string GetCallerInfo(string baseString) {
+        protected string GetCallerInfo(string baseString, TimeSpan? timeSpan = null) {
             var element = GetStackTraceElement();
 
             return string.Format(baseString,
                 ReplaceTypeName(element.TypeName),
                 element.MethodName,
                 element.FileName,
-                element.LineNumber);
+                element.LineNumber,
+                timeSpan);
         }
 
         /// <summary>
