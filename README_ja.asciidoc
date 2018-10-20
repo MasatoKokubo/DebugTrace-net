@@ -525,6 +525,22 @@ NonPrintString = `\***` [.small .blue]#*_[デフォルト]_*# +
   `DebugTraceExample.Rectangle` +
 [.small .blue]#デフォルトは未設定# +
 
+|`OutputNonPublicFields`
+ +
+[.small .blue]#*_(1.4.4~)_*#
+|`true` の場合、`public` ではないフィールドもリフレクションで内容を出力する +
+[.small]#*設定例:*# +
+`OutputNonPublicFields = true` +
+`OutputNonPublicFields = false` [.small .blue]#*_[デフォルト]_*# +
+
+|`OutputNonPublicProperties`
+ +
+[.small .blue]#*_(1.4.4~)_*#
+|`true` の場合、`public` ではないプロパティもリフレクションで内容を出力する +
+[.small]#*設定例:*# +
+`OutputNonPublicProperties = true` +
+`OutputNonPublicProperties = false` [.small .blue]#*_[デフォルト]_*# +
+
 |===
 
 ==== 7.1. DebugTrace.propertiesファイルの追加

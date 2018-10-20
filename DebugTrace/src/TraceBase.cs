@@ -25,28 +25,30 @@ namespace DebugTrace {
     public abstract class TraceBase : ITrace {
         public static Resource Resource {get; private set;}
 
-        public static string   EnterString             {get; set;} // Enter string
-        public static string   LeaveString             {get; set;} // Leave string
-        public static string   ThreadBoundaryString    {get; set;} // Threads boundary string
-        public static string   ClassBoundaryString     {get; set;} // Classes boundary string
-        public static string   CodeIndentString        {get; set;} // Method call indent string
-        public static string   DataIndentString        {get; set;} // Data indent string
-        public static string   LimitString             {get; set;} // String to represent that it has exceeded the limit
-        public static string   DefaultNameSpaceString  {get; set;} // String replacing the default package part
-        public static string   NonPrintString          {get; set;} // String of value in the case of properties that do not display the value
-        public static string   CyclicReferenceString   {get; set;} // String to represent that the cyclic reference occurs
-        public static string   VarNameValueSeparator   {get; set;} // Separator between the variable name and value
-        public static string   KeyValueSeparator       {get; set;} // Separator between the key and value for IDictionary object or property/field and value
-        public static string   PrintSuffixFormat       {get; set;} // Format string of Print suffix
-        public static string   DateTimeFormat          {get; set;} // DateTime format string
-        public static string   LogDateTimeFormat       {get; set;} // DateTime format string when the log was output
-        public static int      MaxDataOutputWidth      {get; set;} // Maximum data output width
-        public static int      CollectionLimit         {get; set;} // Limit of ICollection elements to output
-        public static int      StringLimit             {get; set;} // Limit of string characters to output
-        public static int      ReflectionNestLimit     {get; set;} // Limit of reflection nesting
-        public static List<string> NonPrintProperties  {get; set;} // Non Print properties (<class name>#<property name>)
-        public static string   DefaultNameSpace        {get; set;} // Default package part
-        public static ISet<string> ReflectionClasses   {get; set;} // Class names that output content in reflection even if ToString method is implemented
+        public static string   EnterString               {get; set;} // Enter string
+        public static string   LeaveString               {get; set;} // Leave string
+        public static string   ThreadBoundaryString      {get; set;} // Threads boundary string
+        public static string   ClassBoundaryString       {get; set;} // Classes boundary string
+        public static string   CodeIndentString          {get; set;} // Method call indent string
+        public static string   DataIndentString          {get; set;} // Data indent string
+        public static string   LimitString               {get; set;} // String to represent that it has exceeded the limit
+        public static string   DefaultNameSpaceString    {get; set;} // String replacing the default package part
+        public static string   NonPrintString            {get; set;} // String of value in the case of properties that do not display the value
+        public static string   CyclicReferenceString     {get; set;} // String to represent that the cyclic reference occurs
+        public static string   VarNameValueSeparator     {get; set;} // Separator between the variable name and value
+        public static string   KeyValueSeparator         {get; set;} // Separator between the key and value for IDictionary object or property/field and value
+        public static string   PrintSuffixFormat         {get; set;} // Format string of Print suffix
+        public static string   DateTimeFormat            {get; set;} // DateTime format string
+        public static string   LogDateTimeFormat         {get; set;} // DateTime format string when the log was output / since 1.3.0
+        public static int      MaxDataOutputWidth        {get; set;} // Maximum data output width
+        public static int      CollectionLimit           {get; set;} // Limit of ICollection elements to output
+        public static int      StringLimit               {get; set;} // Limit of string characters to output
+        public static int      ReflectionNestLimit       {get; set;} // Limit of reflection nesting
+        public static List<string> NonPrintProperties    {get; set;} // Non Print properties (<class name>#<property name>)
+        public static string   DefaultNameSpace          {get; set;} // Default package part
+        public static ISet<string> ReflectionClasses     {get; set;} // Class names that output content in reflection even if ToString method is implemented
+        public static bool     OutputNonPublicFields     {get; set;} // Output non-public fields / since 1.4.4
+        public static bool     OutputNonPublicProperties {get; set;} // Output non-public properties / since 1.4.4
 
         // Array of indent strings
         protected static string[] indentStrings;
@@ -100,31 +102,33 @@ namespace DebugTrace {
         public static void InitClass() {
             Resource = new Resource("DebugTrace");
 
-            EnterString              = Resource.GetString (nameof(EnterString            ), Resource.Unescape(@"Enter {0}.{1} ({2}:{3:D})"));
-            LeaveString              = Resource.GetString (nameof(LeaveString            ), Resource.Unescape(@"Leave {0}.{1} ({2}:{3:D}) time: {4}"));
-            ThreadBoundaryString     = Resource.GetString (nameof(ThreadBoundaryString   ), Resource.Unescape(@"______________________________ Thread {0} ______________________________"));
-            ClassBoundaryString      = Resource.GetString (nameof(ClassBoundaryString    ), Resource.Unescape(@"____ {0} ____"));
-            CodeIndentString         = Resource.GetString (nameof(CodeIndentString       ), Resource.Unescape(@"|\s"));
-            DataIndentString         = Resource.GetString (nameof(DataIndentString       ), Resource.Unescape(@"\s\s"));
-            LimitString              = Resource.GetString (nameof(LimitString            ), Resource.Unescape(@"..."));
-            DefaultNameSpaceString   = Resource.GetString (nameof(DefaultNameSpaceString ), Resource.Unescape(@"..."));
-            NonPrintString           = Resource.GetString (nameof(NonPrintString         ), Resource.Unescape(@"***"));
-            CyclicReferenceString    = Resource.GetString (nameof(CyclicReferenceString  ), Resource.Unescape(@"*** Cyclic Reference ***"));
-            VarNameValueSeparator    = Resource.GetString (nameof(VarNameValueSeparator  ), Resource.Unescape(@"\s=\s"));
-            KeyValueSeparator        = Resource.GetString (nameof(KeyValueSeparator      ), Resource.Unescape(@":\s"));
-            PrintSuffixFormat        = Resource.GetString (nameof(PrintSuffixFormat      ), Resource.Unescape(@"\s({2}:{3:D})"));
-            DateTimeFormat           = Resource.GetString (nameof(DateTimeFormat         ), Resource.Unescape(@"{0:yyyy-MM-dd HH:mm:ss.fffffffK}"));
-            LogDateTimeFormat        = Resource.GetString (nameof(LogDateTimeFormat      ), Resource.Unescape(@"{0:yyyy-MM-dd HH:mm:ss.fff} [{1:D2}] {2}"));
-            MaxDataOutputWidth       = Resource.GetInt    (nameof(MaxDataOutputWidth     ), 80);
-            CollectionLimit          = Resource.GetInt    (nameof(CollectionLimit        ), 512);
-            StringLimit              = Resource.GetInt    (nameof(StringLimit            ), 8192);
-            ReflectionNestLimit      = Resource.GetInt    (nameof(ReflectionNestLimit    ), 4);
-            NonPrintProperties       = new List<string>(Resource.GetStrings(nameof(NonPrintProperties), new string[0]));
+            EnterString               = Resource.GetString (nameof(EnterString              ), Resource.Unescape(@"Enter {0}.{1} ({2}:{3:D})"));
+            LeaveString               = Resource.GetString (nameof(LeaveString              ), Resource.Unescape(@"Leave {0}.{1} ({2}:{3:D}) time: {4}"));
+            ThreadBoundaryString      = Resource.GetString (nameof(ThreadBoundaryString     ), Resource.Unescape(@"______________________________ Thread {0} ______________________________"));
+            ClassBoundaryString       = Resource.GetString (nameof(ClassBoundaryString      ), Resource.Unescape(@"____ {0} ____"));
+            CodeIndentString          = Resource.GetString (nameof(CodeIndentString         ), Resource.Unescape(@"|\s"));
+            DataIndentString          = Resource.GetString (nameof(DataIndentString         ), Resource.Unescape(@"\s\s"));
+            LimitString               = Resource.GetString (nameof(LimitString              ), Resource.Unescape(@"..."));
+            DefaultNameSpaceString    = Resource.GetString (nameof(DefaultNameSpaceString   ), Resource.Unescape(@"..."));
+            NonPrintString            = Resource.GetString (nameof(NonPrintString           ), Resource.Unescape(@"***"));
+            CyclicReferenceString     = Resource.GetString (nameof(CyclicReferenceString    ), Resource.Unescape(@"*** Cyclic Reference ***"));
+            VarNameValueSeparator     = Resource.GetString (nameof(VarNameValueSeparator    ), Resource.Unescape(@"\s=\s"));
+            KeyValueSeparator         = Resource.GetString (nameof(KeyValueSeparator        ), Resource.Unescape(@":\s"));
+            PrintSuffixFormat         = Resource.GetString (nameof(PrintSuffixFormat        ), Resource.Unescape(@"\s({2}:{3:D})"));
+            DateTimeFormat            = Resource.GetString (nameof(DateTimeFormat           ), Resource.Unescape(@"{0:yyyy-MM-dd HH:mm:ss.fffffffK}"));
+            LogDateTimeFormat         = Resource.GetString (nameof(LogDateTimeFormat        ), Resource.Unescape(@"{0:yyyy-MM-dd HH:mm:ss.fff} [{1:D2}] {2}")); // since 1.3.0
+            MaxDataOutputWidth        = Resource.GetInt    (nameof(MaxDataOutputWidth       ), 80);
+            CollectionLimit           = Resource.GetInt    (nameof(CollectionLimit          ), 512);
+            StringLimit               = Resource.GetInt    (nameof(StringLimit              ), 8192);
+            ReflectionNestLimit       = Resource.GetInt    (nameof(ReflectionNestLimit      ), 4);
+            NonPrintProperties        = new List<string>(Resource.GetStrings(nameof(NonPrintProperties), new string[0]));
             NonPrintProperties.Add("System.Threading.Tasks.Task.Result");
-            DefaultNameSpace         = Resource.GetString (nameof(DefaultNameSpace       ), "");
-            ReflectionClasses        = new HashSet<string>(Resource.GetStrings(nameof(ReflectionClasses), new string[0]));
+            DefaultNameSpace          = Resource.GetString (nameof(DefaultNameSpace         ), "");
+            ReflectionClasses         = new HashSet<string>(Resource.GetStrings(nameof(ReflectionClasses), new string[0]));
             ReflectionClasses.Add(typeof(Tuple).FullName); // Tuple
             ReflectionClasses.Add(typeof(ValueTuple).FullName); // ValueTuple
+            OutputNonPublicFields     = Resource.GetBool   (nameof(OutputNonPublicFields    ), false); // since 1.4.4
+            OutputNonPublicProperties = Resource.GetBool   (nameof(OutputNonPublicProperties), false); // since 1.4.4
 
             // Array of indent strings
             indentStrings = new string[64];
@@ -1017,7 +1021,9 @@ namespace DebugTrace {
             var fieldInfos = type.GetFields(
                   BindingFlags.DeclaredOnly
                 | BindingFlags.Public
-                | BindingFlags.Instance);
+                | (OutputNonPublicFields ? BindingFlags.NonPublic : 0) // since 1.4.4
+                | BindingFlags.Instance)
+                .Where(fieldInfo => !fieldInfo.Name.EndsWith("__BackingField")); // Exclude property backing fields // since 1.4.4
             int fieldIndex = 0;
             foreach (var fieldInfo in fieldInfos) {
                 if (buff.Length > MaxDataOutputWidth) {
@@ -1050,9 +1056,10 @@ namespace DebugTrace {
 
             // property
             var propertyInfos = type.GetProperties(
-                      BindingFlags.DeclaredOnly
-                    | BindingFlags.Public
-                    | BindingFlags.Instance);
+                  BindingFlags.DeclaredOnly
+                | BindingFlags.Public
+                | (OutputNonPublicProperties ? BindingFlags.NonPublic : 0) // since 1.4.4
+                | BindingFlags.Instance);
             int propertyIndex = 0;
             foreach (var propertyInfo in propertyInfos) {
                 var parameterInfos = propertyInfo.GetIndexParameters();

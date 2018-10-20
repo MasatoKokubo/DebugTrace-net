@@ -63,6 +63,12 @@ namespace DebugTrace {
             }
         }
 
+        /// <summary>
+        /// Converts the string containing escape sequences into a normal string and returns it.
+        /// </summary>
+        ///
+        /// <param name="escapedString">the string containing escape sequences</param>
+        /// <returns>a normal string</returns>
         public static string Unescape(string escapedString) {
             var buff = new StringBuilder();
             var escape = false;
@@ -85,6 +91,13 @@ namespace DebugTrace {
             return buff.ToString();
         }
 
+        /// <summary>
+        /// Returns the resource value as a stirng.
+        /// </summary>
+        ///
+        /// <param name="name">the resource name</param>
+        /// <param name="defaultValue">resource value when the specified resource name is not defined</param>
+        /// <returns>the resource value</returns>
         public string GetString(string name, string defaultValue) {
             try {
                 return values[name];
@@ -94,6 +107,13 @@ namespace DebugTrace {
             }
         }
 
+        /// <summary>
+        /// Returns the resource value as array of stirngs.
+        /// </summary>
+        ///
+        /// <param name="name">the resource name</param>
+        /// <param name="defaultValue">resource value when the specified resource name is not defined</param>
+        /// <returns>the resource value</returns>
         public string[] GetStrings(string name, string[] defaultValue) {
             try {
                 return values[name].Split(',').Select(str => str.Trim()).ToArray();
@@ -103,9 +123,34 @@ namespace DebugTrace {
             }
         }
 
+        /// <summary>
+        /// Returns the resource value as a int.
+        /// </summary>
+        ///
+        /// <param name="name">the resource name</param>
+        /// <param name="defaultValue">resource value when the specified resource name is not defined</param>
+        /// <returns>the resource value</returns>
         public int GetInt(string name, int defaultValue) {
             try {
                 return int.Parse(values[name]);
+            }
+            catch (Exception) {
+                return defaultValue;
+            }
+        }
+
+        /// <summary>
+        /// Returns the resource value as a bool.
+        /// </summary>
+        ///
+        /// <param name="name">the resource name</param>
+        /// <param name="defaultValue">resource value when the specified resource name is not defined</param>
+        /// <returns>the resource value</returns>
+        ///
+        /// <since>1.4.4</since>
+        public bool GetBool(string name, bool defaultValue) {
+            try {
+                return bool.Parse(values[name]);
             }
             catch (Exception) {
                 return defaultValue;
