@@ -4,9 +4,9 @@ Imports System.Runtime.InteropServices
 
 <Assembly: AssemblyTitle("DebugTraceVBTest")>
 <Assembly: AssemblyDescription("")>
-<Assembly: AssemblyCompany("")>
+<Assembly: AssemblyCompany("Masato Kokubo")>
 <Assembly: AssemblyProduct("DebugTraceVBTest")>
-<Assembly: AssemblyCopyright("Copyright ©  2018")>
+<Assembly: AssemblyCopyright("(C) 2018 Masato Kokubo")>
 <Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>

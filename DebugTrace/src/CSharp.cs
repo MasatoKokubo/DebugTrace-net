@@ -2,10 +2,8 @@
 // (C) 2018 Masato Kokubo
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Reflection;
 
 namespace DebugTrace {
     /// <summary>
@@ -115,5 +113,29 @@ namespace DebugTrace {
         protected override void Append(LogBuffer buff, double   value) {buff.Append(value).Append('d' );}
         protected override void Append(LogBuffer buff, decimal  value) {buff.Append(value).Append('m' );}
         protected override void Append(LogBuffer buff, DateTime value) {buff.Append(string.Format(DateTimeFormat, value));}
+
+        /// <since>1.5.0</since>
+        protected override void AppendAccessModifire(LogBuffer buff, MemberInfo memberInfo) {
+            switch (memberInfo) {
+            case FieldInfo fieldInfo:
+                if (!fieldInfo.IsPublic) {
+                    if      (fieldInfo.IsPrivate          ) buff.Append("private ");
+                    else if (fieldInfo.IsFamily           ) buff.Append("protected ");
+                    else if (fieldInfo.IsAssembly         ) buff.Append("internal ");
+                    else if (fieldInfo.IsFamilyOrAssembly ) buff.Append("protected internal ");
+                    else if (fieldInfo.IsFamilyAndAssembly) buff.Append("private protected ");
+                }
+                break;
+            case PropertyInfo propertyInfo:
+                if (!propertyInfo.GetMethod.IsPublic) {
+                    if      (propertyInfo.GetMethod.IsPrivate          ) buff.Append("private ");
+                    else if (propertyInfo.GetMethod.IsFamily           ) buff.Append("protected ");
+                    else if (propertyInfo.GetMethod.IsAssembly         ) buff.Append("internal ");
+                    else if (propertyInfo.GetMethod.IsFamilyOrAssembly ) buff.Append("protected internal ");
+                    else if (propertyInfo.GetMethod.IsFamilyAndAssembly) buff.Append("private protected ");
+                }
+                break;
+            }
+        }
     }
 }

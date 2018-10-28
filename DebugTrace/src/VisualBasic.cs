@@ -2,10 +2,8 @@
 // (C) 2018 Masato Kokubo
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Reflection;
 
 namespace DebugTrace {
     /// <summary>
@@ -117,5 +115,30 @@ namespace DebugTrace {
         protected override void Append(LogBuffer buff, double   value) {buff.Append(value);}
         protected override void Append(LogBuffer buff, decimal  value) {buff.Append(value).Append('D' );}
         protected override void Append(LogBuffer buff, DateTime value) {buff.Append(string.Format(DateTimeFormat, value));}
+
+
+        /// <since>1.5.0</since>
+        protected override void AppendAccessModifire(LogBuffer buff, MemberInfo memberInfo) {
+            switch (memberInfo) {
+            case FieldInfo fieldInfo:
+                if (!fieldInfo.IsPublic) {
+                    if      (fieldInfo.IsPrivate          ) buff.Append("Private ");
+                    else if (fieldInfo.IsFamily           ) buff.Append("Protected ");
+                    else if (fieldInfo.IsAssembly         ) buff.Append("Friend ");
+                    else if (fieldInfo.IsFamilyOrAssembly ) buff.Append("Protected Friend ");
+                    else if (fieldInfo.IsFamilyAndAssembly) buff.Append("Private Protected ");
+                }
+                break;
+            case PropertyInfo propertyInfo:
+                if (!propertyInfo.GetMethod.IsPublic) {
+                    if      (propertyInfo.GetMethod.IsPrivate          ) buff.Append("Private ");
+                    else if (propertyInfo.GetMethod.IsFamily           ) buff.Append("Protected ");
+                    else if (propertyInfo.GetMethod.IsAssembly         ) buff.Append("Friend ");
+                    else if (propertyInfo.GetMethod.IsFamilyOrAssembly ) buff.Append("Protected Friend ");
+                    else if (propertyInfo.GetMethod.IsFamilyAndAssembly) buff.Append("Private Protected ");
+                }
+                break;
+            }
+        }
     }
 }

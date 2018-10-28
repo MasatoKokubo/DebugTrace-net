@@ -2,11 +2,19 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using DebugTrace;
 using static DebugTrace.CSharp;
 
 namespace DebugTraceTest {
     [TestClass]
     public class PrintTest {
+        // TestCleanup
+        [TestCleanup]
+        public void TestCleanup() {
+            TraceBase.OutputNonPublicFields     = false;
+            TraceBase.OutputNonPublicProperties = false;
+        }
+
         // bool
         [DataTestMethod]
         [DataRow(false, "v = false (")]
@@ -234,13 +242,22 @@ namespace DebugTraceTest {
 
         // Task since 1.4.1
         [DataTestMethod]
-        [DataRow("Result: ***")]
-        public void PrintTask(string expect) {
+        [DataRow(false, false, "Result: ***")]
+        [DataRow(false, true , "Result: ***")]
+        [DataRow(true , false, "Result: ***")]
+        [DataRow(true , true , "Result: ***")]
+        public void PrintTask(bool outputNonPublicFields, bool outputNonPublicProperties, string expect) {
             var task = Task<int>.Run(() => {Thread.Sleep(200); return 1;});
             Thread.Sleep(10); // wait Running 
             Assert.AreEqual(TaskStatus.Running, task.Status);
+
+            TraceBase.OutputNonPublicFields     = outputNonPublicFields;
+            TraceBase.OutputNonPublicProperties = outputNonPublicProperties;
+
             Trace.Print("v", task);
             StringAssert.Contains(Trace.LastLog, expect);
+            Assert.AreEqual(TaskStatus.Running, task.Status);
+
             Trace.Print("task.Result", task.Result);
             StringAssert.Contains(Trace.LastLog, "task.Result = 1 (");
         }

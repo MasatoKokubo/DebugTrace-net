@@ -136,44 +136,53 @@ namespace DebugTrace {
             // Array of data indent strings
             dataIndentStrings = new string[64];
 
-            string loggerName = Resource.GetString("Logger", null);
-            if (loggerName != null) {
+            var loggerStr = Resource.GetString("Logger", null);
+            if (loggerStr != null) {
                 Exception e1 = null;
                 Exception e2 = null;
-                ILogger logger = null;
-                if (!loggerName.Split(',')[0].Contains('.'))
-                    // Add default namesapce if no namespace
-                    loggerName = typeof(ILogger).Namespace + '.' + loggerName;
-                try {
-                    logger = (ILogger)Type.GetType(loggerName)
-                        .GetProperty(nameof(Console.Out.Instance), BindingFlags.Public | BindingFlags.Static)
-                        .GetValue(null);
-                    if (logger != null)
-                        Logger = logger;
-                }
-                catch (Exception e) {
-                    e1 = e;
-                }
-                if (logger == null && !loggerName.Contains(',')) {
-                    // Try with the class name that added the assembly name
-                    loggerName = loggerName + ',' + loggerName;
+                var loggerNames = loggerStr.Split(Loggers.SeparatorChar).Select(str => str.Trim());
+                var loggers = new List<ILogger>();
+                foreach (var loggerName in loggerNames) {
+                    ILogger logger = null;
+                    var loggerFullName = loggerName.Split(',')[0].Contains('.')
+                        ? loggerName
+                        : typeof(ILogger).Namespace + '.' + loggerName; // Add default namesapce if no namespace
                     try {
-                        logger = (ILogger)Type.GetType(loggerName)
+                        logger = (ILogger)Type.GetType(loggerFullName)
                             .GetProperty(nameof(Console.Out.Instance), BindingFlags.Public | BindingFlags.Static)
                             .GetValue(null);
-                        if (logger != null)
-                            Logger = logger;
                     }
                     catch (Exception e) {
-                        e2 = e;
+                        e1 = e;
+                    }
+                    if (logger == null && !loggerFullName.Contains(',')) {
+                        // Try with the class name that added the assembly name
+                        loggerFullName = loggerFullName + ',' + loggerFullName;
+                        try {
+                            logger = (ILogger)Type.GetType(loggerFullName)
+                                .GetProperty(nameof(Console.Out.Instance), BindingFlags.Public | BindingFlags.Static)
+                                .GetValue(null);
+                        }
+                        catch (Exception e) {
+                            e2 = e;
+                        }
+                    }
+
+                    if (logger != null)
+                        loggers.Add(logger);
+                    else {
+                        if (e2 != null)
+                            System.Console.Error.WriteLine($"DebugTrace-net: {e2.ToString()}({loggerName})");
+                        else if (e1 != null)
+                            System.Console.Error.WriteLine($"DebugTrace-net: {e1.ToString()}({loggerName})");
                     }
                 }
-                if (logger == null) {
-                    if (e2 != null)
-                        System.Console.Error.WriteLine($"DebugTrace-net: {e2.ToString()}({loggerName})");
-                    else if (e1 != null)
-                        System.Console.Error.WriteLine($"DebugTrace-net: {e1.ToString()}({loggerName})");
-                }
+                if (loggers.Count == 1)
+                    // single logger
+                    Logger = loggers[0];
+                else if (loggers.Count > 1)
+                    // multiple logger
+                    Logger = new Loggers(loggers.ToArray());
             }
 
             // Set the logging level
@@ -196,7 +205,7 @@ namespace DebugTrace {
                 Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(), typeof(AssemblyInformationalVersionAttribute));
             Logger.Log($"DebugTrace-net {versionAttribute?.InformationalVersion}");
             Logger.Log($"  Referenced properties file: {Resource.FileInfo.FullName}");
-            Logger.Log($"  Logger wrapper: {Logger.GetType().FullName}");
+            Logger.Log($"  Logger wrapper: {Logger}");
         }
 
         /// <summary>
@@ -204,7 +213,7 @@ namespace DebugTrace {
         /// </summary>
         ///
         /// <returns>the indent state of the current thread</returns>
-        /// <param name="threadId">the thread id</returns>
+        /// <param name="threadId">the thread id</param>
         private protected State GetCurrentState(int threadId = -1) {
             State state;
             if (threadId == -1)
@@ -376,7 +385,7 @@ namespace DebugTrace {
         /// </summary>
         ///
         /// <param name="name">the name of the value</param>
-        /// <param name="value">the value to output (accept null)</param>
+        /// <param name="value">the value to output (nullable)</param>
         protected void PrintSub(string name, object value) {
             lock (states) {
                 var state = GetCurrentState();
@@ -441,7 +450,7 @@ namespace DebugTrace {
                     return new StackTraceElement(typeName, methodName, fileName, lineNo);
                 });
 
-            var result = elements.Count() > 0 
+            var result = elements.Count() > 0
                 ? elements.ElementAt(0)
                 : new StackTraceElement("--", "--", "--", 0);
 
@@ -467,7 +476,7 @@ namespace DebugTrace {
         /// </summary>
         ///
         /// <param name="name">the name of the value</param>
-        /// <param name="value">the value to output (accept null)</param>
+        /// <param name="value">the value to output (nullable)</param>
         public void Print(string name, object value) {
             if (!IsEnabled) return;
             PrintSub(name, value);
@@ -547,7 +556,7 @@ namespace DebugTrace {
                 else {
                     // Use Reflection
                     reflectedObjects.Add(value);
-                    isMultiLine = AppendUsedReflection(buff, value, false);
+                    isMultiLine = AppendUsingReflection(buff, value, false);
                     reflectedObjects.RemoveAt(reflectedObjects.Count - 1);
                 }
             } else {
@@ -770,8 +779,8 @@ namespace DebugTrace {
             buff.Append('{');
             var index = 0;
 
-            bool lineFeeded = false;
-            bool success = true;
+            var lineFeeded = false;
+            var success = true;
             foreach (var key in dictionary.Keys) {
                 if (isMultiLine) {
                     if (index == 0) {
@@ -791,7 +800,7 @@ namespace DebugTrace {
                 var value = dictionary[key];
 
                 buff.Save(); // Save current point
-                bool elementIsMultiLine = Append(buff, key, false);
+                var elementIsMultiLine = Append(buff, key, false);
                 buff.Append(KeyValueSeparator);
                 elementIsMultiLine |= Append(buff, value, false);
 
@@ -856,8 +865,8 @@ namespace DebugTrace {
             buff.Append('{');
             var index = 0;
 
-            bool lineFeeded = false;
-            bool success = true;
+            var lineFeeded = false;
+            var success = true;
             foreach (var element in enumerable) {
                 if (isMultiLine) {
                     if (index == 0) {
@@ -953,14 +962,14 @@ namespace DebugTrace {
         }
 
         /// <summary>
-        /// Returns a string representation of the obj uses reflection.
+        /// Returns a string representation of the obj using reflection.
         /// </summary>
         ///
         /// <param name="buff">the logging buffer</param>
         /// <param name="obj">an object</param>
         /// <param name="isMultiLine">output multiple lines if true, single line otherwise</param>
         /// <returns>false if can not be outputed on a single line, otherwise true</returns>
-        protected bool AppendUsedReflection(LogBuffer buff, object obj, bool isMultiLine) {
+        protected bool AppendUsingReflection(LogBuffer buff, object obj, bool isMultiLine) {
             buff.Save(); // Save current point
             var type = obj.GetType();
             buff.Append(GetTypeName(type, obj, false));
@@ -973,10 +982,10 @@ namespace DebugTrace {
                 buff.UpNest();
             }
 
-            if (!AppendUsedReflectionSub(buff, obj, type, isExtended, isMultiLine)) {
+            if (!AppendUsingReflectionSub(buff, obj, type, isExtended, isMultiLine)) {
                 buff.Restore(); // Restore saved point
                 buff.PopSave(); // Pop saveed point
-                return AppendUsedReflection(buff, obj, true);
+                return AppendUsingReflection(buff, obj, true);
             }
 
             if (isMultiLine) {
@@ -991,7 +1000,7 @@ namespace DebugTrace {
         }
 
         /// <summary>
-        /// Returns a string representation of the obj uses reflection.
+        /// Returns a string representation of the obj using reflection.
         /// </summary>
         ///
         /// <param name="buff">the logging buffer</param>
@@ -1000,11 +1009,11 @@ namespace DebugTrace {
         /// <param name="isExtended">if true, the type is isExtended type</param>
         /// <param name="isMultiLine">output multiple lines if true, single line otherwise</param>
         /// <returns>false if can not be outputed on a single line, otherwise true</returns>
-        protected bool AppendUsedReflectionSub(LogBuffer buff, object obj, Type type, bool isExtended, bool isMultiLine) {
+        protected bool AppendUsingReflectionSub(LogBuffer buff, object obj, Type type, bool isExtended, bool isMultiLine) {
             Type baseType = type.BaseType;
-            if (baseType != typeof(object) && baseType != typeof(ValueType))
+            if (baseType != null && baseType != typeof(object) && baseType != typeof(ValueType))
                 // Call for the base type
-                AppendUsedReflectionSub(buff, obj, baseType, isExtended, isMultiLine);
+                AppendUsingReflectionSub(buff, obj, baseType, isExtended, isMultiLine);
 
             var typeNamePrefix = type.Namespace + '.' + type.Name + "#";
 
@@ -1017,14 +1026,14 @@ namespace DebugTrace {
                 buff.LineFeed();
             }
 
-            // field
+            // fields
             var fieldInfos = type.GetFields(
                   BindingFlags.DeclaredOnly
                 | BindingFlags.Public
                 | (OutputNonPublicFields ? BindingFlags.NonPublic : 0) // since 1.4.4
                 | BindingFlags.Instance)
                 .Where(fieldInfo => !fieldInfo.Name.EndsWith("__BackingField")); // Exclude property backing fields // since 1.4.4
-            int fieldIndex = 0;
+            var fieldIndex = 0;
             foreach (var fieldInfo in fieldInfos) {
                 if (buff.Length > MaxDataOutputWidth) {
                     if (!isMultiLine) return false; // can not be outputed on a single line
@@ -1032,7 +1041,7 @@ namespace DebugTrace {
                 }
 
                 buff.Save(); // Save current point
-                bool elementIsMultiLine = AppendReflectValue(buff, type, obj, fieldInfo);
+                var elementIsMultiLine = AppendReflectValue(buff, type, obj, fieldInfo);
                 if (elementIsMultiLine || buff.Length > MaxDataOutputWidth) {
                     if (!isMultiLine) {
                         buff.PopSave(); // Pop saveed point
@@ -1054,7 +1063,7 @@ namespace DebugTrace {
                 ++fieldIndex;
             }
 
-            // property
+            // properties
             var propertyInfos = type.GetProperties(
                   BindingFlags.DeclaredOnly
                 | BindingFlags.Public
@@ -1096,8 +1105,10 @@ namespace DebugTrace {
 
         // AppendReflectValue / MemberInfo
         private bool AppendReflectValue(LogBuffer buff, Type type, object obj, MemberInfo memberInfo) {
-            if (!IsTuple(type))
+            if (!IsTuple(type)) {
+                AppendAccessModifire(buff, memberInfo);
                 buff.Append(memberInfo.Name).Append(KeyValueSeparator);
+            }
 
             if (NonPrintProperties.Contains(GetFullTypeName(type) + '.' + memberInfo.Name)) {
                 buff.Append(NonPrintString);
@@ -1122,10 +1133,28 @@ namespace DebugTrace {
             return Append(buff, value, false);
         }
 
+        /// <since>1.5.0</since>
+        protected abstract void AppendAccessModifire(LogBuffer buff, MemberInfo memberInfo);
+
         // IsTuple
         private static bool IsTuple(Type type) {
             return type.Name.StartsWith("Tuple`") || type.Name.StartsWith("ValueTuple`");
         }
 
+        /// <summary>
+        /// Throws an NullReferenceException if the object is null.
+        /// </summary>
+        ///
+        /// <typeparam name="T">the object type</param>
+        /// <param name="obj">the object</param>
+        /// <param name="message">the message of the NullReferenceException</param>
+        /// <returns>the object</returns>
+        /// <exception cref="NullReferenceException">if the object is null</exception>
+        /// <since>1.5.0</since>
+        public static T RequreNonNull<T>(T obj, string message) {
+            if (obj == null)
+                throw new NullReferenceException(message);
+            return obj;
+        }
     }
 }

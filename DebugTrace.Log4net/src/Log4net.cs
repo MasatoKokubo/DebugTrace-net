@@ -51,6 +51,7 @@ namespace DebugTrace {
         public string Level {
             get => levelStr;
             set {
+                TraceBase.RequreNonNull(value, "value"); // since 1.1.1
                 var upperValue = value.ToUpper();
                 if (levelDictinary.ContainsKey(upperValue)) {
                     level = levelDictinary[upperValue];
@@ -71,5 +72,13 @@ namespace DebugTrace {
         public void Log(string message) {
             logger.Log(null, level, message, null);
         }
+
+        /// <summary>
+        /// Returns a string representation of this object.
+        /// </summary>
+        /// <returns>a string representation of this object</returns>
+        /// <since>1.5.0</since>
+        public override string ToString() => GetType().FullName;
+
     }
 }

@@ -9,7 +9,7 @@
 
     <Company>Masato Kokubo</Company>
 
-    <Version>1.0.0</Version>
+    <Version>1.5.0</Version>
 
     <Copyright>(C) 2018 Masato Kokubo</Copyright>
 
@@ -19,7 +19,7 @@
 
     <PackageIconUrl>https://github.com/MasatoKokubo/DebugTrace-net/blob/master/DebugTrace/DebugTrace-32.png</PackageIconUrl>
 
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <AssemblyVersion>1.5.0.0</AssemblyVersion>
 
     <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>

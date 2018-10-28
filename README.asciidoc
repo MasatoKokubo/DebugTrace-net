@@ -330,10 +330,12 @@ You can specify following properties in the `DebugTrace.properties` file.
 |`Logger`
 |Logger DebugTrace uses +
 [.small]#*Examples:*# +
-`Logger = Console+Out` [.small .blue]#Output to the console (stdout)# +
-`Logger = Console+Error` [.small .blue]#Output to the console (stderr)# [.small .blue]#*_[Default]_*# + 
-`Logger = Log4net` [.small .blue]#use Log4net# +
-`Logger = NLog` [.small .blue]#use NLog# +
+`Logger = Console+Out` [.small .blue]#Outputs to the console (stdout)# +
+`Logger = Console+Error` [.small .blue]#Outputs to the console (stderr)# [.small .blue]#*_[Default]_*# + 
+`Logger = Log4net` [.small .blue]#Outputs using Log4net# +
+`Logger = NLog` [.small .blue]#Outputs using NLog# +
+[.small]#*Example for multiple outputs:*# [.small .blue]#*_(since 1.5.0)_*# +
+`Logger = Console+Out; Log4net` [.small .blue]#Outputs to the console (stdout) and using Log4net# + 
 
 |`LogLevel`
 |Log level to use +

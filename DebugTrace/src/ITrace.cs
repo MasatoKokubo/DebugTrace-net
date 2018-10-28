@@ -66,7 +66,7 @@ namespace DebugTrace {
         /// </summary>
         ///
         /// <param name="name">the name of the value</param>
-        /// <param name="value">the value to output (accept null)</param>
+        /// <param name="value">the value to output (nullable)</param>
         void Print(string name, object value);
 
         /// <summary>

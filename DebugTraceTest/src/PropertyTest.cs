@@ -12,6 +12,8 @@ namespace DebugTraceTest {
     public class PropertyTest {
         // testProperties
         private static readonly IDictionary<string, string> testProperties = new Dictionary<string, string>() {
+            {nameof(TraceBase.Logger                   ), " Console+Out ; Console+Error"},
+            {                "LogLevel"                 , " Info ; Warn"},
             {nameof(TraceBase.EnterString              ), @"_Enter_ {0}.{1} ({2}:{3:D})"},
             {nameof(TraceBase.LeaveString              ), @"_Leave_ {0}.{1} ({2}:{3:D})"},
             {nameof(TraceBase.ThreadBoundaryString     ), @"_Thread_ {0}"},
@@ -94,8 +96,6 @@ namespace DebugTraceTest {
             Assert.AreEqual(TraceBase.CollectionLimit    .ToString(),            testProperties[nameof(TraceBase.CollectionLimit        )]);
             Assert.AreEqual(TraceBase.StringLimit        .ToString(),            testProperties[nameof(TraceBase.StringLimit            )]);
             Assert.AreEqual(TraceBase.ReflectionNestLimit.ToString(),            testProperties[nameof(TraceBase.ReflectionNestLimit    )]);
-        // 1.4.1
-        //  AssertAreEqual (TraceBase.NonPrintProperties     ,                   testProperties[nameof(TraceBase.NonPrintProperties     )].Split(',').Select(s => s.Trim()).ToArray());
             Assert.AreEqual(TraceBase.DefaultNameSpace       ,                   testProperties[nameof(TraceBase.DefaultNameSpace       )]);
 
             var reflectionClasses = new HashSet<string>(testProperties[nameof(TraceBase.ReflectionClasses)].Split(',').Select(s => s.Trim()));
@@ -105,6 +105,11 @@ namespace DebugTraceTest {
 
             Assert.AreEqual(TraceBase.OutputNonPublicFields    , bool.Parse(testProperties[nameof(TraceBase.OutputNonPublicFields    )])); // since 1.4.4
             Assert.AreEqual(TraceBase.OutputNonPublicProperties, bool.Parse(testProperties[nameof(TraceBase.OutputNonPublicProperties)])); // since 1.4.4
+
+            Assert.AreEqual(typeof(Loggers), TraceBase.Logger.GetType()); // since 1.5.0
+            CollectionAssert.AreEqual(
+                new List<Type>() {typeof(DebugTrace.Console.Out), typeof(DebugTrace.Console.Error)},
+                ((Loggers)TraceBase.Logger).Members.Select(logger => logger.GetType()).ToList()); // since 1.5.0
         }
 
         // AssertAreEqual
@@ -220,56 +225,96 @@ namespace DebugTraceTest {
         }
 
         public class Inner {
-            private   int PrivateField      = 1;
-            protected int ProtectedField    = 2;
-            public    int PublicField       = 3;
-            private   int PrivateProperty   {get;} = 4;
-            protected int ProtectedProperty {get;} = 5;
-            public    int PublicProperty    {get;} = 6;
+            private            int           PrivateField = 1;
+            protected          int         ProtectedField = 2;
+            internal           int          InternalField = 3;
+            protected internal int ProtectedInternalField = 4;
+            private protected  int  PrivateProtectedField = 5;
+            public             int            PublicField = 6;
+
+            private            int           PrivateProperty {get;} = 1;
+            protected          int         ProtectedProperty {get;} = 2;
+            internal           int          InternalProperty {get;} = 3;
+            protected internal int ProtectedInternalProperty {get;} = 4;
+            private protected  int  PrivateProtectedProperty {get;} = 5;
+            public             int            PublicProperty {get;} = 6;
         }
 
         // OutputNonPublicFields / since 1.4.4
+        // OutputNonPublicProperties / since 1.4.4
         [TestMethod]
         public void OutputNonPublicFields_Properties() {
             TraceBase.OutputNonPublicFields     = false;
             TraceBase.OutputNonPublicProperties = false;
             Trace.Print("value", new Inner());
-            Assert.IsFalse(Trace.LastLog.Contains("PrivateField"     ));
-            Assert.IsFalse(Trace.LastLog.Contains("ProtectedField"   ));
-            Assert.IsTrue (Trace.LastLog.Contains("PublicField"      ));
-            Assert.IsFalse(Trace.LastLog.Contains("PrivateProperty"  ));
-            Assert.IsFalse(Trace.LastLog.Contains("ProtectedProperty"));
-            Assert.IsTrue (Trace.LastLog.Contains("PublicProperty"   ));
+
+            Assert.IsFalse(Trace.LastLog.Contains(                     "private PrivateField"));
+            Assert.IsFalse(Trace.LastLog.Contains(                 "protected ProtectedField"));
+            Assert.IsFalse(Trace.LastLog.Contains(                   "internal InternalField"));
+            Assert.IsFalse(Trace.LastLog.Contains("protected internal ProtectedInternalField"));
+            Assert.IsFalse(Trace.LastLog.Contains(  "private protected PrivateProtectedField"));
+            Assert.IsTrue (Trace.LastLog.Contains(                              "PublicField"));
+
+            Assert.IsFalse(Trace.LastLog.Contains(                     "private PrivateProperty"));
+            Assert.IsFalse(Trace.LastLog.Contains(                 "protected ProtectedProperty"));
+            Assert.IsFalse(Trace.LastLog.Contains(                   "internal InternalProperty"));
+            Assert.IsFalse(Trace.LastLog.Contains("protected internal ProtectedInternalProperty"));
+            Assert.IsFalse(Trace.LastLog.Contains(  "private protected PrivateProtectedProperty"));
+            Assert.IsTrue (Trace.LastLog.Contains(                              "PublicProperty"));
 
             TraceBase.OutputNonPublicFields     = true;
             TraceBase.OutputNonPublicProperties = false;
             Trace.Print("value", new Inner());
-            Assert.IsTrue (Trace.LastLog.Contains("PrivateField"     ));
-            Assert.IsTrue (Trace.LastLog.Contains("ProtectedField"   ));
-            Assert.IsTrue (Trace.LastLog.Contains("PublicField"      ));
-            Assert.IsFalse(Trace.LastLog.Contains("PrivateProperty"  ));
-            Assert.IsFalse(Trace.LastLog.Contains("ProtectedProperty"));
-            Assert.IsTrue (Trace.LastLog.Contains("PublicProperty"   ));
+
+            Assert.IsTrue (Trace.LastLog.Contains(                     "private PrivateField"));
+            Assert.IsTrue (Trace.LastLog.Contains(                 "protected ProtectedField"));
+            Assert.IsTrue (Trace.LastLog.Contains(                   "internal InternalField"));
+            Assert.IsTrue (Trace.LastLog.Contains("protected internal ProtectedInternalField"));
+            Assert.IsTrue (Trace.LastLog.Contains(  "private protected PrivateProtectedField"));
+            Assert.IsTrue (Trace.LastLog.Contains(                              "PublicField"));
+
+            Assert.IsFalse(Trace.LastLog.Contains(                     "private PrivateProperty"));
+            Assert.IsFalse(Trace.LastLog.Contains(                 "protected ProtectedProperty"));
+            Assert.IsFalse(Trace.LastLog.Contains(                   "internal InternalProperty"));
+            Assert.IsFalse(Trace.LastLog.Contains("protected internal ProtectedInternalProperty"));
+            Assert.IsFalse(Trace.LastLog.Contains(  "private protected PrivateProtectedProperty"));
+            Assert.IsTrue (Trace.LastLog.Contains(                              "PublicProperty"));
 
             TraceBase.OutputNonPublicFields     = false;
             TraceBase.OutputNonPublicProperties = true;
             Trace.Print("value", new Inner());
-            Assert.IsFalse(Trace.LastLog.Contains("PrivateField"     ));
-            Assert.IsFalse(Trace.LastLog.Contains("ProtectedField"   ));
-            Assert.IsTrue (Trace.LastLog.Contains("PublicField"      ));
-            Assert.IsTrue (Trace.LastLog.Contains("PrivateProperty"  ));
-            Assert.IsTrue (Trace.LastLog.Contains("ProtectedProperty"));
-            Assert.IsTrue (Trace.LastLog.Contains("PublicProperty"   ));
+
+            Assert.IsFalse(Trace.LastLog.Contains(                     "private PrivateField"));
+            Assert.IsFalse(Trace.LastLog.Contains(                 "protected ProtectedField"));
+            Assert.IsFalse(Trace.LastLog.Contains(                   "internal InternalField"));
+            Assert.IsFalse(Trace.LastLog.Contains("protected internal ProtectedInternalField"));
+            Assert.IsFalse(Trace.LastLog.Contains(  "private protected PrivateProtectedField"));
+            Assert.IsTrue (Trace.LastLog.Contains(                              "PublicField"));
+
+            Assert.IsTrue (Trace.LastLog.Contains(                     "private PrivateProperty"));
+            Assert.IsTrue (Trace.LastLog.Contains(                 "protected ProtectedProperty"));
+            Assert.IsTrue (Trace.LastLog.Contains(                   "internal InternalProperty"));
+            Assert.IsTrue (Trace.LastLog.Contains("protected internal ProtectedInternalProperty"));
+            Assert.IsTrue (Trace.LastLog.Contains(  "private protected PrivateProtectedProperty"));
+            Assert.IsTrue (Trace.LastLog.Contains(                              "PublicProperty"));
 
             TraceBase.OutputNonPublicFields     = true;
             TraceBase.OutputNonPublicProperties = true;
             Trace.Print("value", new Inner());
-            Assert.IsTrue (Trace.LastLog.Contains("PrivateField"     ));
-            Assert.IsTrue (Trace.LastLog.Contains("ProtectedField"   ));
-            Assert.IsTrue (Trace.LastLog.Contains("PublicField"      ));
-            Assert.IsTrue (Trace.LastLog.Contains("PrivateProperty"  ));
-            Assert.IsTrue (Trace.LastLog.Contains("ProtectedProperty"));
-            Assert.IsTrue (Trace.LastLog.Contains("PublicProperty"   ));
+
+            Assert.IsTrue (Trace.LastLog.Contains(                     "private PrivateField"));
+            Assert.IsTrue (Trace.LastLog.Contains(                 "protected ProtectedField"));
+            Assert.IsTrue (Trace.LastLog.Contains(                   "internal InternalField"));
+            Assert.IsTrue (Trace.LastLog.Contains("protected internal ProtectedInternalField"));
+            Assert.IsTrue (Trace.LastLog.Contains(  "private protected PrivateProtectedField"));
+            Assert.IsTrue (Trace.LastLog.Contains(                              "PublicField"));
+
+            Assert.IsTrue (Trace.LastLog.Contains(                     "private PrivateProperty"));
+            Assert.IsTrue (Trace.LastLog.Contains(                 "protected ProtectedProperty"));
+            Assert.IsTrue (Trace.LastLog.Contains(                   "internal InternalProperty"));
+            Assert.IsTrue (Trace.LastLog.Contains("protected internal ProtectedInternalProperty"));
+            Assert.IsTrue (Trace.LastLog.Contains(  "private protected PrivateProtectedProperty"));
+            Assert.IsTrue (Trace.LastLog.Contains(                              "PublicProperty"));
         }
     }
 }

@@ -332,8 +332,10 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
 [.small]#*設定例:*# +
 `Logger = Console+Out` [.small .blue]#コンソール(標準出力)へ出力# + 
 `Logger = Console+Error` [.small .blue]#コンソール(標準エラー出力)へ出力# [.small .blue]#*_[デフォルト]_*# + 
-`Logger = Log4net` [.small .blue]#log4netを使用# + 
-`Logger = NLog` [.small .blue]#NLogを使用# +
+`Logger = Log4net` [.small .blue]#log4netを使用して出力# + 
+`Logger = NLog` [.small .blue]#NLogを使用して出力# +
+[.small]#*設定例(複数):*# [.small .blue]#*_(1.5.0~)_*# +
+`Logger = Console+Out; Log4net` [.small .blue]#コンソール(標準出力)およびlog4netを使用して出力# + 
 
 |`LogLevel`
 |使用するログレベル +

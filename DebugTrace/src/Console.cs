@@ -28,6 +28,13 @@ namespace DebugTrace {
         public abstract void Log(string message);
 
         /// <summary>
+        /// Returns a string representation of this object.
+        /// </summary>
+        /// <returns>a string representation of this object</returns>
+        /// <since>1.5.0</since>
+        public override string ToString() => GetType().FullName;
+
+        /// <summary>
         /// A logger using System.out.
         /// </summary>
         public class Out : Console {

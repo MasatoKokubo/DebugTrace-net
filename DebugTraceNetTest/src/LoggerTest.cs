@@ -9,7 +9,6 @@ namespace DebugTraceNetTest {
     [TestClass]
     public class LoggerTest {
         private static ILogger beforeLogger;
-        private static string beforeLevel;
         private static FileInfo log4netFileInfo;
         private static FileInfo nLogFileInfo;
 
@@ -35,6 +34,7 @@ namespace DebugTraceNetTest {
             TraceBase.Logger = beforeLogger;
         }
 
+        // Log4netLevel
         [DataTestMethod]
         [DataRow("ALL"      )]
         [DataRow("FINEST"   )]
@@ -89,14 +89,11 @@ namespace DebugTraceNetTest {
         [DataRow("fatal"    )]
         [DataRow("emergency")]
         [DataRow("off"      )]
-
-        // Log4netLevel
         public void Log4netLevel(string level) {
             // setup:
             TraceBase.Logger = Log4net.Instance;
             TraceBase.Logger.Level = level;
 
-            // when:
             log4netFileInfo.Refresh();
             var beforeLength = 0L;
             try {
@@ -104,7 +101,8 @@ namespace DebugTraceNetTest {
             }
             catch (Exception) { }
 
-            Trace.Print("Foo");
+            // when:
+            Trace.Print($"Log4netLevel {level} log");
 
             // then:
             var lastLog = GetLastLog(log4netFileInfo, beforeLength);
@@ -122,6 +120,7 @@ namespace DebugTraceNetTest {
             }
         }
 
+        // NLogLevel
         [DataTestMethod]
         [DataRow("TRACE"    )]
         [DataRow("DEBUG"    )]
@@ -143,25 +142,72 @@ namespace DebugTraceNetTest {
         [DataRow("warn"     )]
         [DataRow("error"    )]
         [DataRow("fatal"    )]
-
-        // NLogLevel
         public void NLogLevel(string level) {
             // setup:
             TraceBase.Logger = global::DebugTrace.NLog.Instance;
             TraceBase.Logger.Level = level;
 
-            // when:
             nLogFileInfo.Refresh();
             var beforeLength = 0L;
             try {
                 beforeLength = nLogFileInfo.Length;
             }
             catch (Exception) {}
-            Trace.Print("Foo");
+
+            // when:
+            Trace.Print($"NLogLevel {level} log");
 
             // then:
             var lastLog = GetLastLog(nLogFileInfo, beforeLength);
             StringAssert.Contains(lastLog, $" {level.ToUpper()} ");
+        }
+
+        // Log4netAndNLogLevel
+        [DataTestMethod]
+        [DataRow("TRACE"    )]
+        [DataRow("DEBUG"    )]
+        [DataRow("INFO"     )]
+        [DataRow("WARN"     )]
+        [DataRow("ERROR"    )]
+        [DataRow("FATAL"    )]
+
+        [DataRow("Trace"    )]
+        [DataRow("Debug"    )]
+        [DataRow("Info"     )]
+        [DataRow("Warn"     )]
+        [DataRow("Error"    )]
+        [DataRow("Fatal"    )]
+
+        [DataRow("trace"    )]
+        [DataRow("debug"    )]
+        [DataRow("info"     )]
+        [DataRow("warn"     )]
+        [DataRow("error"    )]
+        [DataRow("fatal"    )]
+        public void Log4netAndNLogLevel(string level) {
+            // setup:
+            TraceBase.Logger = new Loggers(Log4net.Instance, global::DebugTrace.NLog.Instance);
+            TraceBase.Logger.Level = level;
+
+            log4netFileInfo.Refresh();
+            nLogFileInfo.Refresh();
+            var log4netBeforeLength = 0L;
+            var nLogBeforeLength = 0L;
+            try {
+                log4netBeforeLength = log4netFileInfo.Length;
+                nLogBeforeLength = nLogFileInfo.Length;
+            }
+            catch (Exception) {}
+
+            // when:
+            Trace.Print($"Log4netAndNLogLevel {level} log");
+
+            // then:
+            var log4netLastLog = GetLastLog(log4netFileInfo, log4netBeforeLength);
+            StringAssert.Contains(log4netLastLog, $" {level.ToUpper()} ");
+
+            var nLogLastLog = GetLastLog(nLogFileInfo, nLogBeforeLength);
+            StringAssert.Contains(nLogLastLog, $" {level.ToUpper()} ");
         }
 
     }
