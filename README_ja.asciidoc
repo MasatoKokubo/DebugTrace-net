@@ -330,15 +330,15 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
 |`Logger`
 | DebugTrace が使用するロガー +
 [.small]#*設定例:*# +
-`Logger = Console+Out` [.small .blue]#コンソール(標準出力)へ出力# + 
-`Logger = Console+Error` [.small .blue]#コンソール(標準エラー出力)へ出力# [.small .blue]#*_[デフォルト]_*# + 
-`Logger = Log4net` [.small .blue]#log4netを使用して出力# + 
-`Logger = NLog` [.small .blue]#NLogを使用して出力# +
+`Logger = Console+Out` [.small .blue]#- コンソール(標準出力)へ出力# + 
+`Logger = Console+Error` [.small .blue]#- コンソール(標準エラー出力)へ出力# [.small .blue]#*_[デフォルト]_*# + 
+`Logger = Log4net` [.small .blue]#- log4netを使用して出力# + 
+`Logger = NLog` [.small .blue]#- NLogを使用して出力# +
 [.small]#*設定例(複数):*# [.small .blue]#*_(1.5.0~)_*# +
-`Logger = Console+Out; Log4net` [.small .blue]#コンソール(標準出力)およびlog4netを使用して出力# + 
+`Logger = Console+Out; Log4net` [.small .blue]#- コンソール(標準出力)およびlog4netを使用して出力# + 
 
 |`LogLevel`
-|使用するログレベル +
+|出力する際に使用するログレベル +
 [.small]#*Log4netを使用する際の設定例:*# +
 `LogLevel = All` +
 `LogLevel = Finest` +
@@ -365,6 +365,9 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
 `LogLevel = Error` +
 `LogLevel = Fatal` +
 `LogLevel = Off` +
+[.small]#*Log4netとNLogを同時使用する際の設定例:*#  [.small .blue]#(Logger = Log4net; NLog)# +
+`LogLevel = Debug` [.small .blue]#- Log4netとNLogの両方にDebugレベルで出力# +
+`LogLevel = Finer; Trace` [.small .blue]#- Log4netではFinerレベル、NLogではTraceレベルで出力 *_(1.5.0~)_*# +
 
 |`EnterString`
 |`Enter` メソッドで出力される文字列 +

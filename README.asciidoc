@@ -330,16 +330,16 @@ You can specify following properties in the `DebugTrace.properties` file.
 |`Logger`
 |Logger DebugTrace uses +
 [.small]#*Examples:*# +
-`Logger = Console+Out` [.small .blue]#Outputs to the console (stdout)# +
-`Logger = Console+Error` [.small .blue]#Outputs to the console (stderr)# [.small .blue]#*_[Default]_*# + 
-`Logger = Log4net` [.small .blue]#Outputs using Log4net# +
-`Logger = NLog` [.small .blue]#Outputs using NLog# +
+`Logger = Console+Out` [.small .blue]#- Outputs to the console (stdout)# +
+`Logger = Console+Error` [.small .blue]#- Outputs to the console (stderr)# [.small .blue]#*_[Default]_*# + 
+`Logger = Log4net` [.small .blue]#- Outputs using Log4net# +
+`Logger = NLog` [.small .blue]#- Outputs using NLog# +
 [.small]#*Example for multiple outputs:*# [.small .blue]#*_(since 1.5.0)_*# +
-`Logger = Console+Out; Log4net` [.small .blue]#Outputs to the console (stdout) and using Log4net# + 
+`Logger = Console+Out; Log4net` [.small .blue]#- Outputs to the console (stdout) and using Log4net# + 
 
 |`LogLevel`
-|Log level to use +
-[.small]#*Examples when use Log4net:*# +
+|Log level to use when outputting +
+[.small]#*Examples when using Log4net:*# +
 `LogLevel = All` +
 `LogLevel = Finest` +
 `LogLevel = Verbose` +
@@ -357,7 +357,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 `LogLevel = Fatal` +
 `LogLevel = Emergency` +
 `LogLevel = Off` +
-[.small]#*Examples when use NLog:*# +
+[.small]#*Examples when using NLog:*# +
 `LogLevel = Trace` +
 `LogLevel = Debug` [.small .blue]#*_[Default]_*# +
 `LogLevel = Info` +
@@ -365,6 +365,9 @@ You can specify following properties in the `DebugTrace.properties` file.
 `LogLevel = Error` +
 `LogLevel = Fatal` +
 `LogLevel = Off` +
+[.small]#*Examples when using Log4net and NLog:*# [.small .blue]#(Logger = Log4net; NLog)# +
+`LogLevel = Debug` [.small .blue]#- Outputs Debug level for both Log4net and NLog# +
+`LogLevel = Finer; Trace` [.small .blue]#- Outputs Finer level for Log4net and Trace level for NLog *_(since 1.5.0)_*# +
 
 |`EnterString`
 |The string output by `enter` method +
