@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace DebugTrace {
     /// <summary>
-    /// A logger using System.out or System.err.
+    /// The base class of <c>Console.Out</c> and <c>Console.Error</c> class.
     /// </summary>
     ///
     /// <since>1.0.0</since>
@@ -25,19 +25,25 @@ namespace DebugTrace {
         /// <summary>
         /// Output the message to the log.
         /// </summary>
+        ///
+        /// <param name="message">the message</param>
         public abstract void Log(string message);
 
         /// <summary>
         /// Returns a string representation of this object.
         /// </summary>
+        ///
         /// <returns>a string representation of this object</returns>
         /// <since>1.5.0</since>
         public override string ToString() => GetType().FullName;
 
         /// <summary>
-        /// A logger using System.out.
+        /// A logger using <c>System.Console.Out</c>.
         /// </summary>
         public class Out : Console {
+            /// <summary>
+            /// The only <c>Console.Out</c> object.
+            /// </summary>
             public static Out Instance {get;} = new Out();
 
             private Out() {
@@ -46,6 +52,8 @@ namespace DebugTrace {
             /// <summary>
             /// Output the message to the log.
             /// </summary>
+            ///
+            /// <param name="message">the message</param>
             public override void Log(string message) {
                 System.Console.Out.WriteLine(string.Format(TraceBase.LogDateTimeFormat,
                     DateTime.Now, Thread.CurrentThread.ManagedThreadId, message));
@@ -53,9 +61,12 @@ namespace DebugTrace {
         }
 
         /// <summary>
-        /// A logger using System.err.
+        /// A logger using <c>System.Console.Error</c>.
         /// </summary>
         public class Error : Console {
+            /// <summary>
+            /// The only <c>Console.Error</c> object.
+            /// </summary>
             public static Error Instance {get;} = new Error();
 
             private Error() {
@@ -64,6 +75,8 @@ namespace DebugTrace {
             /// <summary>
             /// Output the message to the log.
             /// </summary>
+            ///
+            /// <param name="message">the message</param>
             public override void Log(string message) {
                 System.Console.Error.WriteLine(string.Format(TraceBase.LogDateTimeFormat,
                     DateTime.Now, Thread.CurrentThread.ManagedThreadId, message));

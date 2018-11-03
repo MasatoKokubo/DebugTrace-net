@@ -40,6 +40,9 @@ namespace DebugTrace {
         private string levelStr = defaultLevelStr;
         private Level level = levelDictinary[defaultLevelStr];
 
+        /// <summary>
+        /// The only instance of this class
+        /// </summary>
         public static Log4net Instance {get;} = new Log4net();
 
         private Log4net() {

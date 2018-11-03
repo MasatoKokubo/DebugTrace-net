@@ -17,9 +17,19 @@ namespace DebugTrace {
     /// <author>Masato Kokubo</author>
     public class Resource {
         private static DirectoryInfo currentDirInfo = new DirectoryInfo(".");
+
+        /// <summary>
+        /// The <c>FileInfo</c> of the resource properties file
+        /// </summary>
         public FileInfo FileInfo {get; private set;}
+
         private IDictionary<string, string> values = new Dictionary<string, string>();
 
+        /// <summary>
+        /// Construct a <c>Resource</c>.
+        /// </summary>
+        ///
+        /// <param name="baseName">the base name of the resource properties file</param>
         public Resource(String baseName) {
             FileInfo = new FileInfo(Path.Combine(currentDirInfo.FullName, baseName + ".properties"));
             if (!FileInfo.Exists)

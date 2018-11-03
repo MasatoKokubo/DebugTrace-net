@@ -23,7 +23,7 @@ namespace DebugTrace {
         /// Output the message to the log.
         /// </summary>
         ///
-        /// <param name="message">a log message</param>
+        /// <param name="message">the message</param>
         void Log(string message);
     }
 }

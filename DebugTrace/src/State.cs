@@ -12,20 +12,43 @@ namespace DebugTrace {
     /// <since>1.0.0</since>
     /// <author>Masato Kokubo</author>
     public class State {
-        public int ThreadId          {get; set;} // The thread id
-        public int NestLevel         {get; set;} // The nest level
-        public int PreviousNestLevel {get; private set;} // The previous nest level
-        public int PreviousLineCount {get; set;} // The previous line count
+        /// <summary>
+        /// The thread id
+        /// </summary>
+        public int ThreadId {get; set;}
 
-        private Stack<DateTime> DateTimes = new Stack<DateTime>(); // Datetime Stack - since 1.4.3
+        /// <summary>
+        /// The nest level
+        /// </summary>
+        public int NestLevel {get; set;}
 
+        /// <summary>
+        /// The previous nest level
+        /// </summary>
+        public int PreviousNestLevel {get; private set;}
+
+        /// <summary>
+        /// The previous line count
+        /// </summary>
+        public int PreviousLineCount {get; set;}
+
+        // Datetime Stack - since 1.4.3
+        private Stack<DateTime> DateTimes = new Stack<DateTime>();
+
+        /// <summary>
+        /// Resets
+        /// </summary>
         public void Reset() {
-            NestLevel       = 0;
+            NestLevel = 0;
             PreviousNestLevel = 0;
             PreviousLineCount = 0;
             DateTimes.Clear();
         }
 
+        /// <summary>
+        /// Returns a string representation of this object.
+        /// </summary>
+        /// <returns>a string representation of this object</returns>
         public override string ToString() {
             return "(State)["
                 + "ThreadId: " + ThreadId
@@ -37,7 +60,7 @@ namespace DebugTrace {
         }
 
         /// <summary>
-        /// Up the nest level.
+        /// Ups the nest level.
         /// </summary>
         public void UpNest() {
             PreviousNestLevel = NestLevel;
@@ -47,7 +70,7 @@ namespace DebugTrace {
         }
 
         /// <summary>
-        /// Down the nest level.
+        /// Downs the nest level.
         /// </summary>
         /// <returns>The DateTime when the corresponding UpNest method was invoked</returns>
         public DateTime DownNest() {

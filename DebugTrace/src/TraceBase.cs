@@ -12,85 +12,194 @@ using System.Threading;
 
 namespace DebugTrace {
     /// <summary>
-    /// A utility class for debugging.
+    /// The base class of classes that implements <c>ITrace</c> interface.
     /// </summary>
-    ///
-    /// <remarks>
-    /// Call DebugTrace.enter and DebugTrace.leave methods when enter and leave your methods,
-    /// then outputs execution trace of the program.
-    /// </remarks>
     ///
     /// <since>1.0.0</since>
     /// <author>Masato Kokubo</author>
     public abstract class TraceBase : ITrace {
+        /// <summary>
+        /// Resources including DebugTrace operation option
+        /// </summary>
         public static Resource Resource {get; private set;}
 
-        public static string   EnterString               {get; set;} // Enter string
-        public static string   LeaveString               {get; set;} // Leave string
-        public static string   ThreadBoundaryString      {get; set;} // Threads boundary string
-        public static string   ClassBoundaryString       {get; set;} // Classes boundary string
-        public static string   CodeIndentString          {get; set;} // Method call indent string
-        public static string   DataIndentString          {get; set;} // Data indent string
-        public static string   LimitString               {get; set;} // String to represent that it has exceeded the limit
-        public static string   DefaultNameSpaceString    {get; set;} // String replacing the default package part
-        public static string   NonPrintString            {get; set;} // String of value in the case of properties that do not display the value
-        public static string   CyclicReferenceString     {get; set;} // String to represent that the cyclic reference occurs
-        public static string   VarNameValueSeparator     {get; set;} // Separator between the variable name and value
-        public static string   KeyValueSeparator         {get; set;} // Separator between the key and value for IDictionary object or property/field and value
-        public static string   PrintSuffixFormat         {get; set;} // Format string of Print suffix
-        public static string   DateTimeFormat            {get; set;} // DateTime format string
-        public static string   LogDateTimeFormat         {get; set;} // DateTime format string when the log was output / since 1.3.0
-        public static int      MaxDataOutputWidth        {get; set;} // Maximum data output width
-        public static int      CollectionLimit           {get; set;} // Limit of ICollection elements to output
-        public static int      StringLimit               {get; set;} // Limit of string characters to output
-        public static int      ReflectionNestLimit       {get; set;} // Limit of reflection nesting
-        public static List<string> NonPrintProperties    {get; set;} // Non Print properties (<class name>#<property name>)
-        public static string   DefaultNameSpace          {get; set;} // Default package part
-        public static ISet<string> ReflectionClasses     {get; set;} // Class names that output content in reflection even if ToString method is implemented
-        public static bool     OutputNonPublicFields     {get; set;} // Output non-public fields / since 1.4.4
-        public static bool     OutputNonPublicProperties {get; set;} // Output non-public properties / since 1.4.4
+        /// <summary>
+        /// The string output by <c>Enter</c> method
+        /// </summary>
+        public static string EnterString {get; set;}
 
-        // Array of indent strings
+        /// <summary>
+        /// The string output by <c>Leave</c> method
+        /// </summary>
+        public static string LeaveString {get; set;}
+
+        /// <summary>
+        /// The string output in the threads boundary
+        /// </summary>
+        public static string ThreadBoundaryString {get; set;}
+
+        /// <summary>
+        /// The string output in the classes boundary
+        /// </summary>
+        public static string ClassBoundaryString {get; set;}
+
+        /// <summary>
+        /// The string of one code indent
+        /// </summary>
+        public static string CodeIndentString {get; set;}
+
+        /// <summary>
+        /// The string of one data indent
+        /// </summary>
+        public static string DataIndentString {get; set;}
+
+        /// <summary>
+        /// The string to represent that it has exceeded the limit
+        /// </summary>
+        public static string LimitString {get; set;}
+
+        /// <summary>
+        /// The string replacing the default namespace part
+        /// </summary>
+        public static string DefaultNameSpaceString {get; set;}
+
+        /// <summary>
+        /// The string of value in the case of properties that do not output the value
+        /// </summary>
+        public static string NonPrintString {get; set;}
+
+        /// <summary>
+        /// The string to represent that the cyclic reference occurs
+        /// </summary>
+        public static string CyclicReferenceString {get; set;}
+
+        /// <summary>
+        /// The separator string between the variable name and value
+        /// </summary>
+        public static string VarNameValueSeparator {get; set;}
+
+        /// <summary>
+        /// The separator string between the key and value of dictionary
+        /// </summary>
+        public static string KeyValueSeparator {get; set;}
+
+        /// <summary>
+        /// Output format of <c>Print</c> method suffix
+        /// </summary>
+        public static string PrintSuffixFormat {get; set;}
+
+        /// <summary>
+        /// Output format of <c>DateTime</c>
+        /// </summary>
+        public static string DateTimeFormat {get; set;}
+
+        /// <summary>
+        /// Output format of date and time when outputting logs
+        /// </summary>
+        public static string LogDateTimeFormat {get; set;}
+
+        /// <summary>
+        /// Maximum output width of data
+        /// </summary>
+        public static int MaxDataOutputWidth {get; set;}
+
+        /// <summary>
+        /// Limit value of <c>ICollection</c> elements to output
+        /// </summary>
+        public static int CollectionLimit {get; set;}
+
+        /// <summary>
+        /// Limit value of <c>string</c> characters to output
+        /// </summary>
+        public static int StringLimit {get; set;}
+
+        /// <summary>
+        /// Limit value of reflection nest
+        /// </summary>
+        public static int ReflectionNestLimit {get; set;}
+
+        /// <summary>
+        /// Properties and fields not to be output value
+        /// </summary>
+        public static List<string> NonPrintProperties {get; set;}
+
+        /// <summary>
+        /// Default namespace of your C# source
+        /// </summary>
+        public static string DefaultNameSpace {get; set;}
+
+        /// <summary>
+        /// Classe names that output content by reflection even if <c>ToString</c> method is implemented
+        /// </summary>
+        public static ISet<string> ReflectionClasses {get; set;}
+
+        /// <summary>
+        /// If <c>true</c>, outputs the contents by reflection even for fields which are not <c>public</c>
+        /// </summary>
+        public static bool OutputNonPublicFields {get; set;}
+
+        /// <summary>
+        /// If <c>true</c>, outputs the contents by reflection even for properties which are not <c>public</c>
+        /// </summary>
+        public static bool OutputNonPublicProperties {get; set;}
+
+        /// <summary>
+        /// Array of indent strings
+        /// </summary>
         protected static string[] indentStrings;
 
-        // Array of data indent strings
+        /// <summary>
+        /// Array of data indent strings
+        /// </summary>
         protected static string[] dataIndentStrings;
 
         /// <summary>
-        /// Returns the logger.
+        /// The logger
         /// </summary>
         public static ILogger Logger {get; set;} = Console.Error.Instance; // the logger
 
         /// <summary>
-        /// Returns whether tracing is IsEnabled.
+        /// Whether tracing is IsEnabled
         /// </summary>
         public bool IsEnabled {get => Logger.IsEnabled;}
 
-        // Set of classes that dose not output the type name
+        /// <summary>
+        /// Set of classes that dose not output the type name
+        /// </summary>
         protected abstract ISet<Type> NoOutputTypes {get;}
 
-        // Set of element types of array that dose not output the type name
+        /// <summary>
+        /// Set of element types of array that dose not output the type name
+        /// </summary>
         protected abstract ISet<Type> NoOutputElementTypes {get;}
 
-        // Dictionary of type to type name
+        /// <summary>
+        /// Dictionary of type to type name
+        /// </summary>
         protected abstract IDictionary<Type, string> TypeNameMap {get;}
 
-        // Dictionary of thread id to indent state
+        /// <summary>
+        /// Dictionary of thread id to indent state
+        /// </summary>
         protected readonly IDictionary<int, State> states = new Dictionary<int, State>();
 
-        // Previous thread id
+        /// <summary>
+        /// Previous thread id
+        /// </summary>
         protected int beforeThreadId;
 
-        // Reflected objects
+        /// <summary>
+        /// Reflected objects
+        /// </summary>
         protected readonly IList<object> reflectedObjects = new List<object>();
 
         /// <summary>
-        /// Returns the last log string output.
+        /// The last log string output
         /// </summary>
         public string LastLog {get; private set;} = "";
 
         /// <summary>
-        /// class constructor
+        /// Class constructor
         /// </summary>
         static TraceBase() {
             InitClass();
@@ -212,8 +321,8 @@ namespace DebugTrace {
         /// Returns the indent state of the current thread.
         /// </summary>
         ///
-        /// <returns>the indent state of the current thread</returns>
         /// <param name="threadId">the thread id</param>
+        /// <returns>the indent state of the current thread</returns>
         private protected State GetCurrentState(int threadId = -1) {
             State state;
             if (threadId == -1)
@@ -231,8 +340,12 @@ namespace DebugTrace {
         }
 
         /// <summary>
-        /// Returns a string corresponding to the current indent.
+        /// Returns a string corresponding to the code and data nest level.
         /// </summary>
+        ///
+        /// <param name="nestLevel">the code nest level</param>
+        /// <param name="dataNestLevel">the data nest level</param>
+        /// <returns>a string corresponding to the current indent</returns>
         protected string GetIndentString(int nestLevel, int dataNestLevel) {
             return indentStrings[
                 nestLevel < 0 ? 0 :
@@ -247,6 +360,7 @@ namespace DebugTrace {
         /// <summary>
         /// Common start processing of output.
         /// </summary>
+        ///
         /// <param name="state">the state</param>
         protected void PrintStart(State state) {
             if (state.ThreadId !=  beforeThreadId) {
@@ -271,9 +385,10 @@ namespace DebugTrace {
         }
 
         /// <summary>
-        /// Call this method at entrance of your methods.
+        /// Outputs a log when enters the method.
         /// </summary>
-        /// <returns>current thread id</returns>
+        ///
+        /// <returns>the current thread id</returns>
         public int Enter() {
             if (!IsEnabled) return -1;
 
@@ -297,8 +412,9 @@ namespace DebugTrace {
         }
 
         /// <summary>
-        /// Call this method at exit of your methods.
+        /// Outputs a log when leaves the method.
         /// </summary>
+        ///
         /// <param name="threadId">the thread id</param>
         public void Leave(int threadId = -1) {
             if (!IsEnabled) return;
@@ -320,8 +436,13 @@ namespace DebugTrace {
         }
 
         /// <summary>
-        /// Returns a string of the caller information.
+        /// Returns the caller's class name, method name, file name and line number
+        /// of the caller method and the time span string embedded in <c>baseString</c>.
         /// </summary>
+        ///
+        /// <param name="baseString">the string for formatting</param>
+        /// <param name="timeSpan">the time span</param>
+        /// <returns>a string embedded caller information</returns>
         protected string GetCallerInfo(string baseString, TimeSpan? timeSpan = null) {
             var element = GetStackTraceElement();
 
@@ -337,17 +458,17 @@ namespace DebugTrace {
         /// Outputs the message to the log.
         /// </summary>
         ///
-        /// <param name="message">a message</param>
+        /// <param name="message">the message</param>
         public void Print(string message) {
             if (!IsEnabled) return;
             PrintSub(message);
         }
 
         /// <summary>
-        /// Outputs a message to the log.
+        /// Outputs the message to the log.
         /// </summary>
         ///
-        /// <param name="messageSupplier">a message supplier</param>
+        /// <param name="messageSupplier">the message supplier</param>
         public void Print(Func<string> messageSupplier) {
             if (!IsEnabled) return;
             PrintSub(messageSupplier());
@@ -356,6 +477,8 @@ namespace DebugTrace {
         /// <summary>
         /// Outputs the message to the log.
         /// </summary>
+        ///
+        /// <param name="message">the message</param>
         protected void PrintSub(string message) {
             lock (states) {
                 var state = GetCurrentState();
@@ -427,10 +550,10 @@ namespace DebugTrace {
         private static string thisClassFullName = typeof(TraceBase).FullName + '.';
 
         /// <summary>
-        /// Returns a caller stack trace element.
+        /// Returns the caller stack trace element.
         /// </summary>
         ///
-        /// <returns>a caller stack trace element</returns>
+        /// <returns>the caller stack trace element</returns>
         protected StackTraceElement GetStackTraceElement() {
             var elements = Environment.StackTrace.Split('\n')
                 .Select(str => str.Trim())
@@ -457,6 +580,14 @@ namespace DebugTrace {
             return result;
         }
 
+        /// <summary>
+        /// Returns a tuple of two strings obtained by splitting the string by the separator.
+        /// Searches the string from the top.
+        /// </summary>
+        ///
+        /// <param name="str">the string</param>
+        /// <param name="separator">the separator</param>
+        /// <returns>a tuple of strings</returns>
         protected static (string, string) Split(string str, char separator) {
             var index = str.IndexOf(separator);
             return index < 0
@@ -464,6 +595,14 @@ namespace DebugTrace {
                 : (str.Substring(0, index), str.Substring(index + 1));
         }
 
+        /// <summary>
+        /// Returns a tuple of two strings obtained by splitting the string by the separator.
+        /// Searches the string from the end.
+        /// </summary>
+        ///
+        /// <param name="str">the string</param>
+        /// <param name="separator">the separator</param>
+        /// <returns>a tuple of strings</returns>
         protected static (string, string) LastSplit(string str, char separator) {
             var index = str.LastIndexOf(separator);
             return index < 0
@@ -499,8 +638,8 @@ namespace DebugTrace {
         ///
         /// <param name="buff">the logging buffer</param>
         /// <param name="value">the value object</param>
-        /// <param name="isElement">true if the value is element of a container class, false otherwise</param>
-        /// <returns>isMultiLine">true if output multiple lines, false otherwise</returns>
+        /// <param name="isElement"><c>true</c> if the value is element of a container class, <c>false</c> otherwise</param>
+        /// <returns>isMultiLine"><c>true</c> if output multiple lines, <c>false</c> otherwise</returns>
         protected bool Append(LogBuffer buff, object value, bool isElement) {
             if (value == null) {
                 buff.Append("null");
@@ -568,13 +707,13 @@ namespace DebugTrace {
         }
 
         /// <summary>
-        /// Returns the type name to be output to the log.<br>
+        /// Returns the type name to be output to the log.
         /// If dose not output, returns null.
         /// </summary>
         ///
         /// <param name="type">the type of the value</param>
         /// <param name="value">the value object</param>
-        /// <param name="isElement">true if the value is element of a container class, false otherwise</param>
+        /// <param name="isElement"><c>true</c> if the value is element of a container class, <c>false</c> otherwise</param>
         /// <param name="nest">current nest count</param>
         /// <returns>the type name to be output to the log</returns>
         protected string GetTypeName(Type type, object value, bool isElement, int nest = 0) {
@@ -605,7 +744,7 @@ namespace DebugTrace {
                             try {
                                 count = (int)type.GetProperty("Count").GetValue(value);
                             }
-                            catch (Exception e) {}
+                            catch (Exception) {}
                             if (count >= 0)
                                 typeName += " Count:" + count;
                         }
@@ -618,6 +757,16 @@ namespace DebugTrace {
             return typeName;
         }
 
+        /// <summary>
+        /// Returns the type name of the array to be output to the log.
+        /// If dose not output, returns <c>null</c>.
+        /// </summary>
+        ///
+        /// <param name="type">the type of the value</param>
+        /// <param name="value">the value object</param>
+        /// <param name="isElement"><c>true</c> if the value is element of a container class, <c>false</c> otherwise</param>
+        /// <param name="nest">current nest count</param>
+        /// <returns>the type name to be output to the log</returns>
         protected abstract string GetArrayTypeName(Type type, object value, bool isElement, int nest);
 
         // GetTypeName
@@ -674,19 +823,130 @@ namespace DebugTrace {
             return typeName;
         }
 
-        protected abstract void Append(LogBuffer buff, bool     value);
-        protected abstract void Append(LogBuffer buff, char     value);
-        protected abstract void Append(LogBuffer buff, sbyte    value);
-        protected abstract void Append(LogBuffer buff, byte     value);
-        protected abstract void Append(LogBuffer buff, short    value);
-        protected abstract void Append(LogBuffer buff, ushort   value);
-        protected abstract void Append(LogBuffer buff, int      value);
-        protected abstract void Append(LogBuffer buff, uint     value);
-        protected abstract void Append(LogBuffer buff, long     value);
-        protected abstract void Append(LogBuffer buff, ulong    value);
-        protected abstract void Append(LogBuffer buff, float    value);
-        protected abstract void Append(LogBuffer buff, double   value);
-        protected abstract void Append(LogBuffer buff, decimal  value);
+        /// <summary>
+        /// Appends a string representation of the value to the log buffer.
+        /// </summary>
+        ///
+        /// <param name="buff">the log buffer</param>
+        /// <param name="value">the value</param>
+        /// <returns></returns>
+        protected abstract void Append(LogBuffer buff, bool value);
+
+        /// <summary>
+        /// Appends a string representation of the value to the log buffer.
+        /// </summary>
+        ///
+        /// <param name="buff">the log buffer</param>
+        /// <param name="value">the value</param>
+        /// <returns></returns>
+        protected abstract void Append(LogBuffer buff, char value);
+
+        /// <summary>
+        /// Appends a string representation of the value to the log buffer.
+        /// </summary>
+        ///
+        /// <param name="buff">the log buffer</param>
+        /// <param name="value">the value</param>
+        /// <returns></returns>
+        protected abstract void Append(LogBuffer buff, sbyte value);
+
+        /// <summary>
+        /// Appends a string representation of the value to the log buffer.
+        /// </summary>
+        ///
+        /// <param name="buff">the log buffer</param>
+        /// <param name="value">the value</param>
+        /// <returns></returns>
+        protected abstract void Append(LogBuffer buff, byte value);
+
+        /// <summary>
+        /// Appends a string representation of the value to the log buffer.
+        /// </summary>
+        ///
+        /// <param name="buff">the log buffer</param>
+        /// <param name="value">the value</param>
+        /// <returns></returns>
+        protected abstract void Append(LogBuffer buff, short value);
+
+        /// <summary>
+        /// Appends a string representation of the value to the log buffer.
+        /// </summary>
+        ///
+        /// <param name="buff">the log buffer</param>
+        /// <param name="value">the value</param>
+        /// <returns></returns>
+        protected abstract void Append(LogBuffer buff, ushort value);
+
+        /// <summary>
+        /// Appends a string representation of the value to the log buffer.
+        /// </summary>
+        ///
+        /// <param name="buff">the log buffer</param>
+        /// <param name="value">the value</param>
+        /// <returns></returns>
+        protected abstract void Append(LogBuffer buff, int value);
+
+        /// <summary>
+        /// Appends a string representation of the value to the log buffer.
+        /// </summary>
+        ///
+        /// <param name="buff">the log buffer</param>
+        /// <param name="value">the value</param>
+        /// <returns></returns>
+        protected abstract void Append(LogBuffer buff, uint value);
+
+        /// <summary>
+        /// Appends a string representation of the value to the log buffer.
+        /// </summary>
+        ///
+        /// <param name="buff">the log buffer</param>
+        /// <param name="value">the value</param>
+        /// <returns></returns>
+        protected abstract void Append(LogBuffer buff, long value);
+
+        /// <summary>
+        /// Appends a string representation of the value to the log buffer.
+        /// </summary>
+        ///
+        /// <param name="buff">the log buffer</param>
+        /// <param name="value">the value</param>
+        /// <returns></returns>
+        protected abstract void Append(LogBuffer buff, ulong value);
+
+        /// <summary>
+        /// Appends a string representation of the value to the log buffer.
+        /// </summary>
+        ///
+        /// <param name="buff">the log buffer</param>
+        /// <param name="value">the value</param>
+        /// <returns></returns>
+        protected abstract void Append(LogBuffer buff, float value);
+
+        /// <summary>
+        /// Appends a string representation of the value to the log buffer.
+        /// </summary>
+        ///
+        /// <param name="buff">the log buffer</param>
+        /// <param name="value">the value</param>
+        /// <returns></returns>
+        protected abstract void Append(LogBuffer buff, double value);
+
+        /// <summary>
+        /// Appends a string representation of the value to the log buffer.
+        /// </summary>
+        ///
+        /// <param name="buff">the log buffer</param>
+        /// <param name="value">the value</param>
+        /// <returns></returns>
+        protected abstract void Append(LogBuffer buff, decimal value);
+
+        /// <summary>
+        /// Appends a string representation of the value to the log buffer.
+        /// </summary>
+        ///
+        /// <param name="buff">the log buffer</param>
+        /// <param name="value">the value</param>
+        /// <returns></returns>
         protected abstract void Append(LogBuffer buff, DateTime value);
 
         /// <summary>
@@ -697,7 +957,7 @@ namespace DebugTrace {
         /// <param name="ch">a character</param>
         /// <param name="enclosure">the enclosure character</param>
         /// <param name="escape">escape characters if true, dose not escape characters otherwise</param>
-        /// <returns>true if successful, false otherwise<returns>
+        /// <returns><c>true</c> if successful, <c>false</c> otherwise</returns>
         protected bool AppendChar(LogBuffer buff, char ch, char enclosure, bool escape) {
             if (escape) {
                 // escape
@@ -768,7 +1028,6 @@ namespace DebugTrace {
         /// Appends a IDictionary representation for logging to the string buffer.
         /// </summary>
         ///
-        /// <param name="strings">the string list</param>
         /// <param name="buff">the string buffer</param>
         /// <param name="dictionary">a IDictionary</param>
         /// <param name="isMultiLine">output multiple lines if true, single line otherwise</param>
@@ -936,7 +1195,7 @@ namespace DebugTrace {
         /// </summary>
         ///
         /// <param name="type">the type</param>
-        /// <returns>true if the type or it base types without object and ValueType class has ToString method; false otherwise</returns>
+        /// <returns><c>true</c> if the type or it base types without object and ValueType class has ToString method, <c>false</c> otherwise</returns>
         protected bool HasToString(Type type) {
             var result = false;
 
@@ -1133,6 +1392,13 @@ namespace DebugTrace {
             return Append(buff, value, false);
         }
 
+        /// <summary>
+        /// Appends the access modifire of the member information to the log buffer.
+        /// </summary>
+        ///
+        /// <param name="buff">the log buffer</param>
+        /// <param name="memberInfo">the member information</param>
+        /// <returns></returns>
         /// <since>1.5.0</since>
         protected abstract void AppendAccessModifire(LogBuffer buff, MemberInfo memberInfo);
 
@@ -1142,10 +1408,10 @@ namespace DebugTrace {
         }
 
         /// <summary>
-        /// Throws an NullReferenceException if the object is null.
+        /// Throws an <c>NullReferenceException</c> if the object is <c>null</c>.
         /// </summary>
         ///
-        /// <typeparam name="T">the object type</param>
+        /// <typeparam name="T">the object type</typeparam>
         /// <param name="obj">the object</param>
         /// <param name="message">the message of the NullReferenceException</param>
         /// <returns>the object</returns>

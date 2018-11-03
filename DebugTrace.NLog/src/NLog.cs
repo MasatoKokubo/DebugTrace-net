@@ -28,6 +28,9 @@ namespace DebugTrace {
         private string levelStr = defaultLevelStr;
         private global::NLog.LogLevel level = levelDictinary[defaultLevelStr];
 
+        /// <summary>
+        /// The only instance of this class
+        /// </summary>
         public static NLog Instance {get;} = new NLog();
 
         private NLog() {
@@ -57,6 +60,8 @@ namespace DebugTrace {
         /// <summary>
         /// Output the message to the log.
         /// </summary>
+        ///
+        /// <param name="message">the message</param>
         public void Log(string message) {
             logger.Log(level, message);
         }
@@ -64,6 +69,7 @@ namespace DebugTrace {
         /// <summary>
         /// Returns a string representation of this object.
         /// </summary>
+        ///
         /// <returns>a string representation of this object</returns>
         /// <since>1.5.0</since>
         public override string ToString() => GetType().FullName;
