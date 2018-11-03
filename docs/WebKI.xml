@@ -1,0 +1,400 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<HelpKI>
+  <HelpKINode Title="Append method">
+    <HelpKINode Title="CSharp.Append Method " Url="html/e50939f4-932e-e362-9942-690f985da018.htm" />
+    <HelpKINode Title="LogBuffer.Append Method " Url="html/666d1838-05f7-ca01-bc97-899e4dbcc38e.htm" />
+    <HelpKINode Title="TraceBase.Append Method " Url="html/ea30d2bb-fc6b-8263-a9ab-dbfb8efdbb0b.htm" />
+    <HelpKINode Title="VisualBasic.Append Method " Url="html/186233e9-f993-5727-6aaf-21a05b999af1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="AppendAccessModifire method">
+    <HelpKINode Title="CSharp.AppendAccessModifire Method " Url="html/609a8bfc-e917-0ce5-4a91-aea21d980d02.htm" />
+    <HelpKINode Title="TraceBase.AppendAccessModifire Method " Url="html/2099f920-19e7-b604-1fe5-86225b8d9803.htm" />
+    <HelpKINode Title="VisualBasic.AppendAccessModifire Method " Url="html/ac96dead-cb39-1202-e3f8-567d8b7509f7.htm" />
+  </HelpKINode>
+  <HelpKINode Title="AppendChar method" Url="html/103b0766-fbaa-8fba-1bbd-5047e9ece9ea.htm" />
+  <HelpKINode Title="AppendDictionary method" Url="html/1cba7065-8bae-2e98-46af-9321f7bdf178.htm" />
+  <HelpKINode Title="AppendEnumerable method" Url="html/258e3ea1-ce4d-0451-d6bb-e59d16420181.htm" />
+  <HelpKINode Title="AppendString method" Url="html/6369804c-4b19-9a13-1287-f703990b2572.htm" />
+  <HelpKINode Title="AppendUsingReflection method" Url="html/a35e1cac-56a2-c8da-39fd-82ce842cda06.htm" />
+  <HelpKINode Title="AppendUsingReflectionSub method" Url="html/0379bf5a-af31-0192-8cc5-9742df083b32.htm" />
+  <HelpKINode Title="beforeThreadId field" Url="html/e9e48afa-67e1-2898-0e85-1b1a1c7e65f9.htm" />
+  <HelpKINode Title="builder field" Url="html/6c602ffe-7e60-6df4-909b-1d1e51df0d4f.htm" />
+  <HelpKINode Title="ClassBoundaryString property" Url="html/cd2b13b2-4e71-90b5-d424-640802e6f3d9.htm" />
+  <HelpKINode Title="CodeIndentString property" Url="html/ce354283-e789-6528-a309-bf7784706b43.htm" />
+  <HelpKINode Title="CollectionLimit property" Url="html/c627102f-c7ed-2c46-1184-27a850e759f3.htm" />
+  <HelpKINode Title="Console class">
+    <HelpKINode Title="Console Class" Url="html/f21972c8-1b41-062c-1973-5461bdee0fec.htm" />
+    <HelpKINode Title="constructor" Url="html/a6bf4044-24a6-d421-0bd0-e7c2c09b7ccd.htm" />
+    <HelpKINode Title="methods" Url="html/3f06dbf5-e61f-bd3f-3341-110800bc7f6b.htm" />
+    <HelpKINode Title="properties" Url="html/947928b4-6811-cd16-c2e4-289b0797beac.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Console.Console constructor" Url="html/a6bf4044-24a6-d421-0bd0-e7c2c09b7ccd.htm" />
+  <HelpKINode Title="Console.Error class" Url="html/2d5a2c00-c6a5-50cb-deed-25b826beee2c.htm" />
+  <HelpKINode Title="Console.Error.Instance property" Url="html/0d134c18-1222-91b9-0af6-cca55abdeac7.htm" />
+  <HelpKINode Title="Console.Error.Log method" Url="html/978314da-5f32-2493-fc90-56682593f9a7.htm" />
+  <HelpKINode Title="Console.IsEnabled property" Url="html/b519d1ef-563e-1f93-271f-e444e791e1a8.htm" />
+  <HelpKINode Title="Console.Level property" Url="html/4ef4d361-1f4c-d458-64dc-b28914db9942.htm" />
+  <HelpKINode Title="Console.Log method" Url="html/8c69d47c-c9cb-2f3a-6c3b-8dc1d02d8a88.htm" />
+  <HelpKINode Title="Console.Out class" Url="html/c1287088-3e51-9e84-7f63-740a570baa21.htm" />
+  <HelpKINode Title="Console.Out.Instance property" Url="html/3e4321eb-63b0-3da5-d8ad-b1e0049f0d6b.htm" />
+  <HelpKINode Title="Console.Out.Log method" Url="html/bf12c90e-75e4-17c0-fcd1-92dd3461a4f7.htm" />
+  <HelpKINode Title="Console.ToString method" Url="html/ed57c58e-5fbf-7231-6bed-d93dfd9ccb2a.htm" />
+  <HelpKINode Title="CSharp class">
+    <HelpKINode Title="CSharp Class" Url="html/1cb0f7ad-38f8-4245-4f7f-62cad4941ad2.htm" />
+    <HelpKINode Title="fields" Url="html/851bc965-a98f-8187-bea7-4908e6c838bc.htm" />
+    <HelpKINode Title="methods" Url="html/3d62c460-6635-a83a-b5b6-be9bd4f23418.htm" />
+    <HelpKINode Title="properties" Url="html/926510a7-400b-76b5-844b-998aa5dd6983.htm" />
+  </HelpKINode>
+  <HelpKINode Title="CSharp.Append method" Url="html/e50939f4-932e-e362-9942-690f985da018.htm" />
+  <HelpKINode Title="CSharp.AppendAccessModifire method" Url="html/609a8bfc-e917-0ce5-4a91-aea21d980d02.htm" />
+  <HelpKINode Title="CSharp.GetArrayTypeName method" Url="html/8b929200-c2b5-bf8f-53ca-fdda50885796.htm" />
+  <HelpKINode Title="CSharp.NoOutputElementTypes property" Url="html/b0a5f4c0-796a-8909-f817-49309a27adc0.htm" />
+  <HelpKINode Title="CSharp.NoOutputTypes property" Url="html/a3be4985-d08e-1bd9-18de-f90a9ae4cca2.htm" />
+  <HelpKINode Title="CSharp.Trace property" Url="html/f7dc30b8-a735-535b-a0f7-b63efb5229f3.htm" />
+  <HelpKINode Title="CSharp.TypeNameMap property" Url="html/bc86f10b-ed68-f436-bfc1-2befbd9d92a5.htm" />
+  <HelpKINode Title="CyclicReferenceString property" Url="html/34627687-d54e-813a-bfb4-d010d9d22ccf.htm" />
+  <HelpKINode Title="DataIndentString property" Url="html/2cc61d51-78a7-ade8-512f-71cff6894611.htm" />
+  <HelpKINode Title="dataIndentStrings field" Url="html/c5d8b46b-62f5-d554-2129-97361de787b4.htm" />
+  <HelpKINode Title="DateTimeFormat property" Url="html/12ec8872-7a7f-836b-2304-dcb291fbb678.htm" />
+  <HelpKINode Title="DebugTrace namespace" Url="html/e545f18a-acb5-07a5-8cb5-10d2daba905c.htm" />
+  <HelpKINode Title="DebugTrace.Console class" Url="html/f21972c8-1b41-062c-1973-5461bdee0fec.htm" />
+  <HelpKINode Title="DebugTrace.Console.Error class" Url="html/2d5a2c00-c6a5-50cb-deed-25b826beee2c.htm" />
+  <HelpKINode Title="DebugTrace.Console.Out class" Url="html/c1287088-3e51-9e84-7f63-740a570baa21.htm" />
+  <HelpKINode Title="DebugTrace.CSharp class" Url="html/1cb0f7ad-38f8-4245-4f7f-62cad4941ad2.htm" />
+  <HelpKINode Title="DebugTrace.ILogger interface" Url="html/43e1527e-f668-edc1-5637-54190eacd461.htm" />
+  <HelpKINode Title="DebugTrace.ITrace interface" Url="html/c1221ad1-84c1-3621-aa4f-189752d98457.htm" />
+  <HelpKINode Title="DebugTrace.LogBuffer class" Url="html/27921a44-a2e7-5034-b260-e41f6d1e844b.htm" />
+  <HelpKINode Title="DebugTrace.Loggers class" Url="html/d18e49b6-95ae-713c-d9d1-fd7b55f20f25.htm" />
+  <HelpKINode Title="DebugTrace.Resource class" Url="html/6fa748fb-7267-9e17-3a8c-a532af027a06.htm" />
+  <HelpKINode Title="DebugTrace.StackTraceElement structure" Url="html/357080dc-fbc2-2188-0134-c2eb55118f6f.htm" />
+  <HelpKINode Title="DebugTrace.State class" Url="html/e97999fd-e683-1ed4-d8ef-6032c62003e9.htm" />
+  <HelpKINode Title="DebugTrace.TraceBase class" Url="html/675fe68b-0597-5e8c-c5b8-a4b631820bf5.htm" />
+  <HelpKINode Title="DebugTrace.VisualBasic class" Url="html/db7bee01-7470-7dd8-d0e5-9e693edfb989.htm" />
+  <HelpKINode Title="DefaultNameSpace property" Url="html/a5b38a21-de36-350a-4543-b99934a415bb.htm" />
+  <HelpKINode Title="DefaultNameSpaceString property" Url="html/ce76939d-afd9-c4f2-5b8d-ce04ff30b1c6.htm" />
+  <HelpKINode Title="DownNest method">
+    <HelpKINode Title="LogBuffer.DownNest Method " Url="html/dd433fec-a76f-611f-1be2-84ccedf0e06d.htm" />
+    <HelpKINode Title="State.DownNest Method " Url="html/049f7f6d-9119-b3e0-3e5c-fafc2d8bb26c.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Enter method">
+    <HelpKINode Title="ITrace.Enter Method " Url="html/55742e17-3111-3cbb-ef5e-2786297511be.htm" />
+    <HelpKINode Title="TraceBase.Enter Method " Url="html/b63b4812-3e9f-5f1d-9546-3cd3b4a6cd09.htm" />
+  </HelpKINode>
+  <HelpKINode Title="EnterString property" Url="html/b6ed1e87-0515-5916-dd7f-d744598fc9f4.htm" />
+  <HelpKINode Title="Error class">
+    <HelpKINode Title="methods" Url="html/acb8e6e9-039c-f38c-bd6a-173c019a26a3.htm" />
+    <HelpKINode Title="properties" Url="html/7797b515-65ce-d54e-7dfe-5974c0f60809.htm" />
+  </HelpKINode>
+  <HelpKINode Title="FileInfo property" Url="html/e6a7f815-01f7-0ee3-cfec-f4e376490dcb.htm" />
+  <HelpKINode Title="FileName property" Url="html/8f690b97-f4b9-c43f-09c8-7f10e0680b0a.htm" />
+  <HelpKINode Title="GetArrayTypeName method">
+    <HelpKINode Title="CSharp.GetArrayTypeName Method " Url="html/8b929200-c2b5-bf8f-53ca-fdda50885796.htm" />
+    <HelpKINode Title="TraceBase.GetArrayTypeName Method " Url="html/20617157-bb07-2fb0-4d93-0452321acfd8.htm" />
+    <HelpKINode Title="VisualBasic.GetArrayTypeName Method " Url="html/a04c5e73-b0b0-92e2-e757-63532b03b5f1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="GetBool method" Url="html/13867d65-3f38-c313-d37a-72227db8f54e.htm" />
+  <HelpKINode Title="GetCallerInfo method" Url="html/0861f426-a529-230f-8c8e-af7fff3e180f.htm" />
+  <HelpKINode Title="GetIndentString method" Url="html/acc0712f-78fd-6d29-0a8f-8f2a6a869740.htm" />
+  <HelpKINode Title="GetInt method" Url="html/d32738f7-2fe3-7075-45f4-d891abc616e1.htm" />
+  <HelpKINode Title="GetStackTraceElement method" Url="html/9c80a662-6075-3732-1e32-22896feb2cdd.htm" />
+  <HelpKINode Title="GetString method" Url="html/090b3b5a-c0a3-44c3-ed4b-8dc1b5c30449.htm" />
+  <HelpKINode Title="GetStrings method" Url="html/de639b89-dee9-b2ac-70d1-9bf3d4189bed.htm" />
+  <HelpKINode Title="GetTypeName method" Url="html/f9e79ebc-cb2f-e8cc-2c36-18bc48c13bd5.htm" />
+  <HelpKINode Title="HasToString method" Url="html/c39a37b3-a645-fa96-1645-d59fbea56594.htm" />
+  <HelpKINode Title="ILogger interface">
+    <HelpKINode Title="ILogger Interface" Url="html/43e1527e-f668-edc1-5637-54190eacd461.htm" />
+    <HelpKINode Title="methods" Url="html/1969290e-cc6e-75e5-efae-dc9253f11bd3.htm" />
+    <HelpKINode Title="properties" Url="html/aafe86d4-dc9d-130d-972a-0a5ed4f699b8.htm" />
+  </HelpKINode>
+  <HelpKINode Title="ILogger.IsEnabled property" Url="html/c3633b98-e769-a547-1a2e-cb181cc98208.htm" />
+  <HelpKINode Title="ILogger.Level property" Url="html/216ca8e4-2f08-1b60-d84a-44d85ece8d17.htm" />
+  <HelpKINode Title="ILogger.Log method" Url="html/51d62aed-39ea-057d-50f1-22b47227b656.htm" />
+  <HelpKINode Title="indentStrings field" Url="html/b02f90b9-2907-5a82-01cf-3691f4cbec26.htm" />
+  <HelpKINode Title="InitClass method" Url="html/e731b1ea-ed80-2a43-f0f4-32d5bceed824.htm" />
+  <HelpKINode Title="Insert method" Url="html/ff1364e2-22ed-4c96-5863-601cf830100a.htm" />
+  <HelpKINode Title="Instance property">
+    <HelpKINode Title="Console.Error.Instance Property " Url="html/0d134c18-1222-91b9-0af6-cca55abdeac7.htm" />
+    <HelpKINode Title="Console.Out.Instance Property " Url="html/3e4321eb-63b0-3da5-d8ad-b1e0049f0d6b.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IsEnabled property">
+    <HelpKINode Title="Console.IsEnabled Property " Url="html/b519d1ef-563e-1f93-271f-e444e791e1a8.htm" />
+    <HelpKINode Title="ILogger.IsEnabled Property " Url="html/c3633b98-e769-a547-1a2e-cb181cc98208.htm" />
+    <HelpKINode Title="ITrace.IsEnabled Property " Url="html/ba923b9a-2fc2-aa50-309e-ccbe021bf644.htm" />
+    <HelpKINode Title="Loggers.IsEnabled Property " Url="html/caf27aad-4b05-e3ed-b402-a9ae26ccf364.htm" />
+    <HelpKINode Title="TraceBase.IsEnabled Property " Url="html/e20f7f02-5306-45db-1df1-121aa1ad27fc.htm" />
+  </HelpKINode>
+  <HelpKINode Title="ITrace interface">
+    <HelpKINode Title="ITrace Interface" Url="html/c1221ad1-84c1-3621-aa4f-189752d98457.htm" />
+    <HelpKINode Title="methods" Url="html/777e8185-7dea-02bb-80b3-18646b40125d.htm" />
+    <HelpKINode Title="properties" Url="html/bf727f43-2e9b-3a2e-2f9a-0e308e8f5e95.htm" />
+  </HelpKINode>
+  <HelpKINode Title="ITrace.Enter method" Url="html/55742e17-3111-3cbb-ef5e-2786297511be.htm" />
+  <HelpKINode Title="ITrace.IsEnabled property" Url="html/ba923b9a-2fc2-aa50-309e-ccbe021bf644.htm" />
+  <HelpKINode Title="ITrace.LastLog property" Url="html/c0d945b3-0ff0-4a1b-fc40-9f806d60acbe.htm" />
+  <HelpKINode Title="ITrace.Leave method" Url="html/7a52b722-dc21-f5a5-eb6c-6645160d9be3.htm" />
+  <HelpKINode Title="ITrace.Print method" Url="html/c950c6cb-5d11-c8d5-74b8-1b8e08592845.htm" />
+  <HelpKINode Title="ITrace.ResetNest method" Url="html/a7122d1f-2282-fe5d-ed28-ad824ca1985b.htm" />
+  <HelpKINode Title="KeyValueSeparator property" Url="html/63f83a8b-e795-015f-1292-0dcba16e77ee.htm" />
+  <HelpKINode Title="LastLog property">
+    <HelpKINode Title="ITrace.LastLog Property " Url="html/c0d945b3-0ff0-4a1b-fc40-9f806d60acbe.htm" />
+    <HelpKINode Title="TraceBase.LastLog Property " Url="html/99f430dc-abc1-4d19-f5b8-1ad1ebbef5c9.htm" />
+  </HelpKINode>
+  <HelpKINode Title="LastSplit method" Url="html/700e7b73-9736-0432-adfb-b5614a4954a3.htm" />
+  <HelpKINode Title="Leave method">
+    <HelpKINode Title="ITrace.Leave Method " Url="html/7a52b722-dc21-f5a5-eb6c-6645160d9be3.htm" />
+    <HelpKINode Title="TraceBase.Leave Method " Url="html/9cdef6d5-b70f-2adc-1e69-e8c47602de1d.htm" />
+  </HelpKINode>
+  <HelpKINode Title="LeaveString property" Url="html/28dd2a30-fab7-2613-d2f0-bdcff06c42ce.htm" />
+  <HelpKINode Title="Length property" Url="html/f6c97677-3520-d4a7-72e6-f683306803eb.htm" />
+  <HelpKINode Title="Level property">
+    <HelpKINode Title="Console.Level Property " Url="html/4ef4d361-1f4c-d458-64dc-b28914db9942.htm" />
+    <HelpKINode Title="ILogger.Level Property " Url="html/216ca8e4-2f08-1b60-d84a-44d85ece8d17.htm" />
+    <HelpKINode Title="Loggers.Level Property " Url="html/858ce053-86bc-2042-2bcb-67a534d81bbb.htm" />
+  </HelpKINode>
+  <HelpKINode Title="LimitString property" Url="html/6773a138-49ee-f909-ccbd-6614495ae569.htm" />
+  <HelpKINode Title="LineFeed method" Url="html/998beb30-9339-48c7-c2bf-fed3dc5111c5.htm" />
+  <HelpKINode Title="LineNumber property" Url="html/c7bfb3ee-4a4e-45d0-d9b2-eac0b3384486.htm" />
+  <HelpKINode Title="Lines property" Url="html/fc168ed7-bcd1-8161-7e8c-c4e81639aaa5.htm" />
+  <HelpKINode Title="Log method">
+    <HelpKINode Title="Console.Error.Log Method " Url="html/978314da-5f32-2493-fc90-56682593f9a7.htm" />
+    <HelpKINode Title="Console.Log Method " Url="html/8c69d47c-c9cb-2f3a-6c3b-8dc1d02d8a88.htm" />
+    <HelpKINode Title="Console.Out.Log Method " Url="html/bf12c90e-75e4-17c0-fcd1-92dd3461a4f7.htm" />
+    <HelpKINode Title="ILogger.Log Method " Url="html/51d62aed-39ea-057d-50f1-22b47227b656.htm" />
+    <HelpKINode Title="Loggers.Log Method " Url="html/a8a432f5-8b29-47c6-c6ea-dcb6d5275441.htm" />
+  </HelpKINode>
+  <HelpKINode Title="LogBuffer class">
+    <HelpKINode Title="LogBuffer Class" Url="html/27921a44-a2e7-5034-b260-e41f6d1e844b.htm" />
+    <HelpKINode Title="constructor" Url="html/aefe2f79-477a-5641-38e9-caae6a478d46.htm" />
+    <HelpKINode Title="fields" Url="html/bd46c2d5-01f8-39d8-6b3a-f8140e7d5278.htm" />
+    <HelpKINode Title="methods" Url="html/f35c4c88-1416-0e33-4b1d-1e4d599a4ebf.htm" />
+    <HelpKINode Title="properties" Url="html/3a0a8c38-747e-476e-ffad-ad1c357edbd7.htm" />
+  </HelpKINode>
+  <HelpKINode Title="LogBuffer.Append method" Url="html/666d1838-05f7-ca01-bc97-899e4dbcc38e.htm" />
+  <HelpKINode Title="LogBuffer.builder field" Url="html/6c602ffe-7e60-6df4-909b-1d1e51df0d4f.htm" />
+  <HelpKINode Title="LogBuffer.DownNest method" Url="html/dd433fec-a76f-611f-1be2-84ccedf0e06d.htm" />
+  <HelpKINode Title="LogBuffer.Insert method" Url="html/ff1364e2-22ed-4c96-5863-601cf830100a.htm" />
+  <HelpKINode Title="LogBuffer.Length property" Url="html/f6c97677-3520-d4a7-72e6-f683306803eb.htm" />
+  <HelpKINode Title="LogBuffer.LineFeed method" Url="html/998beb30-9339-48c7-c2bf-fed3dc5111c5.htm" />
+  <HelpKINode Title="LogBuffer.Lines property" Url="html/fc168ed7-bcd1-8161-7e8c-c4e81639aaa5.htm" />
+  <HelpKINode Title="LogBuffer.LogBuffer constructor" Url="html/aefe2f79-477a-5641-38e9-caae6a478d46.htm" />
+  <HelpKINode Title="LogBuffer.PeekSave method" Url="html/a4c334c8-d763-88f4-345d-385cbddcec6b.htm" />
+  <HelpKINode Title="LogBuffer.PopSave method" Url="html/2dce06d7-fdc7-2a94-1905-c7fa10e40b39.htm" />
+  <HelpKINode Title="LogBuffer.Restore method" Url="html/e7bbc872-903f-eef9-9085-cb87e154a2f7.htm" />
+  <HelpKINode Title="LogBuffer.Save method" Url="html/480ab654-4928-ad1e-8a23-539aae4e8442.htm" />
+  <HelpKINode Title="LogBuffer.savePoints field" Url="html/c28c226f-9347-42e4-90d8-79161507d743.htm" />
+  <HelpKINode Title="LogBuffer.UpNest method" Url="html/0859d048-1732-ee85-432c-a14419e8c0b3.htm" />
+  <HelpKINode Title="LogDateTimeFormat property" Url="html/37348cb8-1461-ebe3-5943-7b36044d2167.htm" />
+  <HelpKINode Title="Logger property" Url="html/4d250378-1464-e841-73b7-859c6618133c.htm" />
+  <HelpKINode Title="Loggers class">
+    <HelpKINode Title="Loggers Class" Url="html/d18e49b6-95ae-713c-d9d1-fd7b55f20f25.htm" />
+    <HelpKINode Title="constructor" Url="html/ce51cda0-7355-87b5-c06c-a3c942f46fda.htm" />
+    <HelpKINode Title="methods" Url="html/b1bb89af-3670-944f-b2d3-86908e9a7e55.htm" />
+    <HelpKINode Title="properties" Url="html/3023a1b4-4511-4b77-a3ce-91c1db09ae3e.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Loggers.IsEnabled property" Url="html/caf27aad-4b05-e3ed-b402-a9ae26ccf364.htm" />
+  <HelpKINode Title="Loggers.Level property" Url="html/858ce053-86bc-2042-2bcb-67a534d81bbb.htm" />
+  <HelpKINode Title="Loggers.Log method" Url="html/a8a432f5-8b29-47c6-c6ea-dcb6d5275441.htm" />
+  <HelpKINode Title="Loggers.Loggers constructor" Url="html/ce51cda0-7355-87b5-c06c-a3c942f46fda.htm" />
+  <HelpKINode Title="Loggers.Members property" Url="html/35a7ffca-6908-d495-3bac-280127438ae8.htm" />
+  <HelpKINode Title="Loggers.Separator property" Url="html/6b28ded3-94ec-7d94-43ff-34e63731679e.htm" />
+  <HelpKINode Title="Loggers.SeparatorChar property" Url="html/5da86fd9-1777-b972-da15-a144f3747ec0.htm" />
+  <HelpKINode Title="Loggers.ToString method" Url="html/21abe93b-c11f-8389-5377-7e3ac2c528d5.htm" />
+  <HelpKINode Title="MaxDataOutputWidth property" Url="html/3ec2c367-e579-35c5-36ef-7a03b6270bce.htm" />
+  <HelpKINode Title="Members property" Url="html/35a7ffca-6908-d495-3bac-280127438ae8.htm" />
+  <HelpKINode Title="MethodName property" Url="html/5072d2cf-f8dc-863f-bb41-5e111a66eda7.htm" />
+  <HelpKINode Title="NestLevel property" Url="html/1eb3c070-9f45-8a5c-48e0-bd9114b0719c.htm" />
+  <HelpKINode Title="NonPrintProperties property" Url="html/6b9974b9-7501-8441-b57e-e5a7d11b72ac.htm" />
+  <HelpKINode Title="NonPrintString property" Url="html/30126491-b4fa-20df-b224-b1c810362d14.htm" />
+  <HelpKINode Title="NoOutputElementTypes property">
+    <HelpKINode Title="CSharp.NoOutputElementTypes Property " Url="html/b0a5f4c0-796a-8909-f817-49309a27adc0.htm" />
+    <HelpKINode Title="TraceBase.NoOutputElementTypes Property " Url="html/caadb885-9afd-b859-6fa8-3d665d1ebdd7.htm" />
+    <HelpKINode Title="VisualBasic.NoOutputElementTypes Property " Url="html/b7cf086a-4be9-8aff-14b5-59dba6dc8a2f.htm" />
+  </HelpKINode>
+  <HelpKINode Title="NoOutputTypes property">
+    <HelpKINode Title="CSharp.NoOutputTypes Property " Url="html/a3be4985-d08e-1bd9-18de-f90a9ae4cca2.htm" />
+    <HelpKINode Title="TraceBase.NoOutputTypes Property " Url="html/6fa0e973-2905-b863-2a8c-6c86914aadee.htm" />
+    <HelpKINode Title="VisualBasic.NoOutputTypes Property " Url="html/b3cea5a6-76bd-3a06-479d-d1e5ed1ef7d3.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Out class">
+    <HelpKINode Title="methods" Url="html/9d13236b-6cb6-9c61-afd4-1d6c56af597e.htm" />
+    <HelpKINode Title="properties" Url="html/1ed28120-5073-738f-1d3b-c89661af9110.htm" />
+  </HelpKINode>
+  <HelpKINode Title="OutputNonPublicFields property" Url="html/4514ba3f-2750-9892-4e32-c639b2cd4a59.htm" />
+  <HelpKINode Title="OutputNonPublicProperties property" Url="html/ba7a417a-c36d-cade-dc11-262387a19fe6.htm" />
+  <HelpKINode Title="PeekSave method" Url="html/a4c334c8-d763-88f4-345d-385cbddcec6b.htm" />
+  <HelpKINode Title="PopSave method" Url="html/2dce06d7-fdc7-2a94-1905-c7fa10e40b39.htm" />
+  <HelpKINode Title="PreviousLineCount property" Url="html/2c4d6ef2-6f08-7f3e-e897-a3de1bea01e3.htm" />
+  <HelpKINode Title="PreviousNestLevel property" Url="html/eb4d4cc8-a240-904e-52aa-193327613386.htm" />
+  <HelpKINode Title="Print method">
+    <HelpKINode Title="ITrace.Print Method " Url="html/c950c6cb-5d11-c8d5-74b8-1b8e08592845.htm" />
+    <HelpKINode Title="TraceBase.Print Method " Url="html/3fbbd2f8-9d38-9d0e-ab80-93338ac27579.htm" />
+  </HelpKINode>
+  <HelpKINode Title="PrintStart method" Url="html/e6383595-6b4a-50c2-7086-18c3bf132930.htm" />
+  <HelpKINode Title="PrintSub method" Url="html/efb350e9-ac6e-1531-4c03-8f416a53c914.htm" />
+  <HelpKINode Title="PrintSuffixFormat property" Url="html/88d7eb60-9ff3-ac00-36fc-0093b2c052b4.htm" />
+  <HelpKINode Title="reflectedObjects field" Url="html/253336cd-1b70-a3f5-c731-dc65353fa8e4.htm" />
+  <HelpKINode Title="ReflectionClasses property" Url="html/3668c608-8201-4ea1-9356-7e239f98d306.htm" />
+  <HelpKINode Title="ReflectionNestLimit property" Url="html/bddd0a4e-c748-f395-b530-5dd2d65dd05f.htm" />
+  <HelpKINode Title="ReplaceTypeName method" Url="html/5e3626a3-191e-6591-c250-9b5b2a54ccf1.htm" />
+  <HelpKINode Title="RequreNonNull(Of T) method" Url="html/58da16e3-5a40-c262-d240-5985660f8a16.htm" />
+  <HelpKINode Title="RequreNonNull&lt;T&gt; method" Url="html/58da16e3-5a40-c262-d240-5985660f8a16.htm" />
+  <HelpKINode Title="Reset method" Url="html/1d8d6a24-6543-e0ee-78f4-c249e2b5d558.htm" />
+  <HelpKINode Title="ResetNest method">
+    <HelpKINode Title="ITrace.ResetNest Method " Url="html/a7122d1f-2282-fe5d-ed28-ad824ca1985b.htm" />
+    <HelpKINode Title="TraceBase.ResetNest Method " Url="html/b72bd712-2254-da57-e6c6-b64df4c8139a.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Resource class">
+    <HelpKINode Title="Resource Class" Url="html/6fa748fb-7267-9e17-3a8c-a532af027a06.htm" />
+    <HelpKINode Title="constructor" Url="html/11a57416-e20c-b039-af80-688b29a6d6d6.htm" />
+    <HelpKINode Title="methods" Url="html/014f0de9-49b0-ad50-fec0-e33673e3fc22.htm" />
+    <HelpKINode Title="properties" Url="html/ec11d801-33c5-c568-08d8-703fb8df9b55.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Resource property" Url="html/d50895d0-3c60-88cb-fb94-ced59033f713.htm" />
+  <HelpKINode Title="Resource.FileInfo property" Url="html/e6a7f815-01f7-0ee3-cfec-f4e376490dcb.htm" />
+  <HelpKINode Title="Resource.GetBool method" Url="html/13867d65-3f38-c313-d37a-72227db8f54e.htm" />
+  <HelpKINode Title="Resource.GetInt method" Url="html/d32738f7-2fe3-7075-45f4-d891abc616e1.htm" />
+  <HelpKINode Title="Resource.GetString method" Url="html/090b3b5a-c0a3-44c3-ed4b-8dc1b5c30449.htm" />
+  <HelpKINode Title="Resource.GetStrings method" Url="html/de639b89-dee9-b2ac-70d1-9bf3d4189bed.htm" />
+  <HelpKINode Title="Resource.Resource constructor" Url="html/11a57416-e20c-b039-af80-688b29a6d6d6.htm" />
+  <HelpKINode Title="Resource.Unescape method" Url="html/5f366545-e4a3-97e5-d9bd-7c5220b6b9dc.htm" />
+  <HelpKINode Title="Restore method" Url="html/e7bbc872-903f-eef9-9085-cb87e154a2f7.htm" />
+  <HelpKINode Title="Save method" Url="html/480ab654-4928-ad1e-8a23-539aae4e8442.htm" />
+  <HelpKINode Title="savePoints field" Url="html/c28c226f-9347-42e4-90d8-79161507d743.htm" />
+  <HelpKINode Title="Separator property" Url="html/6b28ded3-94ec-7d94-43ff-34e63731679e.htm" />
+  <HelpKINode Title="SeparatorChar property" Url="html/5da86fd9-1777-b972-da15-a144f3747ec0.htm" />
+  <HelpKINode Title="Split method" Url="html/dab26916-0d30-254d-69f6-12d8f21c639b.htm" />
+  <HelpKINode Title="StackTraceElement structure">
+    <HelpKINode Title="StackTraceElement Structure" Url="html/357080dc-fbc2-2188-0134-c2eb55118f6f.htm" />
+    <HelpKINode Title="constructor" Url="html/48e68291-a830-4bd3-dcd8-bbd821d8fdbd.htm" />
+    <HelpKINode Title="methods" Url="html/b8e9915b-12f3-4602-efca-a69fc02cb5b0.htm" />
+    <HelpKINode Title="properties" Url="html/ae408465-57e5-afee-ec6b-e8bfda1d60b0.htm" />
+  </HelpKINode>
+  <HelpKINode Title="StackTraceElement.FileName property" Url="html/8f690b97-f4b9-c43f-09c8-7f10e0680b0a.htm" />
+  <HelpKINode Title="StackTraceElement.LineNumber property" Url="html/c7bfb3ee-4a4e-45d0-d9b2-eac0b3384486.htm" />
+  <HelpKINode Title="StackTraceElement.MethodName property" Url="html/5072d2cf-f8dc-863f-bb41-5e111a66eda7.htm" />
+  <HelpKINode Title="StackTraceElement.StackTraceElement constructor" Url="html/48e68291-a830-4bd3-dcd8-bbd821d8fdbd.htm" />
+  <HelpKINode Title="StackTraceElement.TypeName property" Url="html/c6b98781-f287-9596-169e-343af9780358.htm" />
+  <HelpKINode Title="State class">
+    <HelpKINode Title="State Class" Url="html/e97999fd-e683-1ed4-d8ef-6032c62003e9.htm" />
+    <HelpKINode Title="constructor" Url="html/fe14399c-83d5-5383-f63b-3c1ed38e51ea.htm" />
+    <HelpKINode Title="methods" Url="html/dbaa55f9-94ae-7839-2468-c9d0435a1ead.htm" />
+    <HelpKINode Title="properties" Url="html/c993de57-b021-9607-332d-705642217a08.htm" />
+  </HelpKINode>
+  <HelpKINode Title="State.DownNest method" Url="html/049f7f6d-9119-b3e0-3e5c-fafc2d8bb26c.htm" />
+  <HelpKINode Title="State.NestLevel property" Url="html/1eb3c070-9f45-8a5c-48e0-bd9114b0719c.htm" />
+  <HelpKINode Title="State.PreviousLineCount property" Url="html/2c4d6ef2-6f08-7f3e-e897-a3de1bea01e3.htm" />
+  <HelpKINode Title="State.PreviousNestLevel property" Url="html/eb4d4cc8-a240-904e-52aa-193327613386.htm" />
+  <HelpKINode Title="State.Reset method" Url="html/1d8d6a24-6543-e0ee-78f4-c249e2b5d558.htm" />
+  <HelpKINode Title="State.State constructor" Url="html/fe14399c-83d5-5383-f63b-3c1ed38e51ea.htm" />
+  <HelpKINode Title="State.ThreadId property" Url="html/90f934f4-3f65-0c7d-2420-a13e4966d931.htm" />
+  <HelpKINode Title="State.ToString method" Url="html/17b7a696-163f-48ff-73a2-ed0207c449f4.htm" />
+  <HelpKINode Title="State.UpNest method" Url="html/20d85120-1045-b269-045a-a92d38e79ebd.htm" />
+  <HelpKINode Title="states field" Url="html/fc2ef9cc-6608-5ad7-4ac3-ec0fc09d00b4.htm" />
+  <HelpKINode Title="StringLimit property" Url="html/c6b38de5-bd3a-a543-7659-d7cc2fbe997f.htm" />
+  <HelpKINode Title="ThreadBoundaryString property" Url="html/701a002c-4193-36c2-f80e-e090576190cc.htm" />
+  <HelpKINode Title="ThreadId property" Url="html/90f934f4-3f65-0c7d-2420-a13e4966d931.htm" />
+  <HelpKINode Title="ToString method">
+    <HelpKINode Title="Console.ToString Method " Url="html/ed57c58e-5fbf-7231-6bed-d93dfd9ccb2a.htm" />
+    <HelpKINode Title="Loggers.ToString Method " Url="html/21abe93b-c11f-8389-5377-7e3ac2c528d5.htm" />
+    <HelpKINode Title="State.ToString Method " Url="html/17b7a696-163f-48ff-73a2-ed0207c449f4.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Trace property">
+    <HelpKINode Title="CSharp.Trace Property " Url="html/f7dc30b8-a735-535b-a0f7-b63efb5229f3.htm" />
+    <HelpKINode Title="VisualBasic.Trace Property " Url="html/a62fe0cf-c001-2417-66c8-741fb3e14e60.htm" />
+  </HelpKINode>
+  <HelpKINode Title="TraceBase class">
+    <HelpKINode Title="TraceBase Class" Url="html/675fe68b-0597-5e8c-c5b8-a4b631820bf5.htm" />
+    <HelpKINode Title="constructor" Url="html/1dafa155-da3a-56ce-539a-ff970e29810f.htm" />
+    <HelpKINode Title="fields" Url="html/37363b32-5a64-87b7-587c-3c7478f3e823.htm" />
+    <HelpKINode Title="methods" Url="html/c48915f0-88c3-75c1-4a8f-693fd746803c.htm" />
+    <HelpKINode Title="properties" Url="html/3b96714d-e8cd-d693-bd0a-48fe346bf837.htm" />
+  </HelpKINode>
+  <HelpKINode Title="TraceBase.Append method" Url="html/ea30d2bb-fc6b-8263-a9ab-dbfb8efdbb0b.htm" />
+  <HelpKINode Title="TraceBase.AppendAccessModifire method" Url="html/2099f920-19e7-b604-1fe5-86225b8d9803.htm" />
+  <HelpKINode Title="TraceBase.AppendChar method" Url="html/103b0766-fbaa-8fba-1bbd-5047e9ece9ea.htm" />
+  <HelpKINode Title="TraceBase.AppendDictionary method" Url="html/1cba7065-8bae-2e98-46af-9321f7bdf178.htm" />
+  <HelpKINode Title="TraceBase.AppendEnumerable method" Url="html/258e3ea1-ce4d-0451-d6bb-e59d16420181.htm" />
+  <HelpKINode Title="TraceBase.AppendString method" Url="html/6369804c-4b19-9a13-1287-f703990b2572.htm" />
+  <HelpKINode Title="TraceBase.AppendUsingReflection method" Url="html/a35e1cac-56a2-c8da-39fd-82ce842cda06.htm" />
+  <HelpKINode Title="TraceBase.AppendUsingReflectionSub method" Url="html/0379bf5a-af31-0192-8cc5-9742df083b32.htm" />
+  <HelpKINode Title="TraceBase.beforeThreadId field" Url="html/e9e48afa-67e1-2898-0e85-1b1a1c7e65f9.htm" />
+  <HelpKINode Title="TraceBase.ClassBoundaryString property" Url="html/cd2b13b2-4e71-90b5-d424-640802e6f3d9.htm" />
+  <HelpKINode Title="TraceBase.CodeIndentString property" Url="html/ce354283-e789-6528-a309-bf7784706b43.htm" />
+  <HelpKINode Title="TraceBase.CollectionLimit property" Url="html/c627102f-c7ed-2c46-1184-27a850e759f3.htm" />
+  <HelpKINode Title="TraceBase.CyclicReferenceString property" Url="html/34627687-d54e-813a-bfb4-d010d9d22ccf.htm" />
+  <HelpKINode Title="TraceBase.DataIndentString property" Url="html/2cc61d51-78a7-ade8-512f-71cff6894611.htm" />
+  <HelpKINode Title="TraceBase.dataIndentStrings field" Url="html/c5d8b46b-62f5-d554-2129-97361de787b4.htm" />
+  <HelpKINode Title="TraceBase.DateTimeFormat property" Url="html/12ec8872-7a7f-836b-2304-dcb291fbb678.htm" />
+  <HelpKINode Title="TraceBase.DefaultNameSpace property" Url="html/a5b38a21-de36-350a-4543-b99934a415bb.htm" />
+  <HelpKINode Title="TraceBase.DefaultNameSpaceString property" Url="html/ce76939d-afd9-c4f2-5b8d-ce04ff30b1c6.htm" />
+  <HelpKINode Title="TraceBase.Enter method" Url="html/b63b4812-3e9f-5f1d-9546-3cd3b4a6cd09.htm" />
+  <HelpKINode Title="TraceBase.EnterString property" Url="html/b6ed1e87-0515-5916-dd7f-d744598fc9f4.htm" />
+  <HelpKINode Title="TraceBase.GetArrayTypeName method" Url="html/20617157-bb07-2fb0-4d93-0452321acfd8.htm" />
+  <HelpKINode Title="TraceBase.GetCallerInfo method" Url="html/0861f426-a529-230f-8c8e-af7fff3e180f.htm" />
+  <HelpKINode Title="TraceBase.GetIndentString method" Url="html/acc0712f-78fd-6d29-0a8f-8f2a6a869740.htm" />
+  <HelpKINode Title="TraceBase.GetStackTraceElement method" Url="html/9c80a662-6075-3732-1e32-22896feb2cdd.htm" />
+  <HelpKINode Title="TraceBase.GetTypeName method" Url="html/f9e79ebc-cb2f-e8cc-2c36-18bc48c13bd5.htm" />
+  <HelpKINode Title="TraceBase.HasToString method" Url="html/c39a37b3-a645-fa96-1645-d59fbea56594.htm" />
+  <HelpKINode Title="TraceBase.indentStrings field" Url="html/b02f90b9-2907-5a82-01cf-3691f4cbec26.htm" />
+  <HelpKINode Title="TraceBase.InitClass method" Url="html/e731b1ea-ed80-2a43-f0f4-32d5bceed824.htm" />
+  <HelpKINode Title="TraceBase.IsEnabled property" Url="html/e20f7f02-5306-45db-1df1-121aa1ad27fc.htm" />
+  <HelpKINode Title="TraceBase.KeyValueSeparator property" Url="html/63f83a8b-e795-015f-1292-0dcba16e77ee.htm" />
+  <HelpKINode Title="TraceBase.LastLog property" Url="html/99f430dc-abc1-4d19-f5b8-1ad1ebbef5c9.htm" />
+  <HelpKINode Title="TraceBase.LastSplit method" Url="html/700e7b73-9736-0432-adfb-b5614a4954a3.htm" />
+  <HelpKINode Title="TraceBase.Leave method" Url="html/9cdef6d5-b70f-2adc-1e69-e8c47602de1d.htm" />
+  <HelpKINode Title="TraceBase.LeaveString property" Url="html/28dd2a30-fab7-2613-d2f0-bdcff06c42ce.htm" />
+  <HelpKINode Title="TraceBase.LimitString property" Url="html/6773a138-49ee-f909-ccbd-6614495ae569.htm" />
+  <HelpKINode Title="TraceBase.LogDateTimeFormat property" Url="html/37348cb8-1461-ebe3-5943-7b36044d2167.htm" />
+  <HelpKINode Title="TraceBase.Logger property" Url="html/4d250378-1464-e841-73b7-859c6618133c.htm" />
+  <HelpKINode Title="TraceBase.MaxDataOutputWidth property" Url="html/3ec2c367-e579-35c5-36ef-7a03b6270bce.htm" />
+  <HelpKINode Title="TraceBase.NonPrintProperties property" Url="html/6b9974b9-7501-8441-b57e-e5a7d11b72ac.htm" />
+  <HelpKINode Title="TraceBase.NonPrintString property" Url="html/30126491-b4fa-20df-b224-b1c810362d14.htm" />
+  <HelpKINode Title="TraceBase.NoOutputElementTypes property" Url="html/caadb885-9afd-b859-6fa8-3d665d1ebdd7.htm" />
+  <HelpKINode Title="TraceBase.NoOutputTypes property" Url="html/6fa0e973-2905-b863-2a8c-6c86914aadee.htm" />
+  <HelpKINode Title="TraceBase.OutputNonPublicFields property" Url="html/4514ba3f-2750-9892-4e32-c639b2cd4a59.htm" />
+  <HelpKINode Title="TraceBase.OutputNonPublicProperties property" Url="html/ba7a417a-c36d-cade-dc11-262387a19fe6.htm" />
+  <HelpKINode Title="TraceBase.Print method" Url="html/3fbbd2f8-9d38-9d0e-ab80-93338ac27579.htm" />
+  <HelpKINode Title="TraceBase.PrintStart method" Url="html/e6383595-6b4a-50c2-7086-18c3bf132930.htm" />
+  <HelpKINode Title="TraceBase.PrintSub method" Url="html/efb350e9-ac6e-1531-4c03-8f416a53c914.htm" />
+  <HelpKINode Title="TraceBase.PrintSuffixFormat property" Url="html/88d7eb60-9ff3-ac00-36fc-0093b2c052b4.htm" />
+  <HelpKINode Title="TraceBase.reflectedObjects field" Url="html/253336cd-1b70-a3f5-c731-dc65353fa8e4.htm" />
+  <HelpKINode Title="TraceBase.ReflectionClasses property" Url="html/3668c608-8201-4ea1-9356-7e239f98d306.htm" />
+  <HelpKINode Title="TraceBase.ReflectionNestLimit property" Url="html/bddd0a4e-c748-f395-b530-5dd2d65dd05f.htm" />
+  <HelpKINode Title="TraceBase.ReplaceTypeName method" Url="html/5e3626a3-191e-6591-c250-9b5b2a54ccf1.htm" />
+  <HelpKINode Title="TraceBase.RequreNonNull(Of T) method" Url="html/58da16e3-5a40-c262-d240-5985660f8a16.htm" />
+  <HelpKINode Title="TraceBase.RequreNonNull&lt;T&gt; method" Url="html/58da16e3-5a40-c262-d240-5985660f8a16.htm" />
+  <HelpKINode Title="TraceBase.ResetNest method" Url="html/b72bd712-2254-da57-e6c6-b64df4c8139a.htm" />
+  <HelpKINode Title="TraceBase.Resource property" Url="html/d50895d0-3c60-88cb-fb94-ced59033f713.htm" />
+  <HelpKINode Title="TraceBase.Split method" Url="html/dab26916-0d30-254d-69f6-12d8f21c639b.htm" />
+  <HelpKINode Title="TraceBase.states field" Url="html/fc2ef9cc-6608-5ad7-4ac3-ec0fc09d00b4.htm" />
+  <HelpKINode Title="TraceBase.StringLimit property" Url="html/c6b38de5-bd3a-a543-7659-d7cc2fbe997f.htm" />
+  <HelpKINode Title="TraceBase.ThreadBoundaryString property" Url="html/701a002c-4193-36c2-f80e-e090576190cc.htm" />
+  <HelpKINode Title="TraceBase.TraceBase constructor" Url="html/1dafa155-da3a-56ce-539a-ff970e29810f.htm" />
+  <HelpKINode Title="TraceBase.TypeNameMap property" Url="html/94bca525-0690-c5f3-cf15-8ddc0f0db703.htm" />
+  <HelpKINode Title="TraceBase.VarNameValueSeparator property" Url="html/53ce21af-ff7a-ac72-905c-125cca4f2ecb.htm" />
+  <HelpKINode Title="TypeName property" Url="html/c6b98781-f287-9596-169e-343af9780358.htm" />
+  <HelpKINode Title="TypeNameMap property">
+    <HelpKINode Title="CSharp.TypeNameMap Property " Url="html/bc86f10b-ed68-f436-bfc1-2befbd9d92a5.htm" />
+    <HelpKINode Title="TraceBase.TypeNameMap Property " Url="html/94bca525-0690-c5f3-cf15-8ddc0f0db703.htm" />
+    <HelpKINode Title="VisualBasic.TypeNameMap Property " Url="html/6052239c-5485-5985-5ad5-3d0137a73c0b.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Unescape method" Url="html/5f366545-e4a3-97e5-d9bd-7c5220b6b9dc.htm" />
+  <HelpKINode Title="UpNest method">
+    <HelpKINode Title="LogBuffer.UpNest Method " Url="html/0859d048-1732-ee85-432c-a14419e8c0b3.htm" />
+    <HelpKINode Title="State.UpNest Method " Url="html/20d85120-1045-b269-045a-a92d38e79ebd.htm" />
+  </HelpKINode>
+  <HelpKINode Title="VarNameValueSeparator property" Url="html/53ce21af-ff7a-ac72-905c-125cca4f2ecb.htm" />
+  <HelpKINode Title="VisualBasic class">
+    <HelpKINode Title="VisualBasic Class" Url="html/db7bee01-7470-7dd8-d0e5-9e693edfb989.htm" />
+    <HelpKINode Title="fields" Url="html/6b6596b3-5e9b-5d8e-8e67-3821b64c0d74.htm" />
+    <HelpKINode Title="methods" Url="html/2de70053-48b0-5e8e-9405-18b6a47ae94a.htm" />
+    <HelpKINode Title="properties" Url="html/e5f348a3-d91f-b6e1-7e8a-733c90ef768a.htm" />
+  </HelpKINode>
+  <HelpKINode Title="VisualBasic.Append method" Url="html/186233e9-f993-5727-6aaf-21a05b999af1.htm" />
+  <HelpKINode Title="VisualBasic.AppendAccessModifire method" Url="html/ac96dead-cb39-1202-e3f8-567d8b7509f7.htm" />
+  <HelpKINode Title="VisualBasic.GetArrayTypeName method" Url="html/a04c5e73-b0b0-92e2-e757-63532b03b5f1.htm" />
+  <HelpKINode Title="VisualBasic.NoOutputElementTypes property" Url="html/b7cf086a-4be9-8aff-14b5-59dba6dc8a2f.htm" />
+  <HelpKINode Title="VisualBasic.NoOutputTypes property" Url="html/b3cea5a6-76bd-3a06-479d-d1e5ed1ef7d3.htm" />
+  <HelpKINode Title="VisualBasic.Trace property" Url="html/a62fe0cf-c001-2417-66c8-741fb3e14e60.htm" />
+  <HelpKINode Title="VisualBasic.TypeNameMap property" Url="html/6052239c-5485-5985-5ad5-3d0137a73c0b.htm" />
+</HelpKI>
