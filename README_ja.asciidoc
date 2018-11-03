@@ -515,7 +515,7 @@ NonPrintString = `\***` [.small .blue]#*_[デフォルト]_*# +
 `<フルクラス名>.<プロパティ名またはフィールド名>` +
 
 |`DefaultNameSpace`
-|デフォルトの 名前空間 +
+|デフォルトの名前空間 +
 [.small]#*設定例:*# +
 `DefaultNameSpace = DebugTraceExample` +
 [.small .blue]#デフォルトは未設定# +
@@ -668,5 +668,9 @@ Logger = NLog
 === 9. ライセンス
 
 link:LICENSE[MIT ライセンス(MIT)]
+
+=== 10. ドキュメント
+
+https://masatokokubo.github.io/DebugTrace-net/index.html[API仕様(英語)]
 
 _(C) 2018 Masato Kokubo_

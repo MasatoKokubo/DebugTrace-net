@@ -370,7 +370,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 `LogLevel = Finer; Trace` [.small .blue]#- Outputs Finer level for Log4net and Trace level for NLog *_(since 1.5.0)_*# +
 
 |`EnterString`
-|The string output by `enter` method +
+|The string output by `Enter` method +
 [.small]#*Example:*# +
 `EnterString = Enter {0}.{1} ({2}:{3:D})` [.small .blue]#*_[Default]_*# +
 [.small]#*Parameters:*# +
@@ -380,7 +380,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 `{3}`: The line number of the caller +
 
 |`LeaveString`
-|The string output by `leave` method +
+|The string output by `Leave` method +
 [.small]#*Examples:*# +
 `LeaveString = Leave {0}.{1} ({2}:{3:D}) time: {4}` [.small .blue]#*_[Default] (since 1.4.3)_*# +
 `LeaveString = Leave {0}.{1} ({2}:{3:D})` [.small .blue]#*_[Default] (before 1.4.3)_*# +
@@ -392,7 +392,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 `{4}`: The time since invoking the corresponding `Enter` method [.small .blue]#*_(since 1.4.3)_*# +
 
 |`ThreadBoundaryString`
-|The string output in the threads boundary. +
+|The string output in the threads boundary +
 [.small]#*Example:*# +
 [.small]#`ThreadBoundaryString = \____\__\__\__\__\__\__\__\__\__\__\__\__\__ Thread {0} \__\__\__\__\__\__\__\__\__\__\__\__\__\____`# +
 [.small .blue]#*_[Default]_*# +
@@ -400,7 +400,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 `{0}`: The thread ID +
 
 |`ClassBoundaryString`
-|The string output in the classes boundary. +
+|The string output in the classes boundary +
 [.small]#*Example:*# +
 `ClassBoundaryString = \\____ {0} \____` [.small .blue]#*_[Default]_*# +
 [.small]#*Parameter:*# +
@@ -445,14 +445,14 @@ You can specify following properties in the `DebugTrace.properties` file.
 [.small .blue]#`\s` is replaced to a space character# +
 
 |`KeyValueSeparator`
-|The separator string between the key and value for Map object +
+|The separator string between the key and value of dictionary +
 and between the property/field name and value +
 [.small]#*Example:*# +
 `KeyValueSeparator = :\s` [.small .blue]#*_[Default]_*# +
 [.small .blue]#`\s` is replaced to a space character# +
 
 |`PrintSuffixFormat`
-|Output format of `print` method suffix +
+|Output format of `Print` method suffix +
 [.small]#*Example:*# +
 `PrintSuffixFormat = \s({2}:{3:D})` [.small .blue]#*_[Default]_*# +
 [.small .blue]#`\s` is replaced to a space character# +
@@ -488,12 +488,12 @@ and between the property/field name and value +
 `MaxDataOutputWidth = 80` [.small .blue]#*_[Default]_*# +
 
 |`CollectionLimit`
-|*Limit* value of `ICollection` elements to output +
+|Limit value of `ICollection` elements to output +
 [.small]#*Example:*# +
 `CollectionLimit = 512` [.small .blue]#*_[Default]_*# +
 
 |`StringLimit`
-|*Limit* value of `string` characters to output +
+|Limit value of `string` characters to output +
 [.small]#*Example:*# +
 `StringLimit = 8192` [.small .blue]#*_[Default]_*# +
 
@@ -516,7 +516,7 @@ and between the property/field name and value +
 [.small .blue]#The default value is unspecified#
 
 |`DefaultNameSpace` +
-|Default namespace of your java source +
+|Default namespace of your C# source +
 [.small]#*Example:*# +
 `DefaultNameSpace = DebugTraceExample` +
 [.small .blue]#The default value is unspecified#
@@ -670,5 +670,9 @@ Logger = NLog
 === 9. License
 
 link:LICENSE[The MIT License (MIT)]
+
+=== 10. Documents
+
+https://masatokokubo.github.io/DebugTrace-net/index.html[API Specification]
 
 [gray]#_(C) 2018 Masato Kokubo_#
