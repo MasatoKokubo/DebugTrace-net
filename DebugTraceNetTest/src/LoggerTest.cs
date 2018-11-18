@@ -109,17 +109,6 @@ namespace DebugTraceNetTest {
             StringAssert.Contains(lastLog, $" {level.ToUpper()} ");
         }
 
-        // GetLastLog
-        public static string GetLastLog(FileInfo fileInfo, long beforeLength) {
-            using (var stream = fileInfo.OpenRead()) {
-                stream.Seek(beforeLength, SeekOrigin.Begin);
-                fileInfo.Refresh();
-                byte[] bytes = new byte[fileInfo.Length - beforeLength];
-                stream.Read(bytes, 0, bytes.Length);
-                return Encoding.UTF8.GetString(bytes);
-            }
-        }
-
         // NLogLevel
         [DataTestMethod]
         [DataRow("TRACE"    )]
@@ -210,5 +199,15 @@ namespace DebugTraceNetTest {
             StringAssert.Contains(nLogLastLog, $" {level.ToUpper()} ");
         }
 
+        // GetLastLog
+        public static string GetLastLog(FileInfo fileInfo, long beforeLength) {
+            using (var stream = fileInfo.OpenRead()) {
+                stream.Seek(beforeLength, SeekOrigin.Begin);
+                fileInfo.Refresh();
+                byte[] bytes = new byte[fileInfo.Length - beforeLength];
+                stream.Read(bytes, 0, bytes.Length);
+                return Encoding.UTF8.GetString(bytes);
+            }
+        }
     }
 }
