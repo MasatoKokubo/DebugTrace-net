@@ -235,18 +235,18 @@ Namespace Global.Readme
 
 主に以下のインタフェース、クラスがあります。
 
-[options="header", width="100%"]
+[options="header", cols="3,3,4", width="90%"]
 .インタフェース、クラス
 |===
-|名前    |スーパークラス、実装するインタフェース|説明
-|`DebugTrace.ITrace`       |_なし_              |Trace処理のインタフェース
-|`DebugTrace.TraceBase`    |`DebugTrace.ITrace` |Trace処理のベースクラス
-|`DebugTrace.CSharp`       |`DebugTrace.Trace`  |C#用のTrace処理のクラス
-|`DebugTrace.VisualBasic`  |`DebugTrace.Trace`  |VisualBasic用のTrace処理のクラス
-|`DebugTrace.ILogger`      |_なし_              |ログ出力のインタフェース
-|`DebugTrace.Console`      |`DebugTrace.ILogger`|ログをコンソール出力する抽象クラス
-|`DebugTrace.Console+Out`  |`DebugTrace.Console`|ログを標準出力に出力するクラス
-|`DebugTrace.Console+Error`|`DebugTrace.Console`|ログを標準エラー出力に出力するクラス
+^s|名 前 ^s|スーパークラス、実装するインタフェース ^s|説 明
+  |`DebugTrace.ITrace`       |_なし_                 |Trace処理のインタフェース
+  |`DebugTrace.TraceBase`    |`DebugTrace.ITrace`    |Trace処理のベースクラス
+  |`DebugTrace.CSharp`       |`DebugTrace.Trace`     |C#用のTrace処理のクラス
+  |`DebugTrace.VisualBasic`  |`DebugTrace.Trace`     |VisualBasic用のTrace処理のクラス
+  |`DebugTrace.ILogger`      |_なし_                 |ログ出力のインタフェース
+  |`DebugTrace.Console`      |`DebugTrace.ILogger`   |ログをコンソール出力する抽象クラス
+  |`DebugTrace.Console+Out`  |`DebugTrace.Console`   |ログを標準出力に出力するクラス
+  |`DebugTrace.Console+Error`|`DebugTrace.Console`   |ログを標準エラー出力に出力するクラス
 |===
 
 === 5. DebugTrace.CSharpおよびDebugTrace.VisualBasicクラスのプロパティ
@@ -257,11 +257,11 @@ Namespace Global.Readme
 
 以下のプロパティおよびメソッドがあります。
 
-[options="header", width="60%"]
+[options="header", cols="1,5", width="70%"]
 .プロパティ
 |===
 
-|名前|説明
+^s|名 前 ^s|説 明
 |`IsEnabled`
 |ログ出力が有効なら `true` 、そうでなければ `false`  (`get` のみ)
 
@@ -270,10 +270,10 @@ Namespace Global.Readme
 
 |===
 
-[options="header", cols="1,4,2,3"]
+[options="header", cols="1,4,2,3", width="100%"]
 .メソッド
 |===
-|名 前|引 数|戻り値|説明
+^s|名 前 ^s|引 数 ^s|戻り値 ^s|説 明
 
 |`ResetNest`
 |なし
@@ -323,10 +323,10 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
 [.small]#(バージョン 1.4.0より、それより前のバージョンでは、DebugTrace.dllと同一ディレクトリにある `DebugTrace.properties` を読み込む)# +
 `DebugTrace.properties` ファイルでは以下のプロパティを指定できます。
 
-[options="header", cols="2,8"]
+[options="header", cols="2,8", width="100%"]
 .DebugTrace.properties
 |===
-|プロパティ名|説明
+^s|プロパティ名 ^s|説 明
 |`Logger`
 | DebugTrace が使用するロガー +
 [.small]#*設定例:*# +
@@ -586,13 +586,13 @@ NonPrintProperties = \
 
 コンソール出力以外に以下のライブラリを使用してログ出力が可能です。
 
-[options="header", width="70%"]
+[options="header", cols="3,5,4", width="60%"]
 .ロギング・ライブラリ
 |===
-   |ライブラリ名|必要なパッケージ       |対象フレームワーク
-   |log4net     |DebugTrace.Log4net     |.NET Framework 4.7
-.2+|NLog        |DebugTrace.NLog 1.6.0~ |.NET Standard 2.0
-                |DebugTrace.NLog ~1.5.0 |.NET Framework 4.7
+   ^s|ライブラリ名 ^s|必要なパッケージ                          ^s|対象フレームワーク
+     |log4net        |DebugTrace.Log4net                          |.NET Framework 4.7
+.2+.^|NLog           |DebugTrace.NLog [.small .blue]#*_(1.6.0~)_*#|.NET Standard 2.0
+                     |DebugTrace.NLog [.small .blue]#*_(~1.5.0)_*#|.NET Framework 4.7
 |===
 
 使用する場合は、上記パッケージをNuGetから追加してください。

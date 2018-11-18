@@ -237,18 +237,18 @@ Namespace Global.Readme
 
 There are mainly the following interfaces and classes.
 
-[options="header", width="100%"]
+[options="header", cols="3,3,4", width="100%"]
 .Interfaces and Classes
 |===
-|Name     |Super Class or Implemented Interfaces|Description
-|`DebugTrace.ITrace`       |_None_              |Trace processing interface
-|`DebugTrace.TraceBase`    |`DebugTrace.ITrace` |Trace processing base class
-|`DebugTrace.CSharp`       |`DebugTrace.Trace`  |Trace processing class for C#
-|`DebugTrace.VisualBasic`  |`DebugTrace.Trace`  |Trace processing class for VisualBasic
-|`DebugTrace.ILogger`      |_None_              |Log output interface
-|`DebugTrace.Console`      |`DebugTrace.ILogger`|Abstract class that outputs logs to the console
-|`DebugTrace.Console+Out`  |`DebugTrace.Console`|Class outputting logs to standard output
-|`DebugTrace.Console+Error`|`DebugTrace.Console`|Class outputting logs to standard error output
+^s|Name ^s|Super Class or Implemented Interfaces ^s|Description
+  |`DebugTrace.ITrace`       |_None_               |Trace processing interface
+  |`DebugTrace.TraceBase`    |`DebugTrace.ITrace`  |Trace processing base class
+  |`DebugTrace.CSharp`       |`DebugTrace.Trace`   |Trace processing class for C#
+  |`DebugTrace.VisualBasic`  |`DebugTrace.Trace`   |Trace processing class for VisualBasic
+  |`DebugTrace.ILogger`      |_None_               |Log output interface
+  |`DebugTrace.Console`      |`DebugTrace.ILogger` |Abstract class that outputs logs to the console
+  |`DebugTrace.Console+Out`  |`DebugTrace.Console` |Class outputting logs to standard output
+  |`DebugTrace.Console+Error`|`DebugTrace.Console` |Class outputting logs to standard error output
 |===
 
 === 5. Properties of DebugTrace.CSharp class and DebugTrace.VisualBasic class
@@ -259,10 +259,10 @@ There are mainly the following interfaces and classes.
 
 It has the following properties and methods.
 
-[options="header", width="60%"]
+[options="header", cols="1,5", width="60%"]
 .Properties
 |===
-|Name|Description
+^s|Name ^s|Description
 
 |`IsEnabled`
 |`true` if log output is enabled, `false` otherwise (`get` only)
@@ -272,10 +272,10 @@ It has the following properties and methods.
 
 |===
 
-[options="header", cols="1,4,2,3"]
+[options="header", cols="1,4,2,3", width="100%"]
 .Methods
 |===
-|Name|Arguments|Return Value|Description
+^s|Name ^s|Arguments ^s|Return Value ^s|Description
 
 |`ResetNest`
 |_None_
@@ -322,10 +322,10 @@ DebugTrace reads the `DebugTrace.properties` file in the current directory at st
 [.small]#(since 1.4.0, Reads the the file in the same directory as DebugTrace.dll in earlier versions)#. +
 You can specify following properties in the `DebugTrace.properties` file.  
 
-[options="header", cols="2,8"]
+[options="header", cols="2,8", width="100%"]
 .DebugTrace.properties
 |===
-|Property Name|Description
+^s|Property Name ^s|Description
 
 |`Logger`
 |Logger DebugTrace uses +
@@ -588,13 +588,13 @@ NonPrintProperties = \
 
 You can output logs using the following libraries besides console output.
 
-[options="header", width="70%"]
+[options="header", cols="3,5,4", width="70%"]
 .logging Libraries
 |===
-|Library Name   |Required package       |Target Framework
-   |log4net     |DebugTrace.Log4net     |.NET Framework 4.7
-.2+|NLog        |DebugTrace.NLog 1.6.0~ |.NET Standard 2.0
-                |DebugTrace.NLog ~1.5.0 |.NET Framework 4.7
+   ^s|Library Name ^s|Required package                                ^s|Target Framework
+     |log4net        |DebugTrace.Log4net                                |.NET Framework 4.7
+.2+.^|NLog           |DebugTrace.NLog [.small .blue]#*_(since 1.6.0)_*# |.NET Standard 2.0
+                     |DebugTrace.NLog [.small .blue]#*_(before 1.5.0)_*#|.NET Framework 4.7
 |===
 
 To use them, add the above package from NuGet.
