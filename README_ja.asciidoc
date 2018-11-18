@@ -21,7 +21,7 @@ link:README.asciidoc[[English]]
 === 2. インストール
 NuGetから `DebugTrace` パッケージを検索してインストールしてください。 +
 https://logging.apache.org/log4net/[log4net]または http://nlog-project.org/[NLog]を使用してログを出力する場合は、 `DebugTrace.Log4net` または `DebugTrace.NLog` をインストールしてください。 +
-`DebugTrace.Log4net` および `DebugTrace.NLog` は、(https://docs.microsoft.com/ja-jp/dotnet/standard/net-standard[.NET Standard]ではなく).NET Framework 4.7に対応しています。
+`DebugTrace.Log4net` は、(https://docs.microsoft.com/ja-jp/dotnet/standard/net-standard[.NET Standard]ではなく).NET Framework 4.7に対応しています。
 
 === 3. 使用方法
 
@@ -586,12 +586,13 @@ NonPrintProperties = \
 
 コンソール出力以外に以下のライブラリを使用してログ出力が可能です。
 
-[options="header", width="60%"]
+[options="header", width="70%"]
 .ロギング・ライブラリ
 |===
-|ライブラリ名|必要なパッケージ  |API
-|log4net     |DebugTrace.Log4net|.NET Framework 4.7
-|NLog        |DebugTrace.NLog   |.NET Framework 4.7
+   |ライブラリ名|必要なパッケージ       |対象フレームワーク
+   |log4net     |DebugTrace.Log4net     |.NET Framework 4.7
+.2+|NLog        |DebugTrace.NLog 1.6.0~ |.NET Standard 2.0
+                |DebugTrace.NLog ~1.5.0 |.NET Framework 4.7
 |===
 
 使用する場合は、上記パッケージをNuGetから追加してください。
