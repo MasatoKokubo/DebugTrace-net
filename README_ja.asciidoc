@@ -589,10 +589,10 @@ NonPrintProperties = \
 [options="header", cols="3,5,4", width="60%"]
 .ロギング・ライブラリ
 |===
-   ^s|ライブラリ名 ^s|必要なパッケージ                          ^s|対象フレームワーク
-     |log4net        |DebugTrace.Log4net                          |.NET Framework 4.7
-.2+.^|NLog           |DebugTrace.NLog [.small .blue]#*_(1.6.0~)_*#|.NET Standard 2.0
-                     |DebugTrace.NLog [.small .blue]#*_(~1.5.0)_*#|.NET Framework 4.7
+   ^s|ライブラリ名 ^s|必要なパッケージ                               ^s|対象フレームワーク
+     |log4net        |DebugTrace.Log4net                               |.NET Framework 4.7
+.2+.^|NLog           |DebugTrace.NLog [.small .blue]#*_(1.6.0~)_*#     |.NET Standard 2.0
+                     |DebugTrace.NLog [.small .blue]#*_(1.6.0より前)_*#|.NET Framework 4.7
 |===
 
 使用する場合は、上記パッケージをNuGetから追加してください。
