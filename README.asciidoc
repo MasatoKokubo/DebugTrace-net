@@ -319,7 +319,7 @@ It has the following properties and methods.
 === 7. Properties of *DebugTrace.properties* file
 
 DebugTrace reads the `DebugTrace.properties` file in the current directory at startup
-[.small]#(since 1.4.0, Reads the the file in the same directory as DebugTrace.dll in earlier versions)#. +
+[.small]#(since v1.4.0, Reads the the file in the same directory as DebugTrace.dll in earlier versions)#. +
 You can specify following properties in the `DebugTrace.properties` file.  
 
 [options="header", cols="2,8", width="100%"]
@@ -334,7 +334,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 `Logger = Console+Error` [.small .blue]#- Outputs to the console (stderr)# [.small .blue]#*_[Default]_*# + 
 `Logger = Log4net` [.small .blue]#- Outputs using Log4net# +
 `Logger = NLog` [.small .blue]#- Outputs using NLog# +
-[.small]#*Example for multiple outputs:*# [.small .blue]#*_(since 1.5.0)_*# +
+[.small]#*Example for multiple outputs:*# [.small .blue]#*_(since v1.5.0)_*# +
 `Logger = Console+Out; Log4net` [.small .blue]#- Outputs to the console (stdout) and using Log4net# + 
 
 |`LogLevel`
@@ -367,7 +367,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 `LogLevel = Off` +
 [.small]#*Examples when using Log4net and NLog:*# [.small .blue]#(Logger = Log4net; NLog)# +
 `LogLevel = Debug` [.small .blue]#- Outputs Debug level for both Log4net and NLog# +
-`LogLevel = Finer; Trace` [.small .blue]#- Outputs Finer level for Log4net and Trace level for NLog *_(since 1.5.0)_*# +
+`LogLevel = Finer; Trace` [.small .blue]#- Outputs Finer level for Log4net and Trace level for NLog *_(since v1.5.0)_*# +
 
 |`EnterString`
 |The string output by `Enter` method +
@@ -382,14 +382,14 @@ You can specify following properties in the `DebugTrace.properties` file.
 |`LeaveString`
 |The string output by `Leave` method +
 [.small]#*Examples:*# +
-`LeaveString = Leave {0}.{1} ({2}:{3:D}) time: {4}` [.small .blue]#*_[Default] (since 1.4.3)_*# +
-`LeaveString = Leave {0}.{1} ({2}:{3:D})` [.small .blue]#*_[Default] (before 1.4.3)_*# +
+`LeaveString = Leave {0}.{1} ({2}:{3:D}) time: {4}` [.small .blue]#*_[Default] (since v1.4.3)_*# +
+`LeaveString = Leave {0}.{1} ({2}:{3:D})` [.small .blue]#*_[Default] (before v1.4.3)_*# +
 [.small]#*Parameters:*# +
 `{0}`: The class name of the caller +
 `{1}`: The method name of the caller +
 `{2}`: The file name of the caller +
 `{3}`: The line number of the caller +
-`{4}`: The time since invoking the corresponding `Enter` method [.small .blue]#*_(since 1.4.3)_*# +
+`{4}`: The time since invoking the corresponding `Enter` method [.small .blue]#*_(since v1.4.3)_*# +
 
 |`ThreadBoundaryString`
 |The string output in the threads boundary +
@@ -465,22 +465,22 @@ and between the property/field name and value +
 |`DateTimeFormat`
 |Output format of DateTime +
 [.small]#*Examples:*# +
-`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffffffK}` [.small .blue]#*_[Default] (since 1.4.1)_*# +
-`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffK}` [.small .blue]#*_[Default] (before 1.4.1)_*# +
+`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffffffK}` [.small .blue]#*_[Default] (since v1.4.1)_*# +
+`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffK}` [.small .blue]#*_[Default] (before v1.4.1)_*# +
 [.small]#*Parameter:*# +
 `{0}`: The `DateTime` object +
 
 |`LogDateTimeFormat` +
  +
-[.small .blue]#*_(since 1.3.0)_*#
+[.small .blue]#*_(since v1.3.0)_*#
 |Output format of date and time when outputting logs +
 [.small]#*Examples:*# +
-`LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff} [{1:D2}] {2}` [.small .blue]#*_[Default] (since 1.4.2)_*# +
-`LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff}` [.small .blue]#*_[Default] (before 1.4.2)_*# +
+`LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff} [{1:D2}] {2}` [.small .blue]#*_[Default] (since v1.4.2)_*# +
+`LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff}` [.small .blue]#*_[Default] (before v1.4.2)_*# +
 [.small]#*Parameter:*# +
 `{0}`: The `DateTime` of log output +
-`{1}`: The thread ID [.small .blue]#*_(since 1.4.2)_*# +
-`{2}`: The log contents [.small .blue]#*_(since 1.4.2)_*# +
+`{1}`: The thread ID [.small .blue]#*_(since v1.4.2)_*# +
+`{2}`: The log contents [.small .blue]#*_(since v1.4.2)_*# +
 
 |`MaxDataOutputWidth`
 |Maximum output width of data* +
@@ -533,7 +533,7 @@ and between the property/field name and value +
 
 |`OutputNonPublicFields`
  +
-[.small .blue]#*_(since 1.4.4)_*#
+[.small .blue]#*_(since v1.4.4)_*#
 |If `true`, outputs the contents by reflection even for fields which are not `public` +
 [.small]#*Examples:*# +
 `OutputNonPublicFields = true` +
@@ -541,7 +541,7 @@ and between the property/field name and value +
 
 |`OutputNonPublicProperties`
  +
-[.small .blue]#*_(since 1.4.4)_*#
+[.small .blue]#*_(since v1.4.4)_*#
 |If `true`, outputs the contents by reflection even for properties which are not `public` +
 [.small]#*Examples:*# +
 `OutputNonPublicProperties = true` +
@@ -591,10 +591,10 @@ You can output logs using the following libraries besides console output.
 [options="header", cols="3,5,4", width="70%"]
 .logging Libraries
 |===
-   ^s|Library Name ^s|Required package                                ^s|Target Framework
-     |log4net        |DebugTrace.Log4net                                |.NET Framework 4.7
-.2+.^|NLog           |DebugTrace.NLog [.small .blue]#*_(since 1.6.0)_*# |.NET Standard 2.0
-                     |DebugTrace.NLog [.small .blue]#*_(before 1.6.0)_*#|.NET Framework 4.7
+   ^s|Library Name ^s|Required package                                 ^s|Target Framework
+     |log4net        |DebugTrace.Log4net                                 |.NET Framework 4.7
+.2+.^|NLog           |DebugTrace.NLog [.small .blue]#*_(since v1.6.0)_*# |.NET Standard 2.0
+                     |DebugTrace.NLog [.small .blue]#*_(before v1.6.0)_*#|.NET Framework 4.7
 |===
 
 To use them, add the above package from NuGet.

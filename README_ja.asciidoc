@@ -320,7 +320,7 @@ Namespace Global.Readme
 === 7. *DebugTrace.properties* ファイルのプロパティ
 
 DebugTrace は、カレントディレクトリにある `DebugTrace.properties` ファイルを起動時に読み込みます。
-[.small]#(バージョン 1.4.0より、それより前のバージョンでは、DebugTrace.dllと同一ディレクトリにある `DebugTrace.properties` を読み込む)# +
+[.small]#(v1.4.0~、それより前のバージョンでは、DebugTrace.dllと同一ディレクトリにある `DebugTrace.properties` を読み込む)# +
 `DebugTrace.properties` ファイルでは以下のプロパティを指定できます。
 
 [options="header", cols="2,8", width="100%"]
@@ -334,7 +334,7 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
 `Logger = Console+Error` [.small .blue]#- コンソール(標準エラー出力)へ出力# [.small .blue]#*_[デフォルト]_*# + 
 `Logger = Log4net` [.small .blue]#- log4netを使用して出力# + 
 `Logger = NLog` [.small .blue]#- NLogを使用して出力# +
-[.small]#*設定例(複数):*# [.small .blue]#*_(1.5.0~)_*# +
+[.small]#*設定例(複数):*# [.small .blue]#*_(v1.5.0~)_*# +
 `Logger = Console+Out; Log4net` [.small .blue]#- コンソール(標準出力)およびlog4netを使用して出力# + 
 
 |`LogLevel`
@@ -367,7 +367,7 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
 `LogLevel = Off` +
 [.small]#*Log4netとNLogを同時使用する際の設定例:*#  [.small .blue]#(Logger = Log4net; NLog)# +
 `LogLevel = Debug` [.small .blue]#- Log4netとNLogの両方にDebugレベルで出力# +
-`LogLevel = Finer; Trace` [.small .blue]#- Log4netではFinerレベル、NLogではTraceレベルで出力 *_(1.5.0~)_*# +
+`LogLevel = Finer; Trace` [.small .blue]#- Log4netではFinerレベル、NLogではTraceレベルで出力 *_(v1.5.0~)_*# +
 
 |`EnterString`
 |`Enter` メソッドで出力される文字列 +
@@ -382,14 +382,14 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
 |`LeaveString`
 |`Leave` メソッドで出力される文字列 +
 [.small]#*設定例:*# +
-`LeaveString = 終了 {0}.{1} ({2}:{3:D}) time: {4}` [.small .blue]#*_[デフォルト] (1.4.3~)_*# +
-`LeaveString = 終了 {0}.{1} ({2}:{3:D})` [.small .blue]#*_[デフォルト] (1.4.3より前)_*# +
+`LeaveString = 終了 {0}.{1} ({2}:{3:D}) time: {4}` [.small .blue]#*_[デフォルト] (v1.4.3~)_*# +
+`LeaveString = 終了 {0}.{1} ({2}:{3:D})` [.small .blue]#*_[デフォルト] (v1.4.3より前)_*# +
 [.small]#*パラメータ:*# +
 `{0}`: 呼出側のクラス名 +
 `{1}`: 呼出側のメソッド名 +
 `{2}`: 呼出側のファイル名 +
 `{3}`: 呼出側の行番号 +
-`{4}`: 対応する `Enter` メソッドを呼び出してからの時間 [.small .blue]#*_(1.4.3~)_*# +
+`{4}`: 対応する `Enter` メソッドを呼び出してからの時間 [.small .blue]#*_(v1.4.3~)_*# +
 
 |`ThreadBoundaryString`
 |スレッド境界で出力される文字列 +
@@ -464,22 +464,22 @@ NonPrintString = `\***` [.small .blue]#*_[デフォルト]_*# +
 |`DateTimeFormat`
 |日時の出力フォーマット +
 [.small]#*設定例:*# +
-`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffffffK}` [.small .blue]#*_[デフォルト] (1.4.1~)_*# +
-`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffffffK}` [.small .blue]#*_[デフォルト] (1.4.1より前)_*# +
+`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffffffK}` [.small .blue]#*_[デフォルト] (v1.4.1~)_*# +
+`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffffffK}` [.small .blue]#*_[デフォルト] (v1.4.1より前)_*# +
 [.small]#*パラメータ:*# +
 `{0}`: `DateTime` オブジェクト +
 
 |`LogDateTimeFormat` +
  +
-[.small .blue]#*_(1.3.0~)_*#
+[.small .blue]#*_(v1.3.0~)_*#
 |ログ出力時の日時の出力フォーマット +
 [.small]#*設定例:*# +
-`LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff} [{1:D2}] {2}` [.small .blue]#*_[デフォルト] (1.4.2~)_*# +
-`LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff}` [.small .blue]#*_[デフォルト] (1.4.2より前)_*# +
+`LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff} [{1:D2}] {2}` [.small .blue]#*_[デフォルト] (v1.4.2~)_*# +
+`LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff}` [.small .blue]#*_[デフォルト] (v1.4.2より前)_*# +
 [.small]#*パラメータ:*# +
 `{0}`: ログの出力日時 +
-`{1}`: スレッドID [.small .blue]#*_(1.4.2~)_*# +
-`{2}`: ログ内容 [.small .blue]#*_(1.4.2~)_*# +
+`{1}`: スレッドID [.small .blue]#*_(v1.4.2~)_*# +
+`{2}`: ログ内容 [.small .blue]#*_(v1.4.2~)_*# +
 
 |`MaxDataOutputWidth`
 |データの出力幅の最大値 +
@@ -532,7 +532,7 @@ NonPrintString = `\***` [.small .blue]#*_[デフォルト]_*# +
 
 |`OutputNonPublicFields`
  +
-[.small .blue]#*_(1.4.4~)_*#
+[.small .blue]#*_(v1.4.4~)_*#
 |`true` の場合、`public` ではないフィールドもリフレクションで内容を出力する +
 [.small]#*設定例:*# +
 `OutputNonPublicFields = true` +
@@ -540,7 +540,7 @@ NonPrintString = `\***` [.small .blue]#*_[デフォルト]_*# +
 
 |`OutputNonPublicProperties`
  +
-[.small .blue]#*_(1.4.4~)_*#
+[.small .blue]#*_(v1.4.4~)_*#
 |`true` の場合、`public` ではないプロパティもリフレクションで内容を出力する +
 [.small]#*設定例:*# +
 `OutputNonPublicProperties = true` +
@@ -586,13 +586,13 @@ NonPrintProperties = \
 
 コンソール出力以外に以下のライブラリを使用してログ出力が可能です。
 
-[options="header", cols="3,5,4", width="60%"]
+[options="header", cols="3,6,4", width="60%"]
 .ロギング・ライブラリ
 |===
-   ^s|ライブラリ名 ^s|必要なパッケージ                               ^s|対象フレームワーク
-     |log4net        |DebugTrace.Log4net                               |.NET Framework 4.7
-.2+.^|NLog           |DebugTrace.NLog [.small .blue]#*_(1.6.0~)_*#     |.NET Standard 2.0
-                     |DebugTrace.NLog [.small .blue]#*_(1.6.0より前)_*#|.NET Framework 4.7
+   ^s|ライブラリ名 ^s|必要なパッケージ                                ^s|対象フレームワーク
+     |log4net        |DebugTrace.Log4net                                |.NET Framework 4.7
+.2+.^|NLog           |DebugTrace.NLog [.small .blue]#*_(v1.6.0~)_*#     |.NET Standard 2.0
+                     |DebugTrace.NLog [.small .blue]#*_(v1.6.0より前)_*#|.NET Framework 4.7
 |===
 
 使用する場合は、上記パッケージをNuGetから追加してください。
