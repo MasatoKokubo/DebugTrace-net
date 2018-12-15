@@ -287,9 +287,8 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 *.cs_
-README.md
-DebugTraceExample/DebugTrace.properties
-DebugTraceTest/DebugTrace.properties
-DebugTraceVBExample/DebugTrace.properties
 *.db
 DebugTrace/Help/
+DebugTrace.NLog_netframework/
+DebugTrace.Log4net_netcore/
+*.zip

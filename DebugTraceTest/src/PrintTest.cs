@@ -45,20 +45,34 @@ namespace DebugTraceTest {
         }
 
         // string
-        [DataTestMethod]
-        [DataRow("\0"    , "v = \"\\0\" (")]
-        [DataRow("\a"    , "v = \"\\a\" (")]
-        [DataRow("\b"    , "v = \"\\b\" (")]
-        [DataRow("\t"    , "v = \"\\t\" (")]
-        [DataRow("\n"    , "v = \"\\n\" (")]
-        [DataRow("\v"    , "v = \"\\v\" (")]
-        [DataRow("\f"    , "v = \"\\f\" (")]
-        [DataRow("\r"    , "v = \"\\r\" (")]
-        [DataRow("\""    , "v = \"\\\"\" (")]
-        [DataRow("'"     , "v = \"'\" (")]
-        [DataRow("\\"    , "v = @\"\\\" (")]
-        [DataRow("\u0001", "v = \"\\u0001\" (")]
-        [DataRow("\u007F", "v = \"\\u007F\" (")]
+    // 1.5.1
+    //  [DataTestMethod]
+    //  [DataRow("\0"    , "v = \"\\0\" (")]
+    //  [DataRow("\a"    , "v = \"\\a\" (")]
+    //  [DataRow("\b"    , "v = \"\\b\" (")]
+    //  [DataRow("\t"    , "v = \"\\t\" (")]
+    //  [DataRow("\n"    , "v = \"\\n\" (")]
+    //  [DataRow("\v"    , "v = \"\\v\" (")]
+    //  [DataRow("\f"    , "v = \"\\f\" (")]
+    //  [DataRow("\r"    , "v = \"\\r\" (")]
+    //  [DataRow("\""    , "v = \"\\\"\" (")]
+    //  [DataRow("'"     , "v = \"'\" (")]
+    //  [DataRow("\\"    , "v = @\"\\\" (")]
+    //  [DataRow("\u0001", "v = \"\\u0001\" (")]
+    //  [DataRow("\u007F", "v = \"\\u007F\" (")]
+        [DataRow("\0"    , "v = (Length:1)\"\\0\" (")]
+        [DataRow("\a"    , "v = (Length:1)\"\\a\" (")]
+        [DataRow("\b"    , "v = (Length:1)\"\\b\" (")]
+        [DataRow("\t"    , "v = (Length:1)\"\\t\" (")]
+        [DataRow("\n"    , "v = (Length:1)\"\\n\" (")]
+        [DataRow("\v"    , "v = (Length:1)\"\\v\" (")]
+        [DataRow("\f"    , "v = (Length:1)\"\\f\" (")]
+        [DataRow("\r"    , "v = (Length:1)\"\\r\" (")]
+        [DataRow("\""    , "v = (Length:1)\"\\\"\" (")]
+        [DataRow("'"     , "v = (Length:1)\"'\" (")]
+        [DataRow("\\"    , "v = (Length:1)@\"\\\" (")]
+        [DataRow("\u0001", "v = (Length:1)\"\\u0001\" (")]
+        [DataRow("\u007F", "v = (Length:1)\"\\u007F\" (")]
         public void PrintString(string v, string expect) {
             Trace.Print("v", v);
             StringAssert.Contains(Trace.LastLog, expect);
@@ -260,6 +274,26 @@ namespace DebugTraceTest {
 
             Trace.Print("task.Result", task.Result);
             StringAssert.Contains(Trace.LastLog, "task.Result = 1 (");
+        }
+
+        // ValueTuple since 1.5.1
+        [TestMethod]
+        public void PrintValueTuple() {
+            Trace.Print("v", (1, 2));
+            StringAssert.Contains(Trace.LastLog, "v = (1, 2)");
+
+            Trace.Print("v", ((1, 2), (3, 4)));
+            StringAssert.Contains(Trace.LastLog, "v = ((1, 2), (3, 4))");
+        }
+
+        // Tuple since 1.5.1
+        [TestMethod]
+        public void PrintTuple() {
+            Trace.Print("v", new Tuple<int, int>(1, 2));
+            StringAssert.Contains(Trace.LastLog, "v = Tuple<int, int> (1, 2)");
+
+            Trace.Print("v", new Tuple<Tuple<int, int>, Tuple<int, int>>(new Tuple<int, int>(1, 2), new Tuple<int, int>(3, 4)));
+            StringAssert.Contains(Trace.LastLog, "v = Tuple<Tuple<int, int>, Tuple<int, int>> (Tuple<int, int> (1, 2), Tuple<int, int> (3, 4))");
         }
     }
 }

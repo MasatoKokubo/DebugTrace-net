@@ -15,8 +15,8 @@ By embedding `Trace.Enter()` and `Trace.Leave()` at the start and end of methods
 * You can customize the output content in `DebugTrace.properties`.
 * There is *no dependency library* if you output to the console
 * You can use the following logging library.
-    ** https://logging.apache.org/log4net/[log4net]
-    ** http://nlog-project.org/[NLog]
+  ** https://logging.apache.org/log4net/[log4net]
+  ** http://nlog-project.org/[NLog]
 
 === 2. Install
 
@@ -89,34 +89,34 @@ namespace Readme {
 
 .Console output / C#
 ----
-2018-10-28 20:23:13.809 [03] DebugTrace-net 1.5.0
-2018-10-28 20:23:13.809 [03]   Referenced properties file: Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceTest\bin\Debug\netcoreapp2.1\DebugTrace.properties
-2018-10-28 20:23:13.810 [03]   Logger wrapper: DebugTrace.Console+Error
-2018-10-28 20:23:13.811 [03] 
-2018-10-28 20:23:13.811 [03] ______________________________ Thread 3 ______________________________
-2018-10-28 20:23:13.811 [03] 
-2018-10-28 20:23:13.880 [03] Enter Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:14)
-2018-10-28 20:23:13.901 [03] | 
-2018-10-28 20:23:13.902 [03] | contacts = Readme.Contact[2] {
-2018-10-28 20:23:13.902 [03] |   Readme.Contact {
-2018-10-28 20:23:13.902 [03] |     ____ Readme.Entity ____
-2018-10-28 20:23:13.902 [03] |     ID: 1, 
-2018-10-28 20:23:13.902 [03] |     ____ Readme.ContactBase ____
-2018-10-28 20:23:13.904 [03] |     FirstName: "Akane", LastName: "Apple", 
-2018-10-28 20:23:13.904 [03] |     ____ Readme.Contact ____
-2018-10-28 20:23:13.904 [03] |     Birthday: 1991-02-03 00:00:00.0000000, 
-2018-10-28 20:23:13.904 [03] |   }, 
-2018-10-28 20:23:13.904 [03] |   Readme.Contact {
-2018-10-28 20:23:13.904 [03] |     ____ Readme.Entity ____
-2018-10-28 20:23:13.904 [03] |     ID: 2, 
-2018-10-28 20:23:13.904 [03] |     ____ Readme.ContactBase ____
-2018-10-28 20:23:13.904 [03] |     FirstName: "Yukari", LastName: "Apple", 
-2018-10-28 20:23:13.904 [03] |     ____ Readme.Contact ____
-2018-10-28 20:23:13.904 [03] |     Birthday: 1992-03-04 00:00:00.0000000, 
-2018-10-28 20:23:13.904 [03] |   }, 
-2018-10-28 20:23:13.904 [03] | } (ReadmeExamples.cs:20)
-2018-10-28 20:23:13.905 [03] | 
-2018-10-28 20:23:13.906 [03] Leave Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:22) time: 00:00:00.0245863
+2018-12-15 12:15:43.356 [03] DebugTrace-net 1.5.1
+2018-12-15 12:15:43.357 [03]   Referenced properties file: Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceTest\bin\Debug\netcoreapp2.1\DebugTrace.properties
+2018-12-15 12:15:43.357 [03]   Logger wrapper: DebugTrace.Console+Error
+2018-12-15 12:15:43.360 [03] 
+2018-12-15 12:15:43.360 [03] ______________________________ Thread 3 ______________________________
+2018-12-15 12:15:43.360 [03] 
+2018-12-15 12:15:43.444 [03] Enter Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:14)
+2018-12-15 12:15:43.474 [03] | 
+2018-12-15 12:15:43.475 [03] | contacts = Readme.Contact[2] {
+2018-12-15 12:15:43.475 [03] |   Readme.Contact {
+2018-12-15 12:15:43.475 [03] |     ____ Readme.Entity ____
+2018-12-15 12:15:43.475 [03] |     ID: 1, 
+2018-12-15 12:15:43.475 [03] |     ____ Readme.ContactBase ____
+2018-12-15 12:15:43.475 [03] |     FirstName: (Length:5)"Akane", LastName: (Length:5)"Apple", 
+2018-12-15 12:15:43.475 [03] |     ____ Readme.Contact ____
+2018-12-15 12:15:43.475 [03] |     Birthday: 1991-02-03 00:00:00.0000000, 
+2018-12-15 12:15:43.475 [03] |   }, 
+2018-12-15 12:15:43.475 [03] |   Readme.Contact {
+2018-12-15 12:15:43.475 [03] |     ____ Readme.Entity ____
+2018-12-15 12:15:43.475 [03] |     ID: 2, 
+2018-12-15 12:15:43.475 [03] |     ____ Readme.ContactBase ____
+2018-12-15 12:15:43.475 [03] |     FirstName: (Length:6)"Yukari", LastName: (Length:5)"Apple", 
+2018-12-15 12:15:43.475 [03] |     ____ Readme.Contact ____
+2018-12-15 12:15:43.475 [03] |     Birthday: 1992-03-04 00:00:00.0000000, 
+2018-12-15 12:15:43.475 [03] |   }, 
+2018-12-15 12:15:43.475 [03] | } (ReadmeExamples.cs:20)
+2018-12-15 12:15:43.476 [03] | 
+2018-12-15 12:15:43.477 [03] Leave Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:22) time: 00:00:00.0317334
 ----
 
 [source,vb.net]
@@ -174,34 +174,34 @@ End Namespace
 
 .Console output / Visual Basic
 ----
-2018-10-28 22:46:18.478 [12] DebugTrace-net 1.5.0
-2018-10-28 22:46:18.479 [12]   Referenced properties file: Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceVBTest\bin\Debug\DebugTrace.properties
-2018-10-28 22:46:18.480 [12]   Logger wrapper: DebugTrace.Console+Error
-2018-10-28 22:46:18.482 [12] 
-2018-10-28 22:46:18.482 [12] ______________________________ Thread 12 ______________________________
-2018-10-28 22:46:18.482 [12] 
-2018-10-28 22:46:18.586 [12] Enter DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:14)
-2018-10-28 22:46:18.603 [12] | 
-2018-10-28 22:46:18.604 [12] | contacts = DebugTraceVBTest.Readme.Contact[2] {
-2018-10-28 22:46:18.604 [12] |   DebugTraceVBTest.Readme.Contact {
-2018-10-28 22:46:18.604 [12] |     ____ DebugTraceVBTest.Readme.Entity ____
-2018-10-28 22:46:18.604 [12] |     Id: 1, 
-2018-10-28 22:46:18.604 [12] |     ____ DebugTraceVBTest.Readme.ContactBase ____
-2018-10-28 22:46:18.604 [12] |     FirstName: "Akane", LastName: "Apple", 
-2018-10-28 22:46:18.604 [12] |     ____ DebugTraceVBTest.Readme.Contact ____
-2018-10-28 22:46:18.604 [12] |     Birthday: 1991-02-03 00:00:00.0000000, 
-2018-10-28 22:46:18.604 [12] |   }, 
-2018-10-28 22:46:18.604 [12] |   DebugTraceVBTest.Readme.Contact {
-2018-10-28 22:46:18.604 [12] |     ____ DebugTraceVBTest.Readme.Entity ____
-2018-10-28 22:46:18.604 [12] |     Id: 2, 
-2018-10-28 22:46:18.604 [12] |     ____ DebugTraceVBTest.Readme.ContactBase ____
-2018-10-28 22:46:18.604 [12] |     FirstName: "Yukari", LastName: "Apple", 
-2018-10-28 22:46:18.604 [12] |     ____ DebugTraceVBTest.Readme.Contact ____
-2018-10-28 22:46:18.604 [12] |     Birthday: 1992-03-04 00:00:00.0000000, 
-2018-10-28 22:46:18.604 [12] |   }, 
-2018-10-28 22:46:18.604 [12] | } (ReadmeExamples.vb:20)
-2018-10-28 22:46:18.605 [12] | 
-2018-10-28 22:46:18.605 [12] Leave DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:22) time: 00:00:00.0186238
+2018-12-15 13:16:51.905 [12] DebugTrace-net 1.5.1
+2018-12-15 13:16:51.907 [12]   Referenced properties file: Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceVBTest\bin\Debug\DebugTrace.properties
+2018-12-15 13:16:51.907 [12]   Logger wrapper: DebugTrace.Console+Error
+2018-12-15 13:16:51.909 [12] 
+2018-12-15 13:16:51.909 [12] ______________________________ Thread 12 ______________________________
+2018-12-15 13:16:51.909 [12] 
+2018-12-15 13:16:52.004 [12] Enter DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:14)
+2018-12-15 13:16:52.024 [12] | 
+2018-12-15 13:16:52.026 [12] | contacts = DebugTraceVBTest.Readme.Contact[2] {
+2018-12-15 13:16:52.026 [12] |   DebugTraceVBTest.Readme.Contact {
+2018-12-15 13:16:52.026 [12] |     ____ DebugTraceVBTest.Readme.Entity ____
+2018-12-15 13:16:52.026 [12] |     Id: 1, 
+2018-12-15 13:16:52.026 [12] |     ____ DebugTraceVBTest.Readme.ContactBase ____
+2018-12-15 13:16:52.026 [12] |     FirstName: (Length:5)"Akane", LastName: (Length:5)"Apple", 
+2018-12-15 13:16:52.026 [12] |     ____ DebugTraceVBTest.Readme.Contact ____
+2018-12-15 13:16:52.026 [12] |     Birthday: 1991-02-03 00:00:00.0000000, 
+2018-12-15 13:16:52.026 [12] |   }, 
+2018-12-15 13:16:52.026 [12] |   DebugTraceVBTest.Readme.Contact {
+2018-12-15 13:16:52.026 [12] |     ____ DebugTraceVBTest.Readme.Entity ____
+2018-12-15 13:16:52.026 [12] |     Id: 2, 
+2018-12-15 13:16:52.026 [12] |     ____ DebugTraceVBTest.Readme.ContactBase ____
+2018-12-15 13:16:52.026 [12] |     FirstName: (Length:6)"Yukari", LastName: (Length:5)"Apple", 
+2018-12-15 13:16:52.026 [12] |     ____ DebugTraceVBTest.Readme.Contact ____
+2018-12-15 13:16:52.026 [12] |     Birthday: 1992-03-04 00:00:00.0000000, 
+2018-12-15 13:16:52.026 [12] |   }, 
+2018-12-15 13:16:52.026 [12] | } (ReadmeExamples.vb:20)
+2018-12-15 13:16:52.027 [12] | 
+2018-12-15 13:16:52.029 [12] Leave DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:22) time: 00:00:00.0230803
 ----
 
 ==== 3.1 If using or Imports System.Diagnostics
@@ -318,8 +318,7 @@ It has the following properties and methods.
 
 === 7. Properties of *DebugTrace.properties* file
 
-DebugTrace reads the `DebugTrace.properties` file in the current directory at startup
-[.small]#(since v1.4.0, Reads the the file in the same directory as DebugTrace.dll in earlier versions)#. +
+DebugTrace reads the `DebugTrace.properties` file in the current directory at startup. +
 You can specify following properties in the `DebugTrace.properties` file.  
 
 [options="header", cols="2,8", width="100%"]
@@ -382,14 +381,13 @@ You can specify following properties in the `DebugTrace.properties` file.
 |`LeaveString`
 |The string output by `Leave` method +
 [.small]#*Examples:*# +
-`LeaveString = Leave {0}.{1} ({2}:{3:D}) time: {4}` [.small .blue]#*_[Default] (since v1.4.3)_*# +
-`LeaveString = Leave {0}.{1} ({2}:{3:D})` [.small .blue]#*_[Default] (before v1.4.3)_*# +
+`LeaveString = Leave {0}.{1} ({2}:{3:D}) time: {4}` [.small .blue]#*_[Default]_*# +
 [.small]#*Parameters:*# +
 `{0}`: The class name of the caller +
 `{1}`: The method name of the caller +
 `{2}`: The file name of the caller +
 `{3}`: The line number of the caller +
-`{4}`: The time since invoking the corresponding `Enter` method [.small .blue]#*_(since v1.4.3)_*# +
+`{4}`: The time since invoking the corresponding `Enter` method +
 
 |`ThreadBoundaryString`
 |The string output in the threads boundary +
@@ -423,12 +421,12 @@ You can specify following properties in the `DebugTrace.properties` file.
 [.small]#*Example:*# +
 `LimitString = \...` [.small .blue]#*_[Default]_*# +
 
-|`DefaultNameSpaceString` +
+|`DefaultNameSpaceString`
 |The string replacing the default namespace part +
 [.small]#*Example:*# +
 `DefaultNameSpaceString = \...` [.small .blue]#*_[Default]_*# +
 
-|`NonPrintString` +
+|`NonPrintString`
 |The string of value in the case of properties that do not output the value +
 [.small]#*Example:*# +
 `NonPrintString = \***` [.small .blue]#*_[Default]_*# +
@@ -462,28 +460,42 @@ and between the property/field name and value +
 `{2}`: The file name of the caller +
 `{3}`: The line number of the caller +
 
+|`CountFormat` +
+ +
+[.small .blue]#*_(since v1.5.1)_*# 
+|Output format of the count of collections +
+[.small]#*Examples:*# +
+`CountFormat = \sCount:{0}` [.small .blue]#*_[Default]_*# +
+[.small]#*Parameter:*# +
+`{0}`: The count of collections +
+
+|`StringLengthFormat` +
+ +
+[.small .blue]#*_(since v1.5.1)_*# 
+|Output format of the length of strings +
+[.small]#*Examples:*# +
+`StringLengthFormat = (Length:{0})` [.small .blue]#*_[Default]_*# +
+[.small]#*Parameter:*# +
+`{0}`: The length of strings +
+
 |`DateTimeFormat`
 |Output format of DateTime +
 [.small]#*Examples:*# +
-`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffffffK}` [.small .blue]#*_[Default] (since v1.4.1)_*# +
-`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffK}` [.small .blue]#*_[Default] (before v1.4.1)_*# +
+`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffffffK}` [.small .blue]#*_[Default]_*# +
 [.small]#*Parameter:*# +
 `{0}`: The `DateTime` object +
 
 |`LogDateTimeFormat` +
- +
-[.small .blue]#*_(since v1.3.0)_*#
 |Output format of date and time when outputting logs +
 [.small]#*Examples:*# +
-`LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff} [{1:D2}] {2}` [.small .blue]#*_[Default] (since v1.4.2)_*# +
-`LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff}` [.small .blue]#*_[Default] (before v1.4.2)_*# +
+`LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff} [{1:D2}] {2}` [.small .blue]#*_[Default]_*# +
 [.small]#*Parameter:*# +
 `{0}`: The `DateTime` of log output +
-`{1}`: The thread ID [.small .blue]#*_(since v1.4.2)_*# +
-`{2}`: The log contents [.small .blue]#*_(since v1.4.2)_*# +
+`{1}`: The thread ID +
+`{2}`: The log contents +
 
 |`MaxDataOutputWidth`
-|Maximum output width of data* +
+|Maximum output width of data +
 [.small]#*Example:*# +
 `MaxDataOutputWidth = 80` [.small .blue]#*_[Default]_*# +
 
@@ -502,7 +514,7 @@ and between the property/field name and value +
 [.small]#*Example:*# +
 `ReflectionNestLimit = 4` [.small .blue]#*_[Default]_*# +
 
-|`NonPrintProperties` +
+|`NonPrintProperties`
 |Properties and fields not to be output value +
 [.small]#*Example (One value):*# +
 `NonPrintProperties = DebugTraceExample.Node.Parent` +
@@ -515,13 +527,13 @@ and between the property/field name and value +
 `<full class name>.<property or field name>` +
 [.small .blue]#The default value is unspecified#
 
-|`DefaultNameSpace` +
+|`DefaultNameSpace`
 |Default namespace of your C# source +
 [.small]#*Example:*# +
 `DefaultNameSpace = DebugTraceExample` +
 [.small .blue]#The default value is unspecified#
 
-|`ReflectionClasses` +
+|`ReflectionClasses`
 |Classe names that output content by reflection even if `ToString` method is implemented
 [.small]#*Example (One value):*# +
 `ReflectionClasses = DebugTraceExample.Point` +
@@ -532,16 +544,12 @@ and between the property/field name and value +
 [.small .blue]#The default value is unspecified#
 
 |`OutputNonPublicFields`
- +
-[.small .blue]#*_(since v1.4.4)_*#
 |If `true`, outputs the contents by reflection even for fields which are not `public` +
 [.small]#*Examples:*# +
 `OutputNonPublicFields = true` +
 `OutputNonPublicFields = false` [.small .blue]#*_[Default]_*# +
 
 |`OutputNonPublicProperties`
- +
-[.small .blue]#*_(since v1.4.4)_*#
 |If `true`, outputs the contents by reflection even for properties which are not `public` +
 [.small]#*Examples:*# +
 `OutputNonPublicProperties = true` +
@@ -675,5 +683,34 @@ link:LICENSE[The MIT License (MIT)]
 === 10. Documents
 
 https://masatokokubo.github.io/DebugTrace-net/index.html[API Specification]
+
+=== 11. Release Notes
+
+==== DebugTrace-net 1.5.1 [.small .gray]#- December 15, 2018#
+
+* Improvement
+  ** Now outputs the length of strings.
+
+* Add Properties in `DebugTrace.properties`
+  ** `CountFormat`: Output format of the count of collections
+  ** `StringLengthFormat`: Output format of the length of strings
+
+==== DebugTrace.NLog 1.6.0 [.small .gray]#- November 18, 2018#
+* Changed target framework from .NET Frameword 4.7 to .NET Standard 2.0.
+
+==== DebugTrace-net 1.5.0 [.small .gray]#- October 28, 2018#
+* Bug fix
+  ** **_[Fixed]_** Throws a `NullReferenceException` when print a `Task` on `TraceBase.OutputNonPublicFields = true`.
+
+* Improvement
+  ** You can now specify multiple loggers in DebugTrace.properties. (e.g.: `Logger = Console+Out; Log4net`)
+
+==== DebugTrace.Log4net 1.5.0 [.small .gray]#- October 28, 2018#
+* This release is for DebugTrace-net 1.5.0.
+
+==== DebugTrace.NLog 1.5.0 [.small .gray]#- October 28, 2018#
+* Changes
+  ** This release is for DebugTrace-net 1.5.0.
+  ** Depends on Nlog 4.5.10.
 
 [gray]#_(C) 2018 Masato Kokubo_#

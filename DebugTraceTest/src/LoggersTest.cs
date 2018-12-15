@@ -21,20 +21,6 @@ namespace DebugTraceTest {
         // ClassInit
         [ClassInitialize]
         public static void ClassInit(TestContext context) {
-            var log4netConfig = new XmlDocument();
-            using (StreamReader reader = new StreamReader(new FileStream("log4net.config", FileMode.Open, FileAccess.Read))) {
-                log4netConfig.Load(reader);
-            }
-            var rep = log4net.LogManager.CreateRepository(Assembly.GetEntryAssembly(),
-                typeof(log4net.Repository.Hierarchy.Hierarchy));
-            XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
-
-            log4netFileInfo = new FileInfo("C:/Logs/DebugTrace/Log4net.log");
-            try {
-                using (var stream = log4netFileInfo.Open(FileMode.Truncate)) {}
-            }
-            catch (Exception) {}
-
             nLogFileInfo = new FileInfo("C:/Logs/DebugTrace/NLog.log");
             try {
                 using (var stream = nLogFileInfo.Open(FileMode.Truncate)) {}

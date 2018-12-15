@@ -27,6 +27,8 @@ namespace DebugTraceTest {
             {nameof(TraceBase.VarNameValueSeparator    ), @"\s<=\s"},
             {nameof(TraceBase.KeyValueSeparator        ), @"\s::\s"},
             {nameof(TraceBase.PrintSuffixFormat        ), @"\s[{2}:{3:D}]"},
+            {nameof(TraceBase.CountFormat              ), @"\s_Count_:{0}"}, // 1.5.1
+            {nameof(TraceBase.StringLengthFormat       ), @"(_Length_:{0})"}, // 1.5.1
             {nameof(TraceBase.DateTimeFormat           ), @"{0:MM-dd-yyyy hh:mm:ss.fffffffK}"},
             {nameof(TraceBase.LogDateTimeFormat        ), @"{0:MM-dd-yyyy hh:mm:ss.fff} [{1:D2}] {2}"}, // since 1.3.0
             {nameof(TraceBase.MaxDataOutputWidth       ), "40"},
@@ -90,6 +92,8 @@ namespace DebugTraceTest {
             Assert.AreEqual(TraceBase.VarNameValueSeparator  , Resource.Unescape(testProperties[nameof(TraceBase.VarNameValueSeparator  )]));
             Assert.AreEqual(TraceBase.KeyValueSeparator      , Resource.Unescape(testProperties[nameof(TraceBase.KeyValueSeparator      )]));
             Assert.AreEqual(TraceBase.PrintSuffixFormat      , Resource.Unescape(testProperties[nameof(TraceBase.PrintSuffixFormat      )]));
+            Assert.AreEqual(TraceBase.CountFormat            , Resource.Unescape(testProperties[nameof(TraceBase.CountFormat            )])); // since 1.5.1
+            Assert.AreEqual(TraceBase.StringLengthFormat     , Resource.Unescape(testProperties[nameof(TraceBase.StringLengthFormat     )])); // since 1.5.1
             Assert.AreEqual(TraceBase.DateTimeFormat         , Resource.Unescape(testProperties[nameof(TraceBase.DateTimeFormat         )]));
             Assert.AreEqual(TraceBase.LogDateTimeFormat      , Resource.Unescape(testProperties[nameof(TraceBase.LogDateTimeFormat      )])); // since 1.3.0
             Assert.AreEqual(TraceBase.MaxDataOutputWidth .ToString(),            testProperties[nameof(TraceBase.MaxDataOutputWidth     )]);
@@ -206,6 +210,20 @@ namespace DebugTraceTest {
         public void KeyValueSeparator() {
             Trace.Print("value", new Dictionary<int, int>() {{1, 2}});
             StringAssert.Contains(Trace.LastLog, "1" + TraceBase.KeyValueSeparator + "2");
+        }
+
+        // CountFormat
+        [TestMethod]
+        public void CountFormat() {
+            Trace.Print("value", new List<int>() {1, 2, 3});
+            StringAssert.Contains(Trace.LastLog, string.Format(TraceBase.CountFormat, 3));
+        }
+
+        // StringLengthFormat
+        [TestMethod]
+        public void StringLengthFormat() {
+            Trace.Print("value", "ABC");
+            StringAssert.Contains(Trace.LastLog, string.Format(TraceBase.StringLengthFormat, 3));
         }
 
         // ReflectionClasses

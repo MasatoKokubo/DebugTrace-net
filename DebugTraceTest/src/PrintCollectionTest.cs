@@ -39,7 +39,8 @@ namespace DebugTraceTest {
         // Dictionary<int, string>
         [DataTestMethod]
         [DataRow(new [] {0, 1}, new [] {"0", "1"},
-            "d = System.Collections.Generic.Dictionary<int, string> Count:2 {0: \"0\", 1: \"1\"} (")]
+//          "d = System.Collections.Generic.Dictionary<int, string> Count:2 {0: \"0\", 1: \"1\"} (")]
+            "d = System.Collections.Generic.Dictionary<int, string> Count:2 {0: (Length:1)\"0\", 1: (Length:1)\"1\"} (")] // 1.5.1
         public void PrintDictionary(int[] k, string[] v, string expect) {
             var d = new Dictionary<int, string>();
             for (int index = 0; index < k.Length; ++index)

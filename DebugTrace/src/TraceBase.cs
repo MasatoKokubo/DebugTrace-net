@@ -89,6 +89,18 @@ namespace DebugTrace {
         public static string PrintSuffixFormat {get; set;}
 
         /// <summary>
+        /// Output format of the count of collections
+        /// <since>1.5.1</since>
+        /// </summary>
+        public static string CountFormat {get; set;}
+
+        /// <summary>
+        /// Output format of the length of strings
+        /// <since>1.5.1</since>
+        /// </summary>
+        public static string StringLengthFormat {get; set;}
+
+        /// <summary>
         /// Output format of <c>DateTime</c>
         /// </summary>
         public static string DateTimeFormat {get; set;}
@@ -224,6 +236,8 @@ namespace DebugTrace {
             VarNameValueSeparator     = Resource.GetString (nameof(VarNameValueSeparator    ), Resource.Unescape(@"\s=\s"));
             KeyValueSeparator         = Resource.GetString (nameof(KeyValueSeparator        ), Resource.Unescape(@":\s"));
             PrintSuffixFormat         = Resource.GetString (nameof(PrintSuffixFormat        ), Resource.Unescape(@"\s({2}:{3:D})"));
+            CountFormat               = Resource.GetString (nameof(CountFormat              ), Resource.Unescape(@"\sCount:{0}")); // since 1.5.1
+            StringLengthFormat        = Resource.GetString (nameof(StringLengthFormat       ), Resource.Unescape(@"(Length:{0})")); // since 1.5.1
             DateTimeFormat            = Resource.GetString (nameof(DateTimeFormat           ), Resource.Unescape(@"{0:yyyy-MM-dd HH:mm:ss.fffffffK}"));
             LogDateTimeFormat         = Resource.GetString (nameof(LogDateTimeFormat        ), Resource.Unescape(@"{0:yyyy-MM-dd HH:mm:ss.fff} [{1:D2}] {2}")); // since 1.3.0
             MaxDataOutputWidth        = Resource.GetInt    (nameof(MaxDataOutputWidth       ), 80);
@@ -746,7 +760,10 @@ namespace DebugTrace {
                             }
                             catch (Exception) {}
                             if (count >= 0)
-                                typeName += " Count:" + count;
+                            // 1.5.1
+                            //  typeName += " Count:" + count;
+                                typeName += string.Format(CountFormat, count);
+                            ////
                         }
                     }
                 }
@@ -1002,6 +1019,9 @@ namespace DebugTrace {
         protected bool AppendString(LogBuffer buff, string str, bool escape) {
             buff.Save(); // Save current point
             var needAtChar = false;
+        // 1.5.1
+            buff.Append(string.Format(StringLengthFormat, str.Length));
+        ////
             buff.Append('"');
             for (int index = 0; index < str.Length; ++index) {
                 if (index >= StringLimit) {
@@ -1364,10 +1384,9 @@ namespace DebugTrace {
 
         // AppendReflectValue / MemberInfo
         private bool AppendReflectValue(LogBuffer buff, Type type, object obj, MemberInfo memberInfo) {
-            if (!IsTuple(type)) {
-                AppendAccessModifire(buff, memberInfo);
+            AppendAccessModifire(buff, memberInfo);
+            if (!IsTuple(type))
                 buff.Append(memberInfo.Name).Append(KeyValueSeparator);
-            }
 
             if (NonPrintProperties.Contains(GetFullTypeName(type) + '.' + memberInfo.Name)) {
                 buff.Append(NonPrintString);
