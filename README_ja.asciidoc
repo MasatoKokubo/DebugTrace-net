@@ -204,31 +204,30 @@ End Namespace
 
 ==== 3.1 using System.Diagnostics(Imports System.Diagnostics)を行っている場合
 
-`System.Diagnostics` 名前空間を `using`(`Imports`) している場合は、 `DebugTrace.CSharp.Trace`(`DebugTrace.VisualBaisc.Trace`) プロパティと `System.Diagnostics.Trace` クラスが重なるため、`Trace` プロパティを直接使用できません。 +
-その場合は、`using static DebugTrace.CSharp`(`Imports DebugTrace.VisualBasic`)ではなく `using DebugTrace` (`Imports DebugTrace`)、および `Trace` ではなく `CSharp.Trace`(`VisualBasic.Trace`)を使用してください。
+`System.Diagnostics` 名前空間を `using`(`Imports`) している場合は、 `DebugTrace.CSharp.Trace`(`DebugTrace.VisualBaisc.Trace`) プロパティと `System.Diagnostics.Trace` クラスが重なるため、`Trace` プロパティの代わりに `Trace_` プロパティを使用してください。 +
 
 [source,csharp]
 .ReadmeExample.cs
 ----
 using System.Diagnostics;
-using DebugTrace; // for Debugging
+using static DebugTrace.CSharp; // for Debugging
 
 namespace Readme {
     public class ReadmeExample {
         public static void Main(string[] args) {
-            CSharp.Trace.Enter(); // for Debugging
+            Trace_.Enter(); // for Debugging
 ----
 
 [source,vb.net]
 .ReadmeExample.vb
 ----
 Imports System.Diagnostics
-Imports DebugTrace ' for Debugging
+Imports DebugTrace.VisualBasic ' for Debugging
 
 Namespace Global.Readme
     Public Class ReadmeExample
         Public Shared Sub Main(args As String())
-            VisualBasic.Trace.Enter() ' for Debugging
+            Trace_.Enter() ' for Debugging
 ----
 
 === 4. インタフェース、クラス
@@ -251,7 +250,7 @@ Namespace Global.Readme
 
 === 5. DebugTrace.CSharpおよびDebugTrace.VisualBasicクラスのプロパティ
 
-`DebugTrace.CSharp` クラスと `DebugTrace.VisualBasic` クラスには自身の型のインスタンスとして `Trace` プロパティがあります。
+`DebugTrace.CSharp` クラスと `DebugTrace.VisualBasic` クラスには自身の型のインスタンスとして `Trace` および `Trace_` プロパティがあります。
 
 === 6. ITraceインタフェースのプロパティおよびメソッド
 

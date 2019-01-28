@@ -289,6 +289,4 @@ __pycache__/
 *.cs_
 *.db
 DebugTrace/Help/
-DebugTrace.NLog_netframework/
-DebugTrace.Log4net_netcore/
 *.zip

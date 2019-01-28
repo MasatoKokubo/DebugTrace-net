@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -20,8 +21,8 @@ namespace DebugTraceTest {
         [DataRow(false, "v = false (")]
         [DataRow(true , "v = true (")]
         public void PrintBool(bool v, string expect) {
-            Trace.Print("v", v);
-            StringAssert.Contains(Trace.LastLog, expect);
+            Trace_.Print("v", v);
+            StringAssert.Contains(Trace_.LastLog, expect);
         }
 
         // char
@@ -40,8 +41,8 @@ namespace DebugTraceTest {
         [DataRow('\u0001', "v = '\\u0001' (")]
         [DataRow('\u007F', "v = '\\u007F' (")]
         public void PrintChar(char v, string expect) {
-            Trace.Print("v", v);
-            StringAssert.Contains(Trace.LastLog, expect);
+            Trace_.Print("v", v);
+            StringAssert.Contains(Trace_.LastLog, expect);
         }
 
         // string
@@ -74,9 +75,9 @@ namespace DebugTraceTest {
         [DataRow("\u0001", "v = (Length:1)\"\\u0001\" (")]
         [DataRow("\u007F", "v = (Length:1)\"\\u007F\" (")]
         public void PrintString(string v, string expect) {
-            Trace.Print("v", v);
-            StringAssert.Contains(Trace.LastLog, expect);
-            Trace.Print("Trace.LastLog", Trace.LastLog);
+            Trace_.Print("v", v);
+            StringAssert.Contains(Trace_.LastLog, expect);
+            Trace_.Print("Trace_.LastLog", Trace_.LastLog);
         }
 
         // sbyte
@@ -87,8 +88,8 @@ namespace DebugTraceTest {
         [DataRow((sbyte)   1, "v = sbyte 1 (")]
         [DataRow((sbyte) 127, "v = sbyte 127 (")]
         public void PrintSByte(sbyte v, string expect) {
-            Trace.Print("v", v);
-            StringAssert.Contains(Trace.LastLog, expect);
+            Trace_.Print("v", v);
+            StringAssert.Contains(Trace_.LastLog, expect);
         }
 
         // byte
@@ -97,8 +98,8 @@ namespace DebugTraceTest {
         [DataRow((byte)  1, "v = byte 1 (")]
         [DataRow((byte)255, "v = byte 255 (")]
         public void PrintByte(byte v, string expect) {
-            Trace.Print("v", v);
-            StringAssert.Contains(Trace.LastLog, expect);
+            Trace_.Print("v", v);
+            StringAssert.Contains(Trace_.LastLog, expect);
         }
 
         // short
@@ -109,8 +110,8 @@ namespace DebugTraceTest {
         [DataRow((short)     1, "v = short 1 (")]
         [DataRow((short) 32767, "v = short 32767 (")]
         public void PrintShort(short v, string expect) {
-            Trace.Print("v", v);
-            StringAssert.Contains(Trace.LastLog, expect);
+            Trace_.Print("v", v);
+            StringAssert.Contains(Trace_.LastLog, expect);
         }
 
         // ushort
@@ -119,8 +120,8 @@ namespace DebugTraceTest {
         [DataRow((ushort)    1, "v = ushort 1 (")]
         [DataRow((ushort)65535, "v = ushort 65535 (")]
         public void PrintUShort(ushort v, string expect) {
-            Trace.Print("v", v);
-            StringAssert.Contains(Trace.LastLog, expect);
+            Trace_.Print("v", v);
+            StringAssert.Contains(Trace_.LastLog, expect);
         }
 
         // int
@@ -131,8 +132,8 @@ namespace DebugTraceTest {
         [DataRow(          1, "v = 1 (")]
         [DataRow( 2147483647, "v = 2147483647 (")]
         public void PrintInt(int v, string expect) {
-            Trace.Print("v", v);
-            StringAssert.Contains(Trace.LastLog, expect);
+            Trace_.Print("v", v);
+            StringAssert.Contains(Trace_.LastLog, expect);
         }
 
         // uint
@@ -141,8 +142,8 @@ namespace DebugTraceTest {
         [DataRow(         1u, "v = 1u (")]
         [DataRow(4294967295u, "v = 4294967295u (")]
         public void PrintUInt(uint v, string expect) {
-            Trace.Print("v", v);
-            StringAssert.Contains(Trace.LastLog, expect);
+            Trace_.Print("v", v);
+            StringAssert.Contains(Trace_.LastLog, expect);
         }
 
         // long
@@ -153,8 +154,8 @@ namespace DebugTraceTest {
         [DataRow(                   1L, "v = 1L (")]
         [DataRow( 9223372036854775807L, "v = 9223372036854775807L (")]
         public void PrintLong(long v, string expect) {
-            Trace.Print("v", v);
-            StringAssert.Contains(Trace.LastLog, expect);
+            Trace_.Print("v", v);
+            StringAssert.Contains(Trace_.LastLog, expect);
         }
 
         // ulong
@@ -163,8 +164,8 @@ namespace DebugTraceTest {
         [DataRow(                   1uL, "v = 1uL (")]
         [DataRow(18446744073709551615uL, "v = 18446744073709551615uL (")]
         public void PrintULong(ulong v, string expect) {
-            Trace.Print("v", v);
-            StringAssert.Contains(Trace.LastLog, expect);
+            Trace_.Print("v", v);
+            StringAssert.Contains(Trace_.LastLog, expect);
         }
 
         // decimal
@@ -178,8 +179,8 @@ namespace DebugTraceTest {
         [DataRow(          "1"           , "v = 1m (")]
         [DataRow( "9876543210.0123456789", "v = 9876543210.0123456789m (")]
         public void PrintDecimal(string v, string expect) {
-            Trace.Print("v", decimal.Parse(v));
-            StringAssert.Contains(Trace.LastLog, expect);
+            Trace_.Print("v", decimal.Parse(v));
+            StringAssert.Contains(Trace_.LastLog, expect);
         }
 
         // float
@@ -194,8 +195,8 @@ namespace DebugTraceTest {
         [DataRow(  210.012f, "v = 210.012f (")]
         [DataRow( 3210.012f, "v = 3210.012f (")]
         public void PrintFloat(float v, string expect) {
-            Trace.Print("v", v);
-            StringAssert.Contains(Trace.LastLog, expect);
+            Trace_.Print("v", v);
+            StringAssert.Contains(Trace_.LastLog, expect);
         }
 
         // double
@@ -218,8 +219,8 @@ namespace DebugTraceTest {
         [DataRow(  6543210.0123456, "v = 6543210.0123456d (")]
         [DataRow( 76543210.0123456, "v = 76543210.0123456d (")]
         public void PrintDouble(double v, string expect) {
-            Trace.Print("v", v);
-            StringAssert.Contains(Trace.LastLog, expect);
+            Trace_.Print("v", v);
+            StringAssert.Contains(Trace_.LastLog, expect);
         }
 
         // DateTime
@@ -234,24 +235,24 @@ namespace DebugTraceTest {
                 var timeSpan = TimeZoneInfo.Local.GetUtcOffset(v);
                 expect += String.Format(timeSpan.Ticks >= 0L ? @"+{0:hh\:mm} (" : @"-{0:hh\:mm} (", timeSpan);
             }
-            Trace.Print("v", v);
-            StringAssert.Contains(Trace.LastLog, expect);
+            Trace_.Print("v", v);
+            StringAssert.Contains(Trace_.LastLog, expect);
         }
 
         // Guid
         [DataTestMethod]
         [DataRow("CE8BF46B-723B-44B4-BBF5-288B6C736127", "v = System.Guid ce8bf46b-723b-44b4-bbf5-288b6c736127 (")]
         public void PrintGuid(string v, string expect) {
-            Trace.Print("v", new Guid(v));
-            StringAssert.Contains(Trace.LastLog, expect);
+            Trace_.Print("v", new Guid(v));
+            StringAssert.Contains(Trace_.LastLog, expect);
         }
 
         // Point
         [DataTestMethod]
         [DataRow(1, 2, "v = DebugTraceTest.Point {X: 1, Y: 2} (")]
         public void PrintPoint(int x, int y, string expect) {
-            Trace.Print("v", new Point(x, y));
-            StringAssert.Contains(Trace.LastLog, expect);
+            Trace_.Print("v", new Point(x, y));
+            StringAssert.Contains(Trace_.LastLog, expect);
         }
 
         // Task since 1.4.1
@@ -268,32 +269,32 @@ namespace DebugTraceTest {
             TraceBase.OutputNonPublicFields     = outputNonPublicFields;
             TraceBase.OutputNonPublicProperties = outputNonPublicProperties;
 
-            Trace.Print("v", task);
-            StringAssert.Contains(Trace.LastLog, expect);
+            Trace_.Print("v", task);
+            StringAssert.Contains(Trace_.LastLog, expect);
             Assert.AreEqual(TaskStatus.Running, task.Status);
 
-            Trace.Print("task.Result", task.Result);
-            StringAssert.Contains(Trace.LastLog, "task.Result = 1 (");
+            Trace_.Print("task.Result", task.Result);
+            StringAssert.Contains(Trace_.LastLog, "task.Result = 1 (");
         }
 
         // ValueTuple since 1.5.1
         [TestMethod]
         public void PrintValueTuple() {
-            Trace.Print("v", (1, 2));
-            StringAssert.Contains(Trace.LastLog, "v = (1, 2)");
+            Trace_.Print("v", (1, 2));
+            StringAssert.Contains(Trace_.LastLog, "v = (1, 2)");
 
-            Trace.Print("v", ((1, 2), (3, 4)));
-            StringAssert.Contains(Trace.LastLog, "v = ((1, 2), (3, 4))");
+            Trace_.Print("v", ((1, 2), (3, 4)));
+            StringAssert.Contains(Trace_.LastLog, "v = ((1, 2), (3, 4))");
         }
 
         // Tuple since 1.5.1
         [TestMethod]
         public void PrintTuple() {
-            Trace.Print("v", new Tuple<int, int>(1, 2));
-            StringAssert.Contains(Trace.LastLog, "v = Tuple<int, int> (1, 2)");
+            Trace_.Print("v", new Tuple<int, int>(1, 2));
+            StringAssert.Contains(Trace_.LastLog, "v = Tuple<int, int> (1, 2)");
 
-            Trace.Print("v", new Tuple<Tuple<int, int>, Tuple<int, int>>(new Tuple<int, int>(1, 2), new Tuple<int, int>(3, 4)));
-            StringAssert.Contains(Trace.LastLog, "v = Tuple<Tuple<int, int>, Tuple<int, int>> (Tuple<int, int> (1, 2), Tuple<int, int> (3, 4))");
+            Trace_.Print("v", new Tuple<Tuple<int, int>, Tuple<int, int>>(new Tuple<int, int>(1, 2), new Tuple<int, int>(3, 4)));
+            StringAssert.Contains(Trace_.LastLog, "v = Tuple<Tuple<int, int>, Tuple<int, int>> (Tuple<int, int> (1, 2), Tuple<int, int> (3, 4))");
         }
     }
 }

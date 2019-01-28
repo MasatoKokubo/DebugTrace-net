@@ -204,33 +204,32 @@ End Namespace
 2018-12-15 13:16:52.029 [12] Leave DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:22) time: 00:00:00.0230803
 ----
 
-==== 3.1 If using or Imports System.Diagnostics
+==== 3.1 When using or Imports System.Diagnostics
 
-If you are `using` or `Impors System.Diagnostics`, since the `DebugTrace.CSharp.Trace` (`DebugTrace.VisualBaisc.Trace`) property and `System.Diagnostics.Trace` class overlap, you can not use `Trace` property directly. +
-In that case, use `using DebugTrace` (`Imports DebugTrace`) instead of `using static DebugTrace.CSharp` (`Imports DebugTrace.VisualBasic`) and `CSharp.Trace` (`VisualBasic.Trace`) instead of `Trace`.
+If you are `using System.Diagnostics` or `Impors System.Diagnostics`, since the `DebugTrace.CSharp.Trace` (`DebugTrace.VisualBaisc.Trace`) property and `System.Diagnostics.Trace` class overlap, use `Trace_`  property instead of `Trace`. +
 
 [source,csharp]
 .ReadmeExample.cs
 ----
 using System.Diagnostics;
-using DebugTrace; // for Debugging
+using static DebugTrace.CSharp; // for Debugging
 
 namespace Readme {
     public class ReadmeExample {
         public static void Main(string[] args) {
-            CSharp.Trace.Enter(); // for Debugging
+            Trace_.Enter(); // for Debugging
 ----
 
 [source,vb.net]
 .ReadmeExample.vb
 ----
 Imports System.Diagnostics
-Imports DebugTrace ' for Debugging
+Imports DebugTrace.VisualBasic ' for Debugging
 
 Namespace Global.Readme
     Public Class ReadmeExample
         Public Shared Sub Main(args As String())
-            VisualBasic.Trace.Enter() ' for Debugging
+            Trace_.Enter() ' for Debugging
 ----
 
 === 4. Interfaces and Classes
@@ -253,7 +252,7 @@ There are mainly the following interfaces and classes.
 
 === 5. Properties of DebugTrace.CSharp class and DebugTrace.VisualBasic class
 
-`DebugTrace.CSharp` and `DebugTrace.VisualBasic` class has `Trace` property as an instance of its own type.
+`DebugTrace.CSharp` and `DebugTrace.VisualBasic` class has `Trace` and `Trace_` property as an instance of its own type.
 
 === 6. Properties and methods of ITrace interface
 

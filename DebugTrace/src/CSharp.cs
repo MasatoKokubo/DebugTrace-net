@@ -19,6 +19,13 @@ namespace DebugTrace {
         public static CSharp Trace {get;} = new CSharp();
 
         /// <summary>
+        /// Same as <c>CSharp</c> property.
+        /// Use this property when <c>using System.Diagnostics</c>.
+        /// </summary>
+        /// <since>1.5.2</since>
+        public static CSharp Trace_ => Trace;
+
+        /// <summary>
         /// Set of classes that dose not output the type name
         /// </summary>
         protected override ISet<Type> NoOutputTypes {get;} = new HashSet<Type>() {

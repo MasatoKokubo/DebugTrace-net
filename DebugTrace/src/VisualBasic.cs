@@ -19,6 +19,13 @@ namespace DebugTrace {
         public static VisualBasic Trace {get;} = new VisualBasic();
 
         /// <summary>
+        /// Same as <c>VisualBasic</c> property.
+        /// Use this property when <c>Imports System.Diagnostics</c>.
+        /// </summary>
+        /// <since>1.5.2</since>
+        public static VisualBasic Trace_ => Trace;
+
+        /// <summary>
         /// Set of classes that dose not output the type name
         /// </summary>
         protected override ISet<Type> NoOutputTypes {get;} = new HashSet<Type>() {
