@@ -87,34 +87,34 @@ namespace Readme {
 
 .コンソール出力 / C#
 ----
-2018-12-15 12:15:43.356 [03] DebugTrace-net 1.5.1
-2018-12-15 12:15:43.357 [03]   Referenced properties file: Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceTest\bin\Debug\netcoreapp2.1\DebugTrace.properties
-2018-12-15 12:15:43.357 [03]   Logger wrapper: DebugTrace.Console+Error
-2018-12-15 12:15:43.360 [03] 
-2018-12-15 12:15:43.360 [03] ______________________________ Thread 3 ______________________________
-2018-12-15 12:15:43.360 [03] 
-2018-12-15 12:15:43.444 [03] Enter Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:14)
-2018-12-15 12:15:43.474 [03] | 
-2018-12-15 12:15:43.475 [03] | contacts = Readme.Contact[2] {
-2018-12-15 12:15:43.475 [03] |   Readme.Contact {
-2018-12-15 12:15:43.475 [03] |     ____ Readme.Entity ____
-2018-12-15 12:15:43.475 [03] |     ID: 1, 
-2018-12-15 12:15:43.475 [03] |     ____ Readme.ContactBase ____
-2018-12-15 12:15:43.475 [03] |     FirstName: (Length:5)"Akane", LastName: (Length:5)"Apple", 
-2018-12-15 12:15:43.475 [03] |     ____ Readme.Contact ____
-2018-12-15 12:15:43.475 [03] |     Birthday: 1991-02-03 00:00:00.0000000, 
-2018-12-15 12:15:43.475 [03] |   }, 
-2018-12-15 12:15:43.475 [03] |   Readme.Contact {
-2018-12-15 12:15:43.475 [03] |     ____ Readme.Entity ____
-2018-12-15 12:15:43.475 [03] |     ID: 2, 
-2018-12-15 12:15:43.475 [03] |     ____ Readme.ContactBase ____
-2018-12-15 12:15:43.475 [03] |     FirstName: (Length:6)"Yukari", LastName: (Length:5)"Apple", 
-2018-12-15 12:15:43.475 [03] |     ____ Readme.Contact ____
-2018-12-15 12:15:43.475 [03] |     Birthday: 1992-03-04 00:00:00.0000000, 
-2018-12-15 12:15:43.475 [03] |   }, 
-2018-12-15 12:15:43.475 [03] | } (ReadmeExamples.cs:20)
-2018-12-15 12:15:43.476 [03] | 
-2018-12-15 12:15:43.477 [03] Leave Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:22) time: 00:00:00.0317334
+2019-02-02 14:15:57.797 [03] DebugTrace-net 1.5.3
+2019-02-02 14:15:57.802 [03]   Referenced properties file: Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceTest\bin\Debug\netcoreapp2.1\DebugTrace.properties
+2019-02-02 14:15:57.803 [03]   Logger wrapper: DebugTrace.Console+Error
+2019-02-02 14:15:57.811 [03] 
+2019-02-02 14:15:57.811 [03] ______________________________ Thread 3 ______________________________
+2019-02-02 14:15:57.811 [03] 
+2019-02-02 14:15:58.097 [03] Enter Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:14)
+2019-02-02 14:15:58.190 [03] | 
+2019-02-02 14:15:58.193 [03] | contacts = Readme.Contact[2] {
+2019-02-02 14:15:58.193 [03] |   Readme.Contact {
+2019-02-02 14:15:58.193 [03] |     ____ Readme.Entity ____
+2019-02-02 14:15:58.193 [03] |     ID: 1, 
+2019-02-02 14:15:58.193 [03] |     ____ Readme.ContactBase ____
+2019-02-02 14:15:58.193 [03] |     FirstName: (Length:5)"Akane", LastName: (Length:5)"Apple", 
+2019-02-02 14:15:58.193 [03] |     ____ Readme.Contact ____
+2019-02-02 14:15:58.193 [03] |     Birthday: 1991-02-03 00:00:00.0000000, 
+2019-02-02 14:15:58.193 [03] |   }, 
+2019-02-02 14:15:58.193 [03] |   Readme.Contact {
+2019-02-02 14:15:58.193 [03] |     ____ Readme.Entity ____
+2019-02-02 14:15:58.193 [03] |     ID: 2, 
+2019-02-02 14:15:58.193 [03] |     ____ Readme.ContactBase ____
+2019-02-02 14:15:58.193 [03] |     FirstName: (Length:6)"Yukari", LastName: (Length:5)"Apple", 
+2019-02-02 14:15:58.193 [03] |     ____ Readme.Contact ____
+2019-02-02 14:15:58.193 [03] |     Birthday: 1992-03-04 00:00:00.0000000, 
+2019-02-02 14:15:58.193 [03] |   }, 
+2019-02-02 14:15:58.193 [03] | } (ReadmeExamples.cs:20)
+2019-02-02 14:15:58.196 [03] | 
+2019-02-02 14:15:58.200 [03] Leave Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:22) time: 00:00:00.0973564
 ----
 
 [source,vb.net]
@@ -172,34 +172,34 @@ End Namespace
 
 .コンソール出力 / Visual Basic
 ----
-2018-12-15 13:16:51.905 [12] DebugTrace-net 1.5.1
-2018-12-15 13:16:51.907 [12]   Referenced properties file: Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceVBTest\bin\Debug\DebugTrace.properties
-2018-12-15 13:16:51.907 [12]   Logger wrapper: DebugTrace.Console+Error
-2018-12-15 13:16:51.909 [12] 
-2018-12-15 13:16:51.909 [12] ______________________________ Thread 12 ______________________________
-2018-12-15 13:16:51.909 [12] 
-2018-12-15 13:16:52.004 [12] Enter DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:14)
-2018-12-15 13:16:52.024 [12] | 
-2018-12-15 13:16:52.026 [12] | contacts = DebugTraceVBTest.Readme.Contact[2] {
-2018-12-15 13:16:52.026 [12] |   DebugTraceVBTest.Readme.Contact {
-2018-12-15 13:16:52.026 [12] |     ____ DebugTraceVBTest.Readme.Entity ____
-2018-12-15 13:16:52.026 [12] |     Id: 1, 
-2018-12-15 13:16:52.026 [12] |     ____ DebugTraceVBTest.Readme.ContactBase ____
-2018-12-15 13:16:52.026 [12] |     FirstName: (Length:5)"Akane", LastName: (Length:5)"Apple", 
-2018-12-15 13:16:52.026 [12] |     ____ DebugTraceVBTest.Readme.Contact ____
-2018-12-15 13:16:52.026 [12] |     Birthday: 1991-02-03 00:00:00.0000000, 
-2018-12-15 13:16:52.026 [12] |   }, 
-2018-12-15 13:16:52.026 [12] |   DebugTraceVBTest.Readme.Contact {
-2018-12-15 13:16:52.026 [12] |     ____ DebugTraceVBTest.Readme.Entity ____
-2018-12-15 13:16:52.026 [12] |     Id: 2, 
-2018-12-15 13:16:52.026 [12] |     ____ DebugTraceVBTest.Readme.ContactBase ____
-2018-12-15 13:16:52.026 [12] |     FirstName: (Length:6)"Yukari", LastName: (Length:5)"Apple", 
-2018-12-15 13:16:52.026 [12] |     ____ DebugTraceVBTest.Readme.Contact ____
-2018-12-15 13:16:52.026 [12] |     Birthday: 1992-03-04 00:00:00.0000000, 
-2018-12-15 13:16:52.026 [12] |   }, 
-2018-12-15 13:16:52.026 [12] | } (ReadmeExamples.vb:20)
-2018-12-15 13:16:52.027 [12] | 
-2018-12-15 13:16:52.029 [12] Leave DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:22) time: 00:00:00.0230803
+2019-02-02 15:20:35.591 [12] DebugTrace-net 1.5.3
+2019-02-02 15:20:35.594 [12]   Referenced properties file: Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceVBTest\bin\Debug\DebugTrace.properties
+2019-02-02 15:20:35.594 [12]   Logger wrapper: DebugTrace.Console+Error
+2019-02-02 15:20:35.597 [12] 
+2019-02-02 15:20:35.597 [12] ______________________________ Thread 12 ______________________________
+2019-02-02 15:20:35.597 [12] 
+2019-02-02 15:20:35.712 [12] Enter DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:14)
+2019-02-02 15:20:35.740 [12] | 
+2019-02-02 15:20:35.741 [12] | contacts = DebugTraceVBTest.Readme.Contact[2] {
+2019-02-02 15:20:35.741 [12] |   DebugTraceVBTest.Readme.Contact {
+2019-02-02 15:20:35.741 [12] |     ____ DebugTraceVBTest.Readme.Entity ____
+2019-02-02 15:20:35.741 [12] |     Id: 1, 
+2019-02-02 15:20:35.741 [12] |     ____ DebugTraceVBTest.Readme.ContactBase ____
+2019-02-02 15:20:35.741 [12] |     FirstName: (Length:5)"Akane", LastName: (Length:5)"Apple", 
+2019-02-02 15:20:35.741 [12] |     ____ DebugTraceVBTest.Readme.Contact ____
+2019-02-02 15:20:35.741 [12] |     Birthday: 1991-02-03 00:00:00.0000000, 
+2019-02-02 15:20:35.741 [12] |   }, 
+2019-02-02 15:20:35.741 [12] |   DebugTraceVBTest.Readme.Contact {
+2019-02-02 15:20:35.741 [12] |     ____ DebugTraceVBTest.Readme.Entity ____
+2019-02-02 15:20:35.741 [12] |     Id: 2, 
+2019-02-02 15:20:35.741 [12] |     ____ DebugTraceVBTest.Readme.ContactBase ____
+2019-02-02 15:20:35.741 [12] |     FirstName: (Length:6)"Yukari", LastName: (Length:5)"Apple", 
+2019-02-02 15:20:35.741 [12] |     ____ DebugTraceVBTest.Readme.Contact ____
+2019-02-02 15:20:35.741 [12] |     Birthday: 1992-03-04 00:00:00.0000000, 
+2019-02-02 15:20:35.741 [12] |   }, 
+2019-02-02 15:20:35.741 [12] | } (ReadmeExamples.vb:20)
+2019-02-02 15:20:35.741 [12] | 
+2019-02-02 15:20:35.742 [12] Leave DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:22) time: 00:00:00.0292355
 ----
 
 ==== 3.1 using System.Diagnostics(Imports System.Diagnostics)を行っている場合

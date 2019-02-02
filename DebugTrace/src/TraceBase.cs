@@ -764,6 +764,10 @@ namespace DebugTrace {
                             //  typeName += " Count:" + count;
                                 typeName += string.Format(CountFormat, count);
                             ////
+                        // 1.5.3
+                            else
+                                typeName += type.IsEnum ? " enum" : type.IsValueType ? " struct" : "";
+                        ////
                         }
                     }
                 }

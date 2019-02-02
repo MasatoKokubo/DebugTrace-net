@@ -241,7 +241,10 @@ namespace DebugTraceTest {
 
         // Guid
         [DataTestMethod]
-        [DataRow("CE8BF46B-723B-44B4-BBF5-288B6C736127", "v = System.Guid ce8bf46b-723b-44b4-bbf5-288b6c736127 (")]
+    // 1.5.3
+    //  [DataRow("CE8BF46B-723B-44B4-BBF5-288B6C736127", "v = System.Guid ce8bf46b-723b-44b4-bbf5-288b6c736127 (")]
+        [DataRow("CE8BF46B-723B-44B4-BBF5-288B6C736127", "v = System.Guid struct ce8bf46b-723b-44b4-bbf5-288b6c736127 (")]
+    ////
         public void PrintGuid(string v, string expect) {
             Trace_.Print("v", new Guid(v));
             StringAssert.Contains(Trace_.LastLog, expect);
@@ -249,7 +252,10 @@ namespace DebugTraceTest {
 
         // Point
         [DataTestMethod]
-        [DataRow(1, 2, "v = DebugTraceTest.Point {X: 1, Y: 2} (")]
+    // 1.5.3
+    //  [DataRow(1, 2, "v = DebugTraceTest.Point {X: 1, Y: 2} (")]
+        [DataRow(1, 2, "v = DebugTraceTest.Point struct {X: 1, Y: 2} (")]
+    ////
         public void PrintPoint(int x, int y, string expect) {
             Trace_.Print("v", new Point(x, y));
             StringAssert.Contains(Trace_.LastLog, expect);
@@ -295,6 +301,16 @@ namespace DebugTraceTest {
 
             Trace_.Print("v", new Tuple<Tuple<int, int>, Tuple<int, int>>(new Tuple<int, int>(1, 2), new Tuple<int, int>(3, 4)));
             StringAssert.Contains(Trace_.LastLog, "v = Tuple<Tuple<int, int>, Tuple<int, int>> (Tuple<int, int> (1, 2), Tuple<int, int> (3, 4))");
+        }
+
+        // enum 1.5.3
+        public enum Fruits {Apple, Grape, Kiwi, Orange, Pineapple};
+        [DataTestMethod]
+        [DataRow(Fruits.Apple, "Fruits enum Apple")]
+        [DataRow(Fruits.Grape, "Fruits enum Grape")]
+        public void PrintEnum(Fruits Fruits, string log) {
+            Trace_.Print("v", Fruits);
+            StringAssert.Contains(Trace_.LastLog, log);
         }
     }
 }
