@@ -306,11 +306,35 @@ namespace DebugTraceTest {
         // enum 1.5.3
         public enum Fruits {Apple, Grape, Kiwi, Orange, Pineapple};
         [DataTestMethod]
-        [DataRow(Fruits.Apple, "Fruits enum Apple")]
-        [DataRow(Fruits.Grape, "Fruits enum Grape")]
+        [DataRow(Fruits.Apple, "enum DebugTraceTest.Fruits Apple")]
+        [DataRow(Fruits.Grape, "enum DebugTraceTest.Fruits Grape")]
         public void PrintEnum(Fruits Fruits, string log) {
             Trace_.Print("v", Fruits);
             StringAssert.Contains(Trace_.LastLog, log);
+        }
+
+        public class Foo {
+            public override string ToString() {return "F";}
+        }
+        public class FooSub : Foo {}
+        public class Bar {
+	        public Foo Foo {get;}
+            public Bar(Foo foo) {
+                Foo = foo;
+            }
+        }
+
+        // 1.5.4
+        [TestMethod]
+        public void PrintReflection() {
+            Trace_.Print("v", new Bar(new Foo()));
+            StringAssert.Contains(Trace_.LastLog, "v = DebugTraceTest.Bar {Foo: DebugTraceTest.Foo F}");
+
+            Trace_.Print("v", new Bar(new FooSub()));
+            StringAssert.Contains(Trace_.LastLog, "v = DebugTraceTest.Bar {DebugTraceTest.Foo Foo: DebugTraceTest.FooSub F}");
+
+            Trace_.Print("v", new Bar(null));
+            StringAssert.Contains(Trace_.LastLog, "v = DebugTraceTest.Bar {DebugTraceTest.Foo Foo: null}");
         }
     }
 }

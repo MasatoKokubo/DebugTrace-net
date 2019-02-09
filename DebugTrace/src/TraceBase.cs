@@ -765,8 +765,15 @@ namespace DebugTrace {
                                 typeName += string.Format(CountFormat, count);
                             ////
                         // 1.5.3
-                            else
-                                typeName += type.IsEnum ? " enum" : type.IsValueType ? " struct" : "";
+                            else {
+                            // 1.5.4
+                            //  typeName += type.IsEnum ? " enum" : type.IsValueType ? " struct" : "";
+                                if (type.IsEnum)
+                                    typeName = "enum " + typeName;
+                                else if (type.IsValueType)
+                                    typeName += " struct";
+                            ////
+                            }
                         ////
                         }
                     }
@@ -1389,22 +1396,44 @@ namespace DebugTrace {
         // AppendReflectValue / MemberInfo
         private bool AppendReflectValue(LogBuffer buff, Type type, object obj, MemberInfo memberInfo) {
             AppendAccessModifire(buff, memberInfo);
-            if (!IsTuple(type))
-                buff.Append(memberInfo.Name).Append(KeyValueSeparator);
+        // 1.5.4
+        //  if (!IsTuple(type))
+        //      buff.Append(memberInfo.Name).Append(KeyValueSeparator);
+		//
+        //  if (NonPrintProperties.Contains(GetFullTypeName(type) + '.' + memberInfo.Name)) {
+        //      buff.Append(NonPrintString);
+        //      return false;
+        //  }
+		//
+        //  object value = null;
+        //  try {
+        //      switch (memberInfo) {
+        //      case FieldInfo fieldInfo:
+        //          value = fieldInfo.GetValue(obj);
+        //          break;
+        //      case PropertyInfo propertyInfo:
+        //          value = propertyInfo.GetValue(obj);
+        //          break;
+        //      }
+        //  }
+        //  catch (Exception e) {
+        //      value = e.ToString();
+        //  }
+            var nonPrint = NonPrintProperties.Contains(GetFullTypeName(type) + '.' + memberInfo.Name);
 
-            if (NonPrintProperties.Contains(GetFullTypeName(type) + '.' + memberInfo.Name)) {
-                buff.Append(NonPrintString);
-                return false;
-            }
-
+            Type memberType = null;
             object value = null;
             try {
                 switch (memberInfo) {
                 case FieldInfo fieldInfo:
-                    value = fieldInfo.GetValue(obj);
+                    memberType = fieldInfo.FieldType;
+                    if (!nonPrint)
+                        value = fieldInfo.GetValue(obj);
                     break;
                 case PropertyInfo propertyInfo:
-                    value = propertyInfo.GetValue(obj);
+                    memberType = propertyInfo.PropertyType;
+                    if (!nonPrint)
+                        value = propertyInfo.GetValue(obj);
                     break;
                 }
             }
@@ -1412,6 +1441,18 @@ namespace DebugTrace {
                 value = e.ToString();
             }
 
+            if (!IsTuple(type)) {
+                if (value == null || memberType != value.GetType())
+                    buff.Append(GetFullTypeName(memberType)).Append(' ');
+                buff.Append(memberInfo.Name);
+                buff.Append(KeyValueSeparator);
+            }
+
+            if (nonPrint) {
+                buff.Append(NonPrintString);
+                return false;
+            }
+        ////
             return Append(buff, value, false);
         }
 
