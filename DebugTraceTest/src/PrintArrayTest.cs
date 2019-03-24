@@ -70,10 +70,8 @@ namespace DebugTraceTest {
         // string[]
         [DataTestMethod]
         [DataRow(new string[] {}, "v = string[0] {}")]
-//      [DataRow(new string[] {"A"}, "v = string[1] {\"A\"}")]
-        [DataRow(new string[] {"A"}, "v = string[1] {(Length:1)\"A\"}")] // 1.5.1
-//      [DataRow(new string[] {"A", "B"}, "v = string[2] {\"A\", \"B\"}")]
-        [DataRow(new string[] {"A", "B"}, "v = string[2] {(Length:1)\"A\", (Length:1)\"B\"}")] // 1.5.1
+        [DataRow(new string[] {"A"}, "v = string[1] {(Length:1)\"A\"}")]
+        [DataRow(new string[] {"A", "B"}, "v = string[2] {(Length:1)\"A\", (Length:1)\"B\"}")]
         public void PrintStringArray(string[] v, string expect) {
             Trace.Print("v", v);
             StringAssert.Contains(Trace.LastLog, expect);

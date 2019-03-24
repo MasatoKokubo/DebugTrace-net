@@ -109,12 +109,7 @@ namespace DebugTrace {
         /// <param name="defaultValue">resource value when the specified resource name is not defined</param>
         /// <returns>the resource value</returns>
         public string GetString(string name, string defaultValue) {
-            try {
-                return values[name];
-            }
-            catch (Exception) {
-                return defaultValue;
-            }
+            return values.ContainsKey(name) ? values[name] : defaultValue;
         }
 
         /// <summary>
@@ -125,12 +120,9 @@ namespace DebugTrace {
         /// <param name="defaultValue">resource value when the specified resource name is not defined</param>
         /// <returns>the resource value</returns>
         public string[] GetStrings(string name, string[] defaultValue) {
-            try {
-                return values[name].Split(',').Select(str => str.Trim()).ToArray();
-            }
-            catch (Exception) {
-                return defaultValue;
-            }
+            return values.ContainsKey(name)
+                ? values[name].Split(',').Select(str => str.Trim()).ToArray()
+                : defaultValue;
         }
 
         /// <summary>
@@ -142,7 +134,7 @@ namespace DebugTrace {
         /// <returns>the resource value</returns>
         public int GetInt(string name, int defaultValue) {
             try {
-                return int.Parse(values[name]);
+                return values.ContainsKey(name) ? int.Parse(values[name]) : defaultValue;
             }
             catch (Exception) {
                 return defaultValue;
@@ -160,7 +152,7 @@ namespace DebugTrace {
         /// <since>1.4.4</since>
         public bool GetBool(string name, bool defaultValue) {
             try {
-                return bool.Parse(values[name]);
+                return values.ContainsKey(name) ? bool.Parse(values[name]) : defaultValue;
             }
             catch (Exception) {
                 return defaultValue;

@@ -87,34 +87,34 @@ namespace Readme {
 
 .コンソール出力 / C#
 ----
-2019-02-02 14:15:57.797 [03] DebugTrace-net 1.5.3
-2019-02-02 14:15:57.802 [03]   Referenced properties file: Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceTest\bin\Debug\netcoreapp2.1\DebugTrace.properties
-2019-02-02 14:15:57.803 [03]   Logger wrapper: DebugTrace.Console+Error
-2019-02-02 14:15:57.811 [03] 
-2019-02-02 14:15:57.811 [03] ______________________________ Thread 3 ______________________________
-2019-02-02 14:15:57.811 [03] 
-2019-02-02 14:15:58.097 [03] Enter Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:14)
-2019-02-02 14:15:58.190 [03] | 
-2019-02-02 14:15:58.193 [03] | contacts = Readme.Contact[2] {
-2019-02-02 14:15:58.193 [03] |   Readme.Contact {
-2019-02-02 14:15:58.193 [03] |     ____ Readme.Entity ____
-2019-02-02 14:15:58.193 [03] |     ID: 1, 
-2019-02-02 14:15:58.193 [03] |     ____ Readme.ContactBase ____
-2019-02-02 14:15:58.193 [03] |     FirstName: (Length:5)"Akane", LastName: (Length:5)"Apple", 
-2019-02-02 14:15:58.193 [03] |     ____ Readme.Contact ____
-2019-02-02 14:15:58.193 [03] |     Birthday: 1991-02-03 00:00:00.0000000, 
-2019-02-02 14:15:58.193 [03] |   }, 
-2019-02-02 14:15:58.193 [03] |   Readme.Contact {
-2019-02-02 14:15:58.193 [03] |     ____ Readme.Entity ____
-2019-02-02 14:15:58.193 [03] |     ID: 2, 
-2019-02-02 14:15:58.193 [03] |     ____ Readme.ContactBase ____
-2019-02-02 14:15:58.193 [03] |     FirstName: (Length:6)"Yukari", LastName: (Length:5)"Apple", 
-2019-02-02 14:15:58.193 [03] |     ____ Readme.Contact ____
-2019-02-02 14:15:58.193 [03] |     Birthday: 1992-03-04 00:00:00.0000000, 
-2019-02-02 14:15:58.193 [03] |   }, 
-2019-02-02 14:15:58.193 [03] | } (ReadmeExamples.cs:20)
-2019-02-02 14:15:58.196 [03] | 
-2019-02-02 14:15:58.200 [03] Leave Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:22) time: 00:00:00.0973564
+2019-03-24 15:04:49.790 [04] DebugTrace-net 1.6.0
+2019-03-24 15:04:49.794 [04]   Referenced properties file: Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceTest\bin\Debug\netcoreapp2.2\DebugTrace.properties
+2019-03-24 15:04:49.795 [04]   Logger wrapper: DebugTrace.Console+Error
+2019-03-24 15:04:49.803 [04] 
+2019-03-24 15:04:49.803 [04] ______________________________ Thread 4 ______________________________
+2019-03-24 15:04:49.803 [04] 
+2019-03-24 15:04:50.079 [04] Enter Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:14)
+2019-03-24 15:04:50.199 [04] | 
+2019-03-24 15:04:50.204 [04] | contacts = Readme.Contact[2] {
+2019-03-24 15:04:50.204 [04] |   Readme.Contact {
+2019-03-24 15:04:50.204 [04] |     ____ Readme.Entity ____
+2019-03-24 15:04:50.204 [04] |     ID: 1, 
+2019-03-24 15:04:50.204 [04] |     ____ Readme.ContactBase ____
+2019-03-24 15:04:50.204 [04] |     FirstName: (Length:5)"Akane", LastName: (Length:5)"Apple", 
+2019-03-24 15:04:50.204 [04] |     ____ Readme.Contact ____
+2019-03-24 15:04:50.204 [04] |     Birthday: 1991-02-03 00:00:00.0000000, 
+2019-03-24 15:04:50.204 [04] |   }, 
+2019-03-24 15:04:50.204 [04] |   Readme.Contact {
+2019-03-24 15:04:50.204 [04] |     ____ Readme.Entity ____
+2019-03-24 15:04:50.204 [04] |     ID: 2, 
+2019-03-24 15:04:50.204 [04] |     ____ Readme.ContactBase ____
+2019-03-24 15:04:50.204 [04] |     FirstName: (Length:6)"Yukari", LastName: (Length:5)"Apple", 
+2019-03-24 15:04:50.204 [04] |     ____ Readme.Contact ____
+2019-03-24 15:04:50.204 [04] |     Birthday: 1992-03-04 00:00:00.0000000, 
+2019-03-24 15:04:50.204 [04] |   }, 
+2019-03-24 15:04:50.204 [04] | } (ReadmeExamples.cs:20)
+2019-03-24 15:04:50.207 [04] | 
+2019-03-24 15:04:50.212 [04] Leave Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:22) time: 00:00:00.1271534
 ----
 
 [source,vb.net]
@@ -172,34 +172,34 @@ End Namespace
 
 .コンソール出力 / Visual Basic
 ----
-2019-02-02 15:20:35.591 [12] DebugTrace-net 1.5.3
-2019-02-02 15:20:35.594 [12]   Referenced properties file: Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceVBTest\bin\Debug\DebugTrace.properties
-2019-02-02 15:20:35.594 [12]   Logger wrapper: DebugTrace.Console+Error
-2019-02-02 15:20:35.597 [12] 
-2019-02-02 15:20:35.597 [12] ______________________________ Thread 12 ______________________________
-2019-02-02 15:20:35.597 [12] 
-2019-02-02 15:20:35.712 [12] Enter DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:14)
-2019-02-02 15:20:35.740 [12] | 
-2019-02-02 15:20:35.741 [12] | contacts = DebugTraceVBTest.Readme.Contact[2] {
-2019-02-02 15:20:35.741 [12] |   DebugTraceVBTest.Readme.Contact {
-2019-02-02 15:20:35.741 [12] |     ____ DebugTraceVBTest.Readme.Entity ____
-2019-02-02 15:20:35.741 [12] |     Id: 1, 
-2019-02-02 15:20:35.741 [12] |     ____ DebugTraceVBTest.Readme.ContactBase ____
-2019-02-02 15:20:35.741 [12] |     FirstName: (Length:5)"Akane", LastName: (Length:5)"Apple", 
-2019-02-02 15:20:35.741 [12] |     ____ DebugTraceVBTest.Readme.Contact ____
-2019-02-02 15:20:35.741 [12] |     Birthday: 1991-02-03 00:00:00.0000000, 
-2019-02-02 15:20:35.741 [12] |   }, 
-2019-02-02 15:20:35.741 [12] |   DebugTraceVBTest.Readme.Contact {
-2019-02-02 15:20:35.741 [12] |     ____ DebugTraceVBTest.Readme.Entity ____
-2019-02-02 15:20:35.741 [12] |     Id: 2, 
-2019-02-02 15:20:35.741 [12] |     ____ DebugTraceVBTest.Readme.ContactBase ____
-2019-02-02 15:20:35.741 [12] |     FirstName: (Length:6)"Yukari", LastName: (Length:5)"Apple", 
-2019-02-02 15:20:35.741 [12] |     ____ DebugTraceVBTest.Readme.Contact ____
-2019-02-02 15:20:35.741 [12] |     Birthday: 1992-03-04 00:00:00.0000000, 
-2019-02-02 15:20:35.741 [12] |   }, 
-2019-02-02 15:20:35.741 [12] | } (ReadmeExamples.vb:20)
-2019-02-02 15:20:35.741 [12] | 
-2019-02-02 15:20:35.742 [12] Leave DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:22) time: 00:00:00.0292355
+2019-03-24 18:12:41.481 [13] DebugTrace-net 1.6.0
+2019-03-24 18:12:41.483 [13]   Referenced properties file: Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceVBTest\bin\Debug\DebugTrace.properties
+2019-03-24 18:12:41.483 [13]   Logger wrapper: DebugTrace.Console+Error
+2019-03-24 18:12:41.488 [13] 
+2019-03-24 18:12:41.489 [13] ______________________________ Thread 13 ______________________________
+2019-03-24 18:12:41.489 [13] 
+2019-03-24 18:12:41.718 [13] Enter DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:14)
+2019-03-24 18:12:41.764 [13] | 
+2019-03-24 18:12:41.765 [13] | contacts = DebugTraceVBTest.Readme.Contact[2] {
+2019-03-24 18:12:41.765 [13] |   DebugTraceVBTest.Readme.Contact {
+2019-03-24 18:12:41.765 [13] |     ____ DebugTraceVBTest.Readme.Entity ____
+2019-03-24 18:12:41.765 [13] |     Id: 1, 
+2019-03-24 18:12:41.765 [13] |     ____ DebugTraceVBTest.Readme.ContactBase ____
+2019-03-24 18:12:41.765 [13] |     FirstName: (Length:5)"Akane", LastName: (Length:5)"Apple", 
+2019-03-24 18:12:41.765 [13] |     ____ DebugTraceVBTest.Readme.Contact ____
+2019-03-24 18:12:41.765 [13] |     Birthday: 1991-02-03 00:00:00.0000000, 
+2019-03-24 18:12:41.765 [13] |   }, 
+2019-03-24 18:12:41.765 [13] |   DebugTraceVBTest.Readme.Contact {
+2019-03-24 18:12:41.765 [13] |     ____ DebugTraceVBTest.Readme.Entity ____
+2019-03-24 18:12:41.765 [13] |     Id: 2, 
+2019-03-24 18:12:41.765 [13] |     ____ DebugTraceVBTest.Readme.ContactBase ____
+2019-03-24 18:12:41.765 [13] |     FirstName: (Length:6)"Yukari", LastName: (Length:5)"Apple", 
+2019-03-24 18:12:41.765 [13] |     ____ DebugTraceVBTest.Readme.Contact ____
+2019-03-24 18:12:41.765 [13] |     Birthday: 1992-03-04 00:00:00.0000000, 
+2019-03-24 18:12:41.765 [13] |   }, 
+2019-03-24 18:12:41.765 [13] | } (ReadmeExamples.vb:20)
+2019-03-24 18:12:41.767 [13] | 
+2019-03-24 18:12:41.769 [13] Leave DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:22) time: 00:00:00.0498967
 ----
 
 ==== 3.1 using System.Diagnostics(Imports System.Diagnostics)を行っている場合
@@ -237,15 +237,21 @@ Namespace Global.Readme
 [options="header", cols="3,3,4", width="90%"]
 .インタフェース、クラス
 |===
-^s|名 前 ^s|スーパークラス、実装するインタフェース ^s|説 明
-  |`DebugTrace.ITrace`       |_なし_                 |Trace処理のインタフェース
-  |`DebugTrace.TraceBase`    |`DebugTrace.ITrace`    |Trace処理のベースクラス
-  |`DebugTrace.CSharp`       |`DebugTrace.Trace`     |C#用のTrace処理のクラス
-  |`DebugTrace.VisualBasic`  |`DebugTrace.Trace`     |VisualBasic用のTrace処理のクラス
-  |`DebugTrace.ILogger`      |_なし_                 |ログ出力のインタフェース
-  |`DebugTrace.Console`      |`DebugTrace.ILogger`   |ログをコンソール出力する抽象クラス
-  |`DebugTrace.Console+Out`  |`DebugTrace.Console`   |ログを標準出力に出力するクラス
-  |`DebugTrace.Console+Error`|`DebugTrace.Console`   |ログを標準エラー出力に出力するクラス
+^s|名 前 ^s|スーパークラス、実装するインタフェース  ^s|説 明
+  |`DebugTrace.ITrace`       |_なし_                  |Trace処理のインタフェース
+  |`DebugTrace.TraceBase`    |`DebugTrace.ITrace`     |Trace処理のベースクラス
+  |`DebugTrace.CSharp`       |`DebugTrace.Trace`      |C#用のTrace処理のクラス
+  |`DebugTrace.VisualBasic`  |`DebugTrace.Trace`      |VisualBasic用のTrace処理のクラス
+  |`DebugTrace.ILogger`      |_なし_                  |ログ出力のインタフェース
+  |`DebugTrace.Console`      |`DebugTrace.ILogger`    |`DebugTrace.Console.Out` と `DebugTrace.Console.Error` の抽象スーパークラス
+  |`DebugTrace.Console.Out`  |`DebugTrace.Console`    |ログを標準出力に出力するクラス
+  |`DebugTrace.Console.Error`|`DebugTrace.Console`    |ログを標準エラー出力に出力するクラス
+  |`DebugTrace.Diagnostics` +
+[.small .blue]#*_(v1.6.0~)_*#|`DebugTrace.ILogger`    |`DebugTrace.Diagnostics.Debug` と `DebugTrace.Diagnostics.Trace` の抽象スーパークラス
+  |`DebugTrace.Diagnostics.Debug` +
+[.small .blue]#*_(v1.6.0~)_*#|`DebugTrace.Diagnostics`|ログを `System.Diagnostics.Debug` を使用して出力するクラス
+  |`DebugTrace.Diagnostics.Trace` +
+[.small .blue]#*_(v1.6.0~)_*#|`DebugTrace.Diagnostics`|ログを `System.Diagnostics.Trace` を使用して出力するクラス
 |===
 
 === 5. DebugTrace.CSharpおよびDebugTrace.VisualBasicクラスのプロパティ
@@ -314,6 +320,13 @@ Namespace Global.Readme
 `<値の名前> = <値>` +
 の形式でログに出力する
 
+
+|`PrintStack` +
+[.small .blue]#*_(v1.6.0~)_*#
+|`int maxCount`: 出力するスタック要素の最大数
+|なし
+|コールスタックをログに出力する
+
 |===
 
 === 7. *DebugTrace.properties* ファイルのプロパティ
@@ -330,7 +343,10 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
 [.small]#*設定例:*# +
 `Logger = Console+Out` [.small .blue]#- コンソール(標準出力)へ出力# + 
 `Logger = Console+Error` [.small .blue]#- コンソール(標準エラー出力)へ出力# [.small .blue]#*_[デフォルト]_*# + 
+`Logger = Diagnostics+Debug` [.small .blue]#- System.Diagnostics.Debugクラスを使用して出力 *_(v1.6.0~)_*# +
+`Logger = Diagnostics+Trace` [.small .blue]#- System.Diagnostics.Traceクラスを使用して出力 *_(v1.6.0~)_*# +
 `Logger = Log4net` [.small .blue]#- log4netを使用して出力# + 
+`Logger = NLog` [.small .blue]#- NLogを使用して出力# +
 `Logger = NLog` [.small .blue]#- NLogを使用して出力# +
 [.small]#*設定例(複数):*# [.small .blue]#*_(v1.5.0~)_*# +
 `Logger = Console+Out; Log4net` [.small .blue]#- コンソール(標準出力)およびlog4netを使用して出力# + 
@@ -683,6 +699,36 @@ https://masatokokubo.github.io/DebugTrace-net/index.html[API仕様(英語)]
 
 === 11. リリースノート
 
+==== DebugTrace-net 1.6.0 [.small .gray]#- 2019-03-24#
+
+* 以下のロガーを追加
+  ** Diagnostics+Debug
+  ** Diagnostics+Trace
+
+* `TraceBase` クラスに `PrintStack(int)` メソッドを追加
+
+==== DebugTrace-net 1.5.4 [.small .gray]#- 2019-02-11#
+
+* `Print` メソッドの変更
+  ** 型名の前に `enum` の表示 +
+    例: `v = enum Fruits Apple`
+
+* `Print` メソッドの改善
+  ** プロパティまたはフィールドの型とその値の型が異なる場合は、プロパティまたはフィールド名の前に型名を出力する。
+
+
+==== DebugTrace-net 1.5.3 [.small .gray]#- 2019-02-03#
+
+* `Print` メソッドの改善
+  ** 型名の後に `struct` の表示を追加 +
+    例: `v = Point struct {X: 1, Y: 2}`
+  ** 型名の後に `enum` の表示を追加 +
+    例: `v = Fruits enum Apple`
+
+==== DebugTrace-net 1.5.2 [.small .gray]#- 2019-01-28#
+
+* `CSharp` クラスと `VisualBasic` クラスに `Trace_` プロパティを追加。
+
 ==== DebugTrace-net 1.5.1 [.small .gray]#- 2018-12-15#
 
 * 改善
@@ -693,7 +739,7 @@ https://masatokokubo.github.io/DebugTrace-net/index.html[API仕様(英語)]
   ** `StringLengthFormat`: 文字列長の出力フォーマット
 
 ==== DebugTrace.NLog 1.6.0 [.small .gray]#- 2018-11-18#
-* 対象フレームを.NET Frameword 4.7から.NET Standard 2.0に変更しました。
+* 対象フレームを.NET Frameword 4.7から.NET Standard 2.0に変更。
 
 ==== DebugTrace-net 1.5.0 [.small .gray]#- 2018-10-28#
 * バグ修正

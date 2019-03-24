@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static DebugTrace.CSharp;
 using DebugTrace;
@@ -11,104 +9,51 @@ namespace DebugTraceTest {
     [TestClass]
     public class PropertyTest {
         // testProperties
-        private static readonly IDictionary<string, string> testProperties = new Dictionary<string, string>() {
-            {nameof(TraceBase.Logger                   ), " Console+Out ; Console+Error"},
-            {                "LogLevel"                 , " Info ; Warn"},
-            {nameof(TraceBase.EnterString              ), @"_Enter_ {0}.{1} ({2}:{3:D})"},
-            {nameof(TraceBase.LeaveString              ), @"_Leave_ {0}.{1} ({2}:{3:D})"},
-            {nameof(TraceBase.ThreadBoundaryString     ), @"_Thread_ {0}"},
-            {nameof(TraceBase.ClassBoundaryString      ), @"_ {0} _"},
-            {nameof(TraceBase.CodeIndentString         ), @"||"},
-            {nameof(TraceBase.DataIndentString         ), @"``"},
-            {nameof(TraceBase.LimitString              ), @"<Limit>"},
-            {nameof(TraceBase.DefaultNameSpaceString   ), @"<DefaultNameSpace>"},
-            {nameof(TraceBase.NonPrintString           ), @"<NonPrint>"},
-            {nameof(TraceBase.CyclicReferenceString    ), @"<CyclicReference>"},
-            {nameof(TraceBase.VarNameValueSeparator    ), @"\s<=\s"},
-            {nameof(TraceBase.KeyValueSeparator        ), @"\s::\s"},
-            {nameof(TraceBase.PrintSuffixFormat        ), @"\s[{2}:{3:D}]"},
-            {nameof(TraceBase.CountFormat              ), @"\s_Count_:{0}"}, // 1.5.1
-            {nameof(TraceBase.StringLengthFormat       ), @"(_Length_:{0})"}, // 1.5.1
-            {nameof(TraceBase.DateTimeFormat           ), @"{0:MM-dd-yyyy hh:mm:ss.fffffffK}"},
-            {nameof(TraceBase.LogDateTimeFormat        ), @"{0:MM-dd-yyyy hh:mm:ss.fff} [{1:D2}] {2}"}, // since 1.3.0
-            {nameof(TraceBase.MaxDataOutputWidth       ), "40"},
-            {nameof(TraceBase.CollectionLimit          ), "8"},
-            {nameof(TraceBase.StringLimit              ), "32"},
-            {nameof(TraceBase.ReflectionNestLimit      ), "2"},
-            {nameof(TraceBase.NonPrintProperties       ), "DebugTraceTest.Point.X, DebugTraceTest.Point.Y"},
-            {nameof(TraceBase.DefaultNameSpace         ), "DebugTraceTest"},
-            {nameof(TraceBase.ReflectionClasses        ), "DebugTraceTest.Point3,System.DateTime"},
-            {nameof(TraceBase.OutputNonPublicFields    ), "true"},  // since 1.4.4
-            {nameof(TraceBase.OutputNonPublicProperties), "True"},  // since 1.4.4
-        };
-
-        // emptyProperties
-        private static readonly IDictionary<string, string> emptyProperties = new Dictionary<string, string>();
-
         // ClassInit
         [ClassInitialize]
         public static void ClassInit(TestContext context) {
-            WriteToProperties(testProperties);
-            TraceBase.InitClass();
+            TraceBase.InitClass("DebugTrace_PropertyTest");
         }
 
         // ClassCleanup
         [ClassCleanup]
         public static void ClassCleanup() {
-            WriteToProperties(emptyProperties);
-            TraceBase.InitClass();
-        }
-
-        // WriteToProperties
-        private static void WriteToProperties(IDictionary<string, string> values) {
-            var resourceFileInfo = TraceBase.Resource.FileInfo;
-            if (resourceFileInfo.Exists)
-                resourceFileInfo.Delete();
-
-            using (FileStream stream = resourceFileInfo.Open(FileMode.Create, FileAccess.Write, FileShare.None)) {
-                var encoding = new UTF8Encoding();
-
-                foreach (var key in values.Keys) {
-                    var line = $"{key} = {values[key]}\n";
-                    var bytes = encoding.GetBytes(line);
-                    stream.Write(bytes, 0, bytes.Length);
-                }
-            }
+            TraceBase.InitClass("DebugTrace");
         }
 
         // TraceBase.InitClass
         [TestMethod]
         public void TraceBaseInitClass() {
-            Assert.AreEqual(TraceBase.EnterString            , Resource.Unescape(testProperties[nameof(TraceBase.EnterString            )]));
-            Assert.AreEqual(TraceBase.LeaveString            , Resource.Unescape(testProperties[nameof(TraceBase.LeaveString            )]));
-            Assert.AreEqual(TraceBase.ThreadBoundaryString   , Resource.Unescape(testProperties[nameof(TraceBase.ThreadBoundaryString   )]));
-            Assert.AreEqual(TraceBase.ClassBoundaryString    , Resource.Unescape(testProperties[nameof(TraceBase.ClassBoundaryString    )]));
-            Assert.AreEqual(TraceBase.CodeIndentString       , Resource.Unescape(testProperties[nameof(TraceBase.CodeIndentString       )]));
-            Assert.AreEqual(TraceBase.DataIndentString       , Resource.Unescape(testProperties[nameof(TraceBase.DataIndentString       )]));
-            Assert.AreEqual(TraceBase.LimitString            , Resource.Unescape(testProperties[nameof(TraceBase.LimitString            )]));
-            Assert.AreEqual(TraceBase.DefaultNameSpaceString , Resource.Unescape(testProperties[nameof(TraceBase.DefaultNameSpaceString )]));
-            Assert.AreEqual(TraceBase.NonPrintString         , Resource.Unescape(testProperties[nameof(TraceBase.NonPrintString         )]));
-            Assert.AreEqual(TraceBase.CyclicReferenceString  , Resource.Unescape(testProperties[nameof(TraceBase.CyclicReferenceString  )]));
-            Assert.AreEqual(TraceBase.VarNameValueSeparator  , Resource.Unescape(testProperties[nameof(TraceBase.VarNameValueSeparator  )]));
-            Assert.AreEqual(TraceBase.KeyValueSeparator      , Resource.Unescape(testProperties[nameof(TraceBase.KeyValueSeparator      )]));
-            Assert.AreEqual(TraceBase.PrintSuffixFormat      , Resource.Unescape(testProperties[nameof(TraceBase.PrintSuffixFormat      )]));
-            Assert.AreEqual(TraceBase.CountFormat            , Resource.Unescape(testProperties[nameof(TraceBase.CountFormat            )])); // since 1.5.1
-            Assert.AreEqual(TraceBase.StringLengthFormat     , Resource.Unescape(testProperties[nameof(TraceBase.StringLengthFormat     )])); // since 1.5.1
-            Assert.AreEqual(TraceBase.DateTimeFormat         , Resource.Unescape(testProperties[nameof(TraceBase.DateTimeFormat         )]));
-            Assert.AreEqual(TraceBase.LogDateTimeFormat      , Resource.Unescape(testProperties[nameof(TraceBase.LogDateTimeFormat      )])); // since 1.3.0
-            Assert.AreEqual(TraceBase.MaxDataOutputWidth .ToString(),            testProperties[nameof(TraceBase.MaxDataOutputWidth     )]);
-            Assert.AreEqual(TraceBase.CollectionLimit    .ToString(),            testProperties[nameof(TraceBase.CollectionLimit        )]);
-            Assert.AreEqual(TraceBase.StringLimit        .ToString(),            testProperties[nameof(TraceBase.StringLimit            )]);
-            Assert.AreEqual(TraceBase.ReflectionNestLimit.ToString(),            testProperties[nameof(TraceBase.ReflectionNestLimit    )]);
-            Assert.AreEqual(TraceBase.DefaultNameSpace       ,                   testProperties[nameof(TraceBase.DefaultNameSpace       )]);
+            Assert.AreEqual(TraceBase.EnterString                   , Resource.Unescape("_Enter_ {0}.{1} ({2}:{3:D})"));
+            Assert.AreEqual(TraceBase.LeaveString                   , Resource.Unescape("_Leave_ {0}.{1} ({2}:{3:D})"));
+            Assert.AreEqual(TraceBase.ThreadBoundaryString          , Resource.Unescape("_Thread_ {0}"));
+            Assert.AreEqual(TraceBase.ClassBoundaryString           , Resource.Unescape("_ {0} _"));
+            Assert.AreEqual(TraceBase.CodeIndentString              , Resource.Unescape("||"));
+            Assert.AreEqual(TraceBase.DataIndentString              , Resource.Unescape("``"));
+            Assert.AreEqual(TraceBase.LimitString                   , Resource.Unescape("<Limit>"));
+            Assert.AreEqual(TraceBase.DefaultNameSpaceString        , Resource.Unescape("<DefaultNameSpace>"));
+            Assert.AreEqual(TraceBase.NonPrintString                , Resource.Unescape("<NonPrint>"));
+            Assert.AreEqual(TraceBase.CyclicReferenceString         , Resource.Unescape("<CyclicReference>"));
+            Assert.AreEqual(TraceBase.VarNameValueSeparator         , Resource.Unescape(@"\s<=\s"));
+            Assert.AreEqual(TraceBase.KeyValueSeparator             , Resource.Unescape(@"\s::\s"));
+            Assert.AreEqual(TraceBase.PrintSuffixFormat             , Resource.Unescape(@"\s[{2}:{3:D}]"));
+            Assert.AreEqual(TraceBase.CountFormat                   , Resource.Unescape(@"\s_Count_:{0}")); // since 1.5.1
+            Assert.AreEqual(TraceBase.StringLengthFormat            , Resource.Unescape("(_Length_:{0})")); // since 1.5.1
+            Assert.AreEqual(TraceBase.DateTimeFormat                , Resource.Unescape("{0:MM-dd-yyyy hh:mm:ss.fffffffK}"));
+            Assert.AreEqual(TraceBase.LogDateTimeFormat             , Resource.Unescape("{0:MM-dd-yyyy hh:mm:ss.fff} [{1:D2}] {2}")); // since 1.3.0
+            Assert.AreEqual(TraceBase.MaxDataOutputWidth .ToString(),                   "40");
+            Assert.AreEqual(TraceBase.CollectionLimit    .ToString(),                   "8");
+            Assert.AreEqual(TraceBase.StringLimit        .ToString(),                   "32");
+            Assert.AreEqual(TraceBase.ReflectionNestLimit.ToString(),                   "2");
+            Assert.AreEqual(TraceBase.DefaultNameSpace              ,                   "DebugTraceTest");
 
-            var reflectionClasses = new HashSet<string>(testProperties[nameof(TraceBase.ReflectionClasses)].Split(',').Select(s => s.Trim()));
+            var reflectionClasses = new HashSet<string>("DebugTraceTest.Point3,System.DateTime".Split(',').Select(s => s.Trim()));
             reflectionClasses.Add(typeof(Tuple).FullName); // Tuple
             reflectionClasses.Add(typeof(ValueTuple).FullName); // ValueTuple
             AssertAreEqual(TraceBase.ReflectionClasses, reflectionClasses);
 
-            Assert.AreEqual(TraceBase.OutputNonPublicFields    , bool.Parse(testProperties[nameof(TraceBase.OutputNonPublicFields    )])); // since 1.4.4
-            Assert.AreEqual(TraceBase.OutputNonPublicProperties, bool.Parse(testProperties[nameof(TraceBase.OutputNonPublicProperties)])); // since 1.4.4
+            Assert.AreEqual(TraceBase.OutputNonPublicFields    , true); // since 1.4.4
+            Assert.AreEqual(TraceBase.OutputNonPublicProperties, true); // since 1.4.4
 
             Assert.AreEqual(typeof(Loggers), TraceBase.Logger.GetType()); // since 1.5.0
             CollectionAssert.AreEqual(

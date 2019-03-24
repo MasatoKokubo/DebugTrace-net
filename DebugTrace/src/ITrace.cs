@@ -76,5 +76,13 @@ namespace DebugTrace {
         /// <param name="name">the name of the value</param>
         /// <param name="valueSupplier">the supplier of value to output</param>
         void Print(string name, Func<object> valueSupplier);
+
+        /// <summary>
+        /// Outputs an array of StackTraceElement to the log.
+        /// </summary>
+        ///
+        /// <param name="maxCount">maximum number of stack trace elements to output</returns>
+        /// <since>1.5.5</since>
+        void PrintStack(int maxCount);
     }
 }

@@ -1,12 +1,14 @@
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DebugTrace;
 using static DebugTrace.CSharp;
 
-namespace DebugTraceTest {
+namespace DebugTraceTest
+{
     [TestClass]
     public class PrintTest {
         // TestCleanup
@@ -46,21 +48,6 @@ namespace DebugTraceTest {
         }
 
         // string
-    // 1.5.1
-    //  [DataTestMethod]
-    //  [DataRow("\0"    , "v = \"\\0\" (")]
-    //  [DataRow("\a"    , "v = \"\\a\" (")]
-    //  [DataRow("\b"    , "v = \"\\b\" (")]
-    //  [DataRow("\t"    , "v = \"\\t\" (")]
-    //  [DataRow("\n"    , "v = \"\\n\" (")]
-    //  [DataRow("\v"    , "v = \"\\v\" (")]
-    //  [DataRow("\f"    , "v = \"\\f\" (")]
-    //  [DataRow("\r"    , "v = \"\\r\" (")]
-    //  [DataRow("\""    , "v = \"\\\"\" (")]
-    //  [DataRow("'"     , "v = \"'\" (")]
-    //  [DataRow("\\"    , "v = @\"\\\" (")]
-    //  [DataRow("\u0001", "v = \"\\u0001\" (")]
-    //  [DataRow("\u007F", "v = \"\\u007F\" (")]
         [DataRow("\0"    , "v = (Length:1)\"\\0\" (")]
         [DataRow("\a"    , "v = (Length:1)\"\\a\" (")]
         [DataRow("\b"    , "v = (Length:1)\"\\b\" (")]
@@ -241,10 +228,7 @@ namespace DebugTraceTest {
 
         // Guid
         [DataTestMethod]
-    // 1.5.3
-    //  [DataRow("CE8BF46B-723B-44B4-BBF5-288B6C736127", "v = System.Guid ce8bf46b-723b-44b4-bbf5-288b6c736127 (")]
         [DataRow("CE8BF46B-723B-44B4-BBF5-288B6C736127", "v = System.Guid struct ce8bf46b-723b-44b4-bbf5-288b6c736127 (")]
-    ////
         public void PrintGuid(string v, string expect) {
             Trace_.Print("v", new Guid(v));
             StringAssert.Contains(Trace_.LastLog, expect);
@@ -252,10 +236,7 @@ namespace DebugTraceTest {
 
         // Point
         [DataTestMethod]
-    // 1.5.3
-    //  [DataRow(1, 2, "v = DebugTraceTest.Point {X: 1, Y: 2} (")]
         [DataRow(1, 2, "v = DebugTraceTest.Point struct {X: 1, Y: 2} (")]
-    ////
         public void PrintPoint(int x, int y, string expect) {
             Trace_.Print("v", new Point(x, y));
             StringAssert.Contains(Trace_.LastLog, expect);
@@ -264,11 +245,11 @@ namespace DebugTraceTest {
         // Task since 1.4.1
         [DataTestMethod]
         [DataRow(false, false, "Result: ***")]
-        [DataRow(false, true , "Result: ***")]
-        [DataRow(true , false, "Result: ***")]
-        [DataRow(true , true , "Result: ***")]
+    //    [DataRow(false, true , "Result: ***")]
+    //    [DataRow(true , false, "Result: ***")]
+    //    [DataRow(true , true , "Result: ***")]
         public void PrintTask(bool outputNonPublicFields, bool outputNonPublicProperties, string expect) {
-            var task = Task<int>.Run(() => {Thread.Sleep(200); return 1;});
+            var task = Task<int>.Run(() => {Thread.Sleep(400); return 1;});
             Thread.Sleep(10); // wait Running 
             Assert.AreEqual(TaskStatus.Running, task.Status);
 
@@ -303,7 +284,7 @@ namespace DebugTraceTest {
             StringAssert.Contains(Trace_.LastLog, "v = Tuple<Tuple<int, int>, Tuple<int, int>> (Tuple<int, int> (1, 2), Tuple<int, int> (3, 4))");
         }
 
-        // enum 1.5.3
+        // enum since 1.5.3
         public enum Fruits {Apple, Grape, Kiwi, Orange, Pineapple};
         [DataTestMethod]
         [DataRow(Fruits.Apple, "enum DebugTraceTest.Fruits Apple")]
@@ -324,7 +305,7 @@ namespace DebugTraceTest {
             }
         }
 
-        // 1.5.4
+        // Reflection since 1.5.4
         [TestMethod]
         public void PrintReflection() {
             Trace_.Print("v", new Bar(new Foo()));
@@ -335,6 +316,34 @@ namespace DebugTraceTest {
 
             Trace_.Print("v", new Bar(null));
             StringAssert.Contains(Trace_.LastLog, "v = DebugTraceTest.Bar {DebugTraceTest.Foo Foo: null}");
+        }
+
+        // PrintStack since 1.5.5
+        [DataTestMethod]
+        [DataRow(0)]
+        [DataRow(1)]
+        [DataRow(2)]
+        [DataRow(3)]
+        [DataRow(4)]
+        [DataRow(5)]
+        [DataRow(6)]
+        [DataRow(7)]
+        [DataRow(8)]
+        [DataRow(9)]
+        public void PrintStack(int maxCount) {
+            func1(maxCount);
+        }
+
+        private void func1(int maxCount) {
+            func2(maxCount);
+        }
+
+        private void func2(int maxCount) {
+            func3(maxCount);
+        }
+
+        private void func3(int maxCount) {
+            Array.ForEach(new int[] {0}, num => Trace_.PrintStack(maxCount));
         }
     }
 }

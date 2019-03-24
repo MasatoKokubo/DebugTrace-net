@@ -214,14 +214,16 @@ namespace DebugTrace {
         /// Class constructor
         /// </summary>
         static TraceBase() {
-            InitClass();
+            InitClass("DebugTrace");
         }
 
         /// <summary>
         /// Initializes this class.
         /// </summary>
-        public static void InitClass() {
-            Resource = new Resource("DebugTrace");
+        ///
+        /// <param name="baseName">the base name of the resource properties file</param>
+        public static void InitClass(string baseName) {
+            Resource = new Resource(baseName);
 
             EnterString               = Resource.GetString (nameof(EnterString              ), Resource.Unescape(@"Enter {0}.{1} ({2}:{3:D})"));
             LeaveString               = Resource.GetString (nameof(LeaveString              ), Resource.Unescape(@"Leave {0}.{1} ({2}:{3:D}) time: {4}"));
@@ -523,7 +525,7 @@ namespace DebugTrace {
         ///
         /// <param name="name">the name of the value</param>
         /// <param name="value">the value to output (nullable)</param>
-        protected void PrintSub(string name, object value) {
+        protected void PrintSub(string name, object value, bool innerUse = false) {
             lock (states) {
                 var state = GetCurrentState();
                 PrintStart(state); // Common start processing of output
@@ -569,9 +571,27 @@ namespace DebugTrace {
         ///
         /// <returns>the caller stack trace element</returns>
         protected StackTraceElement GetStackTraceElement() {
-            var elements = Environment.StackTrace.Split('\n')
+            var elements = GetStackTraceElements(1);
+
+            var result = elements.Count() > 0
+                ? elements.ElementAt(0)
+                : new StackTraceElement("--", "--", "--", 0);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Returns the caller stack trace element.
+        /// </summary>
+        ///
+        /// <param name="maxCount">maximum number of stack trace elements to return</returns>
+        /// <returns>the caller stack trace element</returns>
+        /// <since>1.5.5</since>
+        protected StackTraceElement[] GetStackTraceElements(int maxCount) {
+            return Environment.StackTrace.Split('\n')
                 .Select(str => str.Trim())
                 .Where(str => str != "" && !str.Contains(thisClassFullName) && !str.Contains("StackTrace"))
+                .Take(maxCount)
                 .Select(str => {
                     //  0  1            2  3             4
                     // "at Class.Method() in filePath:line N"
@@ -585,13 +605,8 @@ namespace DebugTrace {
                     (var str8, var lineNoStr) = Split(str7.Trim(), ' ');
                     var lineNo = lineNoStr == "" ? 0 : int.Parse(lineNoStr);
                     return new StackTraceElement(typeName, methodName, fileName, lineNo);
-                });
-
-            var result = elements.Count() > 0
-                ? elements.ElementAt(0)
-                : new StackTraceElement("--", "--", "--", 0);
-
-            return result;
+                })
+                .ToArray();
         }
 
         /// <summary>
@@ -637,6 +652,7 @@ namespace DebugTrace {
 
         /// <summary>
         /// Outputs the name and value to the log.
+        /// Outputs an array of StackTraceElement to the log.
         /// </summary>
         ///
         /// <param name="name">the name of the value</param>
@@ -644,6 +660,16 @@ namespace DebugTrace {
         public void Print(string name, Func<object> valueSupplier) {
             if (!IsEnabled) return;
             PrintSub(name, valueSupplier());
+        }
+
+        /// <summary>
+        /// Outputs an array of StackTraceElement to the log.
+        /// </summary>
+        ///
+        /// <param name="maxCount">maximum number of stack trace elements to output</returns>
+        /// <since>1.5.5</since>
+        public void PrintStack(int maxCount) {
+            Print("Stack", GetStackTraceElements(maxCount));
         }
 
         /// <summary>
@@ -756,25 +782,19 @@ namespace DebugTrace {
                             typeName = ReplaceTypeName(typeName);
                             var count = -1;
                             try {
-                                count = (int)type.GetProperty("Count").GetValue(value);
+                                var countProperty = type.GetProperty("Count");
+                                if (countProperty != null)
+                                    count = (int)countProperty.GetValue(value);
                             }
                             catch (Exception) {}
                             if (count >= 0)
-                            // 1.5.1
-                            //  typeName += " Count:" + count;
                                 typeName += string.Format(CountFormat, count);
-                            ////
-                        // 1.5.3
                             else {
-                            // 1.5.4
-                            //  typeName += type.IsEnum ? " enum" : type.IsValueType ? " struct" : "";
                                 if (type.IsEnum)
                                     typeName = "enum " + typeName;
                                 else if (type.IsValueType)
                                     typeName += " struct";
-                            ////
                             }
-                        ////
                         }
                     }
                 }
@@ -1030,9 +1050,7 @@ namespace DebugTrace {
         protected bool AppendString(LogBuffer buff, string str, bool escape) {
             buff.Save(); // Save current point
             var needAtChar = false;
-        // 1.5.1
             buff.Append(string.Format(StringLengthFormat, str.Length));
-        ////
             buff.Append('"');
             for (int index = 0; index < str.Length; ++index) {
                 if (index >= StringLimit) {
@@ -1396,29 +1414,6 @@ namespace DebugTrace {
         // AppendReflectValue / MemberInfo
         private bool AppendReflectValue(LogBuffer buff, Type type, object obj, MemberInfo memberInfo) {
             AppendAccessModifire(buff, memberInfo);
-        // 1.5.4
-        //  if (!IsTuple(type))
-        //      buff.Append(memberInfo.Name).Append(KeyValueSeparator);
-		//
-        //  if (NonPrintProperties.Contains(GetFullTypeName(type) + '.' + memberInfo.Name)) {
-        //      buff.Append(NonPrintString);
-        //      return false;
-        //  }
-		//
-        //  object value = null;
-        //  try {
-        //      switch (memberInfo) {
-        //      case FieldInfo fieldInfo:
-        //          value = fieldInfo.GetValue(obj);
-        //          break;
-        //      case PropertyInfo propertyInfo:
-        //          value = propertyInfo.GetValue(obj);
-        //          break;
-        //      }
-        //  }
-        //  catch (Exception e) {
-        //      value = e.ToString();
-        //  }
             var nonPrint = NonPrintProperties.Contains(GetFullTypeName(type) + '.' + memberInfo.Name);
 
             Type memberType = null;
@@ -1452,7 +1447,6 @@ namespace DebugTrace {
                 buff.Append(NonPrintString);
                 return false;
             }
-        ////
             return Append(buff, value, false);
         }
 

@@ -31,14 +31,9 @@ namespace DebugTraceTest {
         [DataTestMethod]
         [DataRow(new [] {0, 1, 2}, new [] {10, 11, 12},
             "v = System.Collections.Generic.List<DebugTraceTest.Point> Count:3 {" +
-        // 1.5.3
-        //  "DebugTraceTest.Point {X: 0, Y: 10}, " +
-        //  "DebugTraceTest.Point {X: 1, Y: 11}, " +
-        //  "DebugTraceTest.Point {X: 2, Y: 12}" +
             "DebugTraceTest.Point struct {X: 0, Y: 10}, " +
             "DebugTraceTest.Point struct {X: 1, Y: 11}, " +
             "DebugTraceTest.Point struct {X: 2, Y: 12}" +
-        ///
             "} (")]
         public void PrintPointList(int[] x, int[] y, string expect) {
             Trace.Print("v", x.Select((e, index) => new Point(e, y[index])).ToList());
@@ -48,10 +43,7 @@ namespace DebugTraceTest {
         // Dictionary<int, string>
         [DataTestMethod]
         [DataRow(new [] {0, 1}, new [] {"0", "1"},
-        // 1.5.1
-        //  "d = System.Collections.Generic.Dictionary<int, string> Count:2 {0: \"0\", 1: \"1\"} (")]
             "d = System.Collections.Generic.Dictionary<int, string> Count:2 {0: (Length:1)\"0\", 1: (Length:1)\"1\"} (")]
-        ////
         public void PrintDictionary(int[] k, string[] v, string expect) {
             var d = new Dictionary<int, string>();
             for (int index = 0; index < k.Length; ++index)
