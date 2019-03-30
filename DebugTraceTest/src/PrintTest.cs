@@ -48,6 +48,8 @@ namespace DebugTraceTest
         }
 
         // string
+        [DataTestMethod]
+        [DataRow("ABC"   , "v = (Length:3)\"ABC\" (")]
         [DataRow("\0"    , "v = (Length:1)\"\\0\" (")]
         [DataRow("\a"    , "v = (Length:1)\"\\a\" (")]
         [DataRow("\b"    , "v = (Length:1)\"\\b\" (")]
@@ -318,7 +320,7 @@ namespace DebugTraceTest
             StringAssert.Contains(Trace_.LastLog, "v = DebugTraceTest.Bar {DebugTraceTest.Foo Foo: null}");
         }
 
-        // PrintStack since 1.5.5
+        // PrintStack since 1.6.0
         [DataTestMethod]
         [DataRow(0)]
         [DataRow(1)]

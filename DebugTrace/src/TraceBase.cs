@@ -1049,8 +1049,9 @@ namespace DebugTrace {
         /// <returns>always false</returns>
         protected bool AppendString(LogBuffer buff, string str, bool escape) {
             buff.Save(); // Save current point
-            var needAtChar = false;
             buff.Append(string.Format(StringLengthFormat, str.Length));
+            var needAtChar = false;
+            var atIndex = buff.Length;
             buff.Append('"');
             for (int index = 0; index < str.Length; ++index) {
                 if (index >= StringLimit) {
@@ -1068,7 +1069,7 @@ namespace DebugTrace {
             }
             buff.Append('"');
             if (needAtChar)
-                buff.Insert(buff.PeekSave().builderLength, '@');
+                buff.Insert(atIndex, '@');
             buff.PopSave(); // Pop saveed point
             return false;
         }
