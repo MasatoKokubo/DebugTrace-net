@@ -1,8 +1,6 @@
-﻿Imports System
-Imports System.Threading
-Imports System.Threading.Tasks
+﻿Imports System.Threading
 Imports Microsoft.VisualStudio.TestTools.UnitTesting
-Imports DebugTrace.CSharp ' for Debugging
+Imports DebugTrace.VisualBasic ' for Debugging
 
 Namespace Readme
     ''' <summary>ReadmeExample1</summary>

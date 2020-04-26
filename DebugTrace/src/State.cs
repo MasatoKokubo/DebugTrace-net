@@ -8,7 +8,6 @@ namespace DebugTrace {
     /// <summary>
     /// Have a trace state for a thread.
     /// </summary>
-    ///
     /// <since>1.0.0</since>
     /// <author>Masato Kokubo</author>
     public class State {

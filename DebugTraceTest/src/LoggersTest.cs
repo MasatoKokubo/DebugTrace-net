@@ -1,11 +1,8 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
-using System.Xml;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using log4net.Config;
 using DebugTrace;
 using static DebugTrace.CSharp;
 using Console = DebugTrace.Console;
@@ -13,10 +10,10 @@ using Console = DebugTrace.Console;
 namespace DebugTraceTest {
     [TestClass]
     public class LoggersTest {
-        private static FileInfo log4netFileInfo;
-        private static FileInfo nLogFileInfo;
-        private ILogger beforeLogger;
-        private string beforeLevel;
+        private static FileInfo? log4netFileInfo;
+        private static FileInfo? nLogFileInfo;
+        private ILogger? beforeLogger;
+        private string? beforeLevel;
 
         // ClassInit
         [ClassInitialize]
@@ -43,8 +40,10 @@ namespace DebugTraceTest {
         // TestCleanup
         [TestCleanup]
         public void TestCleanup() {
-            TraceBase.Logger = beforeLogger;
-            TraceBase.Logger.Level = beforeLevel;
+            if (beforeLogger != null)
+                TraceBase.Logger = beforeLogger;
+            if (beforeLevel != null)
+                TraceBase.Logger.Level = beforeLevel;
         }
 
         // 0 Loggers
@@ -121,10 +120,10 @@ namespace DebugTraceTest {
             TraceBase.Logger = global::DebugTrace.NLog.Instance;
             TraceBase.Logger.Level = level;
 
-            nLogFileInfo.Refresh();
+            nLogFileInfo?.Refresh();
             var beforeLength = 0L;
             try {
-                beforeLength = nLogFileInfo.Length;
+                beforeLength = nLogFileInfo?.Length ?? 0;
             }
             catch (Exception) {}
 
@@ -132,7 +131,7 @@ namespace DebugTraceTest {
             Trace.Print($"NLogLevel {level} log");
 
             // then:
-            var lastLog = GetLastLog(nLogFileInfo, beforeLength);
+            var lastLog = nLogFileInfo == null ? "" : GetLastLog(nLogFileInfo, beforeLength);
             StringAssert.Contains(lastLog, $" {level.ToUpper()} ");
         }
 

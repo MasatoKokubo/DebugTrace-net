@@ -10,7 +10,7 @@ namespace DebugTrace {
     /// <since>1.0.0</since>
     /// <author>Masato Kokubo</author>
     public class NLog : ILogger {
-        private static readonly Dictionary<string, global::NLog.LogLevel> levelDictinary = 
+        private static readonly Dictionary<string, global::NLog.LogLevel> levelDictionary = 
             new Dictionary<string, global::NLog.LogLevel>() {
                 {"TRACE", global::NLog.LogLevel.Trace},
                 {"DEBUG", global::NLog.LogLevel.Debug},
@@ -22,11 +22,11 @@ namespace DebugTrace {
             };
 
         // NLog Logger
-        private global::NLog.Logger logger = global::NLog.LogManager.GetLogger(typeof(ILogger).Namespace);
+        private readonly global::NLog.Logger logger = global::NLog.LogManager.GetLogger(typeof(ILogger).Namespace);
 
-        private static string defaultLevelStr = "DEBUG";
+        private static readonly string defaultLevelStr = "DEBUG";
         private string levelStr = defaultLevelStr;
-        private global::NLog.LogLevel level = levelDictinary[defaultLevelStr];
+        private global::NLog.LogLevel level = levelDictionary[defaultLevelStr];
 
         /// <summary>
         /// The only instance of this class
@@ -44,8 +44,8 @@ namespace DebugTrace {
             set {
                 TraceBase.RequreNonNull(value, "value"); // since 1.1.1
                 var upperValue = value.ToUpper();
-                if (levelDictinary.ContainsKey(upperValue)) {
-                    level = levelDictinary[upperValue];
+                if (levelDictionary.ContainsKey(upperValue)) {
+                    level = levelDictionary[upperValue];
                     levelStr = value;
                 } else
                     System.Console.Error.WriteLine($"LogLevel: \"{value}\" is unknown.");
@@ -72,6 +72,6 @@ namespace DebugTrace {
         ///
         /// <returns>a string representation of this object</returns>
         /// <since>1.5.0</since>
-        public override string ToString() => GetType().FullName;
+        public override string ToString() => GetType().FullName ?? "";
     }
 }

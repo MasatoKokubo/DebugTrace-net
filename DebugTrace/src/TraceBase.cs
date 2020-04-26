@@ -14,7 +14,6 @@ namespace DebugTrace {
     /// <summary>
     /// The base class of classes that implements <c>ITrace</c> interface.
     /// </summary>
-    ///
     /// <since>1.0.0</since>
     /// <author>Masato Kokubo</author>
     public abstract class TraceBase : ITrace {
@@ -24,96 +23,108 @@ namespace DebugTrace {
         public static Resource Resource {get; private set;}
 
         /// <summary>
-        /// The string output by <c>Enter</c> method
+        /// Format string of log output when entering methods
         /// </summary>
-        public static string EnterString {get; set;}
+        public static string EnterFormat {get; set;} = ""; // since 2.0.0 EnterFormat <- EnterString
 
         /// <summary>
-        /// The string output by <c>Leave</c> method
+        /// Format string of log output when leaving methods
         /// </summary>
-        public static string LeaveString {get; set;}
+        public static string LeaveFormat {get; set;} = ""; // since 2.0.0 LeaveFormat <- LeaveString
 
         /// <summary>
-        /// The string output in the threads boundary
+        /// Format string of log output at threads boundary
         /// </summary>
-        public static string ThreadBoundaryString {get; set;}
+        public static string ThreadBoundaryFormat {get; set;} = ""; // since 2.0.0 ThreadBoundaryFormat <- ThreadBoundaryString
 
         /// <summary>
-        /// The string output in the classes boundary
+        /// Format string of log output at classes boundary
         /// </summary>
-        public static string ClassBoundaryString {get; set;}
+        public static string ClassBoundaryFormat {get; set;} = ""; // since 2.0.0 ClassBoundaryFormat <- ClassBoundaryString
 
         /// <summary>
-        /// The string of one code indent
+        /// String of one code indent
         /// </summary>
-        public static string CodeIndentString {get; set;}
+        public static string IndentString {get; set;} = ""; // since 2.0.0 IndentString <- CodeIndentString
 
         /// <summary>
-        /// The string of one data indent
+        /// String of one data indent
         /// </summary>
-        public static string DataIndentString {get; set;}
+        public static string DataIndentString {get; set;} = "";
 
         /// <summary>
-        /// The string to represent that it has exceeded the limit
+        /// String to represent that it has exceeded the limit
         /// </summary>
-        public static string LimitString {get; set;}
+        public static string LimitString {get; set;} = "";
 
         /// <summary>
-        /// The string replacing the default namespace part
+        /// String replacing the default namespace part
         /// </summary>
-        public static string DefaultNameSpaceString {get; set;}
+        public static string DefaultNameSpaceString {get; set;} = "";
 
         /// <summary>
-        /// The string of value in the case of properties that do not output the value
+        /// String to be output instead of not outputting value
         /// </summary>
-        public static string NonPrintString {get; set;}
+        public static string NonOutputString {get; set;} = ""; // since 2.0.0 NonOutputString <- NonPrintString
 
         /// <summary>
-        /// The string to represent that the cyclic reference occurs
+        /// String to represent that the cyclic reference occurs
         /// </summary>
-        public static string CyclicReferenceString {get; set;}
+        public static string CyclicReferenceString {get; set;} = "";
 
         /// <summary>
-        /// The separator string between the variable name and value
+        /// Separator string between the variable name and value
         /// </summary>
-        public static string VarNameValueSeparator {get; set;}
+        public static string VarNameValueSeparator {get; set;} = "";
 
         /// <summary>
-        /// The separator string between the key and value of dictionary
+        /// Separator string between the key and value of dictionary
         /// </summary>
-        public static string KeyValueSeparator {get; set;}
+        public static string KeyValueSeparator {get; set;} = "";
 
         /// <summary>
         /// Output format of <c>Print</c> method suffix
         /// </summary>
-        public static string PrintSuffixFormat {get; set;}
+        public static string PrintSuffixFormat {get; set;} = "";
 
         /// <summary>
-        /// Output format of the count of collections
+        /// Output format of the count of collection
         /// <since>1.5.1</since>
         /// </summary>
-        public static string CountFormat {get; set;}
+        public static string CountFormat {get; set;} = "";
 
         /// <summary>
-        /// Output format of the length of strings
+        /// Minimum value to output the number of elements of collection
+        /// <since>2.0.0</since>
+        /// </summary>
+        public static int MinimumOutputCount {get; set;}
+
+        /// <summary>
+        /// Output format of the length of <c>string</c>
         /// <since>1.5.1</since>
         /// </summary>
-        public static string StringLengthFormat {get; set;}
+        public static string LengthFormat {get; set;} = ""; // since 2.0.0 LengthFormat <- StringLengthFormat
+
+        /// <summary>
+        /// Minimum value to output the length of string
+        /// <since>2.0.0</since>
+        /// </summary>
+        public static int MinimumOutputLength {get; set;}
 
         /// <summary>
         /// Output format of <c>DateTime</c>
         /// </summary>
-        public static string DateTimeFormat {get; set;}
+        public static string DateTimeFormat {get; set;} = "";
 
         /// <summary>
         /// Output format of date and time when outputting logs
         /// </summary>
-        public static string LogDateTimeFormat {get; set;}
+        public static string LogDateTimeFormat {get; set;} = "";
 
         /// <summary>
         /// Maximum output width of data
         /// </summary>
-        public static int MaxDataOutputWidth {get; set;}
+        public static int MaximumDataOutputWidth {get; set;} // since 2.0.0 MaximumDataOutputWidth <- MaxDataOutputWidth
 
         /// <summary>
         /// Limit value of <c>ICollection</c> elements to output
@@ -133,17 +144,17 @@ namespace DebugTrace {
         /// <summary>
         /// Properties and fields not to be output value
         /// </summary>
-        public static List<string> NonPrintProperties {get; set;}
+        public static IList<string> NonOutputProperties {get; set;} = new List<string>(); // since 2.0.0 NonOutputProperties <- NonPrintProperties
 
         /// <summary>
         /// Default namespace of your C# source
         /// </summary>
-        public static string DefaultNameSpace {get; set;}
+        public static string DefaultNameSpace {get; set;} = "";
 
         /// <summary>
         /// Classe names that output content by reflection even if <c>ToString</c> method is implemented
         /// </summary>
-        public static ISet<string> ReflectionClasses {get; set;}
+        public static ISet<string> ReflectionClasses {get; set;} = new HashSet<string>();
 
         /// <summary>
         /// If <c>true</c>, outputs the contents by reflection even for fields which are not <c>public</c>
@@ -158,12 +169,12 @@ namespace DebugTrace {
         /// <summary>
         /// Array of indent strings
         /// </summary>
-        protected static string[] indentStrings;
+        protected static string[] indentStrings = new string[0];
 
         /// <summary>
         /// Array of data indent strings
         /// </summary>
-        protected static string[] dataIndentStrings;
+        protected static string[] dataIndentStrings = new string[0];
 
         /// <summary>
         /// The logger
@@ -214,44 +225,46 @@ namespace DebugTrace {
         /// Class constructor
         /// </summary>
         static TraceBase() {
+            Resource = new Resource("DebugTrace");
             InitClass("DebugTrace");
         }
 
         /// <summary>
         /// Initializes this class.
         /// </summary>
-        ///
         /// <param name="baseName">the base name of the resource properties file</param>
         public static void InitClass(string baseName) {
             Resource = new Resource(baseName);
 
-            EnterString               = Resource.GetString (nameof(EnterString              ), Resource.Unescape(@"Enter {0}.{1} ({2}:{3:D})"));
-            LeaveString               = Resource.GetString (nameof(LeaveString              ), Resource.Unescape(@"Leave {0}.{1} ({2}:{3:D}) time: {4}"));
-            ThreadBoundaryString      = Resource.GetString (nameof(ThreadBoundaryString     ), Resource.Unescape(@"______________________________ Thread {0} ______________________________"));
-            ClassBoundaryString       = Resource.GetString (nameof(ClassBoundaryString      ), Resource.Unescape(@"____ {0} ____"));
-            CodeIndentString          = Resource.GetString (nameof(CodeIndentString         ), Resource.Unescape(@"|\s"));
+            EnterFormat               = Resource.GetString (nameof(EnterFormat), "EnterString", Resource.Unescape(@"Enter {0}.{1} ({2}:{3:D})"));
+            LeaveFormat               = Resource.GetString (nameof(LeaveFormat), "LeaveString", Resource.Unescape(@"Leave {0}.{1} ({2}:{3:D}) duration: {4}"));
+            ThreadBoundaryFormat      = Resource.GetString (nameof(ThreadBoundaryFormat), "ThreadBoundaryString", Resource.Unescape(@"______________________________ Thread {0} ______________________________"));
+            ClassBoundaryFormat       = Resource.GetString (nameof(ClassBoundaryFormat ), "ClassBoundaryString" , Resource.Unescape(@"____ {0} ____"));
+            IndentString              = Resource.GetString (nameof(IndentString), "CodeIndentString", Resource.Unescape(@"|\s"));
             DataIndentString          = Resource.GetString (nameof(DataIndentString         ), Resource.Unescape(@"\s\s"));
             LimitString               = Resource.GetString (nameof(LimitString              ), Resource.Unescape(@"..."));
             DefaultNameSpaceString    = Resource.GetString (nameof(DefaultNameSpaceString   ), Resource.Unescape(@"..."));
-            NonPrintString            = Resource.GetString (nameof(NonPrintString           ), Resource.Unescape(@"***"));
+            NonOutputString           = Resource.GetString (nameof(NonOutputString), "NonPrintString", Resource.Unescape(@"***"));
             CyclicReferenceString     = Resource.GetString (nameof(CyclicReferenceString    ), Resource.Unescape(@"*** Cyclic Reference ***"));
             VarNameValueSeparator     = Resource.GetString (nameof(VarNameValueSeparator    ), Resource.Unescape(@"\s=\s"));
             KeyValueSeparator         = Resource.GetString (nameof(KeyValueSeparator        ), Resource.Unescape(@":\s"));
             PrintSuffixFormat         = Resource.GetString (nameof(PrintSuffixFormat        ), Resource.Unescape(@"\s({2}:{3:D})"));
             CountFormat               = Resource.GetString (nameof(CountFormat              ), Resource.Unescape(@"\sCount:{0}")); // since 1.5.1
-            StringLengthFormat        = Resource.GetString (nameof(StringLengthFormat       ), Resource.Unescape(@"(Length:{0})")); // since 1.5.1
+            MinimumOutputCount        = Resource.GetInt    (nameof(MinimumOutputCount       ), 5); // since 2.0.0
+            LengthFormat              = Resource.GetString (nameof(LengthFormat), "StringLengthFormat", Resource.Unescape(@"(Length:{0})")); // since 1.5.1
+            MinimumOutputLength       = Resource.GetInt    (nameof(MinimumOutputLength      ), 5); // since 2.0.0
             DateTimeFormat            = Resource.GetString (nameof(DateTimeFormat           ), Resource.Unescape(@"{0:yyyy-MM-dd HH:mm:ss.fffffffK}"));
             LogDateTimeFormat         = Resource.GetString (nameof(LogDateTimeFormat        ), Resource.Unescape(@"{0:yyyy-MM-dd HH:mm:ss.fff} [{1:D2}] {2}")); // since 1.3.0
-            MaxDataOutputWidth        = Resource.GetInt    (nameof(MaxDataOutputWidth       ), 80);
+            MaximumDataOutputWidth    = Resource.GetInt    (nameof(MaximumDataOutputWidth), "MaxDataOutputWidth", 80);
             CollectionLimit           = Resource.GetInt    (nameof(CollectionLimit          ), 512);
             StringLimit               = Resource.GetInt    (nameof(StringLimit              ), 8192);
             ReflectionNestLimit       = Resource.GetInt    (nameof(ReflectionNestLimit      ), 4);
-            NonPrintProperties        = new List<string>(Resource.GetStrings(nameof(NonPrintProperties), new string[0]));
-            NonPrintProperties.Add("System.Threading.Tasks.Task.Result");
+            NonOutputProperties       = new List<string>(Resource.GetStrings(nameof(NonOutputProperties), "NonPrintProperties", new string[0]));
+            NonOutputProperties.Add("System.Threading.Tasks.Task.Result");
             DefaultNameSpace          = Resource.GetString (nameof(DefaultNameSpace         ), "");
             ReflectionClasses         = new HashSet<string>(Resource.GetStrings(nameof(ReflectionClasses), new string[0]));
-            ReflectionClasses.Add(typeof(Tuple).FullName); // Tuple
-            ReflectionClasses.Add(typeof(ValueTuple).FullName); // ValueTuple
+            ReflectionClasses.Add(typeof(Tuple).FullName ?? ""); // Tuple
+            ReflectionClasses.Add(typeof(ValueTuple).FullName ?? ""); // ValueTuple
             OutputNonPublicFields     = Resource.GetBool   (nameof(OutputNonPublicFields    ), false); // since 1.4.4
             OutputNonPublicProperties = Resource.GetBool   (nameof(OutputNonPublicProperties), false); // since 1.4.4
 
@@ -261,20 +274,20 @@ namespace DebugTrace {
             // Array of data indent strings
             dataIndentStrings = new string[64];
 
-            var loggerStr = Resource.GetString("Logger", null);
-            if (loggerStr != null) {
-                Exception e1 = null;
-                Exception e2 = null;
+            var loggerStr = Resource.GetString("Logger", "");
+            if (loggerStr != "") {
+                Exception? e1 = null;
+                Exception? e2 = null;
                 var loggerNames = loggerStr.Split(Loggers.SeparatorChar).Select(str => str.Trim());
                 var loggers = new List<ILogger>();
                 foreach (var loggerName in loggerNames) {
-                    ILogger logger = null;
+                    ILogger? logger = null;
                     var loggerFullName = loggerName.Split(',')[0].Contains('.')
                         ? loggerName
                         : typeof(ILogger).Namespace + '.' + loggerName; // Add default namesapce if no namespace
                     try {
-                        logger = (ILogger)Type.GetType(loggerFullName)
-                            .GetProperty(nameof(Console.Out.Instance), BindingFlags.Public | BindingFlags.Static)
+                        logger = (ILogger?)Type.GetType(loggerFullName)?
+                            .GetProperty(nameof(Console.Out.Instance), BindingFlags.Public | BindingFlags.Static)?
                             .GetValue(null);
                     }
                     catch (Exception e) {
@@ -284,8 +297,8 @@ namespace DebugTrace {
                         // Try with the class name that added the assembly name
                         loggerFullName = loggerFullName + ',' + loggerFullName;
                         try {
-                            logger = (ILogger)Type.GetType(loggerFullName)
-                                .GetProperty(nameof(Console.Out.Instance), BindingFlags.Public | BindingFlags.Static)
+                            logger = (ILogger?)Type.GetType(loggerFullName)?
+                                .GetProperty(nameof(Console.Out.Instance), BindingFlags.Public | BindingFlags.Static)?
                                 .GetValue(null);
                         }
                         catch (Exception e) {
@@ -311,14 +324,14 @@ namespace DebugTrace {
             }
 
             // Set the logging level
-            var logLevel = Resource.GetString("LogLevel", null);
-            if (logLevel != null)
+            var logLevel = Resource.GetString("LogLevel", "");
+            if (logLevel != "")
                 Logger.Level = logLevel;
 
             // make code indent strings
             indentStrings[0] = "";
             for (var index = 1; index < indentStrings.Length; ++index)
-                indentStrings[index] = indentStrings[index - 1] + CodeIndentString;
+                indentStrings[index] = indentStrings[index - 1] + IndentString;
 
             // make data indent strings
             dataIndentStrings[0] = "";
@@ -326,17 +339,15 @@ namespace DebugTrace {
                 dataIndentStrings[index] = dataIndentStrings[index - 1] + DataIndentString;
 
             // output version log
-            var versionAttribute = (AssemblyInformationalVersionAttribute)
+            var versionAttribute = (AssemblyInformationalVersionAttribute?)
                 Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(), typeof(AssemblyInformationalVersionAttribute));
-            Logger.Log($"DebugTrace-net {versionAttribute?.InformationalVersion}");
-            Logger.Log($"  Referenced properties file: {Resource.FileInfo.FullName}");
-            Logger.Log($"  Logger wrapper: {Logger}");
+            Logger.Log($"DebugTrace-net {versionAttribute?.InformationalVersion} uses {Logger}");
+            Logger.Log($"with {Resource.FileInfo.FullName}.");
         }
 
         /// <summary>
         /// Returns the indent state of the current thread.
         /// </summary>
-        ///
         /// <param name="threadId">the thread id</param>
         /// <returns>the indent state of the current thread</returns>
         private protected State GetCurrentState(int threadId = -1) {
@@ -358,7 +369,6 @@ namespace DebugTrace {
         /// <summary>
         /// Returns a string corresponding to the code and data nest level.
         /// </summary>
-        ///
         /// <param name="nestLevel">the code nest level</param>
         /// <param name="dataNestLevel">the data nest level</param>
         /// <returns>a string corresponding to the current indent</returns>
@@ -376,13 +386,12 @@ namespace DebugTrace {
         /// <summary>
         /// Common start processing of output.
         /// </summary>
-        ///
         /// <param name="state">the state</param>
         protected void PrintStart(State state) {
             if (state.ThreadId !=  beforeThreadId) {
                 // Thread changing
                 Logger.Log(""); // Line break
-                Logger.Log(string.Format(ThreadBoundaryString, state.ThreadId));
+                Logger.Log(string.Format(ThreadBoundaryFormat, state.ThreadId));
                 Logger.Log(""); // Line break
 
                 beforeThreadId = state.ThreadId;
@@ -403,7 +412,6 @@ namespace DebugTrace {
         /// <summary>
         /// Outputs a log when enters the method.
         /// </summary>
-        ///
         /// <returns>the current thread id</returns>
         public int Enter() {
             if (!IsEnabled) return -1;
@@ -416,7 +424,7 @@ namespace DebugTrace {
                 if (state.PreviousNestLevel > state.NestLevel)
                     Logger.Log(GetIndentString(state.NestLevel, 0)); // Empty Line
 
-                LastLog = GetIndentString(state.NestLevel, 0) + GetCallerInfo(EnterString);
+                LastLog = GetIndentString(state.NestLevel, 0) + GetCallerInfo(EnterFormat);
                 Logger.Log(LastLog);
 
                 state.PreviousLineCount = 1;
@@ -430,7 +438,6 @@ namespace DebugTrace {
         /// <summary>
         /// Outputs a log when leaves the method.
         /// </summary>
-        ///
         /// <param name="threadId">the thread id</param>
         public void Leave(int threadId = -1) {
             if (!IsEnabled) return;
@@ -444,7 +451,7 @@ namespace DebugTrace {
 
                 var timeSpan = DateTime.UtcNow - state.DownNest();;
 
-                LastLog = GetIndentString(state.NestLevel, 0) + GetCallerInfo(LeaveString, timeSpan);
+                LastLog = GetIndentString(state.NestLevel, 0) + GetCallerInfo(LeaveFormat, timeSpan);
                 Logger.Log(LastLog);
 
                 state.PreviousLineCount = 1;
@@ -455,7 +462,6 @@ namespace DebugTrace {
         /// Returns the caller's class name, method name, file name and line number
         /// of the caller method and the time span string embedded in <c>baseString</c>.
         /// </summary>
-        ///
         /// <param name="baseString">the string for formatting</param>
         /// <param name="timeSpan">the time span</param>
         /// <returns>a string embedded caller information</returns>
@@ -473,7 +479,6 @@ namespace DebugTrace {
         /// <summary>
         /// Outputs the message to the log.
         /// </summary>
-        ///
         /// <param name="message">the message</param>
         public void Print(string message) {
             if (!IsEnabled) return;
@@ -483,7 +488,6 @@ namespace DebugTrace {
         /// <summary>
         /// Outputs the message to the log.
         /// </summary>
-        ///
         /// <param name="messageSupplier">the message supplier</param>
         public void Print(Func<string> messageSupplier) {
             if (!IsEnabled) return;
@@ -493,7 +497,6 @@ namespace DebugTrace {
         /// <summary>
         /// Outputs the message to the log.
         /// </summary>
-        ///
         /// <param name="message">the message</param>
         protected void PrintSub(string message) {
             lock (states) {
@@ -522,10 +525,9 @@ namespace DebugTrace {
         /// <summary>
         /// Outputs the name and value to the log.
         /// </summary>
-        ///
         /// <param name="name">the name of the value</param>
         /// <param name="value">the value to output (nullable)</param>
-        protected void PrintSub(string name, object value, bool innerUse = false) {
+        protected void PrintSub(string name, object? value, bool innerUse = false) {
             lock (states) {
                 var state = GetCurrentState();
                 PrintStart(state); // Common start processing of output
@@ -534,10 +536,11 @@ namespace DebugTrace {
 
                 var buff = new LogBuffer();
 
-                buff.Append(name).Append(VarNameValueSeparator);
+                buff.Append(name).NoBreakAppend(VarNameValueSeparator);
                 var normalizedName = name.Substring(name.LastIndexOf('.') + 1).Trim();
                 normalizedName = normalizedName.Substring(normalizedName.LastIndexOf(' ') + 1);
-                Append(buff, value, false);
+                var valueBuff = ToString(value);
+                buff.Append(valueBuff);
 
                 var element = GetStackTraceElement();
                 var suffix = string.Format(PrintSuffixFormat,
@@ -545,7 +548,7 @@ namespace DebugTrace {
                     element.MethodName,
                     element.FileName,
                     element.LineNumber);
-                buff.Append(suffix);
+                buff.NoBreakAppend(suffix);
                 buff.LineFeed();
 
                 if (state.PreviousLineCount > 1 || buff.Lines.Count > 1)
@@ -568,7 +571,6 @@ namespace DebugTrace {
         /// <summary>
         /// Returns the caller stack trace element.
         /// </summary>
-        ///
         /// <returns>the caller stack trace element</returns>
         protected StackTraceElement GetStackTraceElement() {
             var elements = GetStackTraceElements(1);
@@ -583,7 +585,6 @@ namespace DebugTrace {
         /// <summary>
         /// Returns the caller stack trace element.
         /// </summary>
-        ///
         /// <param name="maxCount">maximum number of stack trace elements to return</returns>
         /// <returns>the caller stack trace element</returns>
         /// <since>1.5.5</since>
@@ -613,7 +614,6 @@ namespace DebugTrace {
         /// Returns a tuple of two strings obtained by splitting the string by the separator.
         /// Searches the string from the top.
         /// </summary>
-        ///
         /// <param name="str">the string</param>
         /// <param name="separator">the separator</param>
         /// <returns>a tuple of strings</returns>
@@ -628,7 +628,6 @@ namespace DebugTrace {
         /// Returns a tuple of two strings obtained by splitting the string by the separator.
         /// Searches the string from the end.
         /// </summary>
-        ///
         /// <param name="str">the string</param>
         /// <param name="separator">the separator</param>
         /// <returns>a tuple of strings</returns>
@@ -642,10 +641,9 @@ namespace DebugTrace {
         /// <summary>
         /// Outputs the name and value to the log.
         /// </summary>
-        ///
         /// <param name="name">the name of the value</param>
         /// <param name="value">the value to output (nullable)</param>
-        public void Print(string name, object value) {
+        public void Print(string name, object? value) {
             if (!IsEnabled) return;
             PrintSub(name, value);
         }
@@ -654,10 +652,9 @@ namespace DebugTrace {
         /// Outputs the name and value to the log.
         /// Outputs an array of StackTraceElement to the log.
         /// </summary>
-        ///
         /// <param name="name">the name of the value</param>
         /// <param name="valueSupplier">the supplier of value to output</param>
-        public void Print(string name, Func<object> valueSupplier) {
+        public void Print(string name, Func<object?> valueSupplier) {
             if (!IsEnabled) return;
             PrintSub(name, valueSupplier());
         }
@@ -665,7 +662,6 @@ namespace DebugTrace {
         /// <summary>
         /// Outputs an array of StackTraceElement to the log.
         /// </summary>
-        ///
         /// <param name="maxCount">maximum number of stack trace elements to output</returns>
         /// <since>1.5.5</since>
         public void PrintStack(int maxCount) {
@@ -673,17 +669,17 @@ namespace DebugTrace {
         }
 
         /// <summary>
-        /// Appends the value for logging to the string buffer.
+        /// Creates a string buffer from the value.
         /// </summary>
-        ///
-        /// <param name="buff">the logging buffer</param>
         /// <param name="value">the value object</param>
         /// <param name="isElement"><c>true</c> if the value is element of a container class, <c>false</c> otherwise</param>
         /// <returns>isMultiLine"><c>true</c> if output multiple lines, <c>false</c> otherwise</returns>
-        protected bool Append(LogBuffer buff, object value, bool isElement) {
+        protected LogBuffer ToString(object? value, bool isElement = false) {
+            var buff = new LogBuffer();
+
             if (value == null) {
                 buff.Append("null");
-                return  false;
+                return buff;
             }
 
             var type = value.GetType();
@@ -694,24 +690,24 @@ namespace DebugTrace {
             if (!isReflection) {
 
                 switch (value) {
-                case bool       boolValue: buff.Append(typeName); Append(buff,    boolValue); return false;
-                case char       charValue: buff.Append(typeName); Append(buff,    charValue); return false;
-                case sbyte     sbyteValue: buff.Append(typeName); Append(buff,   sbyteValue); return false;
-                case byte       byteValue: buff.Append(typeName); Append(buff,    byteValue); return false;
-                case short     shortValue: buff.Append(typeName); Append(buff,   shortValue); return false;
-                case ushort   ushortValue: buff.Append(typeName); Append(buff,  ushortValue); return false;
-                case int         intValue: buff.Append(typeName); Append(buff,     intValue); return false;
-                case uint       uintValue: buff.Append(typeName); Append(buff,    uintValue); return false;
-                case long       longValue: buff.Append(typeName); Append(buff,    longValue); return false;
-                case ulong     ulongValue: buff.Append(typeName); Append(buff,   ulongValue); return false;
-                case float     floatValue: buff.Append(typeName); Append(buff,   floatValue); return false;
-                case double   doubleValue: buff.Append(typeName); Append(buff,  doubleValue); return false;
-                case decimal decimalValue: buff.Append(typeName); Append(buff, decimalValue); return false;
-                case DateTime    dateTime: buff.Append(typeName); Append(buff,     dateTime); return false;
-                case string   stringValue: buff.Append(typeName); return AppendString(buff, stringValue, false);
-                case IDictionary dictionary: return AppendDictionary(buff, dictionary, false);
-                case IEnumerable enumerable: return AppendEnumerable(buff, enumerable, false);
-                case Enum       enumValue: buff.Append(typeName); buff.Append(enumValue); return false;
+                case bool       boolValue: buff.Append(typeName); Append(buff,    boolValue); return buff;
+                case char       charValue: buff.Append(typeName); Append(buff,    charValue); return buff;
+                case sbyte     sbyteValue: buff.Append(typeName); Append(buff,   sbyteValue); return buff;
+                case byte       byteValue: buff.Append(typeName); Append(buff,    byteValue); return buff;
+                case short     shortValue: buff.Append(typeName); Append(buff,   shortValue); return buff;
+                case ushort   ushortValue: buff.Append(typeName); Append(buff,  ushortValue); return buff;
+                case int         intValue: buff.Append(typeName); Append(buff,     intValue); return buff;
+                case uint       uintValue: buff.Append(typeName); Append(buff,    uintValue); return buff;
+                case long       longValue: buff.Append(typeName); Append(buff,    longValue); return buff;
+                case ulong     ulongValue: buff.Append(typeName); Append(buff,   ulongValue); return buff;
+                case float     floatValue: buff.Append(typeName); Append(buff,   floatValue); return buff;
+                case double   doubleValue: buff.Append(typeName); Append(buff,  doubleValue); return buff;
+                case decimal decimalValue: buff.Append(typeName); Append(buff, decimalValue); return buff;
+                case DateTime    dateTime: buff.Append(typeName); Append(buff,     dateTime); return buff;
+                case string   stringValue: buff.Append(typeName); AppendString(buff, stringValue); return buff;
+                case IDictionary dictionary: return ToStringDictionary(dictionary);
+                case IEnumerable enumerable: return ToStringEnumerable(enumerable);
+                case Enum       enumValue: buff.Append(typeName); buff.Append(enumValue); return buff;
                 default:
                     if (!HasToString(type)) {
                         isReflection = true;
@@ -721,7 +717,6 @@ namespace DebugTrace {
                 }
             }
 
-            bool isMultiLine = false;
             if (isReflection) {
                 // Use Reflection
                 if (reflectedObjects.Any(obj => object.ReferenceEquals(value, obj)))
@@ -735,7 +730,8 @@ namespace DebugTrace {
                 else {
                     // Use Reflection
                     reflectedObjects.Add(value);
-                    isMultiLine = AppendUsingReflection(buff, value, false);
+                    var valueBuff = ToStringUsingReflection(value);
+                    buff.Append(valueBuff);
                     reflectedObjects.RemoveAt(reflectedObjects.Count - 1);
                 }
             } else {
@@ -743,20 +739,19 @@ namespace DebugTrace {
                 buff.Append(typeName).Append(value);
             }
 
-            return isMultiLine;
+            return buff;
         }
 
         /// <summary>
         /// Returns the type name to be output to the log.
         /// If dose not output, returns null.
         /// </summary>
-        ///
         /// <param name="type">the type of the value</param>
         /// <param name="value">the value object</param>
         /// <param name="isElement"><c>true</c> if the value is element of a container class, <c>false</c> otherwise</param>
         /// <param name="nest">current nest count</param>
         /// <returns>the type name to be output to the log</returns>
-        protected string GetTypeName(Type type, object value, bool isElement, int nest = 0) {
+        protected string GetTypeName(Type type, object? value, bool isElement, int nest = 0) {
             var typeName = "";
             if (type.IsArray) {
                 // Array
@@ -783,18 +778,16 @@ namespace DebugTrace {
                             var count = -1;
                             try {
                                 var countProperty = type.GetProperty("Count");
-                                if (countProperty != null)
-                                    count = (int)countProperty.GetValue(value);
+                                count = (int?)countProperty?.GetValue(value) ?? -1;
                             }
                             catch (Exception) {}
-                            if (count >= 0)
-                                typeName += string.Format(CountFormat, count);
-                            else {
+                            if (count == -1) {
                                 if (type.IsEnum)
                                     typeName = "enum " + typeName;
                                 else if (type.IsValueType)
                                     typeName += " struct";
-                            }
+                            } else if (count >= MinimumOutputCount)
+                                typeName += string.Format(CountFormat, count);
                         }
                     }
                 }
@@ -809,13 +802,12 @@ namespace DebugTrace {
         /// Returns the type name of the array to be output to the log.
         /// If dose not output, returns <c>null</c>.
         /// </summary>
-        ///
         /// <param name="type">the type of the value</param>
         /// <param name="value">the value object</param>
         /// <param name="isElement"><c>true</c> if the value is element of a container class, <c>false</c> otherwise</param>
         /// <param name="nest">current nest count</param>
         /// <returns>the type name to be output to the log</returns>
-        protected abstract string GetArrayTypeName(Type type, object value, bool isElement, int nest);
+        protected abstract string GetArrayTypeName(Type type, object? value, bool isElement, int nest);
 
         // GetTypeName
         private string GetTypeName(Type type) {
@@ -862,7 +854,6 @@ namespace DebugTrace {
         /// <summary>
         /// Replace a class name.
         /// </summary>
-        ///
         /// <param name="typeName">a class name</param>
         /// <returns>the replaced ckass name</returns>
         protected string ReplaceTypeName(string typeName) {
@@ -874,7 +865,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -883,7 +873,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -892,7 +881,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -901,7 +889,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -910,7 +897,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -919,7 +905,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -928,7 +913,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -937,7 +921,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -946,7 +929,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -955,7 +937,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -964,7 +945,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -973,7 +953,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -982,7 +961,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -991,7 +969,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -1000,13 +977,12 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a character representation for logging to the string buffer.
         /// </summary>
-        ///
         /// <param name="buff">the logging buffer</param>
         /// <param name="ch">a character</param>
         /// <param name="enclosure">the enclosure character</param>
         /// <param name="escape">escape characters if true, dose not escape characters otherwise</param>
         /// <returns><c>true</c> if successful, <c>false</c> otherwise</returns>
-        protected bool AppendChar(LogBuffer buff, char ch, char enclosure, bool escape) {
+        protected void AppendChar(LogBuffer buff, char ch, char enclosure, bool escape) {
             if (escape) {
                 // escape
                 switch (ch) {
@@ -1031,210 +1007,164 @@ namespace DebugTrace {
                 }
             } else {
                 // dose not escape
-                if (ch < ' ' || ch == '\u007F' || ch == enclosure)
-                    return false;
-                else
-                    buff.Append(ch);
+                buff.Append(ch);
             }
-            return true;
         }
 
         /// <summary>
         /// Appends a CharSequence representation for logging to the string buffer.
         /// </summary>
-        ///
         /// <param name="buff">the logging buffer</param>
         /// <param name="str">a string object</param>
         /// <param name="escape">escape characters if true, dose not escape characters otherwise</param>
         /// <returns>always false</returns>
-        protected bool AppendString(LogBuffer buff, string str, bool escape) {
-            buff.Save(); // Save current point
-            buff.Append(string.Format(StringLengthFormat, str.Length));
-            var needAtChar = false;
-            var atIndex = buff.Length;
+        protected void AppendString(LogBuffer buff, string str) {
+            if (str.Length >= MinimumOutputLength)
+                buff.Append(string.Format(LengthFormat, str.Length));
+
+            var hasBackslash = false;
+            var hasEscaped = false;
+            for (var index = 0; index < str.Length; ++index) {
+                if (index >= StringLimit)
+                    break;
+                var ch = str[index];
+                if (ch == '\\')
+                    hasBackslash = true;
+                else if (ch < ' ' || ch == '"' || ch == '\u007F')
+                    hasEscaped = true;
+            }
+
+            if (hasBackslash && !hasEscaped)
+                buff.Append('@');
             buff.Append('"');
-            for (int index = 0; index < str.Length; ++index) {
+
+            for (var index = 0; index < str.Length; ++index) {
                 if (index >= StringLimit) {
                     buff.Append(LimitString);
                     break;
                 }
-                var ch = str[index];
-                if (!AppendChar(buff, ch, '"', escape)) {
-                    buff.Restore(); // Restore saved point
-                    buff.PopSave(); // Pop saveed point
-                    return AppendString(buff, str, true);
-                }
-                if (!escape && ch == '\\')
-                    needAtChar = true;
+                AppendChar(buff, str[index], '"', hasEscaped);
             }
+
             buff.Append('"');
-            if (needAtChar)
-                buff.Insert(atIndex, '@');
-            buff.PopSave(); // Pop saveed point
-            return false;
         }
 
         /// <summary>
-        /// Appends a IDictionary representation for logging to the string buffer.
+        /// Creates a string buffer from the dictionary.
         /// </summary>
-        ///
-        /// <param name="buff">the string buffer</param>
         /// <param name="dictionary">a IDictionary</param>
         /// <param name="isMultiLine">output multiple lines if true, single line otherwise</param>
         /// <returns>false if outputed on a single line, otherwise true</returns>
-        protected bool AppendDictionary(LogBuffer buff, IDictionary dictionary, bool isMultiLine) {
-            buff.Save(); // Save current point
+        protected LogBuffer ToStringDictionary(IDictionary dictionary) {
+            var buff = new LogBuffer();
+
             buff.Append(GetTypeName(dictionary.GetType(), dictionary, false));
             buff.Append('{');
-            var index = 0;
 
-            var lineFeeded = false;
-            var success = true;
+            var elementsBuff = ToStringDictionaryBody(dictionary);
+
+            var isMultiLines = elementsBuff.IsMultiLines || buff.Length + elementsBuff.Length > MaximumDataOutputWidth;
+
+            if (isMultiLines) {
+                buff.LineFeed();
+                buff.UpNest();
+            }
+
+            buff.Append(elementsBuff);
+
+            if (isMultiLines) {
+                buff.LineFeed();
+                buff.DownNest();
+            }
+
+            buff.Append('}');
+
+            return buff;
+        }
+
+       private LogBuffer ToStringDictionaryBody(IDictionary dictionary) {
+            var buff = new LogBuffer();
+
+            var index = 0;
             foreach (var key in dictionary.Keys) {
-                if (isMultiLine) {
-                    if (index == 0) {
-                        buff.LineFeed();
-                        if (!lineFeeded) {
-                            buff.UpNest();
-                            lineFeeded = true;
-                        }
-                    }
-                }
+                if (index > 0)
+                    buff.NoBreakAppend(", "); // Append a delimiter
 
                 if (index >= CollectionLimit) {
-                    buff.Append(LimitString).Append(", ");
+                    buff.Append(LimitString);
                     break;
                 }
 
-                var value = dictionary[key];
+                var value = dictionary[key!];
 
-                buff.Save(); // Save current point
-                var elementIsMultiLine = Append(buff, key, false);
-                buff.Append(KeyValueSeparator);
-                elementIsMultiLine |= Append(buff, value, false);
-
-                if (elementIsMultiLine || buff.Length > MaxDataOutputWidth) {
-                    if (!isMultiLine) {
-                        success = false; // can not be outputed on a single line
-                        buff.PopSave(); // Pop saveed point
-                        break;
-                    }
-
-                    if (buff.PeekSave().builderLength > 0) {
-                        buff.Restore(); // Restore saved point
-                        buff.LineFeed();
-                        elementIsMultiLine = Append(buff, key, false);
-                        buff.Append(KeyValueSeparator);
-                        elementIsMultiLine |= Append(buff, value, false);
-                    }
-                }
-                buff.PopSave(); // Pop saveed point
-
-                buff.Append(", ");
-                if (elementIsMultiLine)
+                var elementBuff = ToString(key, true).NoBreakAppend(KeyValueSeparator).Append(ToString(value, true));
+                if (index > 0 && elementBuff.IsMultiLines)
                     buff.LineFeed();
+                buff.Append(elementBuff);
 
                 ++index;
             }
 
-            if (!success) {
-                buff.Restore(); // Restore saved point
-                buff.PopSave(); // Pop saveed point
-                AppendDictionary(buff, dictionary, true);
-                return true;
-            }
-
-            if (dictionary.Count > 0 && !lineFeeded)
-                buff.Length -= 2;
-
-            if (lineFeeded) {
-                if (buff.Length > 0)
-                    buff.LineFeed();
-                buff.DownNest();
-            }
-            buff.Append('}');
-
-            buff.PopSave(); // Pop saveed point
-            return isMultiLine;
+            return buff;
         }
 
         /// <summary>
-        /// Appends a IEnumerable representation for logging to the string buffer.
+        /// Creates a string buffer from the enumerable.
         /// </summary>
-        ///
-        /// <param name="buff">the logging buffer</param>
         /// <param name="enumerable">a IEnumerable object</param>
         /// <param name="isMultiLine">output multiple lines if true, single line otherwise</param>
         /// <returns>false if outputed on a single line, otherwise true</returns>
-        ///
         /// <since>1.4.1</since>
-        protected bool AppendEnumerable(LogBuffer buff, IEnumerable enumerable, bool isMultiLine) {
-            buff.Save(); // Save current point
+
+        protected LogBuffer ToStringEnumerable(IEnumerable enumerable) {
+            var buff = new LogBuffer();
+
             buff.Append(GetTypeName(enumerable.GetType(), enumerable, false));
             buff.Append('{');
-            var index = 0;
 
-            var lineFeeded = false;
-            var success = true;
+            var elementsBuff = ToStringEnumerableBody(enumerable);
+
+            var isMultiLines = elementsBuff.IsMultiLines || buff.Length + elementsBuff.Length > MaximumDataOutputWidth;
+
+            if (isMultiLines) {
+                buff.LineFeed();
+                buff.UpNest();
+            }
+
+            buff.Append(elementsBuff);
+
+            if (isMultiLines) {
+                buff.LineFeed();
+                buff.DownNest();
+            }
+
+            buff.Append('}');
+
+            return buff;
+        }
+
+        private LogBuffer ToStringEnumerableBody(IEnumerable enumerable) {
+            var buff = new LogBuffer();
+
+            var index = 0;
             foreach (var element in enumerable) {
-                if (isMultiLine) {
-                    if (index == 0) {
-                        buff.LineFeed();
-                        if (!lineFeeded) {
-                            buff.UpNest();
-                            lineFeeded = true;
-                        }
-                    }
-                }
+                if (index > 0)
+                    buff.NoBreakAppend(", "); // Append a delimiter
 
                 if (index >= CollectionLimit) {
-                    buff.Append(LimitString).Append(", ");
+                    buff.Append(LimitString);
                     break;
                 }
 
-                buff.Save(); // Save current point
-                bool elementIsMultiLine = Append(buff, element, true);
-                if (elementIsMultiLine || buff.Length > MaxDataOutputWidth) {
-                    if (!isMultiLine) {
-                        success = false;
-                        buff.PopSave(); // Pop saveed point
-                        break;
-                    }
-
-                    if (buff.PeekSave().builderLength > 0) {
-                        buff.Restore(); // Restore saved point
-                        buff.LineFeed();
-                        elementIsMultiLine = Append(buff, element, true);
-                    }
-                }
-                buff.PopSave(); // Pop saveed point
-
-                buff.Append(", ");
-                if (elementIsMultiLine)
+                var elementBuff = ToString(element, true);
+                if (index > 0 && elementBuff.IsMultiLines)
                     buff.LineFeed();
+                buff.Append(elementBuff);
 
                 ++index;
             }
 
-            if (!success) {
-                buff.Restore(); // Restore saved point
-                buff.PopSave(); // Pop saveed point
-                AppendEnumerable(buff, enumerable, true);
-                return true;
-            }
-
-            if (index > 0 && !lineFeeded)
-                buff.Length -= 2;
-
-            if (lineFeeded) {
-                if (buff.Length > 0)
-                    buff.LineFeed();
-                buff.DownNest();
-            }
-            buff.Append('}');
-
-            buff.PopSave(); // Pop saveed point
-            return isMultiLine;
+            return buff;
         }
 
         private static readonly Type[] zeroTypes = new Type[0];
@@ -1243,7 +1173,6 @@ namespace DebugTrace {
         /// <summary>
         /// Returns true, if this class or super classes without object class has ToString method.
         /// </summary>
-        ///
         /// <param name="type">the type</param>
         /// <returns><c>true</c> if the type or it base types without object and ValueType class has ToString method, <c>false</c> otherwise</returns>
         protected bool HasToString(Type type) {
@@ -1261,6 +1190,8 @@ namespace DebugTrace {
                         result = true;
                         break;
                     }
+                    if (type.BaseType == null)
+                        break;
                     type = type.BaseType;
                 }
             }
@@ -1271,67 +1202,56 @@ namespace DebugTrace {
         }
 
         /// <summary>
-        /// Returns a string representation of the obj using reflection.
+        /// Creates a string builder from the value.
         /// </summary>
-        ///
         /// <param name="buff">the logging buffer</param>
         /// <param name="obj">an object</param>
         /// <param name="isMultiLine">output multiple lines if true, single line otherwise</param>
         /// <returns>false if can not be outputed on a single line, otherwise true</returns>
-        protected bool AppendUsingReflection(LogBuffer buff, object obj, bool isMultiLine) {
-            buff.Save(); // Save current point
+        protected LogBuffer ToStringUsingReflection(object obj) {
+            var buff = new LogBuffer();
+
             var type = obj.GetType();
             buff.Append(GetTypeName(type, obj, false));
             var isExtended = type.BaseType != typeof(object) && type.BaseType != typeof(ValueType);
             var isTuple = IsTuple(type);
 
+            var subBuff = ToUsingReflectionSub(obj, type, isExtended);
+
             buff.Append(isTuple ? '(' : '{');
-            if (isMultiLine) {
+            if (subBuff.IsMultiLines) {
                 buff.LineFeed();
                 buff.UpNest();
             }
 
-            if (!AppendUsingReflectionSub(buff, obj, type, isExtended, isMultiLine)) {
-                buff.Restore(); // Restore saved point
-                buff.PopSave(); // Pop saveed point
-                return AppendUsingReflection(buff, obj, true);
-            }
+            buff.Append(subBuff);
 
-            if (isMultiLine) {
+            if (subBuff.IsMultiLines) {
                 if (buff.Length > 0)
                     buff.LineFeed();
                 buff.DownNest();
             }
             buff.Append(isTuple ? ')' : '}');
 
-            buff.PopSave(); // Pop saveed point
-            return isMultiLine;
+            return buff;
         }
 
-        /// <summary>
-        /// Returns a string representation of the obj using reflection.
-        /// </summary>
-        ///
-        /// <param name="buff">the logging buffer</param>
-        /// <param name="obj">an object</param>
-        /// <param name="type">the type of the object</param>
-        /// <param name="isExtended">if true, the type is isExtended type</param>
-        /// <param name="isMultiLine">output multiple lines if true, single line otherwise</param>
-        /// <returns>false if can not be outputed on a single line, otherwise true</returns>
-        protected bool AppendUsingReflectionSub(LogBuffer buff, object obj, Type type, bool isExtended, bool isMultiLine) {
-            Type baseType = type.BaseType;
-            if (baseType != null && baseType != typeof(object) && baseType != typeof(ValueType))
+        private LogBuffer ToUsingReflectionSub(object obj, Type type, bool isExtended) {
+            var buff = new LogBuffer();
+
+            Type? baseType = type.BaseType;
+            if (baseType != null && baseType != typeof(object) && baseType != typeof(ValueType)) {
                 // Call for the base type
-                AppendUsingReflectionSub(buff, obj, baseType, isExtended, isMultiLine);
+                var baseBuff =  ToUsingReflectionSub(obj, baseType, isExtended);
+                buff.Append(baseBuff);
+            }
 
             var typeNamePrefix = type.Namespace + '.' + type.Name + "#";
 
             if (isExtended) {
-                if (!isMultiLine) return false; // can not be outputed on a single line
-
                 if (buff.Length > 0)
                     buff.LineFeed();
-                buff.Append(string.Format(ClassBoundaryString, ReplaceTypeName(type.Namespace + '.' + type.Name)));
+                buff.Append(string.Format(ClassBoundaryFormat, ReplaceTypeName(type.Namespace + '.' + type.Name)));
                 buff.LineFeed();
             }
 
@@ -1344,31 +1264,10 @@ namespace DebugTrace {
                 .Where(fieldInfo => !fieldInfo.Name.EndsWith("__BackingField")); // Exclude property backing fields // since 1.4.4
             var fieldIndex = 0;
             foreach (var fieldInfo in fieldInfos) {
-                if (buff.Length > MaxDataOutputWidth) {
-                    if (!isMultiLine) return false; // can not be outputed on a single line
-                    buff.LineFeed();
-                }
-
-                buff.Save(); // Save current point
-                var elementIsMultiLine = AppendReflectValue(buff, type, obj, fieldInfo);
-                if (elementIsMultiLine || buff.Length > MaxDataOutputWidth) {
-                    if (!isMultiLine) {
-                        buff.PopSave(); // Pop saveed point
-                        return false;
-                    }
-
-                    if (buff.PeekSave().builderLength > 0) {
-                        buff.Restore(); // Restore saved point
-                        buff.LineFeed();
-                        elementIsMultiLine = AppendReflectValue(buff, type, obj, fieldInfo);
-                    }
-                }
-                buff.PopSave(); // Pop saveed point
-
-                buff.Append(", ");
-                if (elementIsMultiLine)
-                    buff.LineFeed();
-
+                if (fieldIndex > 0)
+                    buff.NoBreakAppend(", "); // Append a delimiter
+                var valueBuff = TOStringReflectValue(type, obj, fieldInfo);
+                buff.Append(valueBuff);
                 ++fieldIndex;
             }
 
@@ -1382,53 +1281,37 @@ namespace DebugTrace {
             foreach (var propertyInfo in propertyInfos) {
                 var parameterInfos = propertyInfo.GetIndexParameters();
                 if (parameterInfos.Length > 0) continue; // Not support indexed properties
-
-                buff.Save(); // Save current point
-                bool elementIsMultiLine = AppendReflectValue(buff, type, obj, propertyInfo);
-                if (elementIsMultiLine || buff.Length > MaxDataOutputWidth) {
-                    if (!isMultiLine) {
-                        buff.PopSave(); // Pop saveed point
-                        return false;
-                    }
-
-                    if (buff.PeekSave().builderLength > 0) {
-                        buff.Restore(); // Restore saved point
-                        buff.LineFeed();
-                        elementIsMultiLine = AppendReflectValue(buff, type, obj, propertyInfo);
-                    }
-                }
-                buff.PopSave(); // Pop saveed point
-
-                buff.Append(", ");
-                if (elementIsMultiLine)
-                    buff.LineFeed();
-
+                if (propertyIndex > 0)
+                    buff.NoBreakAppend(", "); // Append a delimiter
+                var valueBuff = TOStringReflectValue(type, obj, propertyInfo);
+                buff.Append(valueBuff);
                 ++propertyIndex;
             }
 
-            if (!isMultiLine && fieldIndex + propertyIndex > 0)
-                buff.Length -= 2;
-
-            return true;
+            return buff;
         }
 
         // AppendReflectValue / MemberInfo
-        private bool AppendReflectValue(LogBuffer buff, Type type, object obj, MemberInfo memberInfo) {
-            AppendAccessModifire(buff, memberInfo);
-            var nonPrint = NonPrintProperties.Contains(GetFullTypeName(type) + '.' + memberInfo.Name);
+        private LogBuffer TOStringReflectValue(Type type, object obj, MemberInfo memberInfo) {
+            var buff = new LogBuffer();
 
-            Type memberType = null;
-            object value = null;
+            AppendAccessModifire(buff, memberInfo);
+            var nonOutput = NonOutputProperties.Contains(GetFullTypeName(type) + '.' + memberInfo.Name);
+      
+            Type? memberType = null;
+            object? value = null;
             try {
                 switch (memberInfo) {
                 case FieldInfo fieldInfo:
+                    // field
                     memberType = fieldInfo.FieldType;
-                    if (!nonPrint)
+                    if (!nonOutput)
                         value = fieldInfo.GetValue(obj);
                     break;
                 case PropertyInfo propertyInfo:
+                    // property
                     memberType = propertyInfo.PropertyType;
-                    if (!nonPrint)
+                    if (!nonOutput)
                         value = propertyInfo.GetValue(obj);
                     break;
                 }
@@ -1436,25 +1319,27 @@ namespace DebugTrace {
             catch (Exception e) {
                 value = e.ToString();
             }
-
+      
             if (!IsTuple(type)) {
-                if (value == null || memberType != value.GetType())
+                //  not Tuple
+                if (memberType != null && (value == null || memberType != value.GetType()))
                     buff.Append(GetFullTypeName(memberType)).Append(' ');
                 buff.Append(memberInfo.Name);
-                buff.Append(KeyValueSeparator);
+                buff.NoBreakAppend(KeyValueSeparator);
             }
+      
+            if (nonOutput)
+            //  buff.Append(NonPrintString);
+                buff.Append(NonOutputString);
+            else
+                buff.Append(ToString(value));
 
-            if (nonPrint) {
-                buff.Append(NonPrintString);
-                return false;
-            }
-            return Append(buff, value, false);
+            return buff;
         }
 
         /// <summary>
         /// Appends the access modifire of the member information to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="memberInfo">the member information</param>
         /// <returns></returns>

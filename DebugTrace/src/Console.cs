@@ -8,14 +8,13 @@ namespace DebugTrace {
     /// <summary>
     /// The base class of <c>Console.Out</c> and <c>Console.Error</c> class.
     /// </summary>
-    ///
     /// <since>1.0.0</since>
     /// <author>Masato Kokubo</author>
     public abstract class Console : ILogger {
         /// <summary>
         /// Set the logging level
         /// </summary>
-        public string Level {get; set;}
+        public string Level {get; set;} = "";
 
         /// <summary>
         /// Whether logging is enabled.
@@ -32,10 +31,9 @@ namespace DebugTrace {
         /// <summary>
         /// Returns a string representation of this object.
         /// </summary>
-        ///
         /// <returns>a string representation of this object</returns>
         /// <since>1.5.0</since>
-        public override string ToString() => GetType().FullName;
+        public override string ToString() => GetType().FullName ?? "";
 
         /// <summary>
         /// A logger using <c>System.Console.Out</c>.
@@ -52,7 +50,6 @@ namespace DebugTrace {
             /// <summary>
             /// Output the message to the log.
             /// </summary>
-            ///
             /// <param name="message">the message</param>
             public override void Log(string message) {
                 System.Console.Out.WriteLine(string.Format(TraceBase.LogDateTimeFormat,
@@ -75,7 +72,6 @@ namespace DebugTrace {
             /// <summary>
             /// Output the message to the log.
             /// </summary>
-            ///
             /// <param name="message">the message</param>
             public override void Log(string message) {
                 System.Console.Error.WriteLine(string.Format(TraceBase.LogDateTimeFormat,

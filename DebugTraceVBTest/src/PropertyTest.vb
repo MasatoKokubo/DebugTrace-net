@@ -1,5 +1,6 @@
 Imports DebugTrace
 Imports DebugTrace.VisualBasic
+Imports Microsoft.VisualStudio.TestTools.UnitTesting
 
 Namespace DebugTraceTest
     <TestClass>

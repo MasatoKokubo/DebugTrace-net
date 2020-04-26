@@ -10,13 +10,13 @@ namespace DebugTraceTest {
 
         [ClassInitialize]
         public static void ClassInit(TestContext context) {
-            maxDataOutputWidth = DebugTrace.TraceBase.MaxDataOutputWidth;
-            DebugTrace.TraceBase.MaxDataOutputWidth = int.MaxValue;
+            maxDataOutputWidth = DebugTrace.TraceBase.MaximumDataOutputWidth;
+            DebugTrace.TraceBase.MaximumDataOutputWidth = int.MaxValue;
         }
 
         [ClassCleanup]
         public static void ClassCleanup() {
-            DebugTrace.TraceBase.MaxDataOutputWidth = maxDataOutputWidth;
+            DebugTrace.TraceBase.MaximumDataOutputWidth = maxDataOutputWidth;
         }
 
         private class HasIndexer<T> {
@@ -70,8 +70,8 @@ namespace DebugTraceTest {
         // string[]
         [DataTestMethod]
         [DataRow(new string[] {}, "v = string[0] {}")]
-        [DataRow(new string[] {"A"}, "v = string[1] {(Length:1)\"A\"}")]
-        [DataRow(new string[] {"A", "B"}, "v = string[2] {(Length:1)\"A\", (Length:1)\"B\"}")]
+        [DataRow(new string[] {"A"}, "v = string[1] {\"A\"}")]
+        [DataRow(new string[] {"A", "B"}, "v = string[2] {\"A\", \"B\"}")]
         public void PrintStringArray(string[] v, string expect) {
             Trace.Print("v", v);
             StringAssert.Contains(Trace.LastLog, expect);

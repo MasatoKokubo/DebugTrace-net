@@ -1,8 +1,11 @@
 // Log4net.cs
 // (C) 2018 Masato Kokubo
 using System.Collections.Generic;
+using System.Reflection;
 using log4net;
 using log4net.Core;
+
+[assembly: log4net.Config.XmlConfigurator(ConfigFile="Log4net.config", Watch=true)]
 
 namespace DebugTrace {
     /// <summary>
@@ -12,7 +15,7 @@ namespace DebugTrace {
     /// <since>1.0.0</since>
     /// <author>Masato Kokubo</author>
     public class Log4net : ILogger {
-        private static readonly Dictionary<string, Level> levelDictinary = 
+        private static readonly Dictionary<string, Level> levelDictionary = 
             new Dictionary<string, Level>() {
                 {"ALL"      , log4net.Core.Level.All      },
                 {"FINEST"   , log4net.Core.Level.Finest   },
@@ -34,11 +37,15 @@ namespace DebugTrace {
             };
 
         // Log4net Logger
-        private log4net.Core.ILogger logger = LogManager.GetLogger(typeof(ILogger).Namespace).Logger;
+        private readonly log4net.Core.ILogger logger = LogManager.GetLogger(
+            LogManager.CreateRepository(
+                Assembly.GetExecutingAssembly(),
+                typeof(log4net.Repository.Hierarchy.Hierarchy)).Name,
+            "DebugTrace").Logger;
 
-        private static string defaultLevelStr = "DEBUG";
+        private static readonly string defaultLevelStr = "DEBUG";
         private string levelStr = defaultLevelStr;
-        private Level level = levelDictinary[defaultLevelStr];
+        private Level level = levelDictionary[defaultLevelStr];
 
         /// <summary>
         /// The only instance of this class
@@ -56,8 +63,8 @@ namespace DebugTrace {
             set {
                 TraceBase.RequreNonNull(value, "value"); // since 1.1.1
                 var upperValue = value.ToUpper();
-                if (levelDictinary.ContainsKey(upperValue)) {
-                    level = levelDictinary[upperValue];
+                if (levelDictionary.ContainsKey(upperValue)) {
+                    level = levelDictionary[upperValue];
                     levelStr = value;
                 } else
                     System.Console.Error.WriteLine($"LogLevel: \"{value}\" is unknown.");
@@ -81,7 +88,7 @@ namespace DebugTrace {
         /// </summary>
         /// <returns>a string representation of this object</returns>
         /// <since>1.5.0</since>
-        public override string ToString() => GetType().FullName;
+        public override string ToString() => GetType().FullName ?? "";
 
     }
 }

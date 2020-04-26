@@ -1,8 +1,8 @@
-= DebugTrace-net
+= DebugTrace-net 2.0
 
 link:README_ja.asciidoc[[Japanese]]
 
-*DebugTrace-net* is a library that outputs trace logs when debugging .NET programs. It corresponds to https://docs.microsoft.com/en-us/dotnet/standard/net-standard[.NET Standard 2.0]. +
+*DebugTrace-net 2.0* is a library that outputs trace logs when debugging .NET programs. It based on https://docs.microsoft.com/en-us/dotnet/core/about[.NET Core 3.1]. (It based on https://docs.microsoft.com/en-us/dotnet/standard/net-standard[.NET Standard 2.0] before DebugTrace-net 2.0) +
 By embedding `Trace.Enter()` and `Trace.Leave()` at the start and end of methods, you can output the execution status of the program under development to the log.
 
 === 1. Features
@@ -23,7 +23,6 @@ By embedding `Trace.Enter()` and `Trace.Leave()` at the start and end of methods
 Search `DebugTrace` packege on NuGet and install it. +
 If you output logs using https://logging.apache.org/log4net/[log4net] or http://nlog-project.org/[NLog],
 install `DebugTrace.Log4net` or `DebugTrace.NLog` package.
-`DebugTrace.Log4net` package corresponds to .NET Framework 4.7 instead of https://docs.microsoft.com/en-us/dotnet/standard/net-standard[.NET Standard].
 
 === 3. How to use
 
@@ -39,22 +38,29 @@ The following are examples of C# and Visual Basic source used DebugTrace-net met
 .ReadmeExample.cs
 ----
 using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static DebugTrace.CSharp; // for Debugging
 
 namespace Readme {
-    /// <summary>ReadmeExample</summary>
-    public class ReadmeExample {
-        public static void Main(string[] args) {
+    /// <summary>ReadmeExample1</summary>
+    [TestClass]
+    public class ReadmeExample1 {
+        /// <summary>Example1</summary>
+        [TestMethod]
+        public void Example1() {
             Trace.Enter(); // for Debugging
 
-            var contact = new [] {
+            var contacts = new [] {
                 new Contact(1, "Akane" , "Apple", new DateTime(1991, 2, 3)),
                 new Contact(2, "Yukari", "Apple", new DateTime(1992, 3, 4))
             };
-            Trace.Print("contact", contact); // for Debugging
+            Trace.Print("contacts", contacts); // for Debugging
 
             Trace.Leave(); // for Debugging
         }
+
     }
 
     /// <summary>Entity</summary>
@@ -89,68 +95,72 @@ namespace Readme {
 
 .Console output / C#
 ----
-2019-03-24 15:04:49.790 [04] DebugTrace-net 1.6.0
-2019-03-24 15:04:49.794 [04]   Referenced properties file: Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceTest\bin\Debug\netcoreapp2.2\DebugTrace.properties
-2019-03-24 15:04:49.795 [04]   Logger wrapper: DebugTrace.Console+Error
-2019-03-24 15:04:49.803 [04] 
-2019-03-24 15:04:49.803 [04] ______________________________ Thread 4 ______________________________
-2019-03-24 15:04:49.803 [04] 
-2019-03-24 15:04:50.079 [04] Enter Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:14)
-2019-03-24 15:04:50.199 [04] | 
-2019-03-24 15:04:50.204 [04] | contacts = Readme.Contact[2] {
-2019-03-24 15:04:50.204 [04] |   Readme.Contact {
-2019-03-24 15:04:50.204 [04] |     ____ Readme.Entity ____
-2019-03-24 15:04:50.204 [04] |     ID: 1, 
-2019-03-24 15:04:50.204 [04] |     ____ Readme.ContactBase ____
-2019-03-24 15:04:50.204 [04] |     FirstName: (Length:5)"Akane", LastName: (Length:5)"Apple", 
-2019-03-24 15:04:50.204 [04] |     ____ Readme.Contact ____
-2019-03-24 15:04:50.204 [04] |     Birthday: 1991-02-03 00:00:00.0000000, 
-2019-03-24 15:04:50.204 [04] |   }, 
-2019-03-24 15:04:50.204 [04] |   Readme.Contact {
-2019-03-24 15:04:50.204 [04] |     ____ Readme.Entity ____
-2019-03-24 15:04:50.204 [04] |     ID: 2, 
-2019-03-24 15:04:50.204 [04] |     ____ Readme.ContactBase ____
-2019-03-24 15:04:50.204 [04] |     FirstName: (Length:6)"Yukari", LastName: (Length:5)"Apple", 
-2019-03-24 15:04:50.204 [04] |     ____ Readme.Contact ____
-2019-03-24 15:04:50.204 [04] |     Birthday: 1992-03-04 00:00:00.0000000, 
-2019-03-24 15:04:50.204 [04] |   }, 
-2019-03-24 15:04:50.204 [04] | } (ReadmeExamples.cs:20)
-2019-03-24 15:04:50.207 [04] | 
-2019-03-24 15:04:50.212 [04] Leave Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:22) time: 00:00:00.1271534
+2020-04-26 11:16:14.269 [05] DebugTrace-net 2.0.0 uses DebugTrace.Console+Error
+2020-04-26 11:16:14.272 [05] with Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceTest\bin\Debug\netcoreapp3.1\DebugTrace.properties.
+2020-04-26 11:16:14.276 [05] 
+2020-04-26 11:16:14.276 [05] ______________________________ Thread 5 ______________________________
+2020-04-26 11:16:14.276 [05] 
+2020-04-26 11:16:14.427 [05] Enter Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:14)
+2020-04-26 11:16:14.444 [05] | 
+2020-04-26 11:16:14.444 [05] | contacts = Readme.Contact[2] {
+2020-04-26 11:16:14.444 [05] |   Readme.Contact {
+2020-04-26 11:16:14.444 [05] |     ____ Readme.Entity ____
+2020-04-26 11:16:14.444 [05] |     ID: 1
+2020-04-26 11:16:14.444 [05] |     ____ Readme.ContactBase ____
+2020-04-26 11:16:14.444 [05] |     FirstName: (Length:5)"Akane", LastName: (Length:5)"Apple"
+2020-04-26 11:16:14.444 [05] |     ____ Readme.Contact ____
+2020-04-26 11:16:14.444 [05] |     Birthday: 1991-02-03 00:00:00.0000000
+2020-04-26 11:16:14.444 [05] |   }, 
+2020-04-26 11:16:14.444 [05] |   Readme.Contact {
+2020-04-26 11:16:14.444 [05] |     ____ Readme.Entity ____
+2020-04-26 11:16:14.444 [05] |     ID: 2
+2020-04-26 11:16:14.444 [05] |     ____ Readme.ContactBase ____
+2020-04-26 11:16:14.444 [05] |     FirstName: (Length:6)"Yukari", LastName: (Length:5)"Apple"
+2020-04-26 11:16:14.444 [05] |     ____ Readme.Contact ____
+2020-04-26 11:16:14.444 [05] |     Birthday: 1992-03-04 00:00:00.0000000
+2020-04-26 11:16:14.444 [05] |   }
+2020-04-26 11:16:14.444 [05] | } (ReadmeExamples.cs:20)
+2020-04-26 11:16:14.445 [05] | 
+2020-04-26 11:16:14.446 [05] Leave Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:22) duration: 00:00:00.0171680
 ----
 
 [source,vb.net]
 .ReadmeExample.vb
 ----
+Imports System.Threading
+Imports Microsoft.VisualStudio.TestTools.UnitTesting
 Imports DebugTrace.VisualBasic ' for Debugging
 
-Namespace Global.Readme
-    ''' <summary>ReadmeExample</summary>
-    Public Class ReadmeExample
-        Public Shared Sub Main(args As String())
+Namespace Readme
+    ''' <summary>ReadmeExample1</summary>
+    <TestClass()>
+    Public Class ReadmeExample1
+        ''' <summary>Example1</summary>
+        <TestMethod()>
+        Public Sub Example1()
             Trace.Enter() ' for Debugging
 
-            Dim contact = New Contact() {
+            Dim contacts = New Contact() {
                 New Contact(1, "Akane", "Apple", New DateTime(1991, 2, 3)),
                 New Contact(2, "Yukari", "Apple", New DateTime(1992, 3, 4))
             }
-            Trace.Print(NameOf(contact), contact) ' for Debugging
+            Trace.Print("contacts", contacts) ' for Debugging
 
             Trace.Leave() ' for Debugging
         End Sub
     End Class
 
     ''' <summary>Entity</summary>
-    Public Class Entity
-        Public Property ID As Integer
+    Public class Entity
+        Public Property Id As Integer
 
         Public Sub New(id_ As Integer)
-            ID = id_
+            Id = id_
         End Sub
     End Class
 
     ''' <summary>ContactBase</summary>
-    Public Class ContactBase : Inherits Entity
+    public class ContactBase : Inherits Entity
         Public Property FirstName As String
         Public Property LastName As String
 
@@ -174,34 +184,33 @@ End Namespace
 
 .Console output / Visual Basic
 ----
-2019-03-24 18:12:41.481 [13] DebugTrace-net 1.6.0
-2019-03-24 18:12:41.483 [13]   Referenced properties file: Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceVBTest\bin\Debug\DebugTrace.properties
-2019-03-24 18:12:41.483 [13]   Logger wrapper: DebugTrace.Console+Error
-2019-03-24 18:12:41.488 [13] 
-2019-03-24 18:12:41.489 [13] ______________________________ Thread 13 ______________________________
-2019-03-24 18:12:41.489 [13] 
-2019-03-24 18:12:41.718 [13] Enter DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:14)
-2019-03-24 18:12:41.764 [13] | 
-2019-03-24 18:12:41.765 [13] | contacts = DebugTraceVBTest.Readme.Contact[2] {
-2019-03-24 18:12:41.765 [13] |   DebugTraceVBTest.Readme.Contact {
-2019-03-24 18:12:41.765 [13] |     ____ DebugTraceVBTest.Readme.Entity ____
-2019-03-24 18:12:41.765 [13] |     Id: 1, 
-2019-03-24 18:12:41.765 [13] |     ____ DebugTraceVBTest.Readme.ContactBase ____
-2019-03-24 18:12:41.765 [13] |     FirstName: (Length:5)"Akane", LastName: (Length:5)"Apple", 
-2019-03-24 18:12:41.765 [13] |     ____ DebugTraceVBTest.Readme.Contact ____
-2019-03-24 18:12:41.765 [13] |     Birthday: 1991-02-03 00:00:00.0000000, 
-2019-03-24 18:12:41.765 [13] |   }, 
-2019-03-24 18:12:41.765 [13] |   DebugTraceVBTest.Readme.Contact {
-2019-03-24 18:12:41.765 [13] |     ____ DebugTraceVBTest.Readme.Entity ____
-2019-03-24 18:12:41.765 [13] |     Id: 2, 
-2019-03-24 18:12:41.765 [13] |     ____ DebugTraceVBTest.Readme.ContactBase ____
-2019-03-24 18:12:41.765 [13] |     FirstName: (Length:6)"Yukari", LastName: (Length:5)"Apple", 
-2019-03-24 18:12:41.765 [13] |     ____ DebugTraceVBTest.Readme.Contact ____
-2019-03-24 18:12:41.765 [13] |     Birthday: 1992-03-04 00:00:00.0000000, 
-2019-03-24 18:12:41.765 [13] |   }, 
-2019-03-24 18:12:41.765 [13] | } (ReadmeExamples.vb:20)
-2019-03-24 18:12:41.767 [13] | 
-2019-03-24 18:12:41.769 [13] Leave DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:22) time: 00:00:00.0498967
+2020-04-26 11:25:50.608 [05] DebugTrace-net 2.0.0 uses DebugTrace.Console+Error
+2020-04-26 11:25:50.610 [05] with Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceVBTest\bin\Debug\netcoreapp3.1\DebugTrace.properties.
+2020-04-26 11:25:50.611 [05] 
+2020-04-26 11:25:50.611 [05] ______________________________ Thread 5 ______________________________
+2020-04-26 11:25:50.611 [05] 
+2020-04-26 11:25:50.704 [05] Enter DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:12)
+2020-04-26 11:25:50.723 [05] | 
+2020-04-26 11:25:50.723 [05] | contacts = DebugTraceVBTest.Readme.Contact(Length: 2) {
+2020-04-26 11:25:50.723 [05] |   DebugTraceVBTest.Readme.Contact {
+2020-04-26 11:25:50.723 [05] |     ____ DebugTraceVBTest.Readme.Entity ____
+2020-04-26 11:25:50.723 [05] |     Id: 1
+2020-04-26 11:25:50.723 [05] |     ____ DebugTraceVBTest.Readme.ContactBase ____
+2020-04-26 11:25:50.723 [05] |     FirstName: (Length:5)"Akane", LastName: (Length:5)"Apple"
+2020-04-26 11:25:50.723 [05] |     ____ DebugTraceVBTest.Readme.Contact ____
+2020-04-26 11:25:50.723 [05] |     Birthday: 1991-02-03 00:00:00.0000000
+2020-04-26 11:25:50.723 [05] |   }, 
+2020-04-26 11:25:50.723 [05] |   DebugTraceVBTest.Readme.Contact {
+2020-04-26 11:25:50.723 [05] |     ____ DebugTraceVBTest.Readme.Entity ____
+2020-04-26 11:25:50.723 [05] |     Id: 2
+2020-04-26 11:25:50.723 [05] |     ____ DebugTraceVBTest.Readme.ContactBase ____
+2020-04-26 11:25:50.723 [05] |     FirstName: (Length:6)"Yukari", LastName: (Length:5)"Apple"
+2020-04-26 11:25:50.723 [05] |     ____ DebugTraceVBTest.Readme.Contact ____
+2020-04-26 11:25:50.723 [05] |     Birthday: 1992-03-04 00:00:00.0000000
+2020-04-26 11:25:50.723 [05] |   }
+2020-04-26 11:25:50.723 [05] | } (ReadmeExamples.vb:18)
+2020-04-26 11:25:50.723 [05] | 
+2020-04-26 11:25:50.727 [05] Leave DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:20) duration: 00:00:00.0193486
 ----
 
 ==== 3.1 When using or Imports System.Diagnostics
@@ -249,11 +258,11 @@ There are mainly the following interfaces and classes.
   |`DebugTrace.Console.Out`  |`DebugTrace.Console` |Class that outputs logs to standard output
   |`DebugTrace.Console.Error`|`DebugTrace.Console` |Class that outputs logs to standard error output
   |`DebugTrace.Diagnostics` +
-[.small .blue]#*_(since v1.6.0)_*#|`DebugTrace.ILogger`    |Abstract super class of `DebugTrace.Diagnostics.Debug` and `DebugTrace.Diagnostics.Trace` class
+[.small .blue]#since 1.6.0#|`DebugTrace.ILogger`    |Abstract super class of `DebugTrace.Diagnostics.Debug` and `DebugTrace.Diagnostics.Trace` class
   |`DebugTrace.Diagnostics.Debug` +
-[.small .blue]#*_(since v1.6.0)_*#|`DebugTrace.Diagnostics`|Class that outputs logs using `System.Diagnostics.Debug` class
+[.small .blue]#since 1.6.0#|`DebugTrace.Diagnostics`|Class that outputs logs using `System.Diagnostics.Debug` class
   |`DebugTrace.Diagnostics.Trace` +
-[.small .blue]#*_(since v1.6.0)_*#|`DebugTrace.Diagnostics`|Class that outputs logs using `System.Diagnostics.Trace` class
+[.small .blue]#since 1.6.0#|`DebugTrace.Diagnostics`|Class that outputs logs using `System.Diagnostics.Trace` class
 |===
 
 === 5. Properties of DebugTrace.CSharp class and DebugTrace.VisualBasic class
@@ -320,7 +329,7 @@ It has the following properties and methods.
 |Gets a value from `valueSupplier` and output it to the log in the form of `"Name = Value"`.
 
 |`PrintStack`
-[.small .blue]#*_(v1.6.0~)_*#
+[.small .blue]#since 1.6.0#
 |`int maxCount`: maximum number of stack elements to output
 |_None_
 |Outputs call stack to log.
@@ -341,12 +350,12 @@ You can specify following properties in the `DebugTrace.properties` file.
 |Logger DebugTrace uses +
 [.small]#*Examples:*# +
 `Logger = Console+Out` [.small .blue]#- Outputs to the console (stdout)# +
-`Logger = Console+Error` [.small .blue]#- Outputs to the console (stderr)# [.small .blue]#*_[Default]_*# + 
-`Logger = Diagnostics+Debug` [.small .blue]#- Outputs using System.Diagnostics.Debug class *_(since v1.6.0)_*# +
-`Logger = Diagnostics+Trace` [.small .blue]#- Outputs using System.Diagnostics.Trace class *_(since v1.6.0)_*# + 
+`Logger = Console+Error` [.small .blue]#- Outputs to the console (stderr)# [.small .blue]#*[Default]*# + 
+`Logger = Diagnostics+Debug` [.small .blue]#- Outputs using System.Diagnostics.Debug class - since 1.6.0# +
+`Logger = Diagnostics+Trace` [.small .blue]#- Outputs using System.Diagnostics.Trace class - since 1.6.0# + 
 `Logger = Log4net` [.small .blue]#- Outputs using Log4net# +
 `Logger = NLog` [.small .blue]#- Outputs using NLog# +
-[.small]#*Example for multiple outputs:*# [.small .blue]#*_(since v1.5.0)_*# +
+[.small]#*Example for multiple outputs:*# [.small .blue]#- since 1.5.0# +
 `Logger = Console+Out; Log4net` [.small .blue]#- Outputs to the console (stdout) and using Log4net# + 
 
 |`LogLevel`
@@ -358,7 +367,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 `LogLevel = Finer` +
 `LogLevel = Trace` +
 `LogLevel = Fine` +
-`LogLevel = Debug` [.small .blue]#*_[Default]_*# +
+`LogLevel = Debug` [.small .blue]#*[Default]*# +
 `LogLevel = Info` +
 `LogLevel = Notice` +
 `LogLevel = Warn` +
@@ -371,7 +380,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 `LogLevel = Off` +
 [.small]#*Examples when using NLog:*# +
 `LogLevel = Trace` +
-`LogLevel = Debug` [.small .blue]#*_[Default]_*# +
+`LogLevel = Debug` [.small .blue]#*[Default]*# +
 `LogLevel = Info` +
 `LogLevel = Warn` +
 `LogLevel = Error` +
@@ -379,93 +388,109 @@ You can specify following properties in the `DebugTrace.properties` file.
 `LogLevel = Off` +
 [.small]#*Examples when using Log4net and NLog:*# [.small .blue]#(Logger = Log4net; NLog)# +
 `LogLevel = Debug` [.small .blue]#- Outputs Debug level for both Log4net and NLog# +
-`LogLevel = Finer; Trace` [.small .blue]#- Outputs Finer level for Log4net and Trace level for NLog *_(since v1.5.0)_*# +
+`LogLevel = Finer; Trace` [.small .blue]#- Outputs Finer level for Log4net and Trace level for NLog - since 1.5.0# +
 
-|`EnterString`
-|The string output by `Enter` method +
+|`EnterFormat` +
+[.small .blue]#Renamed since 2.0.0# +
+ +
+[.small]#`EnterString`# +
+[.small .blue]#Deprecated since 2.0.0#
+|Format string of log output when entering methods +
 [.small]#*Example:*# +
-`EnterString = Enter {0}.{1} ({2}:{3:D})` [.small .blue]#*_[Default]_*# +
+`EnterFormat = Enter {0}.{1} ({2}:{3:D})` [.small .blue]#*[Default]*# +
 [.small]#*Parameters:*# +
 `{0}`: The class name of the caller +
 `{1}`: The method name of the caller +
 `{2}`: The file name of the caller +
 `{3}`: The line number of the caller +
 
-|`LeaveString`
-|The string output by `Leave` method +
+|`LeaveFormat` +
+[.small .blue]#Renamed since 2.0.0# +
+ +
+[.small]#`LeaveString`# +
+[.small .blue]#Deprecated since 2.0.0#
+|Format string of log output when leaving methods +
 [.small]#*Examples:*# +
-`LeaveString = Leave {0}.{1} ({2}:{3:D}) time: {4}` [.small .blue]#*_[Default]_*# +
+`LeaveString = Leave {0}.{1} ({2}:{3:D}) duration: {4}` [.small .blue]#*[Default]*# +
 [.small]#*Parameters:*# +
 `{0}`: The class name of the caller +
 `{1}`: The method name of the caller +
 `{2}`: The file name of the caller +
 `{3}`: The line number of the caller +
-`{4}`: The time since invoking the corresponding `Enter` method +
+`{4}`: The duration since invoking the corresponding `Enter` method +
 
 |`ThreadBoundaryString`
-|The string output in the threads boundary +
+|Format string of log output at threads boundary +
 [.small]#*Example:*# +
 [.small]#`ThreadBoundaryString = \____\__\__\__\__\__\__\__\__\__\__\__\__\__ Thread {0} \__\__\__\__\__\__\__\__\__\__\__\__\__\____`# +
-[.small .blue]#*_[Default]_*# +
+[.small .blue]#*[Default]*# +
 [.small]#*Parameter:*# +
 `{0}`: The thread ID +
 
 |`ClassBoundaryString`
-|The string output in the classes boundary +
+|Format string of log output at classes boundary +
 [.small]#*Example:*# +
-`ClassBoundaryString = \\____ {0} \____` [.small .blue]#*_[Default]_*# +
+`ClassBoundaryString = \\____ {0} \____` [.small .blue]#*[Default]*# +
 [.small]#*Parameter:*# +
 `{0}`: The class name +
 
-|`CodeIndentString`
-|The string of one code indent +
+|`IndentString` +
+[.small .blue]#Renamed since 2.0.0# +
+ +
+[.small]#`CodeIndentString`# +
+[.small .blue]#Deprecated since 2.0.0#
+|String of one code indent +
 [.small]#*Example:*# +
-`CodeIndentString = &#x7c;\s` [.small .blue]#*_[Default]_*# +
+`CodeIndentString = &#x7c;\s` [.small .blue]#*[Default]*# +
 [.small .blue]#`\s` is replaced to a space character# +
 
 |`DataIndentString`
-|The string of one data indent +
+|String of one data indent +
 [.small]#*Example:*# +
-`DataIndentString = \s\s` [.small .blue]#*_[Default]_*# +
+`DataIndentString = \s\s` [.small .blue]#*[Default]*# +
 [.small .blue]#`\s` is replaced to a space character# +
 
 |`LimitString`
-|The string to represent that it has exceeded the limit +
+|String to represent that it has exceeded the limit +
 [.small]#*Example:*# +
-`LimitString = \...` [.small .blue]#*_[Default]_*# +
+`LimitString = \...` [.small .blue]#*[Default]*# +
 
 |`DefaultNameSpaceString`
-|The string replacing the default namespace part +
+|String replacing the default namespace part +
 [.small]#*Example:*# +
-`DefaultNameSpaceString = \...` [.small .blue]#*_[Default]_*# +
+`DefaultNameSpaceString = \...` [.small .blue]#*[Default]*# +
 
-|`NonPrintString`
-|The string of value in the case of properties that do not output the value +
+|`NonOutputString` +
+[.small .blue]#Renamed since 2.0.0# +
+ +
+[.small]#`NonPrintString`# +
+[.small .blue]#Deprecated since 2.0.0#
+|String to be output instead of not outputting value +
 [.small]#*Example:*# +
-`NonPrintString = \***` [.small .blue]#*_[Default]_*# +
+`NonOutputString = \***` [.small .blue]#*[Default]*# +
 
 |`CyclicReferenceString`
-|The string to represent that the cyclic reference occurs +
+|String to represent that the cyclic reference occurs +
 [.small]#*Example:*# +
-`CyclicReferenceString = \*\** Cyclic Reference \***` [.small .blue]#*_[Default]_*#
+`CyclicReferenceString = \*\** Cyclic Reference \***` [.small .blue]#*[Default]*#
 
 |`VarNameValueSeparator`
-|The separator string between the variable name and value +
+|Separator string between the variable name and value +
 [.small]#*Example:*# +
-`VarNameValueSeparator = \s=\s` [.small .blue]#*_[Default]_*# +
+`VarNameValueSeparator = \s=\s` [.small .blue]#*[Default]*# +
 [.small .blue]#`\s` is replaced to a space character# +
 
 |`KeyValueSeparator`
-|The separator string between the key and value of dictionary +
+|Separator string between the key and value of dictionary +
 and between the property/field name and value +
 [.small]#*Example:*# +
-`KeyValueSeparator = :\s` [.small .blue]#*_[Default]_*# +
+`KeyValueSeparator = :\s` [.small .blue]#*[Default]*# +
 [.small .blue]#`\s` is replaced to a space character# +
 
 |`PrintSuffixFormat`
 |Output format of `Print` method suffix +
 [.small]#*Example:*# +
-`PrintSuffixFormat = \s({2}:{3:D})` [.small .blue]#*_[Default]_*# +
+`PrintSuffixFormat = \s({2}:{3:D})` [.small .blue]#*[Default]*# +
 [.small .blue]#`\s` is replaced to a space character# +
 [.small]#*Parameters:*# +
 `{0}`: The class name of the caller +
@@ -474,34 +499,48 @@ and between the property/field name and value +
 `{3}`: The line number of the caller +
 
 |`CountFormat` +
- +
-[.small .blue]#*_(since v1.5.1)_*# 
+[.small .blue]#since 1.5.1# 
 |Output format of the count of collections +
 [.small]#*Examples:*# +
-`CountFormat = \sCount:{0}` [.small .blue]#*_[Default]_*# +
+`CountFormat = \sCount:{0}` [.small .blue]#*[Default]*# +
 [.small]#*Parameter:*# +
 `{0}`: The count of collections +
 
-|`StringLengthFormat` +
+|`MinimumOutputCount` +
+[.small .blue]#since 2.0.0# 
+|Minimum value to output the number of elements of collection +
+[.small]#*Examples:*# +
+`MinimumOutputCount = 5` [.small .blue]#*[Default]*# +
+
+|`LengthFormat` +
+[.small .blue]#Renamed since 2.0.0# +
  +
-[.small .blue]#*_(since v1.5.1)_*# 
+[.small]#`StringLengthFormat`# +
+[.small .blue]#since 1.5.1# +
+[.small .blue]#Deprecated since 2.0.0#
 |Output format of the length of strings +
 [.small]#*Examples:*# +
-`StringLengthFormat = (Length:{0})` [.small .blue]#*_[Default]_*# +
+`StringLengthFormat = (Length:{0})` [.small .blue]#*[Default]*# +
 [.small]#*Parameter:*# +
 `{0}`: The length of strings +
+
+|`MinimumOutputLength` +
+[.small .blue]#since 2.0.0# 
+|Minimum value to output the length of string +
+[.small]#*Examples:*# +
+`MinimumOutputLength = 5` [.small .blue]#*[Default]*# +
 
 |`DateTimeFormat`
 |Output format of DateTime +
 [.small]#*Examples:*# +
-`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffffffK}` [.small .blue]#*_[Default]_*# +
+`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffffffK}` [.small .blue]#*[Default]*# +
 [.small]#*Parameter:*# +
 `{0}`: The `DateTime` object +
 
 |`LogDateTimeFormat` +
 |Output format of date and time when outputting logs +
 [.small]#*Examples:*# +
-`LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff} [{1:D2}] {2}` [.small .blue]#*_[Default]_*# +
+`LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff} [{1:D2}] {2}` [.small .blue]#*[Default]*# +
 [.small]#*Parameter:*# +
 `{0}`: The `DateTime` of log output +
 `{1}`: The thread ID +
@@ -510,29 +549,33 @@ and between the property/field name and value +
 |`MaxDataOutputWidth`
 |Maximum output width of data +
 [.small]#*Example:*# +
-`MaxDataOutputWidth = 80` [.small .blue]#*_[Default]_*# +
+`MaxDataOutputWidth = 80` [.small .blue]#*[Default]*# +
 
 |`CollectionLimit`
 |Limit value of `ICollection` elements to output +
 [.small]#*Example:*# +
-`CollectionLimit = 512` [.small .blue]#*_[Default]_*# +
+`CollectionLimit = 512` [.small .blue]#*[Default]*# +
 
 |`StringLimit`
 |Limit value of `string` characters to output +
 [.small]#*Example:*# +
-`StringLimit = 8192` [.small .blue]#*_[Default]_*# +
+`StringLimit = 8192` [.small .blue]#*[Default]*# +
 
 |`ReflectionNestLimit`
 |Limit value of reflection nest +
 [.small]#*Example:*# +
-`ReflectionNestLimit = 4` [.small .blue]#*_[Default]_*# +
+`ReflectionNestLimit = 4` [.small .blue]#*[Default]*# +
 
-|`NonPrintProperties`
+|`NonOutputProperties` +
+[.small .blue]#Renamed since 2.0.0# +
+ +
+[.small]#`NonPrintProperties`# +
+[.small .blue]#Deprecated since 2.0.0#
 |Properties and fields not to be output value +
 [.small]#*Example (One value):*# +
-`NonPrintProperties = DebugTraceExample.Node.Parent` +
+`NonOutputProperties = DebugTraceExample.Node.Parent` +
 [.small]#*Example (Multiple values):*# +
-`NonPrintProperties = \` +
+`NonOutputProperties = \` +
   `DebugTraceExample.Node.Parent,\` +
   `DebugTraceExample.Node.Left,\` +
   `DebugTraceExample.Node.Right` +
@@ -560,13 +603,13 @@ and between the property/field name and value +
 |If `true`, outputs the contents by reflection even for fields which are not `public` +
 [.small]#*Examples:*# +
 `OutputNonPublicFields = true` +
-`OutputNonPublicFields = false` [.small .blue]#*_[Default]_*# +
+`OutputNonPublicFields = false` [.small .blue]#*[Default]*# +
 
 |`OutputNonPublicProperties`
 |If `true`, outputs the contents by reflection even for properties which are not `public` +
 [.small]#*Examples:*# +
 `OutputNonPublicProperties = true` +
-`OutputNonPublicProperties = false` [.small .blue]#*_[Default]_*# +
+`OutputNonPublicProperties = false` [.small .blue]#*[Default]*# +
 
 |===
 
@@ -583,23 +626,23 @@ You can add the `DebugTrace.properties` file to your projects in the following s
 1. Change setting of `Copy to Output Directory` in the `*Advanced*` section of the `Properties` to `Copy if newer` or `Copy always`.
 
 
-==== 7.2. *NonPrintProperties*, *NonPrintString*
+==== 7.2. *NonOutputProperties*, *NonOutputString*
 
 DebugTrace use reflection to output object contents if the `ToString` method is not implemented.
 If there are other object references, the contents of objects are also output.
 However, if there is circular reference, it will automatically detect and suspend output.
-You can suppress output by specifying the `NonPrintProperties` property and
+You can suppress output by specifying the `NonOutputProperties` property and
 can specify multiple values of this property separated by commas.  
-The value of the property specified by `NonPrintProperties` are output as the string specified by `NonPrintString` (default: `\***`).
+The value of the property specified by `NonOutputProperties` are output as the string specified by `NonOutputString` (default: `\***`).
 
-.Example of NonPrintProperties
+.Example of NonOutputProperties
 ----
-NonPrintProperties = DebugTraceExample.Node.Parent
+NonOutputProperties = DebugTraceExample.Node.Parent
 ----
 
-.Example of NonPrintProperties (Multiple specifications)
+.Example of NonOutputProperties (Multiple specifications)
 ----
-NonPrintProperties = \
+NonOutputProperties = \
     DebugTraceExample.Node.Parent,\
     DebugTraceExample.Node.Left,\
     DebugTraceExample.Node.Right
@@ -612,10 +655,10 @@ You can output logs using the following libraries besides console output.
 [options="header", cols="3,5,4", width="70%"]
 .logging Libraries
 |===
-   ^s|Library Name ^s|Required package                                 ^s|Target Framework
-     |log4net        |DebugTrace.Log4net                                 |.NET Framework 4.7
-.2+.^|NLog           |DebugTrace.NLog [.small .blue]#*_(since v1.6.0)_*# |.NET Standard 2.0
-                     |DebugTrace.NLog [.small .blue]#*_(before v1.6.0)_*#|.NET Framework 4.7
+   ^s|Library Name ^s|Required package                          ^s|Target Framework
+     |log4net        |DebugTrace.Log4net                          |.NET Framework 4.7
+.2+.^|NLog           |DebugTrace.NLog [.small .blue]#since 1.6.0# |.NET Standard 2.0
+                     |DebugTrace.NLog [.small .blue]#before 1.6.0#|.NET Framework 4.7
 |===
 
 To use them, add the above package from NuGet.
@@ -698,6 +741,26 @@ link:LICENSE[The MIT License (MIT)]
 https://masatokokubo.github.io/DebugTrace-net/index.html[API Specification]
 
 === 11. Release Notes
+
+==== DebugTrace-net 2.0.0 [.small .gray]#- April 4, 2020#
+
+* Changed the supported framework to *.NET Core 3.1* from .NET Standard 2.0.
+
+* Add properties specified in DebugTrace.properties.
+  ** `MinimumOutputCount` - Minimum value to output the number of elements of collection (Default: 5)
+  ** `MinimumOutputLength` - Minimum value to output the length of string (Default: 5)
+
+* Changed following property names specified in DebugTrace.properties. However, you can specify the previous names for compatibility.
+  ** `EnterFormat` <- `EnterString`
+  ** `LeaveFormat` <- `LeaveString`
+  ** `IndentString` <- `CodeIndentString`
+  ** `NonOutputString` <- `NonPrintString`
+  ** `LengthFormat` <- `StringLengthFormat`
+  ** `MaximumDataOutputWidth` <- `MaxDataOutputWidth`
+  ** `NonOutputProperties` <- `NonPrintProperties`
+
+* Improvement
+  ** Speed up by changing the algorithm of line break detection.
 
 ==== DebugTrace-net 1.6.0 [.small .gray]#- March 24, 2019#
 

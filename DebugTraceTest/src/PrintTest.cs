@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -49,20 +47,21 @@ namespace DebugTraceTest
 
         // string
         [DataTestMethod]
-        [DataRow("ABC"   , "v = (Length:3)\"ABC\" (")]
-        [DataRow("\0"    , "v = (Length:1)\"\\0\" (")]
-        [DataRow("\a"    , "v = (Length:1)\"\\a\" (")]
-        [DataRow("\b"    , "v = (Length:1)\"\\b\" (")]
-        [DataRow("\t"    , "v = (Length:1)\"\\t\" (")]
-        [DataRow("\n"    , "v = (Length:1)\"\\n\" (")]
-        [DataRow("\v"    , "v = (Length:1)\"\\v\" (")]
-        [DataRow("\f"    , "v = (Length:1)\"\\f\" (")]
-        [DataRow("\r"    , "v = (Length:1)\"\\r\" (")]
-        [DataRow("\""    , "v = (Length:1)\"\\\"\" (")]
-        [DataRow("'"     , "v = (Length:1)\"'\" (")]
-        [DataRow("\\"    , "v = (Length:1)@\"\\\" (")]
-        [DataRow("\u0001", "v = (Length:1)\"\\u0001\" (")]
-        [DataRow("\u007F", "v = (Length:1)\"\\u007F\" (")]
+        [DataRow("ABC"   , "v = \"ABC\" (")]
+        [DataRow("\0"    , "v = \"\\0\" (")]
+        [DataRow("\a"    , "v = \"\\a\" (")]
+        [DataRow("\b"    , "v = \"\\b\" (")]
+        [DataRow("\t"    , "v = \"\\t\" (")]
+        [DataRow("\n"    , "v = \"\\n\" (")]
+        [DataRow("\v"    , "v = \"\\v\" (")]
+        [DataRow("\f"    , "v = \"\\f\" (")]
+        [DataRow("\r"    , "v = \"\\r\" (")]
+        [DataRow("\""    , "v = \"\\\"\" (")]
+        [DataRow("'"     , "v = \"'\" (")]
+        [DataRow("\\"    , "v = @\"\\\" (")]
+        [DataRow("\u0001", "v = \"\\u0001\" (")]
+        [DataRow("\u007F", "v = \"\\u007F\" (")]
+        [DataRow("ABCDE" , "v = (Length:5)\"ABCDE\" (")]
         public void PrintString(string v, string expect) {
             Trace_.Print("v", v);
             StringAssert.Contains(Trace_.LastLog, expect);
@@ -301,8 +300,8 @@ namespace DebugTraceTest
         }
         public class FooSub : Foo {}
         public class Bar {
-	        public Foo Foo {get;}
-            public Bar(Foo foo) {
+	        public Foo? Foo {get;}
+            public Bar(Foo? foo) {
                 Foo = foo;
             }
         }

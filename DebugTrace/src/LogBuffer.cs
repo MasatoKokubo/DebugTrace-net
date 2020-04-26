@@ -1,7 +1,6 @@
 // State.cs
 // (C) 2018 Masato Kokubo
 
-using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,11 +8,11 @@ namespace DebugTrace {
     /// <summary>
     /// Buffers logs.
     /// </summary>
-    ///
     /// <since>1.0.0</since>
     /// <author>Masato Kokubo</author>
     public class LogBuffer {
         private int nestLevel = 0;
+        private int appendNestLevel = 0; // since 2.0.0
 
         /// <summary>
         /// Log lines
@@ -26,116 +25,76 @@ namespace DebugTrace {
         public StringBuilder builder = new StringBuilder();
 
         /// <summary>
-        /// Stack of save points
-        /// </summary>
-        public Stack<(int, int)> savePoints;
-
-        /// <summary>
-        /// Breaks the line
+        /// Breaks the current line.
         /// </summary>
         public void LineFeed() {
-            Lines.Add((nestLevel, builder.ToString()));
+            Lines.Add((nestLevel + appendNestLevel, builder.ToString()));
+            appendNestLevel = 0;
             builder.Clear();
         }
 
         /// <summary>
         /// Ups the nest level.
         /// </summary>
-        public void UpNest() {
-            ++nestLevel;
-        }
+        public void UpNest() => ++nestLevel;
 
         /// <summary>
         /// Downs the nest.
         /// </summary>
-        public void DownNest() {
-            --nestLevel;
-        }
+        public void DownNest() => --nestLevel;
 
         /// <summary>
         /// Appends a string representation of the value.
         /// </summary>
         /// <param name="value">the value</param>
+        /// <param name="nestLevel">the nest level of the value</param>
+        /// <param name="noBreak">if true, does not break even if the maximum width is exceeded</param>
         /// <returns>this object</returns>
-        public LogBuffer Append(object value) {
-            if (value != null)
-                builder.Append(value);
+        /// <since>2.0.0</since>
+        public LogBuffer Append(object value, int nestLevel = 0, bool noBreak = false) {
+            var str = value.ToString() ?? "";
+            if (!noBreak && Length > 0 && Length + str.Length > TraceBase.MaximumDataOutputWidth)
+                LineFeed();
+            appendNestLevel = nestLevel;
+            builder.Append(str);
             return this;
         }
 
         /// <summary>
-        /// Inserts a string representation of the value at the specified position.
+        /// Appends .
+        /// Does not break even if the maximum width is exceeded.
         /// </summary>
-        /// <param name="index">the index of insertion position</param>
         /// <param name="value">the value</param>
         /// <returns>this object</returns>
-        public LogBuffer Insert(int index, object value) {
-            builder.Insert(index, value);
+        /// <since>2.0.0</since>
+        public LogBuffer NoBreakAppend(object value) => Append(value, 0, true);
+ 
+        /// <summary>
+        /// Appends the <c>LogBuffer</c>.
+        /// </summary>
+        /// <returns>this object</returns>
+        public LogBuffer Append(LogBuffer buff) {
+            buff.LineFeed();
+            var index = 0;
+            foreach ((var nestLevel, var str) in buff.Lines) {
+                if (index > 0)
+                    LineFeed();
+                Append(str, nestLevel);
+                ++index;
+            }
             return this;
         }
 
         /// <summary>
-        /// Log length of the current line
+        /// Log length of the current line.
         /// </summary>
+        /// <since>2.0.0</since>
         public int Length {get {return builder.Length;} set {builder.Length = value;}}
 
         /// <summary>
-        /// Saves the current logging point.
+        /// True if multiple lines.
         /// </summary>
-        public void Save() {
-            if (savePoints == null)
-                savePoints = new Stack<(int, int)>();
-            savePoints.Push((Lines.Count, builder.Length));
-        }
-
-        /// <summary>
-        /// Peeks the last saved logging point.
-        /// </summary>
-        /// <returns>the last saved logging point</returns>
-        public (int linesCount, int builderLength) PeekSave() {
-            if (savePoints == null || savePoints.Count == 0)
-                throw new InvalidOperationException("savePoint == null || savePoint.Count == 0");
-
-            return savePoints.Peek();
-        }
-
-        /// <summary>
-        /// Pops the last saved logging point.
-        /// </summary>
-        /// <returns>the last saved logging point</returns>
-        public (int linesCount, int builderLength) PopSave() {
-            if (savePoints == null || savePoints.Count == 0)
-                throw new InvalidOperationException("savePoint == null || savePoint.Count == 0");
-
-            return savePoints.Pop();
-        }
-
-        /// <summary>
-        /// Restores the last saved logging point.
-        /// </summary>
-        public void Restore() {
-            (int linesCount, int builderLength) = PeekSave();
-            if (linesCount > Lines.Count)
-                throw new InvalidOperationException($"saved lines count: {linesCount} > Lines.Count: {Lines.Count}");
-
-            if (linesCount < Lines.Count) {
-                (int lineNestLevel, string line) = Lines[linesCount];
-                if (builderLength > line.Length)
-                    throw new InvalidOperationException($"saved builder length: {builderLength} < line.Length: {line.Length}");
-
-                nestLevel = lineNestLevel;
-                builder.Clear();
-                builder.Append(line.Substring(0, builderLength));
-
-                while (Lines.Count > linesCount)
-                    Lines.RemoveAt(Lines.Count - 1);
-            } else {
-                if (builderLength > builder.Length)
-                    throw new InvalidOperationException($"saved builder length: {builderLength} > current builder length: {builder.Length}");
-
-                builder.Length = builderLength;
-            }
-        }
-
+        /// <since>2.0.0</since>
+        public bool IsMultiLines => Lines.Count > 1 || Lines.Count == 1 && Length > 0;
     }
 }

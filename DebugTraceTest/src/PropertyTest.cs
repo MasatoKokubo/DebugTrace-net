@@ -24,78 +24,60 @@ namespace DebugTraceTest {
         // TraceBase.InitClass
         [TestMethod]
         public void TraceBaseInitClass() {
-            Assert.AreEqual(TraceBase.EnterString                   , Resource.Unescape("_Enter_ {0}.{1} ({2}:{3:D})"));
-            Assert.AreEqual(TraceBase.LeaveString                   , Resource.Unescape("_Leave_ {0}.{1} ({2}:{3:D})"));
-            Assert.AreEqual(TraceBase.ThreadBoundaryString          , Resource.Unescape("_Thread_ {0}"));
-            Assert.AreEqual(TraceBase.ClassBoundaryString           , Resource.Unescape("_ {0} _"));
-            Assert.AreEqual(TraceBase.CodeIndentString              , Resource.Unescape("||"));
-            Assert.AreEqual(TraceBase.DataIndentString              , Resource.Unescape("``"));
-            Assert.AreEqual(TraceBase.LimitString                   , Resource.Unescape("<Limit>"));
-            Assert.AreEqual(TraceBase.DefaultNameSpaceString        , Resource.Unescape("<DefaultNameSpace>"));
-            Assert.AreEqual(TraceBase.NonPrintString                , Resource.Unescape("<NonPrint>"));
-            Assert.AreEqual(TraceBase.CyclicReferenceString         , Resource.Unescape("<CyclicReference>"));
-            Assert.AreEqual(TraceBase.VarNameValueSeparator         , Resource.Unescape(@"\s<=\s"));
-            Assert.AreEqual(TraceBase.KeyValueSeparator             , Resource.Unescape(@"\s::\s"));
-            Assert.AreEqual(TraceBase.PrintSuffixFormat             , Resource.Unescape(@"\s[{2}:{3:D}]"));
-            Assert.AreEqual(TraceBase.CountFormat                   , Resource.Unescape(@"\s_Count_:{0}")); // since 1.5.1
-            Assert.AreEqual(TraceBase.StringLengthFormat            , Resource.Unescape("(_Length_:{0})")); // since 1.5.1
-            Assert.AreEqual(TraceBase.DateTimeFormat                , Resource.Unescape("{0:MM-dd-yyyy hh:mm:ss.fffffffK}"));
-            Assert.AreEqual(TraceBase.LogDateTimeFormat             , Resource.Unescape("{0:MM-dd-yyyy hh:mm:ss.fff} [{1:D2}] {2}")); // since 1.3.0
-            Assert.AreEqual(TraceBase.MaxDataOutputWidth .ToString(),                   "40");
-            Assert.AreEqual(TraceBase.CollectionLimit    .ToString(),                   "8");
-            Assert.AreEqual(TraceBase.StringLimit        .ToString(),                   "32");
-            Assert.AreEqual(TraceBase.ReflectionNestLimit.ToString(),                   "2");
-            Assert.AreEqual(TraceBase.DefaultNameSpace              ,                   "DebugTraceTest");
-
-            var reflectionClasses = new HashSet<string>("DebugTraceTest.Point3,System.DateTime".Split(',').Select(s => s.Trim()));
-            reflectionClasses.Add(typeof(Tuple).FullName); // Tuple
-            reflectionClasses.Add(typeof(ValueTuple).FullName); // ValueTuple
-            AssertAreEqual(TraceBase.ReflectionClasses, reflectionClasses);
-
-            Assert.AreEqual(TraceBase.OutputNonPublicFields    , true); // since 1.4.4
-            Assert.AreEqual(TraceBase.OutputNonPublicProperties, true); // since 1.4.4
-
-            Assert.AreEqual(typeof(Loggers), TraceBase.Logger.GetType()); // since 1.5.0
+            Assert.AreEqual(Resource.Unescape("_Enter_ {0}.{1} ({2}:{3:D})")             , TraceBase.EnterFormat                      );
+            Assert.AreEqual(Resource.Unescape("_Leave_ {0}.{1} ({2}:{3:D})")             , TraceBase.LeaveFormat                      );
+            Assert.AreEqual(Resource.Unescape("_Thread_ {0}")                            , TraceBase.ThreadBoundaryFormat             );
+            Assert.AreEqual(Resource.Unescape("_ {0} _")                                 , TraceBase.ClassBoundaryFormat              );
+            Assert.AreEqual(Resource.Unescape("||")                                      , TraceBase.IndentString                     );
+            Assert.AreEqual(Resource.Unescape("``")                                      , TraceBase.DataIndentString                 );
+            Assert.AreEqual(Resource.Unescape("<Limit>")                                 , TraceBase.LimitString                      );
+            Assert.AreEqual(Resource.Unescape("<DefaultNameSpace>")                      , TraceBase.DefaultNameSpaceString           );
+            Assert.AreEqual(Resource.Unescape("<NonOutput>")                             , TraceBase.NonOutputString                  );
+            Assert.AreEqual(Resource.Unescape("<CyclicReference>")                       , TraceBase.CyclicReferenceString            );
+            Assert.AreEqual(Resource.Unescape(@"\s<=\s")                                 , TraceBase.VarNameValueSeparator            );
+            Assert.AreEqual(Resource.Unescape(@"\s::\s")                                 , TraceBase.KeyValueSeparator                );
+            Assert.AreEqual(Resource.Unescape(@"\s[{2}:{3:D}]")                          , TraceBase.PrintSuffixFormat                );
+            Assert.AreEqual(Resource.Unescape(@"\s_Count_:{0}")                          , TraceBase.CountFormat                      ); // since 1.5.1
+            Assert.AreEqual(                  "3"                                        , TraceBase.MinimumOutputCount    .ToString()); // since 2.0.0
+            Assert.AreEqual(Resource.Unescape("(_Length_:{0})")                          , TraceBase.LengthFormat                     ); // since 1.5.1
+            Assert.AreEqual(                  "4"                                        , TraceBase.MinimumOutputLength   .ToString()); // since 2.0.0
+            Assert.AreEqual(Resource.Unescape("{0:MM-dd-yyyy hh:mm:ss.fffffffK}")        , TraceBase.DateTimeFormat                   );
+            Assert.AreEqual(Resource.Unescape("{0:MM-dd-yyyy hh:mm:ss.fff} [{1:D2}] {2}"), TraceBase.LogDateTimeFormat                ); // since 1.3.0
+            Assert.AreEqual(                  "60"                                       , TraceBase.MaximumDataOutputWidth.ToString());
+            Assert.AreEqual(                  "8"                                        , TraceBase.CollectionLimit       .ToString());
+            Assert.AreEqual(                  "32"                                       , TraceBase.StringLimit           .ToString());
+            Assert.AreEqual(                  "2"                                        , TraceBase.ReflectionNestLimit   .ToString());
+            Assert.AreEqual(                  "DebugTraceTest"                           , TraceBase.DefaultNameSpace                 );
+            Assert.IsTrue(TraceBase.ReflectionClasses.Contains("DebugTraceTest.Point3"));
+            Assert.IsTrue(TraceBase.ReflectionClasses.Contains("System.DateTime"));
+            Assert.AreEqual(true           , TraceBase.OutputNonPublicFields    ); // since 1.4.4
+            Assert.AreEqual(true           , TraceBase.OutputNonPublicProperties); // since 1.4.4
+            Assert.AreEqual(typeof(Loggers), TraceBase.Logger.GetType()         ); // since 1.5.0
             CollectionAssert.AreEqual(
                 new List<Type>() {typeof(DebugTrace.Console.Out), typeof(DebugTrace.Console.Error)},
                 ((Loggers)TraceBase.Logger).Members.Select(logger => logger.GetType()).ToList()); // since 1.5.0
         }
 
-        // AssertAreEqual
-        private static void AssertAreEqual<T>(IEnumerable<T> enumerable1, IEnumerable<T> enumerable2) {
-            if (enumerable1 == null) {
-                if (enumerable2 == null) return;
-                Assert.Fail($"enumerable1 == null, enumerable2 != null");
-            }
-            if (enumerable2 == null)
-                Assert.Fail($"enumerable1 != null, enumerable2 == null");
-            if (enumerable1.Count() != enumerable2.Count())
-                Assert.Fail($"enumerable1.Count() = {enumerable1.Count()}, enumerable2.Count() = {enumerable2.Count()}");
-            for (var index = 0; index < enumerable1.Count(); ++index)
-                if (!enumerable1.ElementAt(index).Equals(enumerable1.ElementAt(index)))
-                    Assert.Fail($"enumerable1.ElementAt({index}) = {enumerable1.ElementAt(index)}, enumerable2.ElementAt({index}) = {enumerable1.ElementAt(index)}");
-        }
-
-        // EnterString
+        // EnterFormat
         [TestMethod]
-        public void EnterString() {
+        public void EnterFormat() {
             Trace.Enter();
             StringAssert.Contains(Trace.LastLog, "_Enter_");
         }
 
-        // LeaveString
+        // LeaveFormat
         [TestMethod]
-        public void LeaveString() {
+        public void LeaveFormat() {
             Trace.Leave();
             StringAssert.Contains(Trace.LastLog, "_Leave_");
         }
 
-        // CodeIndentString
+        // IndentString
         [TestMethod]
-        public void CodeIndentString() {
+        public void IndentString() {
             Trace.Enter();
             Trace.Enter();
-            StringAssert.Contains(Trace.LastLog, TraceBase.CodeIndentString);
+            StringAssert.Contains(Trace.LastLog, TraceBase.IndentString);
             Trace.Leave();
             Trace.Leave();
         }
@@ -124,11 +106,11 @@ namespace DebugTraceTest {
             StringAssert.Contains(Trace.LastLog, TraceBase.DefaultNameSpaceString + ".Point");
         }
 
-        // NonPrintString
+        // NonOutputString
         [TestMethod]
-        public void NonPrintString() {
+        public void NonOutputString() {
             Trace.Print("point", new Point(1, 2));
-            StringAssert.Contains(Trace.LastLog, TraceBase.NonPrintString);
+            StringAssert.Contains(Trace.LastLog, TraceBase.NonOutputString);
         }
 
         // CyclicReferenceString
@@ -164,11 +146,11 @@ namespace DebugTraceTest {
             StringAssert.Contains(Trace.LastLog, string.Format(TraceBase.CountFormat, 3));
         }
 
-        // StringLengthFormat
+        // LengthFormat
         [TestMethod]
-        public void StringLengthFormat() {
-            Trace.Print("value", "ABC");
-            StringAssert.Contains(Trace.LastLog, string.Format(TraceBase.StringLengthFormat, 3));
+        public void LengthFormat() {
+            Trace.Print("value", "ABCDE");
+            StringAssert.Contains(Trace.LastLog, string.Format(TraceBase.LengthFormat, 5));
         }
 
         // ReflectionClasses

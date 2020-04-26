@@ -13,7 +13,7 @@ namespace DebugTraceTest {
             TaskExample().Wait();
             Trace.Leave(); // for Debugging
             Trace.Print(""); // for Debugging
-            Assert.IsFalse(Trace.LastLog.Contains(DebugTrace.TraceBase.CodeIndentString), "The indent level is 0");
+            Assert.IsFalse(Trace.LastLog.Contains(DebugTrace.TraceBase.IndentString), "The indent level is 0");
         }
 
         public async Task<int> TaskExample() {

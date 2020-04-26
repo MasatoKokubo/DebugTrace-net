@@ -9,7 +9,6 @@ namespace DebugTrace {
     /// <summary>
     /// Using multiple loggers.
     /// </summary>
-    ///
     /// <since>1.5.0</since>
     /// <author>Masato Kokubo</author>
     public class Loggers : ILogger {
@@ -26,7 +25,7 @@ namespace DebugTrace {
         /// <summary>
         /// IEnumerable of loggers.
         /// </summary>
-        public IEnumerable<ILogger> Members {get; private set;}
+        public IEnumerable<ILogger> Members {get; private set;} = new List<ILogger>();
 
         /// <summary>
         /// Set the logging level
@@ -58,7 +57,6 @@ namespace DebugTrace {
         /// <summary>
         /// Constuct a Loggers object.
         /// </summary>
-        ///
         /// <param name="loggers">an array of ILoggers</param>
         /// <exception cref="NullReferenceException">if the loggers is null</exception>
         public Loggers(params ILogger[] loggers) {
@@ -68,7 +66,6 @@ namespace DebugTrace {
         /// <summary>
         /// Output the message to the log.
         /// </summary>
-        ///
         /// <param name="message">the message</param>
         public void Log(string message) {
             foreach (var logger in Members)
@@ -78,7 +75,6 @@ namespace DebugTrace {
         /// <summary>
         /// Returns a string representation of this object.
         /// </summary>
-        ///
         /// <returns>a string representation of this object</returns>
         /// <since>1.5.0</since>
         public override string ToString() => string.Join(Separator + " ", Members.Select(logger => logger.ToString()));

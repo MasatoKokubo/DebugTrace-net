@@ -9,7 +9,6 @@ namespace DebugTrace {
     /// <summary>
     /// Outputs trace information for C#.
     /// </summary>
-    ///
     /// <since>1.0.0</since>
     /// <author>Masato Kokubo</author>
     public class CSharp : TraceBase {
@@ -91,14 +90,13 @@ namespace DebugTrace {
         /// Returns the type name of the array to be output to the log.
         /// If dose not output, returns <c>null</c>.
         /// </summary>
-        ///
         /// <param name="type">the type of the value</param>
         /// <param name="value">the value object</param>
         /// <param name="isElement"><c>true</c> if the value is element of a container class, <c>false</c> otherwise</param>
         /// <param name="nest">current nest count</param>
         /// <returns>the type name to be output to the log</returns>
-        protected override string GetArrayTypeName(Type type, object value, bool isElement, int nest) {
-            string typeName = GetTypeName(type.GetElementType(), null, false, nest + 1);
+        protected override string GetArrayTypeName(Type type, object? value, bool isElement, int nest) {
+            string typeName = GetTypeName(type.GetElementType()!, null, false, nest + 1);
 
             if (typeName.Length > 0) {
                 var bracket = "[";
@@ -117,7 +115,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -126,7 +123,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -135,7 +131,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -144,7 +139,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -153,7 +147,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -162,7 +155,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -171,7 +163,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -180,7 +171,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -189,7 +179,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -207,7 +196,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -216,7 +204,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -225,7 +212,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -234,7 +220,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="value">the value</param>
         /// <returns></returns>
@@ -243,7 +228,6 @@ namespace DebugTrace {
         /// <summary>
         /// Appends the access modifire of the member information to the log buffer.
         /// </summary>
-        ///
         /// <param name="buff">the log buffer</param>
         /// <param name="memberInfo">the member information</param>
         /// <returns></returns>
@@ -260,12 +244,12 @@ namespace DebugTrace {
                 }
                 break;
             case PropertyInfo propertyInfo:
-                if (!propertyInfo.GetMethod.IsPublic) {
-                    if      (propertyInfo.GetMethod.IsPrivate          ) buff.Append("private ");
-                    else if (propertyInfo.GetMethod.IsFamily           ) buff.Append("protected ");
-                    else if (propertyInfo.GetMethod.IsAssembly         ) buff.Append("internal ");
-                    else if (propertyInfo.GetMethod.IsFamilyOrAssembly ) buff.Append("protected internal ");
-                    else if (propertyInfo.GetMethod.IsFamilyAndAssembly) buff.Append("private protected ");
+                if (!propertyInfo.GetMethod?.IsPublic ?? false) {
+                    if      (propertyInfo.GetMethod?.IsPrivate           ?? false) buff.Append("private ");
+                    else if (propertyInfo.GetMethod?.IsFamily            ?? false) buff.Append("protected ");
+                    else if (propertyInfo.GetMethod?.IsAssembly          ?? false) buff.Append("internal ");
+                    else if (propertyInfo.GetMethod?.IsFamilyOrAssembly  ?? false) buff.Append("protected internal ");
+                    else if (propertyInfo.GetMethod?.IsFamilyAndAssembly ?? false) buff.Append("private protected ");
                 }
                 break;
             }

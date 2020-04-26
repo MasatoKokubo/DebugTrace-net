@@ -11,14 +11,14 @@ namespace DebugTraceTest {
         // ClassInitialize
         [ClassInitialize]
         public static void ClassInit(TestContext testContext) {
-            maxDataOutputWidth = TraceBase.MaxDataOutputWidth;
-            TraceBase.MaxDataOutputWidth = 100;
+            maxDataOutputWidth = TraceBase.MaximumDataOutputWidth;
+            TraceBase.MaximumDataOutputWidth = 100;
         }
 
         // ClassCleanup
         [ClassCleanup]
         public static void ClassCleanup() {
-            TraceBase.MaxDataOutputWidth = maxDataOutputWidth;
+            TraceBase.MaximumDataOutputWidth = maxDataOutputWidth;
         }
 
         // (int, int)

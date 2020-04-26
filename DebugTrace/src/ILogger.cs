@@ -5,7 +5,6 @@ namespace DebugTrace {
     /// <summary>
     /// Interface of Logger classes.
     /// </summary>
-    ///
     /// <since>1.0.0</since>
     /// <author>Masato Kokubo</author>
     public interface ILogger {
@@ -22,7 +21,6 @@ namespace DebugTrace {
         /// <summary>
         /// Output the message to the log.
         /// </summary>
-        ///
         /// <param name="message">the message</param>
         void Log(string message);
     }

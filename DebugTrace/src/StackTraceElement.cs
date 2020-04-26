@@ -5,14 +5,12 @@ namespace DebugTrace {
     /// <summary>
     /// An element of stack traces.
     /// </summary>
-    ///
     /// <since>1.0.0</since>
     /// <author>Masato Kokubo</author>
     public struct StackTraceElement {
         /// <summary>
         /// Construct a <c>StackTraceElement</c>.
         /// </summary>
-        ///
         /// <param name="typeName">the type name</param>
         /// <param name="methodName">the method name</param>
         /// <param name="fileName">the file name</param>
