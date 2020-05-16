@@ -1,6 +1,5 @@
-// State.cs
+// LogBuffer.cs
 // (C) 2018 Masato Kokubo
-
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,12 +14,12 @@ namespace DebugTrace {
         private int appendNestLevel = 0; // since 2.0.0
 
         /// <summary>
-        /// Log lines
+        /// Tuples of data indentation level and log string
         /// </summary>
         public IList<(int, string)> Lines {get;} = new List<(int, string)>();
 
         /// <summary>
-        /// Buffering one line of logs
+        /// Buffer for a line of logs
         /// </summary>
         public StringBuilder builder = new StringBuilder();
 
@@ -28,7 +27,7 @@ namespace DebugTrace {
         /// Breaks the current line.
         /// </summary>
         public void LineFeed() {
-            Lines.Add((nestLevel + appendNestLevel, builder.ToString()));
+            Lines.Add((nestLevel + appendNestLevel, builder.ToString().TrimEnd(' ')));
             appendNestLevel = 0;
             builder.Clear();
         }
@@ -46,7 +45,7 @@ namespace DebugTrace {
         /// <summary>
         /// Appends a string representation of the value.
         /// </summary>
-        /// <param name="value">the value</param>
+        /// <param name="value">the value to append</param>
         /// <param name="nestLevel">the nest level of the value</param>
         /// <param name="noBreak">if true, does not break even if the maximum width is exceeded</param>
         /// <returns>this object</returns>
@@ -61,17 +60,18 @@ namespace DebugTrace {
         }
 
         /// <summary>
-        /// Appends .
+        /// Appends a string representation of the value.
         /// Does not break even if the maximum width is exceeded.
         /// </summary>
-        /// <param name="value">the value</param>
+        /// <param name="value">the value to append</param>
         /// <returns>this object</returns>
         /// <since>2.0.0</since>
         public LogBuffer NoBreakAppend(object value) => Append(value, 0, true);
  
         /// <summary>
-        /// Appends the <c>LogBuffer</c>.
+        /// Appends lines of another <c>LogBuffer</c>.
         /// </summary>
+        /// <param name="buff">another <c>LogBuffer</c></param>
         /// <returns>this object</returns>
         public LogBuffer Append(LogBuffer buff) {
             buff.LineFeed();

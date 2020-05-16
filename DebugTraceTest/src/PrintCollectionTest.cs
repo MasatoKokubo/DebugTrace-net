@@ -1,3 +1,5 @@
+// PrintCollectionTest.cs
+// (C) 2018 Masato Kokubo
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

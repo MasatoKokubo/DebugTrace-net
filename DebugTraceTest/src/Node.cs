@@ -1,4 +1,5 @@
-using System;
+// Node.cs
+// (C) 2018 Masato Kokubo
 
 namespace DebugTraceTest {
     // Node class

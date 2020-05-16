@@ -1,3 +1,5 @@
+// PrintTest.cs
+// (C) 2018 Masato Kokubo
 using System;
 using System.Threading;
 using System.Threading.Tasks;

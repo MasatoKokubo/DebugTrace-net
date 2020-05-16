@@ -1,3 +1,5 @@
+// EnterLeaveAsyncAwaitTest.cs
+// (C) 2018 Masato Kokubo
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

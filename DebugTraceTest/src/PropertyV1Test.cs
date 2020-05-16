@@ -1,6 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+// PropertyV1Test.cs
+// (C) 2018 Masato Kokubo
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static DebugTrace.CSharp;
 using DebugTrace;

@@ -1,4 +1,5 @@
-using System;
+// Point.cs
+// (C) 2018 Masato Kokubo
 
 namespace DebugTraceTest {
     // DebugTraceTest.PropertyTest+Point struct

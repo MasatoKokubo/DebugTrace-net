@@ -1,3 +1,5 @@
+// EnterLeaveNestTest.cs
+// (C) 2018 Masato Kokubo
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static DebugTrace.CSharp;

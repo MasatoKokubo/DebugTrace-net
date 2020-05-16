@@ -356,7 +356,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 `Logger = Log4net` [.small .blue]#- Outputs using Log4net# +
 `Logger = NLog` [.small .blue]#- Outputs using NLog# +
 [.small]#*Example for multiple outputs:*# [.small .blue]#- since 1.5.0# +
-`Logger = Console+Out; Log4net` [.small .blue]#- Outputs to the console (stdout) and using Log4net# + 
+`Logger = Console+Out; Log4net` [.small .blue]#- Outputs to the console (stdout) and using Log4net#
 
 |`LogLevel`
 |Log level to use when outputting +
@@ -388,7 +388,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 `LogLevel = Off` +
 [.small]#*Examples when using Log4net and NLog:*# [.small .blue]#(Logger = Log4net; NLog)# +
 `LogLevel = Debug` [.small .blue]#- Outputs Debug level for both Log4net and NLog# +
-`LogLevel = Finer; Trace` [.small .blue]#- Outputs Finer level for Log4net and Trace level for NLog - since 1.5.0# +
+`LogLevel = Finer; Trace` [.small .blue]#- Outputs Finer level for Log4net and Trace level for NLog - since 1.5.0#
 
 |`EnterFormat` +
 [.small .blue]#Renamed since 2.0.0# +
@@ -402,7 +402,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 `{0}`: The class name of the caller +
 `{1}`: The method name of the caller +
 `{2}`: The file name of the caller +
-`{3}`: The line number of the caller +
+`{3}`: The line number of the caller
 
 |`LeaveFormat` +
 [.small .blue]#Renamed since 2.0.0# +
@@ -417,22 +417,30 @@ You can specify following properties in the `DebugTrace.properties` file.
 `{1}`: The method name of the caller +
 `{2}`: The file name of the caller +
 `{3}`: The line number of the caller +
-`{4}`: The duration since invoking the corresponding `Enter` method +
+`{4}`: The duration since invoking the corresponding `Enter` method
 
-|`ThreadBoundaryString`
+|`ThreadBoundaryFormat` +
+[.small .blue]#Renamed since 2.0.0# +
+ +
+[.small]#`ThreadBoundaryString`# +
+[.small .blue]#Deprecated since 2.0.0#
 |Format string of log output at threads boundary +
 [.small]#*Example:*# +
-[.small]#`ThreadBoundaryString = \____\__\__\__\__\__\__\__\__\__\__\__\__\__ Thread {0} \__\__\__\__\__\__\__\__\__\__\__\__\__\____`# +
+[.small]#`ThreadBoundaryFormat = \____\__\__\__\__\__\__\__\__\__\__\__\__\__ Thread {0} \__\__\__\__\__\__\__\__\__\__\__\__\__\____`# +
 [.small .blue]#*[Default]*# +
 [.small]#*Parameter:*# +
-`{0}`: The thread ID +
+`{0}`: The thread ID
 
-|`ClassBoundaryString`
+|`ClassBoundaryFormat` +
+[.small .blue]#Renamed since 2.0.0# +
+ +
+[.small]#`ClassBoundaryString`# +
+[.small .blue]#Deprecated since 2.0.0#
 |Format string of log output at classes boundary +
 [.small]#*Example:*# +
-`ClassBoundaryString = \\____ {0} \____` [.small .blue]#*[Default]*# +
+`ClassBoundaryFormat = \\____ {0} \____` [.small .blue]#*[Default]*# +
 [.small]#*Parameter:*# +
-`{0}`: The class name +
+`{0}`: The class name
 
 |`IndentString` +
 [.small .blue]#Renamed since 2.0.0# +
@@ -442,23 +450,18 @@ You can specify following properties in the `DebugTrace.properties` file.
 |String of one code indent +
 [.small]#*Example:*# +
 `CodeIndentString = &#x7c;\s` [.small .blue]#*[Default]*# +
-[.small .blue]#`\s` is replaced to a space character# +
+[.small .blue]#`\s` is replaced to a space character#
 
 |`DataIndentString`
 |String of one data indent +
 [.small]#*Example:*# +
 `DataIndentString = \s\s` [.small .blue]#*[Default]*# +
-[.small .blue]#`\s` is replaced to a space character# +
+[.small .blue]#`\s` is replaced to a space character#
 
 |`LimitString`
 |String to represent that it has exceeded the limit +
 [.small]#*Example:*# +
-`LimitString = \...` [.small .blue]#*[Default]*# +
-
-|`DefaultNameSpaceString`
-|String replacing the default namespace part +
-[.small]#*Example:*# +
-`DefaultNameSpaceString = \...` [.small .blue]#*[Default]*# +
+`LimitString = \...` [.small .blue]#*[Default]*#
 
 |`NonOutputString` +
 [.small .blue]#Renamed since 2.0.0# +
@@ -467,7 +470,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 [.small .blue]#Deprecated since 2.0.0#
 |String to be output instead of not outputting value +
 [.small]#*Example:*# +
-`NonOutputString = \***` [.small .blue]#*[Default]*# +
+`NonOutputString = \***` [.small .blue]#*[Default]*#
 
 |`CyclicReferenceString`
 |String to represent that the cyclic reference occurs +
@@ -478,14 +481,14 @@ You can specify following properties in the `DebugTrace.properties` file.
 |Separator string between the variable name and value +
 [.small]#*Example:*# +
 `VarNameValueSeparator = \s=\s` [.small .blue]#*[Default]*# +
-[.small .blue]#`\s` is replaced to a space character# +
+[.small .blue]#`\s` is replaced to a space character#
 
 |`KeyValueSeparator`
 |Separator string between the key and value of dictionary +
 and between the property/field name and value +
 [.small]#*Example:*# +
 `KeyValueSeparator = :\s` [.small .blue]#*[Default]*# +
-[.small .blue]#`\s` is replaced to a space character# +
+[.small .blue]#`\s` is replaced to a space character#
 
 |`PrintSuffixFormat`
 |Output format of `Print` method suffix +
@@ -496,7 +499,7 @@ and between the property/field name and value +
 `{0}`: The class name of the caller +
 `{1}`: The method name of the caller +
 `{2}`: The file name of the caller +
-`{3}`: The line number of the caller +
+`{3}`: The line number of the caller
 
 |`CountFormat` +
 [.small .blue]#since 1.5.1# 
@@ -510,7 +513,7 @@ and between the property/field name and value +
 [.small .blue]#since 2.0.0# 
 |Minimum value to output the number of elements of collection +
 [.small]#*Examples:*# +
-`MinimumOutputCount = 5` [.small .blue]#*[Default]*# +
+`MinimumOutputCount = 5` [.small .blue]#*[Default]*#
 
 |`LengthFormat` +
 [.small .blue]#Renamed since 2.0.0# +
@@ -522,7 +525,7 @@ and between the property/field name and value +
 [.small]#*Examples:*# +
 `StringLengthFormat = (Length:{0})` [.small .blue]#*[Default]*# +
 [.small]#*Parameter:*# +
-`{0}`: The length of strings +
+`{0}`: The length of strings
 
 |`MinimumOutputLength` +
 [.small .blue]#since 2.0.0# 
@@ -535,7 +538,7 @@ and between the property/field name and value +
 [.small]#*Examples:*# +
 `DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffffffK}` [.small .blue]#*[Default]*# +
 [.small]#*Parameter:*# +
-`{0}`: The `DateTime` object +
+`{0}`: The `DateTime` object
 
 |`LogDateTimeFormat` +
 |Output format of date and time when outputting logs +
@@ -544,27 +547,31 @@ and between the property/field name and value +
 [.small]#*Parameter:*# +
 `{0}`: The `DateTime` of log output +
 `{1}`: The thread ID +
-`{2}`: The log contents +
+`{2}`: The log contents
 
-|`MaxDataOutputWidth`
+|`MaximumDataOutputWidth`
+[.small .blue]#Renamed since 2.0.0# +
+ +
+[.small]#`MaxDataOutputWidth`# +
+[.small .blue]#Deprecated since 2.0.0#
 |Maximum output width of data +
 [.small]#*Example:*# +
-`MaxDataOutputWidth = 80` [.small .blue]#*[Default]*# +
+`MaxDataOutputWidth = 70` [.small .blue]#*[Default]*#
 
 |`CollectionLimit`
-|Limit value of `ICollection` elements to output +
+|Limit of collection elements to output +
 [.small]#*Example:*# +
-`CollectionLimit = 512` [.small .blue]#*[Default]*# +
+`CollectionLimit = 512` [.small .blue]#*[Default]*#
 
 |`StringLimit`
-|Limit value of `string` characters to output +
+|Limit of string characters to output +
 [.small]#*Example:*# +
-`StringLimit = 8192` [.small .blue]#*[Default]*# +
+`StringLimit = 8192` [.small .blue]#*[Default]*#
 
 |`ReflectionNestLimit`
-|Limit value of reflection nest +
+|Limit of number of reflection nest +
 [.small]#*Example:*# +
-`ReflectionNestLimit = 4` [.small .blue]#*[Default]*# +
+`ReflectionNestLimit = 4` [.small .blue]#*[Default]*#
 
 |`NonOutputProperties` +
 [.small .blue]#Renamed since 2.0.0# +
@@ -581,13 +588,18 @@ and between the property/field name and value +
   `DebugTraceExample.Node.Right` +
 [.small]#*format:*# +
 `<full class name>.<property or field name>` +
-[.small .blue]#The default value is unspecified#
+[.small .blue]#No default value#
 
 |`DefaultNameSpace`
 |Default namespace of your C# source +
 [.small]#*Example:*# +
 `DefaultNameSpace = DebugTraceExample` +
-[.small .blue]#The default value is unspecified#
+[.small .blue]#No default value#
+
+|`DefaultNameSpaceString`
+|String replacing the default namespace part +
+[.small]#*Example:*# +
+`DefaultNameSpaceString = \...` [.small .blue]#*[Default]*#
 
 |`ReflectionClasses`
 |Classe names that output content by reflection even if `ToString` method is implemented
@@ -597,19 +609,19 @@ and between the property/field name and value +
 `ReflectionClasses = \` +
   `DebugTraceExample.Point,\` +
   `DebugTraceExample.Rectangle` +
-[.small .blue]#The default value is unspecified#
+[.small .blue]#No default value#
 
 |`OutputNonPublicFields`
 |If `true`, outputs the contents by reflection even for fields which are not `public` +
 [.small]#*Examples:*# +
 `OutputNonPublicFields = true` +
-`OutputNonPublicFields = false` [.small .blue]#*[Default]*# +
+`OutputNonPublicFields = false` [.small .blue]#*[Default]*#
 
 |`OutputNonPublicProperties`
 |If `true`, outputs the contents by reflection even for properties which are not `public` +
 [.small]#*Examples:*# +
 `OutputNonPublicProperties = true` +
-`OutputNonPublicProperties = false` [.small .blue]#*[Default]*# +
+`OutputNonPublicProperties = false` [.small .blue]#*[Default]*#
 
 |===
 
@@ -742,11 +754,16 @@ https://masatokokubo.github.io/DebugTrace-net/index.html[API Specification]
 
 === 11. Release Notes
 
+==== DebugTrace-net 2.0.1 [.small .gray]#- May 16, 2020#
+
+* Improvement
+  ** Improved the line break algorithm in reflection.
+
 ==== DebugTrace-net 2.0.0 [.small .gray]#- April 4, 2020#
 
 * Changed the supported framework to *.NET Core 3.1* from .NET Standard 2.0.
 
-* Add properties specified in DebugTrace.properties.
+* Add following properties specified in DebugTrace.properties.
   ** `MinimumOutputCount` - Minimum value to output the number of elements of collection (Default: 5)
   ** `MinimumOutputLength` - Minimum value to output the length of string (Default: 5)
 

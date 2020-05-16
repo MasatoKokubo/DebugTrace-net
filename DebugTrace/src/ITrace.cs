@@ -1,6 +1,5 @@
 ﻿// ITrace.cs
 // (C) 2018 Masato Kokubo
-
 using System;
 
 namespace DebugTrace {

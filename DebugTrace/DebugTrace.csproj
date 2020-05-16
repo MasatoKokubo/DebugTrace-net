@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Nullable>enable</Nullable>
-    <Version>2.0.0</Version>
+    <Version>2.0.1</Version>
     <Authors>Masato Kokubo</Authors>
     <Company>Masato Kokubo</Company>
     <Copyright>© 2018 Masato Kokubo</Copyright>
@@ -12,6 +12,7 @@
     <RepositoryUrl>https://github.com/MasatoKokubo/DebugTrace-net.git</RepositoryUrl>
     <PackageProjectUrl>https://github.com/MasatoKokubo/DebugTrace-net</PackageProjectUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

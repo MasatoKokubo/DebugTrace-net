@@ -1,10 +1,11 @@
-﻿using System;
+﻿// LoggerTest.cs
+// (C) 2018 Masato Kokubo
+using System;
 using System.IO;
 using System.Text;
 using DebugTrace;
 using static DebugTrace.CSharp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using log4net;
 
 namespace DebugTraceTest {
     [TestClass]

@@ -1,6 +1,5 @@
-﻿// Trace.cs
+﻿// TraceBase.cs
 // (C) 2018 Masato Kokubo
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -226,7 +225,7 @@ namespace DebugTrace {
         /// </summary>
         static TraceBase() {
             Resource = new Resource("DebugTrace");
-            InitClass("DebugTrace");
+            InitClass("");
         }
 
         /// <summary>
@@ -234,7 +233,8 @@ namespace DebugTrace {
         /// </summary>
         /// <param name="baseName">the base name of the resource properties file</param>
         public static void InitClass(string baseName) {
-            Resource = new Resource(baseName);
+            if (baseName != "")
+                Resource = new Resource(baseName);
 
             EnterFormat               = Resource.GetString (nameof(EnterFormat), "EnterString", Resource.Unescape(@"Enter {0}.{1} ({2}:{3:D})"));
             LeaveFormat               = Resource.GetString (nameof(LeaveFormat), "LeaveString", Resource.Unescape(@"Leave {0}.{1} ({2}:{3:D}) duration: {4}"));
@@ -243,7 +243,6 @@ namespace DebugTrace {
             IndentString              = Resource.GetString (nameof(IndentString), "CodeIndentString", Resource.Unescape(@"|\s"));
             DataIndentString          = Resource.GetString (nameof(DataIndentString         ), Resource.Unescape(@"\s\s"));
             LimitString               = Resource.GetString (nameof(LimitString              ), Resource.Unescape(@"..."));
-            DefaultNameSpaceString    = Resource.GetString (nameof(DefaultNameSpaceString   ), Resource.Unescape(@"..."));
             NonOutputString           = Resource.GetString (nameof(NonOutputString), "NonPrintString", Resource.Unescape(@"***"));
             CyclicReferenceString     = Resource.GetString (nameof(CyclicReferenceString    ), Resource.Unescape(@"*** Cyclic Reference ***"));
             VarNameValueSeparator     = Resource.GetString (nameof(VarNameValueSeparator    ), Resource.Unescape(@"\s=\s"));
@@ -255,13 +254,14 @@ namespace DebugTrace {
             MinimumOutputLength       = Resource.GetInt    (nameof(MinimumOutputLength      ), 5); // since 2.0.0
             DateTimeFormat            = Resource.GetString (nameof(DateTimeFormat           ), Resource.Unescape(@"{0:yyyy-MM-dd HH:mm:ss.fffffffK}"));
             LogDateTimeFormat         = Resource.GetString (nameof(LogDateTimeFormat        ), Resource.Unescape(@"{0:yyyy-MM-dd HH:mm:ss.fff} [{1:D2}] {2}")); // since 1.3.0
-            MaximumDataOutputWidth    = Resource.GetInt    (nameof(MaximumDataOutputWidth), "MaxDataOutputWidth", 80);
+            MaximumDataOutputWidth    = Resource.GetInt    (nameof(MaximumDataOutputWidth), "MaxDataOutputWidth", 70);
             CollectionLimit           = Resource.GetInt    (nameof(CollectionLimit          ), 512);
             StringLimit               = Resource.GetInt    (nameof(StringLimit              ), 8192);
             ReflectionNestLimit       = Resource.GetInt    (nameof(ReflectionNestLimit      ), 4);
             NonOutputProperties       = new List<string>(Resource.GetStrings(nameof(NonOutputProperties), "NonPrintProperties", new string[0]));
             NonOutputProperties.Add("System.Threading.Tasks.Task.Result");
             DefaultNameSpace          = Resource.GetString (nameof(DefaultNameSpace         ), "");
+            DefaultNameSpaceString    = Resource.GetString (nameof(DefaultNameSpaceString   ), Resource.Unescape(@"..."));
             ReflectionClasses         = new HashSet<string>(Resource.GetStrings(nameof(ReflectionClasses), new string[0]));
             ReflectionClasses.Add(typeof(Tuple).FullName ?? ""); // Tuple
             ReflectionClasses.Add(typeof(ValueTuple).FullName ?? ""); // ValueTuple
@@ -555,7 +555,7 @@ namespace DebugTrace {
                     Logger.Log(GetIndentString(state.NestLevel, 0)); // Empty Line
 
                 var lastLogBuff = new StringBuilder();
-                foreach ((int dataNestLevel, string line) in buff.Lines) {
+                foreach ((var dataNestLevel, var line) in buff.Lines) {
                     var log = GetIndentString(state.NestLevel, dataNestLevel) + line;
                     Logger.Log(log);
                     lastLogBuff.Append(log).Append('\n');
@@ -725,7 +725,7 @@ namespace DebugTrace {
 
                 else if (reflectedObjects.Count > ReflectionNestLimit)
                     // Over reflection level limitation
-                    buff.Append(LimitString);
+                    buff.NoBreakAppend(LimitString);
 
                 else {
                     // Use Reflection
@@ -1216,7 +1216,7 @@ namespace DebugTrace {
             var isExtended = type.BaseType != typeof(object) && type.BaseType != typeof(ValueType);
             var isTuple = IsTuple(type);
 
-            var subBuff = ToUsingReflectionSub(obj, type, isExtended);
+            var subBuff = ToStringUsingReflectionBody(obj, type, isExtended);
 
             buff.Append(isTuple ? '(' : '{');
             if (subBuff.IsMultiLines) {
@@ -1236,13 +1236,13 @@ namespace DebugTrace {
             return buff;
         }
 
-        private LogBuffer ToUsingReflectionSub(object obj, Type type, bool isExtended) {
+        private LogBuffer ToStringUsingReflectionBody(object obj, Type type, bool isExtended) {
             var buff = new LogBuffer();
 
             Type? baseType = type.BaseType;
             if (baseType != null && baseType != typeof(object) && baseType != typeof(ValueType)) {
                 // Call for the base type
-                var baseBuff =  ToUsingReflectionSub(obj, baseType, isExtended);
+                var baseBuff =  ToStringUsingReflectionBody(obj, baseType, isExtended);
                 buff.Append(baseBuff);
             }
 
@@ -1255,6 +1255,8 @@ namespace DebugTrace {
                 buff.LineFeed();
             }
 
+            var fieldPropertyIndex = 0;
+
             // fields
             var fieldInfos = type.GetFields(
                   BindingFlags.DeclaredOnly
@@ -1262,13 +1264,14 @@ namespace DebugTrace {
                 | (OutputNonPublicFields ? BindingFlags.NonPublic : 0) // since 1.4.4
                 | BindingFlags.Instance)
                 .Where(fieldInfo => !fieldInfo.Name.EndsWith("__BackingField")); // Exclude property backing fields // since 1.4.4
-            var fieldIndex = 0;
             foreach (var fieldInfo in fieldInfos) {
-                if (fieldIndex > 0)
+                if (fieldPropertyIndex > 0)
                     buff.NoBreakAppend(", "); // Append a delimiter
-                var valueBuff = TOStringReflectValue(type, obj, fieldInfo);
+                var valueBuff = ToStringReflectValue(type, obj, fieldInfo);
+                if (fieldPropertyIndex > 0 && valueBuff.IsMultiLines)
+                    buff.LineFeed();
                 buff.Append(valueBuff);
-                ++fieldIndex;
+                ++fieldPropertyIndex;
             }
 
             // properties
@@ -1277,22 +1280,23 @@ namespace DebugTrace {
                 | BindingFlags.Public
                 | (OutputNonPublicProperties ? BindingFlags.NonPublic : 0) // since 1.4.4
                 | BindingFlags.Instance);
-            int propertyIndex = 0;
             foreach (var propertyInfo in propertyInfos) {
                 var parameterInfos = propertyInfo.GetIndexParameters();
                 if (parameterInfos.Length > 0) continue; // Not support indexed properties
-                if (propertyIndex > 0)
+                if (fieldPropertyIndex > 0)
                     buff.NoBreakAppend(", "); // Append a delimiter
-                var valueBuff = TOStringReflectValue(type, obj, propertyInfo);
+                var valueBuff = ToStringReflectValue(type, obj, propertyInfo);
+                if (fieldPropertyIndex > 0 && valueBuff.IsMultiLines)
+                    buff.LineFeed();
                 buff.Append(valueBuff);
-                ++propertyIndex;
+                ++fieldPropertyIndex;
             }
 
             return buff;
         }
 
         // AppendReflectValue / MemberInfo
-        private LogBuffer TOStringReflectValue(Type type, object obj, MemberInfo memberInfo) {
+        private LogBuffer ToStringReflectValue(Type type, object obj, MemberInfo memberInfo) {
             var buff = new LogBuffer();
 
             AppendAccessModifire(buff, memberInfo);

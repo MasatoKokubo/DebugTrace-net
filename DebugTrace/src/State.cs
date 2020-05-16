@@ -1,6 +1,5 @@
 // State.cs
 // (C) 2018 Masato Kokubo
-
 using System;
 using System.Collections.Generic;
 

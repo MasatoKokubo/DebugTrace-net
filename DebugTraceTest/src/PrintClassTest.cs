@@ -1,4 +1,5 @@
-using System;
+// PrintClassTest.cs
+// (C) 2018 Masato Kokubo
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static DebugTrace.CSharp;
 

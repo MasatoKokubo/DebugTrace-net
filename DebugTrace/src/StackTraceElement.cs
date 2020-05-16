@@ -1,6 +1,5 @@
 // StackTraceElement.cs
 // (C) 2018 Masato Kokubo
-
 namespace DebugTrace {
     /// <summary>
     /// An element of stack traces.
