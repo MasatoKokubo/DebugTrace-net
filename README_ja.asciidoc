@@ -397,14 +397,14 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
  +
 [.small]#`EnterString`# +
 [.small .blue]#ver. 2.0.0より非推奨#
-|メソッドに入る際のログ出力のフォーマット文字列 +
+|メソッドに入る際に出力するログのフォーマット文字列 +
 [.small]#*設定例:*# +
 `EnterFormat = 開始 {0}.{1} ({2}:{3:D})` [.small .blue]#*[デフォルト]*# +
 [.small]#*パラメータ:*# +
-`{0}`: 呼出側のクラス名 +
-`{1}`: 呼出側のメソッド名 +
-`{2}`: 呼出側のファイル名 +
-`{3}`: 呼出側の行番号
+`{0}`: クラス名 +
+`{1}`: メソッド名 +
+`{2}`: ファイル名 +
+`{3}`: 行番号
 
 |`LeaveFormat` +
 [.small .blue]#ver. 2.0.0より名称変更# +
@@ -415,10 +415,10 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
 [.small]#*設定例:*# +
 `LeaveFormat = 終了 {0}.{1} ({2}:{3:D}) time: {4}` [.small .blue]#*[デフォルト]*# +
 [.small]#*パラメータ:*# +
-`{0}`: 呼出側のクラス名 +
-`{1}`: 呼出側のメソッド名 +
-`{2}`: 呼出側のファイル名 +
-`{3}`: 呼出側の行番号 +
+`{0}`: クラス名 +
+`{1}`: メソッド名 +
+`{2}`: ファイル名 +
+`{3}`: 行番号 +
 `{4}`: 対応する `Enter` メソッドを呼び出してからの時間
 
 |`ThreadBoundaryFormat` +
@@ -460,8 +460,8 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
 `DataIndentString = \s\s` [.small .blue]#*[デフォルト]*# +
 [.small .blue]#`\s` は空白文字に置き換えられる#
 
-|`LimitString`
-|制限を超えた場合の出力文字列 +
+|`gen`
+|制限を超えた場合に出力する文字列 +
 [.small]#*設定例:*# +
 `LimitString = \...` [.small .blue]#*[デフォルト]*# +
 
@@ -470,29 +470,29 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
  +
 [.small]#`NonPrintString`# +
 [.small .blue]#ver. 2.0.0より非推奨#
-|出力しないプロパティ値の文字列 +
+|値を出力しない場合に代わりに出力する文字列 +
 [.small]#*設定例:*# +
 NonOutputString = `\***` [.small .blue]#*[デフォルト]*#
 
 |`CyclicReferenceString`
-|循環参照時の出力文字列 +
+|循環参照している場合に出力する文字列 +
 [.small]#*設定例:*# +
 `CyclicReferenceString = \*\** Cyclic Reference \***` [.small .blue]#*[デフォルト]*#
 
 |`VarNameValueSeparator`
-|変数名と値のセパレータ +
+|変数名と値のセパレータ文字列 +
 [.small]#*設定例:*# +
 `VarNameValueSeparator = \s=\s` [.small .blue]#*[デフォルト]*# +
 [.small .blue]#`\s` は空白文字に置き換えられる#
 
 |`KeyValueSeparator`
-|辞書のキーと値のセパレータまたはプロパティ名/フィールド名と値のセパレータ +
+|辞書のキーと値およびプロパティ/フィールド名と値のセパレータ文字列 +
 [.small]#*設定例:*# +
 `KeyValueSeparator = :\s` [.small .blue]#*[デフォルト]*# +
 [.small .blue]#`\s` は空白文字に置き換えられる#
 
 |`PrintSuffixFormat`
-|`print` メソッドで付加される文字列の出力フォーマット +
+|`print` メソッドで付加される文字列のフォーマット +
 [.small]#*設定例:*# +
 `PrintSuffixFormat = \s({2}:{3:D})` [.small .blue]#*[デフォルト]*# +
 [.small .blue]#`\s` は空白文字に置き換えられる# +
@@ -504,7 +504,7 @@ NonOutputString = `\***` [.small .blue]#*[デフォルト]*#
 
 |`CountFormat` +
 [.small .blue]#ver. 1.5.1より# 
-|コレクションの要素数の出力フィーマット +
+|コレクションの要素数のフォーマット +
 [.small]#*設定例:*# +
 `CountFormat = \sCount:{0}` [.small .blue]#*[デフォルト]*# +
 [.small]#*Parameter:*# +
@@ -522,7 +522,7 @@ NonOutputString = `\***` [.small .blue]#*[デフォルト]*#
 [.small]#`StringLengthFormat`# +
 [.small .blue]#ver. 1.5.1より# +
 [.small .blue]#ver. 2.0.0より非推奨#
-|文字列長の出力フォーマット +
+|文字列長のフォーマット +
 [.small]#*設定例:*# +
 `LengthFormat = (Length:{0})` [.small .blue]#*[デフォルト]*# +
 [.small]#*Parameter:*# +
@@ -535,14 +535,14 @@ NonOutputString = `\***` [.small .blue]#*[デフォルト]*#
 `MinimumOutputLength = 5` [.small .blue]#*[Default]*#
 
 |`DateTimeFormat`
-|日時の出力フォーマット +
+|日時のフォーマット +
 [.small]#*設定例:*# +
 `DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffffffK}` [.small .blue]#*[デフォルト]*# +
 [.small]#*パラメータ:*# +
 `{0}`: `DateTime` オブジェクト
 
 |`LogDateTimeFormat`
-|ログ出力時の日時の出力フォーマット +
+|`logger` が `Console+Out`, `Console+Error`, `Diagnostics+Debug` および `Diagnostics+Trace` の場合のログの日時のフォーマット +
 [.small]#*設定例:*# +
 `LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff} [{1:D2}] {2}` [.small .blue]#*[デフォルト]*# +
 [.small]#*パラメータ:*# +
@@ -560,17 +560,17 @@ NonOutputString = `\***` [.small .blue]#*[デフォルト]*#
 `MaximumDataOutputWidth = 70` [.small .blue]#*[デフォルト]*#
 
 |`CollectionLimit`
-|コレクションの要素の出力数の制限 +
+|コレクションの要素の出力数の制限値 +
 [.small]#*設定例:*# +
 `CollectionLimit = 512` [.small .blue]#*[デフォルト]*#
 
 |`StringLimit`
-|文字列の出力文字数の制限 +
+|文字列の出力文字数の制限値 +
 [.small]#*設定例:*# +
 `StringLimit = 8192` [.small .blue]#*[デフォルト]*#
 
 |`ReflectionNestLimit`
-|リフレクションのネスト数の制限 +
+|リフレクションのネスト数の制限値 +
 [.small]#*設定例:*# +
 `ReflectionNestLimit = 4` [.small .blue]#*[デフォルト]*#
 
@@ -579,7 +579,7 @@ NonOutputString = `\***` [.small .blue]#*[デフォルト]*#
  +
 [.small]#`NonPrintProperties`# +
 [.small .blue]#ver. 2.0.0より非推奨#
-|出力しないプロパティおよびフィールドの配列 +
+|出力しないプロパティ名およびフィールド名の配列 +
 [.small]#*設定例(1つ):*# +
 `NonOutputProperties = DebugTraceExample.Node.Parent` +
 [.small]#*設定例(複数):*# +
@@ -815,8 +815,8 @@ https://masatokokubo.github.io/DebugTrace-net/index.html[API仕様(英語)]
   ** 文字列の長さを出力するようになりました。
 
 * DebugTrace.propertiesへの追加
-  ** `CountFormat`: コレクションの要素数の出力フォーマット
-  ** `StringLengthFormat`: 文字列長の出力フォーマット
+  ** `CountFormat`: コレクションの要素数のフォーマット
+  ** `StringLengthFormat`: 文字列長のフォーマット
 
 ==== DebugTrace.NLog 1.6.0 [.small .gray]#- 2018-11-18#
 * 対応フレームワークを.NET Frameword 4.7から.NET Standard 2.0に変更。

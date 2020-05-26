@@ -347,7 +347,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 ^s|Property Name ^s|Description
 
 |`Logger`
-|Logger DebugTrace uses +
+|Logger used by DebugTrace +
 [.small]#*Examples:*# +
 `Logger = Console+Out` [.small .blue]#- Outputs to the console (stdout)# +
 `Logger = Console+Error` [.small .blue]#- Outputs to the console (stderr)# [.small .blue]#*[Default]*# + 
@@ -399,10 +399,10 @@ You can specify following properties in the `DebugTrace.properties` file.
 [.small]#*Example:*# +
 `EnterFormat = Enter {0}.{1} ({2}:{3:D})` [.small .blue]#*[Default]*# +
 [.small]#*Parameters:*# +
-`{0}`: The class name of the caller +
-`{1}`: The method name of the caller +
-`{2}`: The file name of the caller +
-`{3}`: The line number of the caller
+`{0}`: The class name +
+`{1}`: The method name +
+`{2}`: The file name +
+`{3}`: The line number
 
 |`LeaveFormat` +
 [.small .blue]#Renamed since 2.0.0# +
@@ -413,10 +413,10 @@ You can specify following properties in the `DebugTrace.properties` file.
 [.small]#*Examples:*# +
 `LeaveString = Leave {0}.{1} ({2}:{3:D}) duration: {4}` [.small .blue]#*[Default]*# +
 [.small]#*Parameters:*# +
-`{0}`: The class name of the caller +
-`{1}`: The method name of the caller +
-`{2}`: The file name of the caller +
-`{3}`: The line number of the caller +
+`{0}`: The class name +
+`{1}`: The method name +
+`{2}`: The file name +
+`{3}`: The line number +
 `{4}`: The duration since invoking the corresponding `Enter` method
 
 |`ThreadBoundaryFormat` +
@@ -447,13 +447,13 @@ You can specify following properties in the `DebugTrace.properties` file.
  +
 [.small]#`CodeIndentString`# +
 [.small .blue]#Deprecated since 2.0.0#
-|String of one code indent +
+|Indentation string for code +
 [.small]#*Example:*# +
 `CodeIndentString = &#x7c;\s` [.small .blue]#*[Default]*# +
 [.small .blue]#`\s` is replaced to a space character#
 
 |`DataIndentString`
-|String of one data indent +
+|Indentation string for data +
 [.small]#*Example:*# +
 `DataIndentString = \s\s` [.small .blue]#*[Default]*# +
 [.small .blue]#`\s` is replaced to a space character#
@@ -491,19 +491,19 @@ and between the property/field name and value +
 [.small .blue]#`\s` is replaced to a space character#
 
 |`PrintSuffixFormat`
-|Output format of `Print` method suffix +
+|Format string of `Print` method suffix +
 [.small]#*Example:*# +
 `PrintSuffixFormat = \s({2}:{3:D})` [.small .blue]#*[Default]*# +
 [.small .blue]#`\s` is replaced to a space character# +
 [.small]#*Parameters:*# +
-`{0}`: The class name of the caller +
-`{1}`: The method name of the caller +
-`{2}`: The file name of the caller +
-`{3}`: The line number of the caller
+`{0}`: The class name +
+`{1}`: The method name +
+`{2}`: The file name +
+`{3}`: The line number
 
 |`CountFormat` +
 [.small .blue]#since 1.5.1# 
-|Output format of the count of collections +
+|Format string of the number of elements of collection +
 [.small]#*Examples:*# +
 `CountFormat = \sCount:{0}` [.small .blue]#*[Default]*# +
 [.small]#*Parameter:*# +
@@ -521,11 +521,11 @@ and between the property/field name and value +
 [.small]#`StringLengthFormat`# +
 [.small .blue]#since 1.5.1# +
 [.small .blue]#Deprecated since 2.0.0#
-|Output format of the length of strings +
+|Format string of the length of string +
 [.small]#*Examples:*# +
 `StringLengthFormat = (Length:{0})` [.small .blue]#*[Default]*# +
 [.small]#*Parameter:*# +
-`{0}`: The length of strings
+`{0}`: The length of string
 
 |`MinimumOutputLength` +
 [.small .blue]#since 2.0.0# 
@@ -534,14 +534,14 @@ and between the property/field name and value +
 `MinimumOutputLength = 5` [.small .blue]#*[Default]*# +
 
 |`DateTimeFormat`
-|Output format of DateTime +
+|Format string of DateTime +
 [.small]#*Examples:*# +
 `DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffffffK}` [.small .blue]#*[Default]*# +
 [.small]#*Parameter:*# +
 `{0}`: The `DateTime` object
 
 |`LogDateTimeFormat` +
-|Output format of date and time when outputting logs +
+|Format string of date and time when outputting logs +
 [.small]#*Examples:*# +
 `LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff} [{1:D2}] {2}` [.small .blue]#*[Default]*# +
 [.small]#*Parameter:*# +
@@ -559,17 +559,17 @@ and between the property/field name and value +
 `MaxDataOutputWidth = 70` [.small .blue]#*[Default]*#
 
 |`CollectionLimit`
-|Limit of collection elements to output +
+|Limit value of elements for collection to output +
 [.small]#*Example:*# +
 `CollectionLimit = 512` [.small .blue]#*[Default]*#
 
 |`StringLimit`
-|Limit of string characters to output +
+|Limit value of characters for string to output +
 [.small]#*Example:*# +
 `StringLimit = 8192` [.small .blue]#*[Default]*#
 
 |`ReflectionNestLimit`
-|Limit of number of reflection nest +
+|Limit value of reflection nests +
 [.small]#*Example:*# +
 `ReflectionNestLimit = 4` [.small .blue]#*[Default]*#
 
@@ -814,8 +814,8 @@ https://masatokokubo.github.io/DebugTrace-net/index.html[API Specification]
   ** Now outputs the length of strings.
 
 * Add Properties in `DebugTrace.properties`
-  ** `CountFormat`: Output format of the count of collections
-  ** `StringLengthFormat`: Output format of the length of strings
+  ** `CountFormat`: Format string of the count of collections
+  ** `StringLengthFormat`: Format string of the length of strings
 
 ==== DebugTrace.NLog 1.6.0 [.small .gray]#- November 18, 2018#
 * Changed target framework from .NET Frameword 4.7 to .NET Standard 2.0.
