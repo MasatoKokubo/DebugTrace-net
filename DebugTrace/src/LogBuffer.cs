@@ -12,24 +12,16 @@ namespace DebugTrace {
     public class LogBuffer {
         private int nestLevel = 0;
         private int appendNestLevel = 0; // since 2.0.0
-
-        /// <summary>
-        /// Tuples of data indentation level and log string
-        /// </summary>
-        public IList<(int, string)> Lines {get;} = new List<(int, string)>();
-
-        /// <summary>
-        /// Buffer for a line of logs
-        /// </summary>
-        public StringBuilder builder = new StringBuilder();
+        private IList<(int, string)> lines = new List<(int, string)>();
+        private StringBuilder lastLine = new StringBuilder();
 
         /// <summary>
         /// Breaks the current line.
         /// </summary>
         public void LineFeed() {
-            Lines.Add((nestLevel + appendNestLevel, builder.ToString().TrimEnd(' ')));
+            lines.Add((nestLevel + appendNestLevel, lastLine.ToString().TrimEnd(' ')));
             appendNestLevel = 0;
-            builder.Clear();
+            lastLine.Clear();
         }
 
         /// <summary>
@@ -55,7 +47,7 @@ namespace DebugTrace {
             if (!noBreak && Length > 0 && Length + str.Length > TraceBase.MaximumDataOutputWidth)
                 LineFeed();
             appendNestLevel = nestLevel;
-            builder.Append(str);
+            lastLine.Append(str);
             return this;
         }
 
@@ -74,7 +66,6 @@ namespace DebugTrace {
         /// <param name="buff">another <c>LogBuffer</c></param>
         /// <returns>this object</returns>
         public LogBuffer Append(LogBuffer buff) {
-            buff.LineFeed();
             var index = 0;
             foreach ((var nestLevel, var str) in buff.Lines) {
                 if (index > 0)
@@ -86,15 +77,29 @@ namespace DebugTrace {
         }
 
         /// <summary>
-        /// Log length of the current line.
+        /// Log length of the last line.
         /// </summary>
         /// <since>2.0.0</since>
-        public int Length {get {return builder.Length;} set {builder.Length = value;}}
+        public int Length {get {return lastLine.Length;} set {lastLine.Length = value;}}
 
         /// <summary>
         /// True if multiple lines.
         /// </summary>
         /// <since>2.0.0</since>
-        public bool IsMultiLines => Lines.Count > 1 || Lines.Count == 1 && Length > 0;
+        public bool IsMultiLines => lines.Count > 1 || lines.Count == 1 && Length > 0;
+
+        /// <summary>
+        /// Tuples of data indentation level and log string
+        /// </summary>
+        /// <since>2.0.0</since>
+        public IList<(int, string)> Lines {
+            get {
+                var lines = new List<(int, string)>(this.lines);
+                if (lastLine.Length > 0)
+                    lines.Add((nestLevel, lastLine.ToString()));
+                return lines;
+            }
+        }
+
     }
 }

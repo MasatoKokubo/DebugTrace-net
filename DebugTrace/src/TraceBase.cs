@@ -269,10 +269,10 @@ namespace DebugTrace {
             OutputNonPublicProperties = Resource.GetBool   (nameof(OutputNonPublicProperties), false); // since 1.4.4
 
             // Array of indent strings
-            indentStrings = new string[64];
+            indentStrings = new string[32];
 
             // Array of data indent strings
-            dataIndentStrings = new string[64];
+            dataIndentStrings = new string[32];
 
             var loggerStr = Resource.GetString("Logger", "");
             if (loggerStr != "") {
@@ -341,8 +341,9 @@ namespace DebugTrace {
             // output version log
             var versionAttribute = (AssemblyInformationalVersionAttribute?)
                 Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(), typeof(AssemblyInformationalVersionAttribute));
-            Logger.Log($"DebugTrace-net {versionAttribute?.InformationalVersion} uses {Logger}");
-            Logger.Log($"with {Resource.FileInfo.FullName}.");
+            Logger.Log($"DebugTrace-net {versionAttribute?.InformationalVersion}");
+            Logger.Log($"  logger: {Logger}");
+            Logger.Log($"  properties file path: {Resource.FileInfo.FullName}");
         }
 
         /// <summary>
@@ -374,13 +375,13 @@ namespace DebugTrace {
         /// <returns>a string corresponding to the current indent</returns>
         protected string GetIndentString(int nestLevel, int dataNestLevel) {
             return indentStrings[
-                nestLevel < 0 ? 0 :
-                nestLevel >= indentStrings.Length ? indentStrings.Length - 1
-                    : nestLevel]
-            + dataIndentStrings[
-                dataNestLevel < 0 ? 0 :
-                dataNestLevel >= dataIndentStrings.Length ? dataIndentStrings.Length - 1
-                    : dataNestLevel];
+                    nestLevel < 0 ? 0 :
+                    nestLevel >= indentStrings.Length ? indentStrings.Length - 1
+                        : nestLevel]
+                + dataIndentStrings[
+                    dataNestLevel < 0 ? 0 :
+                    dataNestLevel >= dataIndentStrings.Length ? dataIndentStrings.Length - 1
+                        : dataNestLevel];
         }
 
         /// <summary>
@@ -549,20 +550,20 @@ namespace DebugTrace {
                     element.FileName,
                     element.LineNumber);
                 buff.NoBreakAppend(suffix);
-                buff.LineFeed();
 
-                if (state.PreviousLineCount > 1 || buff.Lines.Count > 1)
+                var lines = buff.Lines;
+                if (state.PreviousLineCount > 1 ||lines.Count > 1)
                     Logger.Log(GetIndentString(state.NestLevel, 0)); // Empty Line
 
                 var lastLogBuff = new StringBuilder();
-                foreach ((var dataNestLevel, var line) in buff.Lines) {
+                foreach ((var dataNestLevel, var line) in lines) {
                     var log = GetIndentString(state.NestLevel, dataNestLevel) + line;
                     Logger.Log(log);
                     lastLogBuff.Append(log).Append('\n');
                 }
                 LastLog = lastLogBuff.ToString();
 
-                state.PreviousLineCount = buff.Lines.Count;
+                state.PreviousLineCount = lines.Count;
             }
         }
 
@@ -583,10 +584,10 @@ namespace DebugTrace {
         }
 
         /// <summary>
-        /// Returns the caller stack trace element.
+        /// Returns stack trace elements.
         /// </summary>
         /// <param name="maxCount">maximum number of stack trace elements to return</returns>
-        /// <returns>the caller stack trace element</returns>
+        /// <returns>stack trace elements</returns>
         /// <since>1.5.5</since>
         protected StackTraceElement[] GetStackTraceElements(int maxCount) {
             return Environment.StackTrace.Split('\n')
@@ -673,7 +674,7 @@ namespace DebugTrace {
         /// </summary>
         /// <param name="value">the value object</param>
         /// <param name="isElement"><c>true</c> if the value is element of a container class, <c>false</c> otherwise</param>
-        /// <returns>isMultiLine"><c>true</c> if output multiple lines, <c>false</c> otherwise</returns>
+        /// <returns>a LogBuffer</returns>
         protected LogBuffer ToString(object? value, bool isElement = false) {
             var buff = new LogBuffer();
 
@@ -730,7 +731,7 @@ namespace DebugTrace {
                 else {
                     // Use Reflection
                     reflectedObjects.Add(value);
-                    var valueBuff = ToStringUsingReflection(value);
+                    var valueBuff = ToStringReflection(value);
                     buff.Append(valueBuff);
                     reflectedObjects.RemoveAt(reflectedObjects.Count - 1);
                 }
@@ -1054,23 +1055,23 @@ namespace DebugTrace {
         /// </summary>
         /// <param name="dictionary">a IDictionary</param>
         /// <param name="isMultiLine">output multiple lines if true, single line otherwise</param>
-        /// <returns>false if outputed on a single line, otherwise true</returns>
+        /// <returns>a LogBuffer</returns>
         protected LogBuffer ToStringDictionary(IDictionary dictionary) {
             var buff = new LogBuffer();
 
             buff.Append(GetTypeName(dictionary.GetType(), dictionary, false));
             buff.Append('{');
 
-            var elementsBuff = ToStringDictionaryBody(dictionary);
+            var bodyBuff = ToStringDictionaryBody(dictionary);
 
-            var isMultiLines = elementsBuff.IsMultiLines || buff.Length + elementsBuff.Length > MaximumDataOutputWidth;
+            var isMultiLines = bodyBuff.IsMultiLines || buff.Length + bodyBuff.Length > MaximumDataOutputWidth;
 
             if (isMultiLines) {
                 buff.LineFeed();
                 buff.UpNest();
             }
 
-            buff.Append(elementsBuff);
+            buff.Append(bodyBuff);
 
             if (isMultiLines) {
                 buff.LineFeed();
@@ -1085,6 +1086,7 @@ namespace DebugTrace {
        private LogBuffer ToStringDictionaryBody(IDictionary dictionary) {
             var buff = new LogBuffer();
 
+            var wasMultiLines = false;
             var index = 0;
             foreach (var key in dictionary.Keys) {
                 if (index > 0)
@@ -1098,10 +1100,11 @@ namespace DebugTrace {
                 var value = dictionary[key!];
 
                 var elementBuff = ToString(key, true).NoBreakAppend(KeyValueSeparator).Append(ToString(value, true));
-                if (index > 0 && elementBuff.IsMultiLines)
+                if (index > 0 && (wasMultiLines || elementBuff.IsMultiLines))
                     buff.LineFeed();
                 buff.Append(elementBuff);
 
+                wasMultiLines = elementBuff.IsMultiLines;
                 ++index;
             }
 
@@ -1113,7 +1116,7 @@ namespace DebugTrace {
         /// </summary>
         /// <param name="enumerable">a IEnumerable object</param>
         /// <param name="isMultiLine">output multiple lines if true, single line otherwise</param>
-        /// <returns>false if outputed on a single line, otherwise true</returns>
+        /// <returns>a LogBuffer</returns>
         /// <since>1.4.1</since>
 
         protected LogBuffer ToStringEnumerable(IEnumerable enumerable) {
@@ -1122,16 +1125,16 @@ namespace DebugTrace {
             buff.Append(GetTypeName(enumerable.GetType(), enumerable, false));
             buff.Append('{');
 
-            var elementsBuff = ToStringEnumerableBody(enumerable);
+            var bodyBuff = ToStringEnumerableBody(enumerable);
 
-            var isMultiLines = elementsBuff.IsMultiLines || buff.Length + elementsBuff.Length > MaximumDataOutputWidth;
+            var isMultiLines = bodyBuff.IsMultiLines || buff.Length + bodyBuff.Length > MaximumDataOutputWidth;
 
             if (isMultiLines) {
                 buff.LineFeed();
                 buff.UpNest();
             }
 
-            buff.Append(elementsBuff);
+            buff.Append(bodyBuff);
 
             if (isMultiLines) {
                 buff.LineFeed();
@@ -1146,6 +1149,7 @@ namespace DebugTrace {
         private LogBuffer ToStringEnumerableBody(IEnumerable enumerable) {
             var buff = new LogBuffer();
 
+            var wasMultiLines = false;
             var index = 0;
             foreach (var element in enumerable) {
                 if (index > 0)
@@ -1157,10 +1161,11 @@ namespace DebugTrace {
                 }
 
                 var elementBuff = ToString(element, true);
-                if (index > 0 && elementBuff.IsMultiLines)
+                if (index > 0 && (wasMultiLines || elementBuff.IsMultiLines))
                     buff.LineFeed();
                 buff.Append(elementBuff);
 
+                wasMultiLines = elementBuff.IsMultiLines;
                 ++index;
             }
 
@@ -1207,8 +1212,8 @@ namespace DebugTrace {
         /// <param name="buff">the logging buffer</param>
         /// <param name="obj">an object</param>
         /// <param name="isMultiLine">output multiple lines if true, single line otherwise</param>
-        /// <returns>false if can not be outputed on a single line, otherwise true</returns>
-        protected LogBuffer ToStringUsingReflection(object obj) {
+        /// <returns>a LogBuffer</returns>
+        protected LogBuffer ToStringReflection(object obj) {
             var buff = new LogBuffer();
 
             var type = obj.GetType();
@@ -1216,17 +1221,17 @@ namespace DebugTrace {
             var isExtended = type.BaseType != typeof(object) && type.BaseType != typeof(ValueType);
             var isTuple = IsTuple(type);
 
-            var subBuff = ToStringUsingReflectionBody(obj, type, isExtended);
+            var bodyBuff = ToStringReflectionBody(obj, type, isExtended);
 
             buff.Append(isTuple ? '(' : '{');
-            if (subBuff.IsMultiLines) {
+            if (bodyBuff.IsMultiLines) {
                 buff.LineFeed();
                 buff.UpNest();
             }
 
-            buff.Append(subBuff);
+            buff.Append(bodyBuff);
 
-            if (subBuff.IsMultiLines) {
+            if (bodyBuff.IsMultiLines) {
                 if (buff.Length > 0)
                     buff.LineFeed();
                 buff.DownNest();
@@ -1236,13 +1241,13 @@ namespace DebugTrace {
             return buff;
         }
 
-        private LogBuffer ToStringUsingReflectionBody(object obj, Type type, bool isExtended) {
+        private LogBuffer ToStringReflectionBody(object obj, Type type, bool isExtended) {
             var buff = new LogBuffer();
 
             Type? baseType = type.BaseType;
             if (baseType != null && baseType != typeof(object) && baseType != typeof(ValueType)) {
                 // Call for the base type
-                var baseBuff =  ToStringUsingReflectionBody(obj, baseType, isExtended);
+                var baseBuff =  ToStringReflectionBody(obj, baseType, isExtended);
                 buff.Append(baseBuff);
             }
 
@@ -1255,6 +1260,7 @@ namespace DebugTrace {
                 buff.LineFeed();
             }
 
+            var wasMultiLines = false;
             var fieldPropertyIndex = 0;
 
             // fields
@@ -1264,13 +1270,17 @@ namespace DebugTrace {
                 | (OutputNonPublicFields ? BindingFlags.NonPublic : 0) // since 1.4.4
                 | BindingFlags.Instance)
                 .Where(fieldInfo => !fieldInfo.Name.EndsWith("__BackingField")); // Exclude property backing fields // since 1.4.4
+
             foreach (var fieldInfo in fieldInfos) {
                 if (fieldPropertyIndex > 0)
                     buff.NoBreakAppend(", "); // Append a delimiter
+
                 var valueBuff = ToStringReflectValue(type, obj, fieldInfo);
-                if (fieldPropertyIndex > 0 && valueBuff.IsMultiLines)
+                if (fieldPropertyIndex > 0 && (wasMultiLines || valueBuff.IsMultiLines))
                     buff.LineFeed();
                 buff.Append(valueBuff);
+
+                wasMultiLines = valueBuff.IsMultiLines;
                 ++fieldPropertyIndex;
             }
 
@@ -1280,15 +1290,20 @@ namespace DebugTrace {
                 | BindingFlags.Public
                 | (OutputNonPublicProperties ? BindingFlags.NonPublic : 0) // since 1.4.4
                 | BindingFlags.Instance);
+
             foreach (var propertyInfo in propertyInfos) {
                 var parameterInfos = propertyInfo.GetIndexParameters();
                 if (parameterInfos.Length > 0) continue; // Not support indexed properties
+
                 if (fieldPropertyIndex > 0)
                     buff.NoBreakAppend(", "); // Append a delimiter
+
                 var valueBuff = ToStringReflectValue(type, obj, propertyInfo);
-                if (fieldPropertyIndex > 0 && valueBuff.IsMultiLines)
+                if (fieldPropertyIndex > 0 && (wasMultiLines || valueBuff.IsMultiLines))
                     buff.LineFeed();
                 buff.Append(valueBuff);
+
+                wasMultiLines = valueBuff.IsMultiLines;
                 ++fieldPropertyIndex;
             }
 
@@ -1301,7 +1316,7 @@ namespace DebugTrace {
 
             AppendAccessModifire(buff, memberInfo);
             var nonOutput = NonOutputProperties.Contains(GetFullTypeName(type) + '.' + memberInfo.Name);
-      
+
             Type? memberType = null;
             object? value = null;
             try {
@@ -1323,7 +1338,7 @@ namespace DebugTrace {
             catch (Exception e) {
                 value = e.ToString();
             }
-      
+
             if (!IsTuple(type)) {
                 //  not Tuple
                 if (memberType != null && (value == null || memberType != value.GetType()))
@@ -1331,9 +1346,8 @@ namespace DebugTrace {
                 buff.Append(memberInfo.Name);
                 buff.NoBreakAppend(KeyValueSeparator);
             }
-      
+
             if (nonOutput)
-            //  buff.Append(NonPrintString);
                 buff.Append(NonOutputString);
             else
                 buff.Append(ToString(value));
@@ -1346,7 +1360,6 @@ namespace DebugTrace {
         /// </summary>
         /// <param name="buff">the log buffer</param>
         /// <param name="memberInfo">the member information</param>
-        /// <returns></returns>
         /// <since>1.5.0</since>
         protected abstract void AppendAccessModifire(LogBuffer buff, MemberInfo memberInfo);
 

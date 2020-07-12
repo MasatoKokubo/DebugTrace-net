@@ -93,33 +93,34 @@ namespace Readme {
 
 .コンソール出力 / C#
 ----
-2020-04-26 11:16:14.269 [05] DebugTrace-net 2.0.0 uses DebugTrace.Console+Error
-2020-04-26 11:16:14.272 [05] with Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceTest\bin\Debug\netcoreapp3.1\DebugTrace.properties.
-2020-04-26 11:16:14.276 [05] 
-2020-04-26 11:16:14.276 [05] ______________________________ Thread 5 ______________________________
-2020-04-26 11:16:14.276 [05] 
-2020-04-26 11:16:14.427 [05] Enter Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:14)
-2020-04-26 11:16:14.444 [05] | 
-2020-04-26 11:16:14.444 [05] | contacts = Readme.Contact[2] {
-2020-04-26 11:16:14.444 [05] |   Readme.Contact {
-2020-04-26 11:16:14.444 [05] |     ____ Readme.Entity ____
-2020-04-26 11:16:14.444 [05] |     ID: 1
-2020-04-26 11:16:14.444 [05] |     ____ Readme.ContactBase ____
-2020-04-26 11:16:14.444 [05] |     FirstName: (Length:5)"Akane", LastName: (Length:5)"Apple"
-2020-04-26 11:16:14.444 [05] |     ____ Readme.Contact ____
-2020-04-26 11:16:14.444 [05] |     Birthday: 1991-02-03 00:00:00.0000000
-2020-04-26 11:16:14.444 [05] |   }, 
-2020-04-26 11:16:14.444 [05] |   Readme.Contact {
-2020-04-26 11:16:14.444 [05] |     ____ Readme.Entity ____
-2020-04-26 11:16:14.444 [05] |     ID: 2
-2020-04-26 11:16:14.444 [05] |     ____ Readme.ContactBase ____
-2020-04-26 11:16:14.444 [05] |     FirstName: (Length:6)"Yukari", LastName: (Length:5)"Apple"
-2020-04-26 11:16:14.444 [05] |     ____ Readme.Contact ____
-2020-04-26 11:16:14.444 [05] |     Birthday: 1992-03-04 00:00:00.0000000
-2020-04-26 11:16:14.444 [05] |   }
-2020-04-26 11:16:14.444 [05] | } (ReadmeExamples.cs:20)
-2020-04-26 11:16:14.445 [05] | 
-2020-04-26 11:16:14.446 [05] Leave Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:22) duration: 00:00:00.0171680
+2020-07-12 16:55:12.409 [05] DebugTrace-net 2.0.2
+2020-07-12 16:55:12.411 [05]   logger: DebugTrace.Console+Error
+2020-07-12 16:55:12.411 [05]   properties file path: Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceTest\bin\Debug\netcoreapp3.1\DebugTrace.properties
+2020-07-12 16:55:12.413 [05] 
+2020-07-12 16:55:12.413 [05] ______________________________ Thread 5 ______________________________
+2020-07-12 16:55:12.413 [05] 
+2020-07-12 16:55:12.637 [05] Enter Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:16)
+2020-07-12 16:55:12.660 [05] | 
+2020-07-12 16:55:12.660 [05] | contacts = Readme.Contact[2] {
+2020-07-12 16:55:12.660 [05] |   Readme.Contact {
+2020-07-12 16:55:12.660 [05] |     ____ Readme.Entity ____
+2020-07-12 16:55:12.660 [05] |     ID: 1
+2020-07-12 16:55:12.660 [05] |     ____ Readme.ContactBase ____
+2020-07-12 16:55:12.660 [05] |     FirstName: (Length:5)"Akane", LastName: (Length:5)"Apple"
+2020-07-12 16:55:12.660 [05] |     ____ Readme.Contact ____
+2020-07-12 16:55:12.660 [05] |     Birthday: 1991-02-03 00:00:00.0000000
+2020-07-12 16:55:12.660 [05] |   },
+2020-07-12 16:55:12.660 [05] |   Readme.Contact {
+2020-07-12 16:55:12.660 [05] |     ____ Readme.Entity ____
+2020-07-12 16:55:12.660 [05] |     ID: 2
+2020-07-12 16:55:12.660 [05] |     ____ Readme.ContactBase ____
+2020-07-12 16:55:12.660 [05] |     FirstName: (Length:6)"Yukari", LastName: (Length:5)"Apple"
+2020-07-12 16:55:12.660 [05] |     ____ Readme.Contact ____
+2020-07-12 16:55:12.660 [05] |     Birthday: 1992-03-04 00:00:00.0000000
+2020-07-12 16:55:12.660 [05] |   }
+2020-07-12 16:55:12.660 [05] | } (ReadmeExamples.cs:22)
+2020-07-12 16:55:12.661 [05] | 
+2020-07-12 16:55:12.662 [05] Leave Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:24) duration: 00:00:00.0226730
 ----
 
 [source,vb.net]
@@ -182,33 +183,34 @@ End Namespace
 
 .コンソール出力 / Visual Basic
 ----
-2020-04-26 11:25:50.608 [05] DebugTrace-net 2.0.0 uses DebugTrace.Console+Error
-2020-04-26 11:25:50.610 [05] with Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceVBTest\bin\Debug\netcoreapp3.1\DebugTrace.properties.
-2020-04-26 11:25:50.611 [05] 
-2020-04-26 11:25:50.611 [05] ______________________________ Thread 5 ______________________________
-2020-04-26 11:25:50.611 [05] 
-2020-04-26 11:25:50.704 [05] Enter DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:12)
-2020-04-26 11:25:50.723 [05] | 
-2020-04-26 11:25:50.723 [05] | contacts = DebugTraceVBTest.Readme.Contact(Length: 2) {
-2020-04-26 11:25:50.723 [05] |   DebugTraceVBTest.Readme.Contact {
-2020-04-26 11:25:50.723 [05] |     ____ DebugTraceVBTest.Readme.Entity ____
-2020-04-26 11:25:50.723 [05] |     Id: 1
-2020-04-26 11:25:50.723 [05] |     ____ DebugTraceVBTest.Readme.ContactBase ____
-2020-04-26 11:25:50.723 [05] |     FirstName: (Length:5)"Akane", LastName: (Length:5)"Apple"
-2020-04-26 11:25:50.723 [05] |     ____ DebugTraceVBTest.Readme.Contact ____
-2020-04-26 11:25:50.723 [05] |     Birthday: 1991-02-03 00:00:00.0000000
-2020-04-26 11:25:50.723 [05] |   }, 
-2020-04-26 11:25:50.723 [05] |   DebugTraceVBTest.Readme.Contact {
-2020-04-26 11:25:50.723 [05] |     ____ DebugTraceVBTest.Readme.Entity ____
-2020-04-26 11:25:50.723 [05] |     Id: 2
-2020-04-26 11:25:50.723 [05] |     ____ DebugTraceVBTest.Readme.ContactBase ____
-2020-04-26 11:25:50.723 [05] |     FirstName: (Length:6)"Yukari", LastName: (Length:5)"Apple"
-2020-04-26 11:25:50.723 [05] |     ____ DebugTraceVBTest.Readme.Contact ____
-2020-04-26 11:25:50.723 [05] |     Birthday: 1992-03-04 00:00:00.0000000
-2020-04-26 11:25:50.723 [05] |   }
-2020-04-26 11:25:50.723 [05] | } (ReadmeExamples.vb:18)
-2020-04-26 11:25:50.723 [05] | 
-2020-04-26 11:25:50.727 [05] Leave DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:20) duration: 00:00:00.0193486
+2020-07-12 16:58:13.872 [05] DebugTrace-net 2.0.2
+2020-07-12 16:58:13.874 [05]   logger: DebugTrace.Console+Error
+2020-07-12 16:58:13.874 [05]   properties file path: Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceVBTest\bin\Debug\netcoreapp3.1\DebugTrace.properties
+2020-07-12 16:58:13.876 [05] 
+2020-07-12 16:58:13.876 [05] ______________________________ Thread 5 ______________________________
+2020-07-12 16:58:13.876 [05] 
+2020-07-12 16:58:13.936 [05] Enter DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:12)
+2020-07-12 16:58:13.953 [05] | 
+2020-07-12 16:58:13.953 [05] | contacts = DebugTraceVBTest.Readme.Contact(Length: 2) {
+2020-07-12 16:58:13.953 [05] |   DebugTraceVBTest.Readme.Contact {
+2020-07-12 16:58:13.953 [05] |     ____ DebugTraceVBTest.Readme.Entity ____
+2020-07-12 16:58:13.953 [05] |     Id: 1
+2020-07-12 16:58:13.953 [05] |     ____ DebugTraceVBTest.Readme.ContactBase ____
+2020-07-12 16:58:13.953 [05] |     FirstName: (Length:5)"Akane", LastName: (Length:5)"Apple"
+2020-07-12 16:58:13.953 [05] |     ____ DebugTraceVBTest.Readme.Contact ____
+2020-07-12 16:58:13.953 [05] |     Birthday: 1991-02-03 00:00:00.0000000
+2020-07-12 16:58:13.953 [05] |   },
+2020-07-12 16:58:13.953 [05] |   DebugTraceVBTest.Readme.Contact {
+2020-07-12 16:58:13.953 [05] |     ____ DebugTraceVBTest.Readme.Entity ____
+2020-07-12 16:58:13.953 [05] |     Id: 2
+2020-07-12 16:58:13.953 [05] |     ____ DebugTraceVBTest.Readme.ContactBase ____
+2020-07-12 16:58:13.953 [05] |     FirstName: (Length:6)"Yukari", LastName: (Length:5)"Apple"
+2020-07-12 16:58:13.953 [05] |     ____ DebugTraceVBTest.Readme.Contact ____
+2020-07-12 16:58:13.953 [05] |     Birthday: 1992-03-04 00:00:00.0000000
+2020-07-12 16:58:13.953 [05] |   }
+2020-07-12 16:58:13.953 [05] | } (ReadmeExamples.vb:18)
+2020-07-12 16:58:13.953 [05] | 
+2020-07-12 16:58:13.957 [05] Leave DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:20) duration: 00:00:00.0166311
 ----
 
 ==== 3.1 using System.Diagnostics(Imports System.Diagnostics)を行っている場合
@@ -508,7 +510,7 @@ NonOutputString = `\***` [.small .blue]#*[デフォルト]*#
 [.small]#*設定例:*# +
 `CountFormat = \sCount:{0}` [.small .blue]#*[デフォルト]*# +
 [.small]#*Parameter:*# +
-`{0}`: コレクションの要素数
+`{0}`: 要素数
 
 |`MinimumOutputCount` +
 [.small .blue]#ver. 2.0.0より# 
@@ -754,10 +756,13 @@ https://masatokokubo.github.io/DebugTrace-net/index.html[API仕様(英語)]
 
 === 11. リリースノート
 
+==== DebugTrace-net 2.0.2 [.small .gray]#- 2020-07-12#
+
+* データ出力の改行処理を改善。
+
 ==== DebugTrace-net 2.0.1 [.small .gray]#- 2020-05-16#
 
-* 改善
-  ** リフレクションでの改行のアルゴリズムを改善。
+* データ出力の改行処理を改善。
 
 ==== DebugTrace-net 2.0.0 [.small .gray]#- 2020-04-26#
 
