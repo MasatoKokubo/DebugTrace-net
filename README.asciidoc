@@ -7,16 +7,16 @@ By embedding `Trace.Enter()` and `Trace.Leave()` at the start and end of methods
 
 === 1. Features
 
-* Automatically outputs caller's *class name*, *method name*, *source file name* and *line number*.
+* Automatically outputs invoker's *class name*, *method name*, *source file name* and *line number*.
 * *Automatically indents* the log with nesting methods and objects.
 * *Automatically breaks* at the output of values.
 * Automatically output logs when *changing threads*.
 * Uses *reflection* to output objects of classes that do not implement `ToString` method.
 * You can customize the output content in `DebugTrace.properties`.
-* There is *no dependency library* if you output to the console
+* There are no dependent libraries at run time if you output to the console.
 * You can use the following logging library.
-  ** https://logging.apache.org/log4net/[log4net]
-  ** http://nlog-project.org/[NLog]
+    ** https://logging.apache.org/log4net/[log4net]
+    ** http://nlog-project.org/[NLog]
 
 === 2. Install
 
@@ -319,7 +319,7 @@ It has the following properties and methods.
 |Gets a message from `messageSupplier` and output it to the log.
 
 |`Print`
-|`string name`: the name of the value +
+|`string name`: the value name +
 `object value`: the value
 |_None_
 |Outputs to the log in the form of `"Name = Value"`
@@ -328,7 +328,8 @@ It has the following properties and methods.
 |`string name`: the name of the value +
 `Func<object> valueSupplier`:  the function to return a value
 |_None_
-|Gets a value from `valueSupplier` and output it to the log in the form of `"Name = Value"`.
+|Gets a value from `valueSupplier` and output it to the log in the form of +
+`"Name = Value"`.
 
 |`PrintStack`
 [.small .blue]#since 1.6.0#
@@ -397,7 +398,7 @@ You can specify following properties in the `DebugTrace.properties` file.
  +
 [.small]#`EnterString`# +
 [.small .blue]#Deprecated since 2.0.0#
-|Format string of log output when entering methods +
+|The format string of log output when entering methods +
 [.small]#*Example:*# +
 `EnterFormat = Enter {0}.{1} ({2}:{3:D})` [.small .blue]#*[Default]*# +
 [.small]#*Parameters:*# +
@@ -411,7 +412,7 @@ You can specify following properties in the `DebugTrace.properties` file.
  +
 [.small]#`LeaveString`# +
 [.small .blue]#Deprecated since 2.0.0#
-|Format string of log output when leaving methods +
+|The format string of log output when leaving methods +
 [.small]#*Examples:*# +
 `LeaveString = Leave {0}.{1} ({2}:{3:D}) duration: {4}` [.small .blue]#*[Default]*# +
 [.small]#*Parameters:*# +
@@ -426,7 +427,7 @@ You can specify following properties in the `DebugTrace.properties` file.
  +
 [.small]#`ThreadBoundaryString`# +
 [.small .blue]#Deprecated since 2.0.0#
-|Format string of log output at threads boundary +
+|The format string of log output at threads boundary +
 [.small]#*Example:*# +
 [.small]#`ThreadBoundaryFormat = \____\__\__\__\__\__\__\__\__\__\__\__\__\__ Thread {0} \__\__\__\__\__\__\__\__\__\__\__\__\__\____`# +
 [.small .blue]#*[Default]*# +
@@ -438,7 +439,7 @@ You can specify following properties in the `DebugTrace.properties` file.
  +
 [.small]#`ClassBoundaryString`# +
 [.small .blue]#Deprecated since 2.0.0#
-|Format string of log output at classes boundary +
+|The format string of log output at classes boundary +
 [.small]#*Example:*# +
 `ClassBoundaryFormat = \\____ {0} \____` [.small .blue]#*[Default]*# +
 [.small]#*Parameter:*# +
@@ -449,19 +450,19 @@ You can specify following properties in the `DebugTrace.properties` file.
  +
 [.small]#`CodeIndentString`# +
 [.small .blue]#Deprecated since 2.0.0#
-|Indentation string for code +
+|The indentation string for code +
 [.small]#*Example:*# +
 `CodeIndentString = &#x7c;\s` [.small .blue]#*[Default]*# +
 [.small .blue]#`\s` is replaced to a space character#
 
 |`DataIndentString`
-|Indentation string for data +
+|The indentation string for data +
 [.small]#*Example:*# +
 `DataIndentString = \s\s` [.small .blue]#*[Default]*# +
 [.small .blue]#`\s` is replaced to a space character#
 
 |`LimitString`
-|String to represent that it has exceeded the limit +
+|The string to represent that it has exceeded the limit +
 [.small]#*Example:*# +
 `LimitString = \...` [.small .blue]#*[Default]*#
 
@@ -470,30 +471,30 @@ You can specify following properties in the `DebugTrace.properties` file.
  +
 [.small]#`NonPrintString`# +
 [.small .blue]#Deprecated since 2.0.0#
-|String to be output instead of not outputting value +
+|The string to be output instead of not outputting value +
 [.small]#*Example:*# +
 `NonOutputString = \***` [.small .blue]#*[Default]*#
 
 |`CyclicReferenceString`
-|String to represent that the cyclic reference occurs +
+|The string to represent that the cyclic reference occurs +
 [.small]#*Example:*# +
 `CyclicReferenceString = \*\** Cyclic Reference \***` [.small .blue]#*[Default]*#
 
 |`VarNameValueSeparator`
-|Separator string between the variable name and value +
+|The separator string between the variable name and value +
 [.small]#*Example:*# +
 `VarNameValueSeparator = \s=\s` [.small .blue]#*[Default]*# +
 [.small .blue]#`\s` is replaced to a space character#
 
 |`KeyValueSeparator`
-|Separator string between the key and value of dictionary +
+|The separator string between the key and value of dictionary +
 and between the property/field name and value +
 [.small]#*Example:*# +
 `KeyValueSeparator = :\s` [.small .blue]#*[Default]*# +
 [.small .blue]#`\s` is replaced to a space character#
 
 |`PrintSuffixFormat`
-|Format string of `Print` method suffix +
+|The format string of `Print` method suffix +
 [.small]#*Example:*# +
 `PrintSuffixFormat = \s({2}:{3:D})` [.small .blue]#*[Default]*# +
 [.small .blue]#`\s` is replaced to a space character# +
@@ -505,7 +506,7 @@ and between the property/field name and value +
 
 |`CountFormat` +
 [.small .blue]#since 1.5.1# 
-|Format string of the number of elements of collection +
+|The format string of the number of elements of collection +
 [.small]#*Examples:*# +
 `CountFormat = \sCount:{0}` [.small .blue]#*[Default]*# +
 [.small]#*Parameter:*# +
@@ -513,7 +514,7 @@ and between the property/field name and value +
 
 |`MinimumOutputCount` +
 [.small .blue]#since 2.0.0# 
-|Minimum value to output the number of elements of collection +
+|The minimum value to output the number of elements of collection +
 [.small]#*Examples:*# +
 `MinimumOutputCount = 5` [.small .blue]#*[Default]*#
 
@@ -523,7 +524,7 @@ and between the property/field name and value +
 [.small]#`StringLengthFormat`# +
 [.small .blue]#since 1.5.1# +
 [.small .blue]#Deprecated since 2.0.0#
-|Format string of the length of string +
+|The format string of the length of string +
 [.small]#*Examples:*# +
 `StringLengthFormat = (Length:{0})` [.small .blue]#*[Default]*# +
 [.small]#*Parameter:*# +
@@ -531,19 +532,19 @@ and between the property/field name and value +
 
 |`MinimumOutputLength` +
 [.small .blue]#since 2.0.0# 
-|Minimum value to output the length of string +
+|The minimum value to output the length of string +
 [.small]#*Examples:*# +
 `MinimumOutputLength = 5` [.small .blue]#*[Default]*# +
 
 |`DateTimeFormat`
-|Format string of DateTime +
+|The format string of DateTime +
 [.small]#*Examples:*# +
 `DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffffffK}` [.small .blue]#*[Default]*# +
 [.small]#*Parameter:*# +
 `{0}`: The `DateTime` object
 
 |`LogDateTimeFormat` +
-|Format string of date and time when outputting logs +
+|The format string of date and time when outputting logs +
 [.small]#*Examples:*# +
 `LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff} [{1:D2}] {2}` [.small .blue]#*[Default]*# +
 [.small]#*Parameter:*# +
@@ -556,22 +557,22 @@ and between the property/field name and value +
  +
 [.small]#`MaxDataOutputWidth`# +
 [.small .blue]#Deprecated since 2.0.0#
-|Maximum output width of data +
+|The maximum output width of data +
 [.small]#*Example:*# +
 `MaximumDataOutputWidth = 70` [.small .blue]#*[Default]*#
 
 |`CollectionLimit`
-|Limit value of elements for collection to output +
+|The limit value of elements for collection to output +
 [.small]#*Example:*# +
 `CollectionLimit = 512` [.small .blue]#*[Default]*#
 
 |`StringLimit`
-|Limit value of characters for string to output +
+|The limit value of characters for string to output +
 [.small]#*Example:*# +
 `StringLimit = 8192` [.small .blue]#*[Default]*#
 
 |`ReflectionNestLimit`
-|Limit value of reflection nests +
+|The The limit value for reflection nesting +
 [.small]#*Example:*# +
 `ReflectionNestLimit = 4` [.small .blue]#*[Default]*#
 
@@ -593,13 +594,13 @@ and between the property/field name and value +
 [.small .blue]#No default value#
 
 |`DefaultNameSpace`
-|Default namespace of your C# source +
+|The default namespace of your C# source +
 [.small]#*Example:*# +
 `DefaultNameSpace = DebugTraceExample` +
 [.small .blue]#No default value#
 
 |`DefaultNameSpaceString`
-|String replacing the default namespace part +
+|The string replacing the default namespace part +
 [.small]#*Example:*# +
 `DefaultNameSpaceString = \...` [.small .blue]#*[Default]*#
 
@@ -758,19 +759,19 @@ https://masatokokubo.github.io/DebugTrace-net/index.html[API Specification]
 
 ==== DebugTrace-net 2.0.2 [.small .gray]#- July 12, 2020#
 
-* Improved the line breaking processing for data output.
+* Improved the line break handling of data output.
 
 ==== DebugTrace-net 2.0.1 [.small .gray]#- May 16, 2020#
 
-* Improved the line breaking processing for data output.
+* Improved the line break handling of data output.
 
 ==== DebugTrace-net 2.0.0 [.small .gray]#- April 4, 2020#
 
 * Changed the supported framework to *.NET Core 3.1* from .NET Standard 2.0.
 
 * Add following properties specified in DebugTrace.properties.
-  ** `MinimumOutputCount` - Minimum value to output the number of elements of collection (Default: 5)
-  ** `MinimumOutputLength` - Minimum value to output the length of string (Default: 5)
+  ** `MinimumOutputCount` - The minimum value to output the number of elements of collection (Default: 5)
+  ** `MinimumOutputLength` - The minimum value to output the length of string (Default: 5)
 
 * Changed following property names specified in DebugTrace.properties. However, you can specify the previous names for compatibility.
   ** `EnterFormat` <- `EnterString`
@@ -819,8 +820,8 @@ https://masatokokubo.github.io/DebugTrace-net/index.html[API Specification]
   ** Now outputs the length of strings.
 
 * Add Properties in `DebugTrace.properties`
-  ** `CountFormat`: Format string of the count of collections
-  ** `StringLengthFormat`: Format string of the length of strings
+  ** `CountFormat`: The format string of the count of collections
+  ** `StringLengthFormat`: The format string of the length of strings
 
 ==== DebugTrace.NLog 1.6.0 [.small .gray]#- November 18, 2018#
 * Changed target framework from .NET Frameword 4.7 to .NET Standard 2.0.

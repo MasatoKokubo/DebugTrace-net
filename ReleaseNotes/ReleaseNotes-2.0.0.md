@@ -14,7 +14,7 @@
 * `NonOutputProperties` <- `NonPrintProperties`
 
 ### Improvement
-* Speed up by changing the algorithm of line break detection.
+* Improved the line break handling of data output.
 
 <font color="blue">*The following are Japanese.*</font>
 
