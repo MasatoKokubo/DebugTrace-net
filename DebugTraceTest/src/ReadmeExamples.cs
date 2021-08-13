@@ -4,7 +4,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static DebugTrace.CSharp; // for Debugging
+using static DebugTrace.CSharp; // ToDo: Remove after debugging
 
 namespace Readme {
     /// <summary>ReadmeExample1</summary>
@@ -13,15 +13,15 @@ namespace Readme {
         /// <summary>Example1</summary>
         [TestMethod]
         public void Example1() {
-            Trace.Enter(); // for Debugging
+            Trace.Enter(); // ToDo: Remove after debugging
 
             var contacts = new [] {
                 new Contact(1, "Akane" , "Apple", new DateTime(1991, 2, 3)),
                 new Contact(2, "Yukari", "Apple", new DateTime(1992, 3, 4))
             };
-            Trace.Print("contacts", contacts); // for Debugging
+            Trace.Print("contacts", contacts); // ToDo: Remove after debugging
 
-            Trace.Leave(); // for Debugging
+            Trace.Leave(); // ToDo: Remove after debugging
         }
 
     }
@@ -61,29 +61,29 @@ namespace Readme {
         [DataTestMethod]
         [DataRow(1)]
         public void Example2(int value) {
-            Trace.Enter(); // for Debugging
+            Trace.Enter(); // ToDo: Remove after debugging
 
             var task = TaskExample(value);
             task.Wait();
-            Trace.Print("task", task); // for Debugging
+            Trace.Print("task", task); // ToDo: Remove after debugging
 
-            Trace.Leave(); // for Debugging
+            Trace.Leave(); // ToDo: Remove after debugging
         }
 
         // TaskExample
         private async Task<int> TaskExample(int value) {
-            var threasdId = Trace.Enter(); // for Debugging
+            var threasdId = Trace.Enter(); // ToDo: Remove after debugging
 
             var task = await Task.Run<int>(() => {
-                Trace.Enter(); // for Debugging
+                Trace.Enter(); // ToDo: Remove after debugging
                 Thread.Sleep(100);
                 var result = value * value;
-                Trace.Print("result", result); // for Debugging
-                Trace.Leave(); // for Debugging
+                Trace.Print("result", result); // ToDo: Remove after debugging
+                Trace.Leave(); // ToDo: Remove after debugging
                 return result;
             });
 
-            Trace.Leave(threasdId); // for Debugging
+            Trace.Leave(threasdId); // ToDo: Remove after debugging
             return task;
         }
     }

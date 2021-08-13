@@ -2,7 +2,7 @@
 // (C) 2018 Masato Kokubo
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static DebugTrace.CSharp; // for Debugging
+using static DebugTrace.CSharp; // ToDo: Remove after debugging
 
 namespace Examples {
     /// <summary>Examples1</summary>
@@ -11,7 +11,7 @@ namespace Examples {
         /// <summary>Example1_1</summary>
         [TestMethod]
         public void Example1_1() {
-            Trace.Enter(); // for Debugging
+            Trace.Enter(); // ToDo: Remove after debugging
 
             var a = 3;
             Trace.Print("a", a);
@@ -34,7 +34,7 @@ namespace Examples {
             b.AddRange(b);
             Trace.Print("b", b);
 
-            Trace.Leave(); // for Debugging
+            Trace.Leave(); // ToDo: Remove after debugging
         }
 
     }

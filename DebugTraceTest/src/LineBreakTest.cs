@@ -18,7 +18,7 @@ namespace DebugTraceTest {
             public DateTime Birthday {get;}
             public string PhoneNumber {get;}
 
-            public Contact(string firstName, string lastName, ValueTuple<int, int, int> birthday, string phoneNumber) {
+            public Contact(string firstName, string lastName, (int, int, int) birthday, string phoneNumber) {
                 FirstName   = firstName;
                 LastName    = lastName;
                 Birthday    = new DateTime(birthday.Item1, birthday.Item2, birthday.Item3);
@@ -157,6 +157,65 @@ namespace DebugTraceTest {
             StringAssert.Contains(Trace.LastLog, ", PhoneNumber:");
             StringAssert.Contains(Trace.LastLog, "},\n|   Contact2: DebugTraceTest.Contact {\n");
             StringAssert.Contains(Trace.LastLog, "},\n|   DebugTraceTest.Contact Contact3: null, DebugTraceTest.Contact Contact4: null");
+
+            // cleanup
+            Trace.Leave();
+        }
+
+
+        /** @since 3.1.1 */
+        [TestMethod]
+        public void NoLineBreak_NameValue() {
+            // setup
+            Trace.Enter();
+            TraceBase.MaximumDataOutputWidth = 60;
+            var foo = "000000000011111111112222222222333333333344444444445555555555";
+
+            // when
+            Trace.Print("foo", foo);
+
+            // then
+            StringAssert.Contains(Trace.LastLog, "foo = (Length:60)\"0000000000");
+
+            // cleanup
+            Trace.Leave();
+        }
+
+        /** @since 3.1.1 */
+        [TestMethod]
+        public void NoLineBreak_Object_NameValue() {
+            // setup
+            Trace.Enter();
+            TraceBase.MaximumDataOutputWidth = 60;
+            var foo = new Contact("000000000011111111112222222222333333333344444444445555555555", "", (2021, 1, 1), "");
+
+
+            // when
+            Trace.Print("foo", foo);
+
+            // then
+            StringAssert.Contains(Trace.LastLog, "FirstName: (Length:60)\"0000000000");
+
+            // cleanup
+            Trace.Leave();
+        }
+
+        /** @since 3.1.1 */
+        [TestMethod]
+        public void NoLineBreak_KeyValue() {
+            // setup
+            Trace.Enter();
+            TraceBase.MaximumDataOutputWidth = 60;
+            var foo = new Dictionary<int, string>();
+            foo[1] = "000000000011111111112222222222333333333344444444445555555555";
+
+
+            // when
+            Trace.Print("foo", foo);
+
+
+            // then
+            StringAssert.Contains(Trace.LastLog, "1: (Length:60)\"0000000000");
 
             // cleanup
             Trace.Leave();

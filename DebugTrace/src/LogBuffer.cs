@@ -59,18 +59,26 @@ namespace DebugTrace {
         /// <returns>this object</returns>
         /// <since>2.0.0</since>
         public LogBuffer NoBreakAppend(object value) => Append(value, 0, true);
- 
+
         /// <summary>
         /// Appends lines of another <c>LogBuffer</c>.
         /// </summary>
         /// <param name="buff">another <c>LogBuffer</c></param>
         /// <returns>this object</returns>
-        public LogBuffer Append(LogBuffer buff) {
+    // 2.0.3
+    //  public LogBuffer Append(LogBuffer buff) {
+        public LogBuffer Append(string? separator, LogBuffer buff) {
+        if (separator != null)
+            Append(separator, 0, true);
+    ////
             var index = 0;
             foreach ((var nestLevel, var str) in buff.Lines) {
                 if (index > 0)
                     LineFeed();
-                Append(str, nestLevel);
+            // 2.0.3
+            //  Append(str, nestLevel);
+                Append(str, nestLevel, index == 0 && separator != null);
+            ////
                 ++index;
             }
             return this;

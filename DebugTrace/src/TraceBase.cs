@@ -342,8 +342,8 @@ namespace DebugTrace {
             var versionAttribute = (AssemblyInformationalVersionAttribute?)
                 Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(), typeof(AssemblyInformationalVersionAttribute));
             Logger.Log($"DebugTrace-net {versionAttribute?.InformationalVersion}");
-            Logger.Log($"  logger: {Logger}");
             Logger.Log($"  properties file path: {Resource.FileInfo.FullName}");
+            Logger.Log($"  logger: {Logger}");
         }
 
         /// <summary>
@@ -537,11 +537,17 @@ namespace DebugTrace {
 
                 var buff = new LogBuffer();
 
-                buff.Append(name).NoBreakAppend(VarNameValueSeparator);
+            // 2.0.3
+            //  buff.Append(name).NoBreakAppend(VarNameValueSeparator);
+                buff.Append(name);
+            ////
                 var normalizedName = name.Substring(name.LastIndexOf('.') + 1).Trim();
                 normalizedName = normalizedName.Substring(normalizedName.LastIndexOf(' ') + 1);
                 var valueBuff = ToString(value);
-                buff.Append(valueBuff);
+            // 2.0.3
+            //  buff.Append(valueBuff);
+                buff.Append(VarNameValueSeparator, valueBuff);
+            ////
 
                 var element = GetStackTraceElement();
                 var suffix = string.Format(PrintSuffixFormat,
@@ -732,7 +738,10 @@ namespace DebugTrace {
                     // Use Reflection
                     reflectedObjects.Add(value);
                     var valueBuff = ToStringReflection(value);
-                    buff.Append(valueBuff);
+                // 2.0.3
+                //  buff.Append(valueBuff);
+                    buff.Append(null, valueBuff);
+                ////
                     reflectedObjects.RemoveAt(reflectedObjects.Count - 1);
                 }
             } else {
@@ -987,28 +996,48 @@ namespace DebugTrace {
             if (escape) {
                 // escape
                 switch (ch) {
-                case '\0': buff.Append(@"\0"); break; // 00 NUL
-                case '\a': buff.Append(@"\a"); break; // 07 BEL
-                case '\b': buff.Append(@"\b"); break; // 08 BS
-                case '\t': buff.Append(@"\t"); break; // 09 HT
-                case '\n': buff.Append(@"\n"); break; // 0A LF
-                case '\v': buff.Append(@"\v"); break; // 0B VT
-                case '\f': buff.Append(@"\f"); break; // 0C FF
-                case '\r': buff.Append(@"\r"); break; // 0D CR
-                case '\\': buff.Append(@"\\"); break; // \
+            // 2.0.3
+            //  case '\0': buff.Append(@"\0"); break; // 00 NUL
+            //  case '\a': buff.Append(@"\a"); break; // 07 BEL
+            //  case '\b': buff.Append(@"\b"); break; // 08 BS
+            //  case '\t': buff.Append(@"\t"); break; // 09 HT
+            //  case '\n': buff.Append(@"\n"); break; // 0A LF
+            //  case '\v': buff.Append(@"\v"); break; // 0B VT
+            //  case '\f': buff.Append(@"\f"); break; // 0C FF
+            //  case '\r': buff.Append(@"\r"); break; // 0D CR
+            //  case '\\': buff.Append(@"\\"); break; // \
+                case '\0': buff.NoBreakAppend(@"\0"); break; // 00 NUL
+                case '\a': buff.NoBreakAppend(@"\a"); break; // 07 BEL
+                case '\b': buff.NoBreakAppend(@"\b"); break; // 08 BS
+                case '\t': buff.NoBreakAppend(@"\t"); break; // 09 HT
+                case '\n': buff.NoBreakAppend(@"\n"); break; // 0A LF
+                case '\v': buff.NoBreakAppend(@"\v"); break; // 0B VT
+                case '\f': buff.NoBreakAppend(@"\f"); break; // 0C FF
+                case '\r': buff.NoBreakAppend(@"\r"); break; // 0D CR
+                case '\\': buff.NoBreakAppend(@"\\"); break; // \
+            ////
                 default:
                     if (ch < ' ' || ch == '\u007F')
-                        buff.Append(string.Format(@"\u{0:X4}", (ushort)ch));
+                    // 2.0.3
+                    //  buff.Append(string.Format(@"\u{0:X4}", (ushort)ch));
+                        buff.NoBreakAppend(string.Format(@"\u{0:X4}", (ushort)ch));
+                    ////
                     else {
                         if (ch == enclosure)
-                            buff.Append('\\');
-                        buff.Append(ch);
+                    // 2.0.3
+                    //      buff.Append('\\');
+                    //  buff.Append(ch);
+                            buff.NoBreakAppend('\\');
+                        buff.NoBreakAppend(ch);
+                    ////
                     }
                     break;
                 }
             } else {
                 // dose not escape
-                buff.Append(ch);
+            // 2.0.3
+            //  buff.Append(ch);
+                buff.NoBreakAppend(ch);
             }
         }
 
@@ -1021,7 +1050,10 @@ namespace DebugTrace {
         /// <returns>always false</returns>
         protected void AppendString(LogBuffer buff, string str) {
             if (str.Length >= MinimumOutputLength)
-                buff.Append(string.Format(LengthFormat, str.Length));
+            // 2.0.3
+            //  buff.Append(string.Format(LengthFormat, str.Length));
+                buff.NoBreakAppend(string.Format(LengthFormat, str.Length));
+            ////
 
             var hasBackslash = false;
             var hasEscaped = false;
@@ -1036,18 +1068,28 @@ namespace DebugTrace {
             }
 
             if (hasBackslash && !hasEscaped)
-                buff.Append('@');
-            buff.Append('"');
+        // 2.0.3
+        //      buff.Append('@');
+        //  buff.Append('"');
+                buff.NoBreakAppend('@');
+            buff.NoBreakAppend('"');
+        ////
 
             for (var index = 0; index < str.Length; ++index) {
                 if (index >= StringLimit) {
-                    buff.Append(LimitString);
+                // 2.0.3
+                //  buff.Append(LimitString);
+                    buff.NoBreakAppend(LimitString);
+                ////
                     break;
                 }
                 AppendChar(buff, str[index], '"', hasEscaped);
             }
 
-            buff.Append('"');
+        // 2.0.3
+        //  buff.Append('"');
+            buff.NoBreakAppend('"');
+        ////
         }
 
         /// <summary>
@@ -1071,7 +1113,10 @@ namespace DebugTrace {
                 buff.UpNest();
             }
 
-            buff.Append(bodyBuff);
+        // 2.0.3
+        //  buff.Append(bodyBuff);
+            buff.Append(null, bodyBuff);
+        ////
 
             if (isMultiLines) {
                 buff.LineFeed();
@@ -1083,7 +1128,7 @@ namespace DebugTrace {
             return buff;
         }
 
-       private LogBuffer ToStringDictionaryBody(IDictionary dictionary) {
+        private LogBuffer ToStringDictionaryBody(IDictionary dictionary) {
             var buff = new LogBuffer();
 
             var wasMultiLines = false;
@@ -1099,10 +1144,16 @@ namespace DebugTrace {
 
                 var value = dictionary[key!];
 
-                var elementBuff = ToString(key, true).NoBreakAppend(KeyValueSeparator).Append(ToString(value, true));
+            // 2.0.3
+            //  var elementBuff = ToString(key, true).NoBreakAppend(KeyValueSeparator).Append(ToString(value, true));
+                var elementBuff = ToString(key, true).Append(KeyValueSeparator, ToString(value, true));
+            ////
                 if (index > 0 && (wasMultiLines || elementBuff.IsMultiLines))
                     buff.LineFeed();
-                buff.Append(elementBuff);
+            // 2.0.3
+            //  buff.Append(elementBuff);
+                buff.Append(null, elementBuff);
+            ////
 
                 wasMultiLines = elementBuff.IsMultiLines;
                 ++index;
@@ -1134,7 +1185,10 @@ namespace DebugTrace {
                 buff.UpNest();
             }
 
-            buff.Append(bodyBuff);
+        // 2.0.3
+        //  buff.Append(bodyBuff);
+            buff.Append(null, bodyBuff);
+        ////
 
             if (isMultiLines) {
                 buff.LineFeed();
@@ -1163,7 +1217,10 @@ namespace DebugTrace {
                 var elementBuff = ToString(element, true);
                 if (index > 0 && (wasMultiLines || elementBuff.IsMultiLines))
                     buff.LineFeed();
-                buff.Append(elementBuff);
+            // 2.0.3
+            //  buff.Append(elementBuff);
+                buff.Append(null, elementBuff);
+            ////
 
                 wasMultiLines = elementBuff.IsMultiLines;
                 ++index;
@@ -1229,7 +1286,10 @@ namespace DebugTrace {
                 buff.UpNest();
             }
 
-            buff.Append(bodyBuff);
+        // 2.0.3
+        //  buff.Append(bodyBuff);
+            buff.Append(null, bodyBuff);
+        ////
 
             if (bodyBuff.IsMultiLines) {
                 if (buff.Length > 0)
@@ -1248,7 +1308,10 @@ namespace DebugTrace {
             if (baseType != null && baseType != typeof(object) && baseType != typeof(ValueType)) {
                 // Call for the base type
                 var baseBuff =  ToStringReflectionBody(obj, baseType, isExtended);
-                buff.Append(baseBuff);
+            // 2.0.3
+            //  buff.Append(baseBuff);
+                buff.Append(null, baseBuff);
+            ////
             }
 
             var typeNamePrefix = type.Namespace + '.' + type.Name + "#";
@@ -1278,7 +1341,10 @@ namespace DebugTrace {
                 var valueBuff = ToStringReflectValue(type, obj, fieldInfo);
                 if (fieldPropertyIndex > 0 && (wasMultiLines || valueBuff.IsMultiLines))
                     buff.LineFeed();
-                buff.Append(valueBuff);
+            // 2.0.3
+            //  buff.Append(valueBuff);
+                buff.Append(null, valueBuff);
+            ////
 
                 wasMultiLines = valueBuff.IsMultiLines;
                 ++fieldPropertyIndex;
@@ -1301,7 +1367,10 @@ namespace DebugTrace {
                 var valueBuff = ToStringReflectValue(type, obj, propertyInfo);
                 if (fieldPropertyIndex > 0 && (wasMultiLines || valueBuff.IsMultiLines))
                     buff.LineFeed();
-                buff.Append(valueBuff);
+            // 2.0.3
+            //  buff.Append(valueBuff);
+                buff.Append(null, valueBuff);
+            ////
 
                 wasMultiLines = valueBuff.IsMultiLines;
                 ++fieldPropertyIndex;
@@ -1339,18 +1408,32 @@ namespace DebugTrace {
                 value = e.ToString();
             }
 
+        // 2.0.3
+            var separator = null as string;
+        ////
             if (!IsTuple(type)) {
                 //  not Tuple
                 if (memberType != null && (value == null || memberType != value.GetType()))
                     buff.Append(GetFullTypeName(memberType)).Append(' ');
                 buff.Append(memberInfo.Name);
-                buff.NoBreakAppend(KeyValueSeparator);
+            // 2.0.3
+            //  buff.NoBreakAppend(KeyValueSeparator);
+                separator = KeyValueSeparator;
+            ////
             }
 
-            if (nonOutput)
-                buff.Append(NonOutputString);
-            else
-                buff.Append(ToString(value));
+            if (nonOutput) {
+            // 2.0.3
+            //  buff.Append(NonOutputString);
+                if (separator != null)
+                    buff.NoBreakAppend(separator);
+                buff.NoBreakAppend(NonOutputString);
+            ////
+            } else
+            // 2.0.3
+            //  buff.Append(ToString(value));
+                buff.Append(separator, ToString(value));
+            ////
 
             return buff;
         }

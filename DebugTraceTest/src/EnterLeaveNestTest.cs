@@ -9,41 +9,41 @@ namespace DebugTraceTest {
     public class EnterLeaveNestTest {
         [TestMethod]
         public void EnterLeaveNestTest1() {
-            Trace.Enter(); // for Debugging
+            Trace.Enter(); // ToDo: Remove after debugging
             Method1();
-            Trace.Leave(); // for Debugging
-            Trace.Leave(); // for Debugging
-            Trace.Enter(); // for Debugging
+            Trace.Leave(); // ToDo: Remove after debugging
+            Trace.Leave(); // ToDo: Remove after debugging
+            Trace.Enter(); // ToDo: Remove after debugging
             Thread.Sleep(1111);
-            Trace.Leave(); // for Debugging
+            Trace.Leave(); // ToDo: Remove after debugging
             Trace.ResetNest();
         }
 
         private void Method1() {
-            Trace.Enter(); // for Debugging
+            Trace.Enter(); // ToDo: Remove after debugging
             Thread.Sleep(1111);
             Method2();
-            Trace.Leave(); // for Debugging
+            Trace.Leave(); // ToDo: Remove after debugging
         }
 
         private void Method2() {
-            Trace.Enter(); // for Debugging
+            Trace.Enter(); // ToDo: Remove after debugging
             Thread.Sleep(1111);
             Method3();
-            Trace.Leave(); // for Debugging
+            Trace.Leave(); // ToDo: Remove after debugging
         }
 
         private void Method3() {
-            Trace.Enter(); // for Debugging
+            Trace.Enter(); // ToDo: Remove after debugging
             Thread.Sleep(1111);
             Method4();
-            Trace.Leave(); // for Debugging
+            Trace.Leave(); // ToDo: Remove after debugging
         }
 
         private void Method4() {
-            Trace.Enter(); // for Debugging
+            Trace.Enter(); // ToDo: Remove after debugging
             Thread.Sleep(1111);
-            Trace.Leave(); // for Debugging
+            Trace.Leave(); // ToDo: Remove after debugging
         }
     }
 }

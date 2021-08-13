@@ -41,7 +41,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static DebugTrace.CSharp; // for Debugging
+using static DebugTrace.CSharp; // ToDo: Remove after debugging
 
 namespace Readme {
     /// <summary>ReadmeExample1</summary>
@@ -50,15 +50,15 @@ namespace Readme {
         /// <summary>Example1</summary>
         [TestMethod]
         public void Example1() {
-            Trace.Enter(); // for Debugging
+            Trace.Enter(); // ToDo: Remove after debugging
 
             var contacts = new [] {
                 new Contact(1, "Akane" , "Apple", new DateTime(1991, 2, 3)),
                 new Contact(2, "Yukari", "Apple", new DateTime(1992, 3, 4))
             };
-            Trace.Print("contacts", contacts); // for Debugging
+            Trace.Print("contacts", contacts); // ToDo: Remove after debugging
 
-            Trace.Leave(); // for Debugging
+            Trace.Leave(); // ToDo: Remove after debugging
         }
 
     }
@@ -95,34 +95,34 @@ namespace Readme {
 
 .Console output / C#
 ----
-2020-07-12 16:55:12.409 [05] DebugTrace-net 2.0.2
-2020-07-12 16:55:12.411 [05]   logger: DebugTrace.Console+Error
-2020-07-12 16:55:12.411 [05]   properties file path: Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceTest\bin\Debug\netcoreapp3.1\DebugTrace.properties
-2020-07-12 16:55:12.413 [05] 
-2020-07-12 16:55:12.413 [05] ______________________________ Thread 5 ______________________________
-2020-07-12 16:55:12.413 [05] 
-2020-07-12 16:55:12.637 [05] Enter Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:16)
-2020-07-12 16:55:12.660 [05] | 
-2020-07-12 16:55:12.660 [05] | contacts = Readme.Contact[2] {
-2020-07-12 16:55:12.660 [05] |   Readme.Contact {
-2020-07-12 16:55:12.660 [05] |     ____ Readme.Entity ____
-2020-07-12 16:55:12.660 [05] |     ID: 1
-2020-07-12 16:55:12.660 [05] |     ____ Readme.ContactBase ____
-2020-07-12 16:55:12.660 [05] |     FirstName: (Length:5)"Akane", LastName: (Length:5)"Apple"
-2020-07-12 16:55:12.660 [05] |     ____ Readme.Contact ____
-2020-07-12 16:55:12.660 [05] |     Birthday: 1991-02-03 00:00:00.0000000
-2020-07-12 16:55:12.660 [05] |   },
-2020-07-12 16:55:12.660 [05] |   Readme.Contact {
-2020-07-12 16:55:12.660 [05] |     ____ Readme.Entity ____
-2020-07-12 16:55:12.660 [05] |     ID: 2
-2020-07-12 16:55:12.660 [05] |     ____ Readme.ContactBase ____
-2020-07-12 16:55:12.660 [05] |     FirstName: (Length:6)"Yukari", LastName: (Length:5)"Apple"
-2020-07-12 16:55:12.660 [05] |     ____ Readme.Contact ____
-2020-07-12 16:55:12.660 [05] |     Birthday: 1992-03-04 00:00:00.0000000
-2020-07-12 16:55:12.660 [05] |   }
-2020-07-12 16:55:12.660 [05] | } (ReadmeExamples.cs:22)
-2020-07-12 16:55:12.661 [05] | 
-2020-07-12 16:55:12.662 [05] Leave Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:24) duration: 00:00:00.0226730
+2021-08-13 13:07:02.999 [05] DebugTrace-net 2.0.3
+2021-08-13 13:07:03.001 [05]   properties file path: Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceTest\bin\Debug\netcoreapp3.1\DebugTrace.properties
+2021-08-13 13:07:03.001 [05]   logger: DebugTrace.Console+Error
+2021-08-13 13:07:03.001 [05] 
+2021-08-13 13:07:03.001 [05] ______________________________ Thread 5 ______________________________
+2021-08-13 13:07:03.001 [05] 
+2021-08-13 13:07:03.041 [05] Enter Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:16)
+2021-08-13 13:07:03.049 [05] | 
+2021-08-13 13:07:03.049 [05] | contacts = Readme.Contact[2] {
+2021-08-13 13:07:03.049 [05] |   Readme.Contact {
+2021-08-13 13:07:03.049 [05] |     ____ Readme.Entity ____
+2021-08-13 13:07:03.049 [05] |     ID: 1
+2021-08-13 13:07:03.049 [05] |     ____ Readme.ContactBase ____
+2021-08-13 13:07:03.049 [05] |     FirstName: (Length:5)"Akane", LastName: (Length:5)"Apple"
+2021-08-13 13:07:03.049 [05] |     ____ Readme.Contact ____
+2021-08-13 13:07:03.049 [05] |     Birthday: 1991-02-03 00:00:00.0000000
+2021-08-13 13:07:03.049 [05] |   },
+2021-08-13 13:07:03.049 [05] |   Readme.Contact {
+2021-08-13 13:07:03.049 [05] |     ____ Readme.Entity ____
+2021-08-13 13:07:03.049 [05] |     ID: 2
+2021-08-13 13:07:03.049 [05] |     ____ Readme.ContactBase ____
+2021-08-13 13:07:03.049 [05] |     FirstName: (Length:6)"Yukari", LastName: (Length:5)"Apple"
+2021-08-13 13:07:03.049 [05] |     ____ Readme.Contact ____
+2021-08-13 13:07:03.049 [05] |     Birthday: 1992-03-04 00:00:00.0000000
+2021-08-13 13:07:03.049 [05] |   }
+2021-08-13 13:07:03.049 [05] | } (ReadmeExamples.cs:22)
+2021-08-13 13:07:03.050 [05] | 
+2021-08-13 13:07:03.050 [05] Leave Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:24) duration: 00:00:00.0086104
 ----
 
 [source,vb.net]
@@ -223,12 +223,12 @@ If you are `using System.Diagnostics` or `Impors System.Diagnostics`, since the 
 .ReadmeExample.cs
 ----
 using System.Diagnostics;
-using static DebugTrace.CSharp; // for Debugging
+using static DebugTrace.CSharp; // ToDo: Remove after debugging
 
 namespace Readme {
     public class ReadmeExample {
         public static void Main(string[] args) {
-            Trace_.Enter(); // for Debugging
+            Trace_.Enter(); // ToDo: Remove after debugging
 ----
 
 [source,vb.net]
@@ -260,11 +260,11 @@ There are mainly the following interfaces and classes.
   |`DebugTrace.Console.Out`  |`DebugTrace.Console` |Class that outputs logs to standard output
   |`DebugTrace.Console.Error`|`DebugTrace.Console` |Class that outputs logs to standard error output
   |`DebugTrace.Diagnostics` +
-[.small .blue]#since 1.6.0#|`DebugTrace.ILogger`    |Abstract super class of `DebugTrace.Diagnostics.Debug` and `DebugTrace.Diagnostics.Trace` class
+[.small]#since 1.6.0#|`DebugTrace.ILogger`    |Abstract super class of `DebugTrace.Diagnostics.Debug` and `DebugTrace.Diagnostics.Trace` class
   |`DebugTrace.Diagnostics.Debug` +
-[.small .blue]#since 1.6.0#|`DebugTrace.Diagnostics`|Class that outputs logs using `System.Diagnostics.Debug` class
+[.small]#since 1.6.0#|`DebugTrace.Diagnostics`|Class that outputs logs using `System.Diagnostics.Debug` class
   |`DebugTrace.Diagnostics.Trace` +
-[.small .blue]#since 1.6.0#|`DebugTrace.Diagnostics`|Class that outputs logs using `System.Diagnostics.Trace` class
+[.small]#since 1.6.0#|`DebugTrace.Diagnostics`|Class that outputs logs using `System.Diagnostics.Trace` class
 |===
 
 === 5. Properties of DebugTrace.CSharp class and DebugTrace.VisualBasic class
@@ -332,7 +332,7 @@ It has the following properties and methods.
 `"Name = Value"`.
 
 |`PrintStack`
-[.small .blue]#since 1.6.0#
+[.small]#since 1.6.0#
 |`int maxCount`: maximum number of stack elements to output
 |_None_
 |Outputs call stack to log.
@@ -352,14 +352,14 @@ You can specify following properties in the `DebugTrace.properties` file.
 |`Logger`
 |Logger used by DebugTrace +
 [.small]#*Examples:*# +
-`Logger = Console+Out` [.small .blue]#- Outputs to the console (stdout)# +
-`Logger = Console+Error` [.small .blue]#- Outputs to the console (stderr)# [.small .blue]#*[Default]*# + 
-`Logger = Diagnostics+Debug` [.small .blue]#- Outputs using System.Diagnostics.Debug class - since 1.6.0# +
-`Logger = Diagnostics+Trace` [.small .blue]#- Outputs using System.Diagnostics.Trace class - since 1.6.0# + 
-`Logger = Log4net` [.small .blue]#- Outputs using Log4net# +
-`Logger = NLog` [.small .blue]#- Outputs using NLog# +
-[.small]#*Example for multiple outputs:*# [.small .blue]#- since 1.5.0# +
-`Logger = Console+Out; Log4net` [.small .blue]#- Outputs to the console (stdout) and using Log4net#
+`Logger = Console+Out` [.small]#- Outputs to the console (stdout)# +
+`Logger = Console+Error` [.small]#- Outputs to the console (stderr)# [.small]#*[Default]*# + 
+`Logger = Diagnostics+Debug` [.small]#- Outputs using System.Diagnostics.Debug class - since 1.6.0# +
+`Logger = Diagnostics+Trace` [.small]#- Outputs using System.Diagnostics.Trace class - since 1.6.0# + 
+`Logger = Log4net` [.small]#- Outputs using Log4net# +
+`Logger = NLog` [.small]#- Outputs using NLog# +
+[.small]#*Example for multiple outputs:*# [.small]#- since 1.5.0# +
+`Logger = Console+Out; Log4net` [.small]#- Outputs to the console (stdout) and using Log4net#
 
 |`LogLevel`
 |Log level to use when outputting +
@@ -370,7 +370,7 @@ You can specify following properties in the `DebugTrace.properties` file.
 `LogLevel = Finer` +
 `LogLevel = Trace` +
 `LogLevel = Fine` +
-`LogLevel = Debug` [.small .blue]#*[Default]*# +
+`LogLevel = Debug` [.small]#*[Default]*# +
 `LogLevel = Info` +
 `LogLevel = Notice` +
 `LogLevel = Warn` +
@@ -383,24 +383,24 @@ You can specify following properties in the `DebugTrace.properties` file.
 `LogLevel = Off` +
 [.small]#*Examples when using NLog:*# +
 `LogLevel = Trace` +
-`LogLevel = Debug` [.small .blue]#*[Default]*# +
+`LogLevel = Debug` [.small]#*[Default]*# +
 `LogLevel = Info` +
 `LogLevel = Warn` +
 `LogLevel = Error` +
 `LogLevel = Fatal` +
 `LogLevel = Off` +
-[.small]#*Examples when using Log4net and NLog:*# [.small .blue]#(Logger = Log4net; NLog)# +
-`LogLevel = Debug` [.small .blue]#- Outputs Debug level for both Log4net and NLog# +
-`LogLevel = Finer; Trace` [.small .blue]#- Outputs Finer level for Log4net and Trace level for NLog - since 1.5.0#
+[.small]#*Examples when using Log4net and NLog:*# [.small]#(Logger = Log4net; NLog)# +
+`LogLevel = Debug` [.small]#- Outputs Debug level for both Log4net and NLog# +
+`LogLevel = Finer; Trace` [.small]#- Outputs Finer level for Log4net and Trace level for NLog - since 1.5.0#
 
 |`EnterFormat` +
-[.small .blue]#Renamed since 2.0.0# +
+[.small]#Renamed since 2.0.0# +
  +
 [.small]#`EnterString`# +
-[.small .blue]#Deprecated since 2.0.0#
+[.small]#Deprecated since 2.0.0#
 |The format string of log output when entering methods +
 [.small]#*Example:*# +
-`EnterFormat = Enter {0}.{1} ({2}:{3:D})` [.small .blue]#*[Default]*# +
+`EnterFormat = Enter {0}.{1} ({2}:{3:D})` [.small]#*[Default]*# +
 [.small]#*Parameters:*# +
 `{0}`: The class name +
 `{1}`: The method name +
@@ -408,13 +408,13 @@ You can specify following properties in the `DebugTrace.properties` file.
 `{3}`: The line number
 
 |`LeaveFormat` +
-[.small .blue]#Renamed since 2.0.0# +
+[.small]#Renamed since 2.0.0# +
  +
 [.small]#`LeaveString`# +
-[.small .blue]#Deprecated since 2.0.0#
+[.small]#Deprecated since 2.0.0#
 |The format string of log output when leaving methods +
 [.small]#*Examples:*# +
-`LeaveString = Leave {0}.{1} ({2}:{3:D}) duration: {4}` [.small .blue]#*[Default]*# +
+`LeaveString = Leave {0}.{1} ({2}:{3:D}) duration: {4}` [.small]#*[Default]*# +
 [.small]#*Parameters:*# +
 `{0}`: The class name +
 `{1}`: The method name +
@@ -423,81 +423,81 @@ You can specify following properties in the `DebugTrace.properties` file.
 `{4}`: The duration since invoking the corresponding `Enter` method
 
 |`ThreadBoundaryFormat` +
-[.small .blue]#Renamed since 2.0.0# +
+[.small]#Renamed since 2.0.0# +
  +
 [.small]#`ThreadBoundaryString`# +
-[.small .blue]#Deprecated since 2.0.0#
+[.small]#Deprecated since 2.0.0#
 |The format string of log output at threads boundary +
 [.small]#*Example:*# +
 [.small]#`ThreadBoundaryFormat = \____\__\__\__\__\__\__\__\__\__\__\__\__\__ Thread {0} \__\__\__\__\__\__\__\__\__\__\__\__\__\____`# +
-[.small .blue]#*[Default]*# +
+[.small]#*[Default]*# +
 [.small]#*Parameter:*# +
 `{0}`: The thread ID
 
 |`ClassBoundaryFormat` +
-[.small .blue]#Renamed since 2.0.0# +
+[.small]#Renamed since 2.0.0# +
  +
 [.small]#`ClassBoundaryString`# +
-[.small .blue]#Deprecated since 2.0.0#
+[.small]#Deprecated since 2.0.0#
 |The format string of log output at classes boundary +
 [.small]#*Example:*# +
-`ClassBoundaryFormat = \\____ {0} \____` [.small .blue]#*[Default]*# +
+`ClassBoundaryFormat = \\____ {0} \____` [.small]#*[Default]*# +
 [.small]#*Parameter:*# +
 `{0}`: The class name
 
 |`IndentString` +
-[.small .blue]#Renamed since 2.0.0# +
+[.small]#Renamed since 2.0.0# +
  +
 [.small]#`CodeIndentString`# +
-[.small .blue]#Deprecated since 2.0.0#
+[.small]#Deprecated since 2.0.0#
 |The indentation string for code +
 [.small]#*Example:*# +
-`CodeIndentString = &#x7c;\s` [.small .blue]#*[Default]*# +
-[.small .blue]#`\s` is replaced to a space character#
+`CodeIndentString = &#x7c;\s` [.small]#*[Default]*# +
+[.small]#`\s` is replaced to a space character#
 
 |`DataIndentString`
 |The indentation string for data +
 [.small]#*Example:*# +
-`DataIndentString = \s\s` [.small .blue]#*[Default]*# +
-[.small .blue]#`\s` is replaced to a space character#
+`DataIndentString = \s\s` [.small]#*[Default]*# +
+[.small]#`\s` is replaced to a space character#
 
 |`LimitString`
 |The string to represent that it has exceeded the limit +
 [.small]#*Example:*# +
-`LimitString = \...` [.small .blue]#*[Default]*#
+`LimitString = \...` [.small]#*[Default]*#
 
 |`NonOutputString` +
-[.small .blue]#Renamed since 2.0.0# +
+[.small]#Renamed since 2.0.0# +
  +
 [.small]#`NonPrintString`# +
-[.small .blue]#Deprecated since 2.0.0#
+[.small]#Deprecated since 2.0.0#
 |The string to be output instead of not outputting value +
 [.small]#*Example:*# +
-`NonOutputString = \***` [.small .blue]#*[Default]*#
+`NonOutputString = \***` [.small]#*[Default]*#
 
 |`CyclicReferenceString`
 |The string to represent that the cyclic reference occurs +
 [.small]#*Example:*# +
-`CyclicReferenceString = \*\** Cyclic Reference \***` [.small .blue]#*[Default]*#
+`CyclicReferenceString = \*\** Cyclic Reference \***` [.small]#*[Default]*#
 
 |`VarNameValueSeparator`
 |The separator string between the variable name and value +
 [.small]#*Example:*# +
-`VarNameValueSeparator = \s=\s` [.small .blue]#*[Default]*# +
-[.small .blue]#`\s` is replaced to a space character#
+`VarNameValueSeparator = \s=\s` [.small]#*[Default]*# +
+[.small]#`\s` is replaced to a space character#
 
 |`KeyValueSeparator`
 |The separator string between the key and value of dictionary +
 and between the property/field name and value +
 [.small]#*Example:*# +
-`KeyValueSeparator = :\s` [.small .blue]#*[Default]*# +
-[.small .blue]#`\s` is replaced to a space character#
+`KeyValueSeparator = :\s` [.small]#*[Default]*# +
+[.small]#`\s` is replaced to a space character#
 
 |`PrintSuffixFormat`
 |The format string of `Print` method suffix +
 [.small]#*Example:*# +
-`PrintSuffixFormat = \s({2}:{3:D})` [.small .blue]#*[Default]*# +
-[.small .blue]#`\s` is replaced to a space character# +
+`PrintSuffixFormat = \s({2}:{3:D})` [.small]#*[Default]*# +
+[.small]#`\s` is replaced to a space character# +
 [.small]#*Parameters:*# +
 `{0}`: The class name +
 `{1}`: The method name +
@@ -505,82 +505,82 @@ and between the property/field name and value +
 `{3}`: The line number
 
 |`CountFormat` +
-[.small .blue]#since 1.5.1# 
+[.small]#since 1.5.1# 
 |The format string of the number of elements of collection +
 [.small]#*Examples:*# +
-`CountFormat = \sCount:{0}` [.small .blue]#*[Default]*# +
+`CountFormat = \sCount:{0}` [.small]#*[Default]*# +
 [.small]#*Parameter:*# +
 `{0}`: The number of elements +
 
 |`MinimumOutputCount` +
-[.small .blue]#since 2.0.0# 
+[.small]#since 2.0.0# 
 |The minimum value to output the number of elements of collection +
 [.small]#*Examples:*# +
-`MinimumOutputCount = 5` [.small .blue]#*[Default]*#
+`MinimumOutputCount = 5` [.small]#*[Default]*#
 
 |`LengthFormat` +
-[.small .blue]#Renamed since 2.0.0# +
+[.small]#Renamed since 2.0.0# +
  +
 [.small]#`StringLengthFormat`# +
-[.small .blue]#since 1.5.1# +
-[.small .blue]#Deprecated since 2.0.0#
+[.small]#since 1.5.1# +
+[.small]#Deprecated since 2.0.0#
 |The format string of the length of string +
 [.small]#*Examples:*# +
-`StringLengthFormat = (Length:{0})` [.small .blue]#*[Default]*# +
+`StringLengthFormat = (Length:{0})` [.small]#*[Default]*# +
 [.small]#*Parameter:*# +
 `{0}`: The string length
 
 |`MinimumOutputLength` +
-[.small .blue]#since 2.0.0# 
+[.small]#since 2.0.0# 
 |The minimum value to output the length of string +
 [.small]#*Examples:*# +
-`MinimumOutputLength = 5` [.small .blue]#*[Default]*# +
+`MinimumOutputLength = 5` [.small]#*[Default]*# +
 
 |`DateTimeFormat`
 |The format string of DateTime +
 [.small]#*Examples:*# +
-`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffffffK}` [.small .blue]#*[Default]*# +
+`DateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fffffffK}` [.small]#*[Default]*# +
 [.small]#*Parameter:*# +
 `{0}`: The `DateTime` object
 
 |`LogDateTimeFormat` +
 |The format string of date and time when outputting logs +
 [.small]#*Examples:*# +
-`LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff} [{1:D2}] {2}` [.small .blue]#*[Default]*# +
+`LogDateTimeFormat = {0:yyyy-MM-dd HH:mm:ss.fff} [{1:D2}] {2}` [.small]#*[Default]*# +
 [.small]#*Parameter:*# +
 `{0}`: The `DateTime` of log output +
 `{1}`: The thread ID +
 `{2}`: The log contents
 
 |`MaximumDataOutputWidth`
-[.small .blue]#Renamed since 2.0.0# +
+[.small]#Renamed since 2.0.0# +
  +
 [.small]#`MaxDataOutputWidth`# +
-[.small .blue]#Deprecated since 2.0.0#
+[.small]#Deprecated since 2.0.0#
 |The maximum output width of data +
 [.small]#*Example:*# +
-`MaximumDataOutputWidth = 70` [.small .blue]#*[Default]*#
+`MaximumDataOutputWidth = 70` [.small]#*[Default]*#
 
 |`CollectionLimit`
 |The limit value of elements for collection to output +
 [.small]#*Example:*# +
-`CollectionLimit = 512` [.small .blue]#*[Default]*#
+`CollectionLimit = 512` [.small]#*[Default]*#
 
 |`StringLimit`
 |The limit value of characters for string to output +
 [.small]#*Example:*# +
-`StringLimit = 8192` [.small .blue]#*[Default]*#
+`StringLimit = 8192` [.small]#*[Default]*#
 
 |`ReflectionNestLimit`
 |The The limit value for reflection nesting +
 [.small]#*Example:*# +
-`ReflectionNestLimit = 4` [.small .blue]#*[Default]*#
+`ReflectionNestLimit = 4` [.small]#*[Default]*#
 
 |`NonOutputProperties` +
-[.small .blue]#Renamed since 2.0.0# +
+[.small]#Renamed since 2.0.0# +
  +
 [.small]#`NonPrintProperties`# +
-[.small .blue]#Deprecated since 2.0.0#
+[.small]#Deprecated since 2.0.0#
 |Properties and fields not to be output value +
 [.small]#*Example (One value):*# +
 `NonOutputProperties = DebugTraceExample.Node.Parent` +
@@ -591,18 +591,18 @@ and between the property/field name and value +
   `DebugTraceExample.Node.Right` +
 [.small]#*format:*# +
 `<full class name>.<property or field name>` +
-[.small .blue]#No default value#
+[.small]#No default value#
 
 |`DefaultNameSpace`
 |The default namespace of your C# source +
 [.small]#*Example:*# +
 `DefaultNameSpace = DebugTraceExample` +
-[.small .blue]#No default value#
+[.small]#No default value#
 
 |`DefaultNameSpaceString`
 |The string replacing the default namespace part +
 [.small]#*Example:*# +
-`DefaultNameSpaceString = \...` [.small .blue]#*[Default]*#
+`DefaultNameSpaceString = \...` [.small]#*[Default]*#
 
 |`ReflectionClasses`
 |Classe names that output content by reflection even if `ToString` method is implemented
@@ -612,19 +612,19 @@ and between the property/field name and value +
 `ReflectionClasses = \` +
   `DebugTraceExample.Point,\` +
   `DebugTraceExample.Rectangle` +
-[.small .blue]#No default value#
+[.small]#No default value#
 
 |`OutputNonPublicFields`
 |If `true`, outputs the contents by reflection even for fields which are not `public` +
 [.small]#*Examples:*# +
 `OutputNonPublicFields = true` +
-`OutputNonPublicFields = false` [.small .blue]#*[Default]*#
+`OutputNonPublicFields = false` [.small]#*[Default]*#
 
 |`OutputNonPublicProperties`
 |If `true`, outputs the contents by reflection even for properties which are not `public` +
 [.small]#*Examples:*# +
 `OutputNonPublicProperties = true` +
-`OutputNonPublicProperties = false` [.small .blue]#*[Default]*#
+`OutputNonPublicProperties = false` [.small]#*[Default]*#
 
 |===
 
@@ -672,8 +672,8 @@ You can output logs using the following libraries besides console output.
 |===
    ^s|Library Name ^s|Required package                          ^s|Target Framework
      |log4net        |DebugTrace.Log4net                          |.NET Framework 4.7
-.2+.^|NLog           |DebugTrace.NLog [.small .blue]#since 1.6.0# |.NET Standard 2.0
-                     |DebugTrace.NLog [.small .blue]#before 1.6.0#|.NET Framework 4.7
+.2+.^|NLog           |DebugTrace.NLog [.small]#since 1.6.0# |.NET Standard 2.0
+                     |DebugTrace.NLog [.small]#before 1.6.0#|.NET Framework 4.7
 |===
 
 To use them, add the above package from NuGet.
@@ -756,6 +756,10 @@ link:LICENSE[The MIT License (MIT)]
 https://masatokokubo.github.io/DebugTrace-net/index.html[API Specification]
 
 === 11. Release Notes
+
+==== DebugTrace-net 2.0.3 [.small .gray]#- August 13, 2021#
+
+* Improved the line break handling of data output.
 
 ==== DebugTrace-net 2.0.2 [.small .gray]#- July 12, 2020#
 

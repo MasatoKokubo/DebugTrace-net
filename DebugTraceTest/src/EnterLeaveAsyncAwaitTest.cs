@@ -11,22 +11,22 @@ namespace DebugTraceTest {
         // TaskExample
         [TestMethod]
         public void Test() {
-            Trace.Enter(); // for Debugging
+            Trace.Enter(); // ToDo: Remove after debugging
             TaskExample().Wait();
-            Trace.Leave(); // for Debugging
-            Trace.Print(""); // for Debugging
+            Trace.Leave(); // ToDo: Remove after debugging
+            Trace.Print(""); // ToDo: Remove after debugging
             Assert.IsFalse(Trace.LastLog.Contains(DebugTrace.TraceBase.IndentString), "The indent level is 0");
         }
 
         public async Task<int> TaskExample() {
-            var threasdId = Trace.Enter(); // for Debugging
+            var threasdId = Trace.Enter(); // ToDo: Remove after debugging
             var task = await Task.Run<int>(() => {
-                Trace.Enter(); // for Debugging
+                Trace.Enter(); // ToDo: Remove after debugging
                 Thread.Sleep(100);
-                Trace.Leave(); // for Debugging
+                Trace.Leave(); // ToDo: Remove after debugging
                 return 0;
             });
-            Trace.Leave(threasdId); // for Debugging
+            Trace.Leave(threasdId); // ToDo: Remove after debugging
             return task;
         }
     }
