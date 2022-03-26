@@ -1,0 +1,112 @@
+## 11. リリースノート
+
+### DebugTrace-net 3.0.0 - _2022/4/24_
+
+* `.NET 6.0` に対応しました。
+* `Print` メソッドは、引数の値またはメッセージを返すようにしました。
+
+<small><i>関連パッケージ:</i></small>
+<table>
+    <tr><td>DebugTrace.Log4net 3.0.0</td><td>log4net 2.0.14</td></tr>
+    <tr><td>DebugTrace.NLog 3.0.0</td><td>NLog 4.7.15</td></tr>
+</table>
+
+### DebugTrace-net 2.1.0 - _2022/4/24_
+
+* `Print` メソッドは、引数の値またはメッセージを返すようにしました。
+
+<small><i>関連パッケージ:</i></small>
+<table>
+    <tr><td>DebugTrace.Log4net 2.1.0</td><td>log4net 2.0.14</td></tr>
+    <tr><td>DebugTrace.NLog 2.1.0</td><td>NLog 4.7.15</td></tr>
+</table>
+
+### DebugTrace-net 2.0.3 - _2021/8/13_
+
+* データ出力の改行処理を改善しました。
+
+### DebugTrace-net 2.0.2 - _2020/7/12_
+
+* データ出力の改行処理を改善しました。
+
+### DebugTrace-net 2.0.1 - _2020/5/16_
+
+* データ出力の改行処理を改善しました。
+
+### DebugTrace-net 2.0.0 - _2020/4/4_
+
+* 対応フレームワークを .NET Standard 2.0 から .NET Core 3.1 に変更しました。
+
+* DebugTrace.propertiesで指定する以下のプロパティを追加
+    * `MinimumOutputCount` - コレクションの要素数を出力する最小値 (デフォルト: 5)
+    * `MinimumOutputLength` - 文字列長を出力する最小値 (デフォルト: 5)
+
+* DebugTrace.propertiesで指定する以下のプロパティ名を変更 (互換性維持のため従来の名称も指定可能)
+    * `EnterFormat` <- `EnterString`
+    * `LeaveFormat` <- `LeaveString`
+    * `IndentString` <- `CodeIndentString`
+    * `NonOutputString` <- `NonPrintString`
+    * `LengthFormat` <- `StringLengthFormat`
+    * `MaximumDataOutputWidth` <- `MaxDataOutputWidth`
+    * `NonOutputProperties` <- `NonPrintProperties`
+
+* 改善
+    * 改行の検出のアルゴリズムを変更して高速化しました。
+
+### DebugTrace-net 1.6.0 - _2019/3/24_
+
+* 以下のロガーを追加。
+    * Diagnostics+Debug
+    * Diagnostics+Trace
+
+* `TraceBase` クラスに `PrintStack(int)` メソッドを追加。
+
+### DebugTrace-net 1.5.4 - _2019/2/11_
+
+* `Print` メソッドの変更
+    * 型名の前に `enum` の表示  
+      例: `v = enum Fruits Apple`
+
+* `Print` メソッドの改善
+    * プロパティまたはフィールドの型とその値の型が異なる場合は、プロパティまたはフィールド名の前に型名を出力する。
+
+### DebugTrace-net 1.5.3 - _2019/2/3_
+
+* `Print` メソッドの改善
+    * 型名の後に `struct` の表示を追加。  
+      例: `v = Point struct {X: 1, Y: 2}`
+    * 型名の後に `enum` の表示を追加。  
+      例: `v = Fruits enum Apple`
+
+### DebugTrace-net 1.5.2 - _2019/1/28_
+
+* Add `Trace_` property to `CSharp` and `VisualBasic` classes.
+
+### DebugTrace-net 1.5.1 - _2018/12/15_
+
+* 改善
+    * 文字列の長さを出力するようになりました。
+
+* Add Properties in `DebugTrace.properties`
+    * `CountFormat`: The format string of the count of collections
+    * `StringLengthFormat`: The format string of the length of strings
+
+### DebugTrace.NLog 1.6.0 - _2018/11/18_
+* 対応フレームワークを.NET Frameword 4.7から.NET Standard 2.0に変更。
+
+### DebugTrace-net 1.5.0 - _2018/10/28_
+* バグ修正
+    * **_[修正済]_** `TraceBase.OutputNonPublicFields = true` の場合に `Task` を出力すると `NullReferenceException` がスローされる。
+
+* 改善
+    * DebugTrace.propertiesで複数のロガーを指定できるようになりました。(例: `Logger = Console+Out; Log4net`)
+
+### DebugTrace.Log4net 1.5.0 - _2018/10/28_
+* DebugTrace-net 1.5.0 に対応するリリース
+
+### DebugTrace.NLog 1.5.0 - _2018/10/28_
+* 変更
+    * DebugTrace-net 1.5.0に対応するリリース
+    * Nlog 4.5.10に依存
+
+<div align="center" style="color:#6699EE">(C) 2018 Masato Kokubo</div>

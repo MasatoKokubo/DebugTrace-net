@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29709.97
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32228.430
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DebugTrace", "DebugTrace\DebugTrace.csproj", "{F9E8AC93-6490-411A-8BED-2FC1373B2779}"
 EndProject
@@ -10,8 +10,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DebugTrace.Log4net", "DebugTrace.Log4net\DebugTrace.Log4net.csproj", "{D0CF3B08-36A2-443C-9B3A-E39407438157}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DebugTrace.NLog", "DebugTrace.NLog\DebugTrace.NLog.csproj", "{653F1508-8E48-496C-8542-DAD78C3661DE}"
-EndProject
-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "DebugTraceVBTest", "DebugTraceVBTest\DebugTraceVBTest.vbproj", "{7202F8E9-707F-43BB-8B75-CDC3D0C025F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +33,6 @@ Global
 		{653F1508-8E48-496C-8542-DAD78C3661DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{653F1508-8E48-496C-8542-DAD78C3661DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{653F1508-8E48-496C-8542-DAD78C3661DE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7202F8E9-707F-43BB-8B75-CDC3D0C025F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7202F8E9-707F-43BB-8B75-CDC3D0C025F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7202F8E9-707F-43BB-8B75-CDC3D0C025F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7202F8E9-707F-43BB-8B75-CDC3D0C025F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

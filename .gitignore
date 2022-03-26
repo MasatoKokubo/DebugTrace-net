@@ -290,3 +290,4 @@ __pycache__/
 *.db
 DebugTrace/Help/
 *.zip
+DebugTraceDoc/

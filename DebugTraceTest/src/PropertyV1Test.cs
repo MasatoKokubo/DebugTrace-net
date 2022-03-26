@@ -4,73 +4,73 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static DebugTrace.CSharp;
 using DebugTrace;
 
-namespace DebugTraceTest {
-    [TestClass]
-    public class PropertyV1Test {
-        // testProperties
-        // ClassInit
-        [ClassInitialize]
-        public static void ClassInit(TestContext context) {
-            TraceBase.InitClass("DebugTrace_PropertyV1Test");
-        }
+namespace DebugTraceTest;
 
-        // ClassCleanup
-        [ClassCleanup]
-        public static void ClassCleanup() {
-            TraceBase.InitClass("DebugTrace");
-        }
+[TestClass]
+public class PropertyV1Test {
+    // testProperties
+    // ClassInit
+    [ClassInitialize]
+    public static void ClassInit(TestContext context) {
+        TraceBase.InitClass("DebugTrace_PropertyV1Test");
+    }
 
-        // TraceBase.InitClass
-        [TestMethod]
-        public void TraceBaseInitClass() {
-            Assert.AreEqual(Resource.Unescape("_Enter_ {0}.{1} ({2}:{3:D})")             , TraceBase.EnterFormat                      );
-            Assert.AreEqual(Resource.Unescape("_Leave_ {0}.{1} ({2}:{3:D})")             , TraceBase.LeaveFormat                      );
+    // ClassCleanup
+    [ClassCleanup]
+    public static void ClassCleanup() {
+        TraceBase.InitClass("DebugTrace");
+    }
 
-            Assert.AreEqual(Resource.Unescape("||")                                      , TraceBase.IndentString                     );
+    // TraceBase.InitClass
+    [TestMethod]
+    public void TraceBaseInitClass() {
+        Assert.AreEqual(Resource.Unescape("_Enter_ {0}.{1} ({2}:{3:D})")             , TraceBase.EnterFormat                      );
+        Assert.AreEqual(Resource.Unescape("_Leave_ {0}.{1} ({2}:{3:D})")             , TraceBase.LeaveFormat                      );
 
-            Assert.AreEqual(Resource.Unescape("<NonPrint>")                              , TraceBase.NonOutputString                  );
+        Assert.AreEqual(Resource.Unescape("||")                                      , TraceBase.IndentString                     );
 
-            Assert.AreEqual(Resource.Unescape("(_Length_:{0})")                          , TraceBase.LengthFormat                     ); // since 1.5.1
+        Assert.AreEqual(Resource.Unescape("<NonPrint>")                              , TraceBase.NonOutputString                  );
 
-            Assert.AreEqual(                  "60"                                       , TraceBase.MaximumDataOutputWidth.ToString());
-        }
+        Assert.AreEqual(Resource.Unescape("(_Length_:{0})")                          , TraceBase.LengthFormat                     ); // since 1.5.1
 
-        // EnterFormat
-        [TestMethod]
-        public void EnterFormat() {
-            Trace.Enter();
-            StringAssert.Contains(Trace.LastLog, "_Enter_");
-        }
+        Assert.AreEqual(                  "60"                                       , TraceBase.MaximumDataOutputWidth.ToString());
+    }
 
-        // LeaveFormat
-        [TestMethod]
-        public void LeaveFormat() {
-            Trace.Leave();
-            StringAssert.Contains(Trace.LastLog, "_Leave_");
-        }
+    // EnterFormat
+    [TestMethod]
+    public void EnterFormat() {
+        Trace.Enter();
+        StringAssert.Contains(Trace.LastLog, "_Enter_");
+    }
 
-        // IndentString
-        [TestMethod]
-        public void IndentString() {
-            Trace.Enter();
-            Trace.Enter();
-            StringAssert.Contains(Trace.LastLog, TraceBase.IndentString);
-            Trace.Leave();
-            Trace.Leave();
-        }
+    // LeaveFormat
+    [TestMethod]
+    public void LeaveFormat() {
+        Trace.Leave();
+        StringAssert.Contains(Trace.LastLog, "_Leave_");
+    }
 
-        // NonOutputString
-        [TestMethod]
-        public void NonOutputString() {
-            Trace.Print("point", new Point(1, 2));
-            StringAssert.Contains(Trace.LastLog, TraceBase.NonOutputString);
-        }
+    // IndentString
+    [TestMethod]
+    public void IndentString() {
+        Trace.Enter();
+        Trace.Enter();
+        StringAssert.Contains(Trace.LastLog, TraceBase.IndentString);
+        Trace.Leave();
+        Trace.Leave();
+    }
 
-        // LengthFormat
-        [TestMethod]
-        public void LengthFormat() {
-            Trace.Print("value", "ABCDE");
-            StringAssert.Contains(Trace.LastLog, string.Format(TraceBase.LengthFormat, 5));
-        }
+    // NonOutputString
+    [TestMethod]
+    public void NonOutputString() {
+        Trace.Print("point", new Point(1, 2));
+        StringAssert.Contains(Trace.LastLog, TraceBase.NonOutputString);
+    }
+
+    // LengthFormat
+    [TestMethod]
+    public void LengthFormat() {
+        Trace.Print("value", "ABCDE");
+        StringAssert.Contains(Trace.LastLog, string.Format(TraceBase.LengthFormat, 5));
     }
 }

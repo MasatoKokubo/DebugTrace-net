@@ -1,17 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <Version>2.0.0</Version>
+    <Version>3.0.0</Version>
     <Authors>Masato Kokubo</Authors>
     <Copyright>© 2018 Masato Kokubo</Copyright>
     <PackageProjectUrl>https://github.com/MasatoKokubo/DebugTrace-net</PackageProjectUrl>
-    <PackageIcon>DebugTrace-32.png</PackageIcon>
+    <PackageIcon>DebugTrace-256.png</PackageIcon>
     <RepositoryUrl>https://github.com/MasatoKokubo/DebugTrace-net.git</RepositoryUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Description>Bridge library that uses NLog for DebugTrace-net output.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -23,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NLog" Version="4.7.0" />
+    <PackageReference Include="NLog" Version="4.7.15" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,13 +32,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\DebugTrace\DebugTrace-32.png">
+    <None Include="..\DebugTrace\DebugTrace-256.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
     <None Include="..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
 
