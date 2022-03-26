@@ -18,8 +18,8 @@ namespace DebugTraceTest {
         [ClassInitialize]
         public static void ClassInit(TestContext context) {
             beforeLogger = TraceBase.Logger;
-            log4netFileInfo = new FileInfo("C:/Logs/DebugTrace/Log4net.log");
-            nLogFileInfo = new FileInfo("C:/Logs/DebugTrace/NLog.log");
+            log4netFileInfo = new FileInfo("/Logs/DebugTrace/Log4net.log");
+            nLogFileInfo = new FileInfo("/Logs/DebugTrace/NLog.log");
             try {
                 using (var stream = log4netFileInfo.Open(FileMode.Truncate)) {}
             }

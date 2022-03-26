@@ -10,7 +10,7 @@ Namespace DebugTraceTest
         <DataRow(False, "v = False ")>
         <DataRow(True, "v = True ")>
         Public Sub PrintBoolean(v As Boolean, expect As String)
-            Trace.Print("v", v)
+            Assert.AreEqual(v, Trace.Print("v", v))
             StringAssert.Contains(Trace.LastLog, expect)
         End Sub
 
@@ -22,7 +22,7 @@ Namespace DebugTraceTest
         <DataRow(CSByte(   1), "v = SByte 1 ")>
         <DataRow(CSByte( 127), "v = SByte 127 ")>
         Public Sub PrintSByte(v As SByte, expect As String)
-            Trace.Print("v", v)
+            Assert.AreEqual(v, Trace.Print("v", v))
             StringAssert.Contains(Trace.LastLog, expect)
         End Sub
 
@@ -32,7 +32,7 @@ Namespace DebugTraceTest
         <DataRow(CByte(  1), "v = Byte 1 ")>
         <DataRow(CByte(255), "v = Byte 255 ")>
         Public Sub PrintByte(v As Byte, expect As String)
-            Trace.Print("v", v)
+            Assert.AreEqual(v, Trace.Print("v", v))
             StringAssert.Contains(Trace.LastLog, expect)
         End Sub
 
@@ -44,7 +44,7 @@ Namespace DebugTraceTest
         <DataRow(     1S, "v = 1S ")>
         <DataRow( 32767S, "v = 32767S ")>
         Public Sub PrintShort(v As Short, expect As String)
-            Trace.Print("v", v)
+            Assert.AreEqual(v, Trace.Print("v", v))
             StringAssert.Contains(Trace.LastLog, expect)
         End Sub
 
@@ -54,7 +54,7 @@ Namespace DebugTraceTest
         <DataRow(    1US, "v = 1US ")>
         <DataRow(65535US, "v = 65535US ")>
         Public Sub PrintUShort(v As UShort, expect As String)
-            Trace.Print("v", v)
+            Assert.AreEqual(v, Trace.Print("v", v))
             StringAssert.Contains(Trace.LastLog, expect)
         End Sub
 
@@ -76,7 +76,7 @@ Namespace DebugTraceTest
         <DataRow(         1UI, "v = 1U ")>
         <DataRow(4294967295UI, "v = 4294967295U ")>
         Public Sub PrintUInteger(v As UInteger, expect As String)
-            Trace.Print("v", v)
+            Assert.AreEqual(v, Trace.Print("v", v))
             StringAssert.Contains(Trace.LastLog, expect)
         End Sub
 
@@ -98,7 +98,7 @@ Namespace DebugTraceTest
         <DataRow(                   1UL, "v = 1UL ")>
         <DataRow(18446744073709551615UL, "v = 18446744073709551615UL ")>
         Public Sub PrintULong(v As ULong, expect As String)
-            Trace.Print("v", v)
+            Assert.AreEqual(v, Trace.Print("v", v))
             StringAssert.Contains(Trace.LastLog, expect)
         End Sub
 
@@ -111,9 +111,10 @@ Namespace DebugTraceTest
         <DataRow(         "-1"           , "v = -1D ")>
         <DataRow(          "0"           , "v = 0D ")>
         <DataRow(          "1"           , "v = 1D ")>
-        <DataRow( "9876543210.0123456789", "v = 9876543210.0123456789D ")>
-        Public Sub PrintDecimal(v As String, expect As String)
-            Trace.Print("v", decimal.Parse(v))
+        <DataRow("9876543210.0123456789", "v = 9876543210.0123456789D ")>
+        Public Sub PrintDecimal(str As String, expect As String)
+            Dim v = Decimal.Parse(str)
+            Assert.AreEqual(v, Trace.Print("v", v))
             StringAssert.Contains(Trace.LastLog, expect)
         End Sub
 
@@ -129,7 +130,7 @@ Namespace DebugTraceTest
         <DataRow(  210.012F, "v = 210.012F ")>
         <DataRow( 3210.012F, "v = 3210.012F ")>
         Public Sub PrintSingle(v As Single, expect As String)
-            Trace.Print("v", v)
+            Assert.AreEqual(v, Trace.Print("v", v))
             StringAssert.Contains(Trace.LastLog, expect)
         End Sub
 
@@ -153,7 +154,7 @@ Namespace DebugTraceTest
         <DataRow(  6543210.0123456, "v = 6543210.0123456 ")>
         <DataRow( 76543210.0123456, "v = 76543210.0123456 ")>
         Public Sub PrintDouble(v As Double, expect As String)
-            Trace.Print("v", v)
+            Assert.AreEqual(v, Trace.Print("v", v))
             StringAssert.Contains(Trace.LastLog, expect)
         End Sub
 

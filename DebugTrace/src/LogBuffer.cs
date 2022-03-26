@@ -63,22 +63,17 @@ namespace DebugTrace {
         /// <summary>
         /// Appends lines of another <c>LogBuffer</c>.
         /// </summary>
+        /// <param name="separator">the separator</param>
         /// <param name="buff">another <c>LogBuffer</c></param>
         /// <returns>this object</returns>
-    // 2.0.3
-    //  public LogBuffer Append(LogBuffer buff) {
         public LogBuffer Append(string? separator, LogBuffer buff) {
         if (separator != null)
             Append(separator, 0, true);
-    ////
             var index = 0;
             foreach ((var nestLevel, var str) in buff.Lines) {
                 if (index > 0)
                     LineFeed();
-            // 2.0.3
-            //  Append(str, nestLevel);
                 Append(str, nestLevel, index == 0 && separator != null);
-            ////
                 ++index;
             }
             return this;

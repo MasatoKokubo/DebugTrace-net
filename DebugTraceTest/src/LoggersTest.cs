@@ -20,7 +20,7 @@ namespace DebugTraceTest {
         // ClassInit
         [ClassInitialize]
         public static void ClassInit(TestContext context) {
-            nLogFileInfo = new FileInfo("C:/Logs/DebugTrace/NLog.log");
+            nLogFileInfo = new FileInfo("/Logs/DebugTrace/NLog.log");
             try {
                 using (var stream = nLogFileInfo.Open(FileMode.Truncate)) {}
             }

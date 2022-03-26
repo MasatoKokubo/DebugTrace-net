@@ -46,32 +46,35 @@ namespace DebugTrace {
         /// Outputs the message to the log.
         /// </summary>
         /// <param name="message">a message</param>
-        void Print(string message);
+        /// <returns>the message</returns>
+        string Print(string message);
 
         /// <summary>
         /// Outputs a message to the log.
         /// </summary>
         /// <param name="messageSupplier">a message supplier</param>
-        void Print(Func<string> messageSupplier);
+        /// <returns>the message if IsEnabled(), otherwise null</returns>
+        string Print(Func<string> messageSupplier);
 
         /// <summary>
         /// Outputs the name and value to the log.
         /// </summary>
         /// <param name="name">the name of the value</param>
         /// <param name="value">the value to output (nullable)</param>
-        void Print(string name, object? value);
+        /// <returns>the value</returns>
+        object? Print(string name, object? value);
 
         /// <summary>
         /// Outputs the name and value to the log.
         /// </summary>
         /// <param name="name">the name of the value</param>
         /// <param name="valueSupplier">the supplier of value to output</param>
-        void Print(string name, Func<object?> valueSupplier);
+        object? Print(string name, Func<object?> valueSupplier);
 
         /// <summary>
         /// Outputs an array of StackTraceElement to the log.
         /// </summary>
-        /// <param name="maxCount">maximum number of stack trace elements to output</returns>
+        /// <param name="maxCount">maximum number of stack trace elements to output</param>
         /// <since>1.5.5</since>
         void PrintStack(int maxCount);
     }

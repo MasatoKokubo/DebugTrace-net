@@ -3,16 +3,20 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Nullable>enable</Nullable>
-    <Version>2.0.3</Version>
+    <NullableReferenceTypes>true</NullableReferenceTypes>
+    <Version>2.1.0</Version>
     <Authors>Masato Kokubo</Authors>
     <Company>Masato Kokubo</Company>
     <Copyright>© 2018 Masato Kokubo</Copyright>
     <Description>DebugTrace-net is a library that outputs trace logs when debugging .NET programs.</Description>
-    <PackageIcon>DebugTrace-32.png</PackageIcon>
+    <PackageIcon>DebugTrace-256.png</PackageIcon>
     <RepositoryUrl>https://github.com/MasatoKokubo/DebugTrace-net.git</RepositoryUrl>
     <PackageProjectUrl>https://github.com/MasatoKokubo/DebugTrace-net</PackageProjectUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>Print methods now returns the value or the message of the argument.
+Now prints the runtime .NET version in the DbeugTrace-net startup log.</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -24,11 +28,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="DebugTrace-32.png">
+    <None Include="..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-    <None Include="..\LICENSE">
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="DebugTrace-256.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>

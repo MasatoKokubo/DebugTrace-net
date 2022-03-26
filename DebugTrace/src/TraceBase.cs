@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 
@@ -338,10 +339,12 @@ namespace DebugTrace {
             for (var index = 1; index < dataIndentStrings.Length; ++index)
                 dataIndentStrings[index] = dataIndentStrings[index - 1] + DataIndentString;
 
-            // output version log
+            // my version
             var versionAttribute = (AssemblyInformationalVersionAttribute?)
                 Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(), typeof(AssemblyInformationalVersionAttribute));
-            Logger.Log($"DebugTrace-net {versionAttribute?.InformationalVersion}");
+
+            // output version log
+            Logger.Log($"DebugTrace-net {versionAttribute?.InformationalVersion} on {RuntimeInformation.FrameworkDescription}");
             Logger.Log($"  properties file path: {Resource.FileInfo.FullName}");
             Logger.Log($"  logger: {Logger}");
         }
@@ -481,18 +484,25 @@ namespace DebugTrace {
         /// Outputs the message to the log.
         /// </summary>
         /// <param name="message">the message</param>
-        public void Print(string message) {
-            if (!IsEnabled) return;
-            PrintSub(message);
+        /// <returns>the message</returns>
+        public string Print(string message) {
+            if (IsEnabled)
+                PrintSub(message);
+            return message;
         }
 
         /// <summary>
         /// Outputs the message to the log.
         /// </summary>
         /// <param name="messageSupplier">the message supplier</param>
-        public void Print(Func<string> messageSupplier) {
-            if (!IsEnabled) return;
-            PrintSub(messageSupplier());
+        /// <returns>the message if IsEnabled, otherwise a empty string</returns>
+        public string Print(Func<string> messageSupplier) {
+            if (IsEnabled) {
+                var message = messageSupplier();
+                PrintSub(message);
+                return message;
+            }
+            return "";
         }
 
         /// <summary>
@@ -528,7 +538,7 @@ namespace DebugTrace {
         /// </summary>
         /// <param name="name">the name of the value</param>
         /// <param name="value">the value to output (nullable)</param>
-        protected void PrintSub(string name, object? value, bool innerUse = false) {
+        protected void PrintSub(string name, object? value) {
             lock (states) {
                 var state = GetCurrentState();
                 PrintStart(state); // Common start processing of output
@@ -537,17 +547,11 @@ namespace DebugTrace {
 
                 var buff = new LogBuffer();
 
-            // 2.0.3
-            //  buff.Append(name).NoBreakAppend(VarNameValueSeparator);
                 buff.Append(name);
-            ////
                 var normalizedName = name.Substring(name.LastIndexOf('.') + 1).Trim();
                 normalizedName = normalizedName.Substring(normalizedName.LastIndexOf(' ') + 1);
                 var valueBuff = ToString(value);
-            // 2.0.3
-            //  buff.Append(valueBuff);
                 buff.Append(VarNameValueSeparator, valueBuff);
-            ////
 
                 var element = GetStackTraceElement();
                 var suffix = string.Format(PrintSuffixFormat,
@@ -649,10 +653,12 @@ namespace DebugTrace {
         /// Outputs the name and value to the log.
         /// </summary>
         /// <param name="name">the name of the value</param>
-        /// <param name="value">the value to output (nullable)</param>
-        public void Print(string name, object? value) {
-            if (!IsEnabled) return;
-            PrintSub(name, value);
+        /// <param name="value">the value to output</param>
+        /// <returns>the value</returns>
+        public object? Print(string name, object? value) {
+            if (IsEnabled)
+                PrintSub(name, value);
+            return value;
         }
 
         /// <summary>
@@ -661,9 +667,19 @@ namespace DebugTrace {
         /// </summary>
         /// <param name="name">the name of the value</param>
         /// <param name="valueSupplier">the supplier of value to output</param>
-        public void Print(string name, Func<object?> valueSupplier) {
-            if (!IsEnabled) return;
-            PrintSub(name, valueSupplier());
+        /// <returns>the value if IsEnabled, otherwise a default value of the T type</returns>
+        public object? Print(string name, Func<object?> valueSupplier) {
+            if (IsEnabled) {
+                try {
+                    var value = valueSupplier();
+                    PrintSub(name, value);
+                    return value;
+                }
+                catch (Exception ex) {
+                    PrintSub(name, ex.ToString());
+                }
+            }
+            return default;
         }
 
         /// <summary>
@@ -738,10 +754,7 @@ namespace DebugTrace {
                     // Use Reflection
                     reflectedObjects.Add(value);
                     var valueBuff = ToStringReflection(value);
-                // 2.0.3
-                //  buff.Append(valueBuff);
                     buff.Append(null, valueBuff);
-                ////
                     reflectedObjects.RemoveAt(reflectedObjects.Count - 1);
                 }
             } else {
@@ -996,16 +1009,6 @@ namespace DebugTrace {
             if (escape) {
                 // escape
                 switch (ch) {
-            // 2.0.3
-            //  case '\0': buff.Append(@"\0"); break; // 00 NUL
-            //  case '\a': buff.Append(@"\a"); break; // 07 BEL
-            //  case '\b': buff.Append(@"\b"); break; // 08 BS
-            //  case '\t': buff.Append(@"\t"); break; // 09 HT
-            //  case '\n': buff.Append(@"\n"); break; // 0A LF
-            //  case '\v': buff.Append(@"\v"); break; // 0B VT
-            //  case '\f': buff.Append(@"\f"); break; // 0C FF
-            //  case '\r': buff.Append(@"\r"); break; // 0D CR
-            //  case '\\': buff.Append(@"\\"); break; // \
                 case '\0': buff.NoBreakAppend(@"\0"); break; // 00 NUL
                 case '\a': buff.NoBreakAppend(@"\a"); break; // 07 BEL
                 case '\b': buff.NoBreakAppend(@"\b"); break; // 08 BS
@@ -1015,28 +1018,18 @@ namespace DebugTrace {
                 case '\f': buff.NoBreakAppend(@"\f"); break; // 0C FF
                 case '\r': buff.NoBreakAppend(@"\r"); break; // 0D CR
                 case '\\': buff.NoBreakAppend(@"\\"); break; // \
-            ////
                 default:
                     if (ch < ' ' || ch == '\u007F')
-                    // 2.0.3
-                    //  buff.Append(string.Format(@"\u{0:X4}", (ushort)ch));
                         buff.NoBreakAppend(string.Format(@"\u{0:X4}", (ushort)ch));
-                    ////
                     else {
                         if (ch == enclosure)
-                    // 2.0.3
-                    //      buff.Append('\\');
-                    //  buff.Append(ch);
                             buff.NoBreakAppend('\\');
                         buff.NoBreakAppend(ch);
-                    ////
                     }
                     break;
                 }
             } else {
                 // dose not escape
-            // 2.0.3
-            //  buff.Append(ch);
                 buff.NoBreakAppend(ch);
             }
         }
@@ -1050,10 +1043,7 @@ namespace DebugTrace {
         /// <returns>always false</returns>
         protected void AppendString(LogBuffer buff, string str) {
             if (str.Length >= MinimumOutputLength)
-            // 2.0.3
-            //  buff.Append(string.Format(LengthFormat, str.Length));
                 buff.NoBreakAppend(string.Format(LengthFormat, str.Length));
-            ////
 
             var hasBackslash = false;
             var hasEscaped = false;
@@ -1068,28 +1058,18 @@ namespace DebugTrace {
             }
 
             if (hasBackslash && !hasEscaped)
-        // 2.0.3
-        //      buff.Append('@');
-        //  buff.Append('"');
                 buff.NoBreakAppend('@');
             buff.NoBreakAppend('"');
-        ////
 
             for (var index = 0; index < str.Length; ++index) {
                 if (index >= StringLimit) {
-                // 2.0.3
-                //  buff.Append(LimitString);
                     buff.NoBreakAppend(LimitString);
-                ////
                     break;
                 }
                 AppendChar(buff, str[index], '"', hasEscaped);
             }
 
-        // 2.0.3
-        //  buff.Append('"');
             buff.NoBreakAppend('"');
-        ////
         }
 
         /// <summary>
@@ -1113,10 +1093,7 @@ namespace DebugTrace {
                 buff.UpNest();
             }
 
-        // 2.0.3
-        //  buff.Append(bodyBuff);
             buff.Append(null, bodyBuff);
-        ////
 
             if (isMultiLines) {
                 buff.LineFeed();
@@ -1144,16 +1121,10 @@ namespace DebugTrace {
 
                 var value = dictionary[key!];
 
-            // 2.0.3
-            //  var elementBuff = ToString(key, true).NoBreakAppend(KeyValueSeparator).Append(ToString(value, true));
                 var elementBuff = ToString(key, true).Append(KeyValueSeparator, ToString(value, true));
-            ////
                 if (index > 0 && (wasMultiLines || elementBuff.IsMultiLines))
                     buff.LineFeed();
-            // 2.0.3
-            //  buff.Append(elementBuff);
                 buff.Append(null, elementBuff);
-            ////
 
                 wasMultiLines = elementBuff.IsMultiLines;
                 ++index;
@@ -1185,10 +1156,7 @@ namespace DebugTrace {
                 buff.UpNest();
             }
 
-        // 2.0.3
-        //  buff.Append(bodyBuff);
             buff.Append(null, bodyBuff);
-        ////
 
             if (isMultiLines) {
                 buff.LineFeed();
@@ -1217,10 +1185,7 @@ namespace DebugTrace {
                 var elementBuff = ToString(element, true);
                 if (index > 0 && (wasMultiLines || elementBuff.IsMultiLines))
                     buff.LineFeed();
-            // 2.0.3
-            //  buff.Append(elementBuff);
                 buff.Append(null, elementBuff);
-            ////
 
                 wasMultiLines = elementBuff.IsMultiLines;
                 ++index;
@@ -1286,10 +1251,7 @@ namespace DebugTrace {
                 buff.UpNest();
             }
 
-        // 2.0.3
-        //  buff.Append(bodyBuff);
             buff.Append(null, bodyBuff);
-        ////
 
             if (bodyBuff.IsMultiLines) {
                 if (buff.Length > 0)
@@ -1308,10 +1270,7 @@ namespace DebugTrace {
             if (baseType != null && baseType != typeof(object) && baseType != typeof(ValueType)) {
                 // Call for the base type
                 var baseBuff =  ToStringReflectionBody(obj, baseType, isExtended);
-            // 2.0.3
-            //  buff.Append(baseBuff);
                 buff.Append(null, baseBuff);
-            ////
             }
 
             var typeNamePrefix = type.Namespace + '.' + type.Name + "#";
@@ -1341,10 +1300,7 @@ namespace DebugTrace {
                 var valueBuff = ToStringReflectValue(type, obj, fieldInfo);
                 if (fieldPropertyIndex > 0 && (wasMultiLines || valueBuff.IsMultiLines))
                     buff.LineFeed();
-            // 2.0.3
-            //  buff.Append(valueBuff);
                 buff.Append(null, valueBuff);
-            ////
 
                 wasMultiLines = valueBuff.IsMultiLines;
                 ++fieldPropertyIndex;
@@ -1367,10 +1323,7 @@ namespace DebugTrace {
                 var valueBuff = ToStringReflectValue(type, obj, propertyInfo);
                 if (fieldPropertyIndex > 0 && (wasMultiLines || valueBuff.IsMultiLines))
                     buff.LineFeed();
-            // 2.0.3
-            //  buff.Append(valueBuff);
                 buff.Append(null, valueBuff);
-            ////
 
                 wasMultiLines = valueBuff.IsMultiLines;
                 ++fieldPropertyIndex;
@@ -1408,32 +1361,21 @@ namespace DebugTrace {
                 value = e.ToString();
             }
 
-        // 2.0.3
             var separator = null as string;
-        ////
             if (!IsTuple(type)) {
                 //  not Tuple
                 if (memberType != null && (value == null || memberType != value.GetType()))
                     buff.Append(GetFullTypeName(memberType)).Append(' ');
                 buff.Append(memberInfo.Name);
-            // 2.0.3
-            //  buff.NoBreakAppend(KeyValueSeparator);
                 separator = KeyValueSeparator;
-            ////
             }
 
             if (nonOutput) {
-            // 2.0.3
-            //  buff.Append(NonOutputString);
                 if (separator != null)
                     buff.NoBreakAppend(separator);
                 buff.NoBreakAppend(NonOutputString);
-            ////
             } else
-            // 2.0.3
-            //  buff.Append(ToString(value));
                 buff.Append(separator, ToString(value));
-            ////
 
             return buff;
         }
