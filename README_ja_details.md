@@ -1,4 +1,4 @@
-以下は、DebugTrace-netを使用したC#, Visual Basicの例とそれを実行した際のログです。
+以下は、DebugTrace-netを使用したC#の例とそれを実行した際のログです。
 
 &emsp;&emsp;_ReadmeExample.cs_
 ```c#
@@ -6,7 +6,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static DebugTrace.CSharp; // ToDo: Remove after debugging
+using DebugTrace; // TODO: Debug
 
 namespace Readme;
 
@@ -16,15 +16,15 @@ public class ReadmeExample1 {
     /// <summary>Example1</summary>
     [TestMethod]
     public void Example1() {
-        Trace.Enter(); // ToDo: Remove after debugging
+        Trace.Enter(); // TODO: Debug
 
         var contacts = new [] {
             new Contact(1, "Akane" , "Apple", new DateTime(1991, 2, 3)),
             new Contact(2, "Yukari", "Apple", new DateTime(1992, 3, 4))
         };
-        Trace.Print("contacts", contacts); // ToDo: Remove after debugging
+        Trace.Print("contacts", contacts); // TODO: Debug
 
-        Trace.Leave(); // ToDo: Remove after debugging
+        Trace.Leave(); // TODO: Debug
     }
 
 }
@@ -60,149 +60,48 @@ public class Contact : ContactBase {
 
 &emsp;&emsp;_コンソール出力 / C#_
 ```log
-2022-05-22 21:39:45.227 [04] DebugTrace-net 3.0.0 on .NET 6.0.5
-2022-05-22 21:39:45.231 [04]   properties file path: Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceTest\bin\Debug\net6.0\DebugTrace.properties
-2022-05-22 21:39:45.231 [04]   logger: DebugTrace.Console+Error
-2022-05-22 21:39:45.232 [04] 
-2022-05-22 21:39:45.232 [04] ______________________________ Thread 4 ______________________________
-2022-05-22 21:39:45.232 [04] 
-2022-05-22 21:39:45.265 [04] Enter Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:17)
-2022-05-22 21:39:45.275 [04] | 
-2022-05-22 21:39:45.275 [04] | contacts = Readme.Contact[2] {
-2022-05-22 21:39:45.275 [04] |   Readme.Contact {
-2022-05-22 21:39:45.275 [04] |     ____ Readme.Entity ____
-2022-05-22 21:39:45.275 [04] |     ID: 1
-2022-05-22 21:39:45.275 [04] |     ____ Readme.ContactBase ____
-2022-05-22 21:39:45.275 [04] |     FirstName: (Length:5)"Akane", LastName: (Length:5)"Apple"
-2022-05-22 21:39:45.275 [04] |     ____ Readme.Contact ____
-2022-05-22 21:39:45.275 [04] |     Birthday: 1991-02-03 00:00:00.0000000
-2022-05-22 21:39:45.275 [04] |   },
-2022-05-22 21:39:45.275 [04] |   Readme.Contact {
-2022-05-22 21:39:45.275 [04] |     ____ Readme.Entity ____
-2022-05-22 21:39:45.275 [04] |     ID: 2
-2022-05-22 21:39:45.275 [04] |     ____ Readme.ContactBase ____
-2022-05-22 21:39:45.275 [04] |     FirstName: (Length:6)"Yukari", LastName: (Length:5)"Apple"
-2022-05-22 21:39:45.275 [04] |     ____ Readme.Contact ____
-2022-05-22 21:39:45.275 [04] |     Birthday: 1992-03-04 00:00:00.0000000
-2022-05-22 21:39:45.275 [04] |   }
-2022-05-22 21:39:45.275 [04] | } (ReadmeExamples.cs:23)
-2022-05-22 21:39:45.275 [04] | 
-2022-05-22 21:39:45.276 [04] Leave Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:25) duration: 00:00:00.0102507
+2024-06-29 12:00:40.799 [04] DebugTrace-net 3.0.0 on .NET 6.0.31
+2024-06-29 12:00:40.802 [04]   properties file path: Z:\Develop\DebugTrace\DebugTrace-net\DebugTraceTest\bin\Debug\net6.0\DebugTrace.properties
+2024-06-29 12:00:40.802 [04]   logger: DebugTrace.Console+Error
+2024-06-29 12:00:40.803 [04] 
+2024-06-29 12:00:40.803 [04] ______________________________ Thread 4 ______________________________
+2024-06-29 12:00:40.803 [04] 
+2024-06-29 12:00:40.845 [04] Enter Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:17)
+2024-06-29 12:00:40.855 [04] | 
+2024-06-29 12:00:40.855 [04] | contacts = Readme.Contact[2] {
+2024-06-29 12:00:40.855 [04] |   Readme.Contact {
+2024-06-29 12:00:40.855 [04] |     ____ Readme.Entity ____
+2024-06-29 12:00:40.855 [04] |     ID: 1
+2024-06-29 12:00:40.855 [04] |     ____ Readme.ContactBase ____
+2024-06-29 12:00:40.855 [04] |     FirstName: "Akane", LastName: "Apple"
+2024-06-29 12:00:40.855 [04] |     ____ Readme.Contact ____
+2024-06-29 12:00:40.855 [04] |     Birthday: 1991-02-03 00:00:00.0000000
+2024-06-29 12:00:40.855 [04] |   },
+2024-06-29 12:00:40.855 [04] |   Readme.Contact {
+2024-06-29 12:00:40.855 [04] |     ____ Readme.Entity ____
+2024-06-29 12:00:40.855 [04] |     ID: 2
+2024-06-29 12:00:40.855 [04] |     ____ Readme.ContactBase ____
+2024-06-29 12:00:40.855 [04] |     FirstName: "Yukari", LastName: "Apple"
+2024-06-29 12:00:40.855 [04] |     ____ Readme.Contact ____
+2024-06-29 12:00:40.855 [04] |     Birthday: 1992-03-04 00:00:00.0000000
+2024-06-29 12:00:40.855 [04] |   }
+2024-06-29 12:00:40.855 [04] | } (ReadmeExamples.cs:23)
+2024-06-29 12:00:40.855 [04] | 
+2024-06-29 12:00:40.856 [04] Leave Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:25) duration: 00:00:00.0102235
 ```
 
-&emsp;&emsp;_ReadmeExample.vb (version 2.1.0)_
-```vb
-Imports System.Threading
-Imports Microsoft.VisualStudio.TestTools.UnitTesting
-Imports DebugTrace.VisualBasic ' for Debugging
+### 3.1 `using System.Diagnostics`を行っている場合
 
-Namespace Readme
-    ''' <summary>ReadmeExample1</summary>
-    <TestClass()>
-    Public Class ReadmeExample1
-        ''' <summary>Example1</summary>
-        <TestMethod()>
-        Public Sub Example1()
-            Trace.Enter() ' for Debugging
-
-            Dim contacts = New Contact() {
-                New Contact(1, "Akane", "Apple", New DateTime(1991, 2, 3)),
-                New Contact(2, "Yukari", "Apple", New DateTime(1992, 3, 4))
-            }
-            Trace.Print("contacts", contacts) ' for Debugging
-
-            Trace.Leave() ' for Debugging
-        End Sub
-    End Class
-
-    ''' <summary>Entity</summary>
-    Public class Entity
-        Public Property Id As Integer
-
-        Public Sub New(id_ As Integer)
-            Id = id_
-        End Sub
-    End Class
-
-    ''' <summary>ContactBase</summary>
-    public class ContactBase : Inherits Entity
-        Public Property FirstName As String
-        Public Property LastName As String
-
-        Public Sub New(id_ As Integer, firstName_ As String, lastName_ As String)
-            MyBase.New(id_)
-            FirstName = firstName_ : LastName = lastName_
-        End Sub
-    End Class
-
-    ''' <summary>Contact</summary>
-    Public Class Contact : Inherits ContactBase
-        Public Birthday As DateTime
-
-        Public Sub New(id_ As Integer, firstName_ As String, lastName_ As String, birthday_ As DateTime)
-            MyBase.New(id_, firstName_, lastName_)
-            Birthday = birthday_
-        End Sub
-    End Class
-End Namespace
-```
-
-&emsp;&emsp;_コンソール出力 / Visual Basic_
-```log
-2022-05-22 21:29:05.534 [05] DebugTrace-net 2.1.0 on .NET Core 3.1.25
-2022-05-22 21:29:05.535 [05]   properties file path: Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceVBTest\bin\Debug\netcoreapp3.1\DebugTrace.properties
-2022-05-22 21:29:05.535 [05]   logger: DebugTrace.Console+Error
-2022-05-22 21:29:05.536 [05] 
-2022-05-22 21:29:05.536 [05] ______________________________ Thread 5 ______________________________
-2022-05-22 21:29:05.536 [05] 
-2022-05-22 21:29:05.567 [05] Enter DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:12)
-2022-05-22 21:29:05.576 [05] | 
-2022-05-22 21:29:05.576 [05] | contacts = DebugTraceVBTest.Readme.Contact(Length: 2) {
-2022-05-22 21:29:05.576 [05] |   DebugTraceVBTest.Readme.Contact {
-2022-05-22 21:29:05.576 [05] |     ____ DebugTraceVBTest.Readme.Entity ____
-2022-05-22 21:29:05.576 [05] |     Id: 1
-2022-05-22 21:29:05.576 [05] |     ____ DebugTraceVBTest.Readme.ContactBase ____
-2022-05-22 21:29:05.576 [05] |     FirstName: (Length:5)"Akane", LastName: (Length:5)"Apple"
-2022-05-22 21:29:05.576 [05] |     ____ DebugTraceVBTest.Readme.Contact ____
-2022-05-22 21:29:05.576 [05] |     Birthday: 1991-02-03 00:00:00.0000000
-2022-05-22 21:29:05.576 [05] |   },
-2022-05-22 21:29:05.576 [05] |   DebugTraceVBTest.Readme.Contact {
-2022-05-22 21:29:05.576 [05] |     ____ DebugTraceVBTest.Readme.Entity ____
-2022-05-22 21:29:05.576 [05] |     Id: 2
-2022-05-22 21:29:05.576 [05] |     ____ DebugTraceVBTest.Readme.ContactBase ____
-2022-05-22 21:29:05.576 [05] |     FirstName: (Length:6)"Yukari", LastName: (Length:5)"Apple"
-2022-05-22 21:29:05.576 [05] |     ____ DebugTraceVBTest.Readme.Contact ____
-2022-05-22 21:29:05.576 [05] |     Birthday: 1992-03-04 00:00:00.0000000
-2022-05-22 21:29:05.576 [05] |   }
-2022-05-22 21:29:05.576 [05] | } (ReadmeExamples.vb:18)
-2022-05-22 21:29:05.576 [05] | 
-2022-05-22 21:29:05.577 [05] Leave DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:20) duration: 00:00:00.0091880
-```
-
-### 3.1 using System.Diagnostics(Imports System.Diagnostics)を行っている場合
-
-`System.Diagnostics` 名前空間を `using`(`Imports`) している場合は、`DebugTrace.CSharp.Trace` (`DebugTrace.VisualBaisc.Trace`) プロパティと `System.Diagnostics.Trace` クラスが重なるため、`Trace` プロパティの代わりに `Trace_` プロパティを使用してください。
+`System.Diagnostics`名前空間を`using`している場合は、`DebugTrace.Trace`クラスと`System.Diagnostics.Trace`クラスが重なるため、名前空間付きの`DebugTrace.Trace`を使用してください。
 
 &emsp;&emsp;_ReadmeExample.cs_
 ```c#
 using System.Diagnostics;
-using static DebugTrace.CSharp; // ToDo: Remove after debugging
 
 namespace Readme {
     public class ReadmeExample {
         public static void Main(string[] args) {
-            Trace_.Enter(); // ToDo: Remove after debugging
-```
-
-&emsp;&emsp;_ReadmeExample.vb_
-```vb
-Imports System.Diagnostics
-Imports DebugTrace.VisualBasic ' for Debugging
-
-Namespace Global.Readme
-    Public Class ReadmeExample
-        Public Shared Sub Main(args As String())
-            Trace_.Enter() ' for Debugging
+            DebugTrace.Trace.Enter(); // TODO: Debug
 ```
 
 ## 4. インタフェース、クラス
@@ -212,24 +111,17 @@ Namespace Global.Readme
 &emsp;&emsp;_インタフェース、クラス_
 <table>
     <tr><th>名 前</th><th>スーパークラス、実装するインタフェース</th><th>説 明</th></tr>
-    <tr><td>DebugTrace.ITrace       </td><td>なし              </td><td>Trace処理のインタフェース</td></tr>
-    <tr><td>DebugTrace.TraceBase    </td><td>DebugTrace.ITrace </td><td>Trace処理のベースクラス</td></tr>
-    <tr><td>DebugTrace.CSharp       </td><td>DebugTrace.Trace  </td><td>C#用のTrace処理のクラス</td></tr>
-    <tr><td>DebugTrace.VisualBasic  </td><td>DebugTrace.Trace  </td><td>VisualBasic用のTrace処理のクラス</td></tr>
-    <tr><td>DebugTrace.ILogger      </td><td>なし              </td><td>ログ出力のインタフェース</td></tr>
-    <tr><td>DebugTrace.Console      </td><td>DebugTrace.ILogger</td><td><code>DebugTrace.Console.Out</code>と<code>DebugTrace.Console.Error</code>の抽象スーパークラス</td></tr>
-    <tr><td>DebugTrace.Console.Out  </td><td>DebugTrace.Console</td><td>ログを標準出力に出力するクラス</td></tr>
-    <tr><td>DebugTrace.Console.Error</td><td>DebugTrace.Console</td><td>ログを標準エラー出力に出力するクラス</td></tr>
-    <tr><td>DebugTrace.Diagnostics<br>&emsp;<i>1.6.0 より</i></td><td>DebugTrace.ILogger</td><td><code>DebugTrace.Diagnostics.Debug</code>と<code>DebugTrace.Diagnostics.Trace</code>の抽象スーパークラス</td></tr>
-    <tr><td>DebugTrace.Diagnostics.Debug<br>&emsp;<i>1.6.0 より</i></td><td>DebugTrace.Diagnostics</td><td>ログを<code>System.Diagnostics.Debug</code>を使用して出力するクラス</td></tr>
-    <tr><td>DebugTrace.Diagnostics.Trace<br>&emsp;<i>1.6.0 より</i></td><td>DebugTrace.Diagnostics</td><td>ログを<code>System.Diagnostics.Trace</code>を使用して出力するクラス</td></tr>
+    <tr><td>DebugTrace.Trace            </td><td>なし                   </td><td>トレース処理のクラス</td></tr>
+    <tr><td>DebugTrace.ILogger          </td><td>なし                   </td><td>ログ出力のインタフェース</td></tr>
+    <tr><td>DebugTrace.Console          </td><td>DebugTrace.ILogger    </td><td><code>DebugTrace.Console.Out</code>と<code>DebugTrace.Console.Error</code>の抽象スーパークラス</td></tr>
+    <tr><td>DebugTrace.Console.Out      </td><td>DebugTrace.Console    </td><td>ログを標準出力に出力するクラス</td></tr>
+    <tr><td>DebugTrace.Console.Error    </td><td>DebugTrace.Console    </td><td>ログを標準エラー出力に出力するクラス</td></tr>
+    <tr><td>DebugTrace.Diagnostics      </td><td>DebugTrace.ILogger    </td><td><code>DebugTrace.Diagnostics.Debug</code>と<code>DebugTrace.Diagnostics.Trace</code>の抽象スーパークラス</td></tr>
+    <tr><td>DebugTrace.Diagnostics.Debug</td><td>DebugTrace.Diagnostics</td><td>ログを<code>System.Diagnostics.Debug</code>を使用して出力するクラス</td></tr>
+    <tr><td>DebugTrace.Diagnostics.Trace</td><td>DebugTrace.Diagnostics</td><td>ログを<code>System.Diagnostics.Trace</code>を使用して出力するクラス</td></tr>
 </table>
 
-## 5. DebugTrace.CSharpおよびDebugTrace.VisualBasicクラスのプロパティ
-
-`DebugTrace.CSharp` クラスと `DebugTrace.VisualBasic` クラスには自身の型のインスタンスとして `Trace` および `Trace_` プロパティがあります。
-
-## 6. ITraceインタフェースのプロパティおよびメソッド
+## 5. Traceクラスのプロパティおよびメソッド
 
 以下のプロパティおよびメソッドがあります。
 
@@ -248,97 +140,88 @@ Namespace Global.Readme
 
 &emsp;&emsp;_メソッド表_
 <table>
-    <tr><th>名 前</th><th>DebugTrace<br>バージョン</th><th>引 数</th><th>戻り値</th><th>説 明</th></tr>
+    <tr><th>名 前</th><th>引 数</th><th>戻り値</th><th>説 明</th></tr>
     <tr>
         <td><code>ResetNest</code></td>
-        <td></td>
         <td><i>なし</i></td>
         <td><i>なし</i></td>
         <td>現在のスレッドのネストレベルを初期化する</td>
     </tr>
     <tr>
         <td><code>Enter</code></td>
-        <td></td>
         <td><i>なし</i></td>
         <td><code>int</code> スレッドID</td>
         <td>メソッドの開始をログに出力する</td>
     </tr>
     <tr>
         <td><code>Leave</code></td>
-        <td></td>
         <td><code>int threadId</code>: スレッドID<br>(デフォルト: <code>-1</code>)</td>
         <td><i>なし</i></td>
         <td>メソッドの終了をログに出力する</td>
     </tr>
     <tr>
-        <td rowspan=2><code>Print</code></td>
-        <td>2.1.0 以降</td>
-        <td rowspan=2><code>string message</code>: メッセージ</td>
+        <td><code>Print</code></td>
+        <td><code>string message</code>: メッセージ</td>
         <td>メッセージ</td>
-        <td rowspan=2>メッセージをログに出力する</td>
+        <td>メッセージをログに出力する</td>
     </tr>
     <tr>
-        <td>2.0.3 以前</td>
-        <td><i>なし</i></td>
-    </tr>
-    <tr>
-        <td rowspan=2><code>Print</code></td>
-        <td>2.1.0 以降</td>
-        <td rowspan=2><code>Func&lt;string&gt; messageSupplier</code>: メッセージを返す関数</td>
+        <td><code>Print</code></td>
+        <td><code>Func&lt;string&gt; messageSupplier</code>: メッセージを返す関数</td>
         <td><code>messageSupplier</code> から取得したメッセージ</td>
-        <td rowspan=2><code>messageSupplier</code> からメッセージを取得してログに出力する</td>
+        <td><code>messageSupplier</code> からメッセージを取得してログに出力する</td>
     </tr>
     <tr>
-        <td>2.0.3 以前</td>
-        <td><i>なし</i></td>
-    </tr>
-    <tr>
-        <td rowspan=3><code>Print</code></td>
-        <td>3.0.0 以降</td>
+        <td><code>Print</code></td>
         <td>
-            <code>string name</code>: 値の名前<br>
-            <code>T value</code>: 値
+            <li><code>string name</code>: 値の名前<br>
+            <li><code>T value</code>: 値<br>
+            <li><code>bool forceReflection = false</code>:<br>
+                <small>trueの場合、ToString()メソッドがあってもリフレクションを使用して出力</small><br>
+            <br>
+            <small>以下はデフォルト値ではない場合は、DebugTrace.propertiesの設定を上書きする。</small><br>
+            <br>
+            <li><code>bool? outputNonPublicFields = null</code>:<br>
+                <small>true の場合、リフレクション使用時に非公開フィールドを出力する</small><br>
+            <li><code>bool? outputNonPublicProperties = null</code>:<br>
+                <small>true の場合、リフレクション使用時に非公開プロパティを出力する</small><br>
+            <li><code>int minimumOutputCount = -1</code>:<br>
+                <small>IDictionaryおよびIEnumerableの要素数を出力するための最小値</small><br>
+            <li><code>int minimumOutputLength = -1</code>:<br>
+                <small>文字列の長さを出力するための最小値</small><br>
+            <li><code>int collectionLimit = -1</code>:<br>
+                <small>IDictionaryおよびIEnumerableの出力する要素数の制限値</small><br>
+            <li><code>int stringLimit = -1</code>:<br>
+                <small>文字列の出力する文字数の制限値</small><br>
+            <li><code>reflectionNestLimit = -1</code>:<br>
+                <small>リフレクション使用時のネスト制限値</small>
         </td>
-        <td rowspan=2>値</td>
-        <td rowspan=3><code>name = value</code> の形式でログに出力する</td>
+        <td>値</td>
+        <td><code>name = value</code> の形式でログに出力する</td>
     </tr>
     <tr>
-        <td>2.1.0 以降</td>
-        <td rowspan=2>
-            <code>string name</code>: 値の名前<br>
-            <code>object value</code>: 値
-        </td>
-    </tr>
-    <tr>
-        <td>2.0.3 以前</td>
-        <td><i>なし</i></td>
-    </tr>
-    <tr>
-        <td rowspan=3><code>Print</code></td>
-        <td>3.0.0 以降</td>
+        <td><code>Print</code></td>
         <td>
-            <code>string name</code>: 値の名前<br>
-            <code>Func&lt;T&gt; valueSupplier</code>: 値を返す関数
+            <li><code>string name</code>: 値の名前<br>
+            <li><code>Func&lt;T&gt; valueSupplier</code>: 値を返す関数<br>
+            <br>
+            <small>以下は上を参照</small><br>
+            <li><code>bool forceReflection = false</code><br>
+            <li><code>bool? outputNonPublicFields = null</code><br>
+            <li><code>bool? outputNonPublicProperties = null</code><br>
+            <li><code>int minimumOutputCount = -1</code><br>
+            <li><code>int minimumOutputLength = -1</code><br>
+            <li><code>int collectionLimit = -1</code><br>
+            <li><code>int stringLimit = -1</code><br>
+            <li><code>reflectionNestLimit = -1</code><br>
         </td>
-        <td rowspan=2>値 obtained from <code>valueSupplier</code></td>
+        <td><code>valueSupplier</code>から取得した値</td>
         <td>
             <code>valueSupplier</code> から値を取得して <code>name = value</code> の形式でログに出力する
         </td>
     </tr>
     <tr>
-        <td>2.1.0 以降</td>
-        <td rowspan=2>
-            <code>string name</code>: 値の名前<br>
-            <code>Func&lt;object&gt; valueSupplier</code>: 値を返す関数
-        </td>
-    </tr>
-    <tr>
-        <td>2.0.3 以前</td>
-        <td><i>なし</i></td>
-    </tr>
-    <tr>
         <td><code>PrintStack</code></td>
-        <td>1.6.0 より</td>
         <td><code>int maxCount</code>: 出力するスタック要素の最大数</td>
         <td><i>なし</i></td>
         <td>コールスタックをログに出力する</td>
@@ -346,10 +229,10 @@ Namespace Global.Readme
 </table>
 
 
-## 7. **DebugTrace.properties** ファイルのプロパティ
+## 6. **DebugTrace.properties** ファイルのプロパティ
 
-DebugTrace は、カレントディレクトリにある `DebugTrace.properties` ファイルを起動時に読み込みます。
-`DebugTrace.properties` ファイルでは以下のプロパティを指定できます。
+DebugTrace は、カレントディレクトリにある`DebugTrace.properties`ファイルを起動時に読み込みます。
+`DebugTrace.properties`ファイルでは以下のプロパティを指定できます。
 
 &emsp;&emsp;_Table of DebugTrace.properties_
 <table>
@@ -361,11 +244,11 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
             <b>設定例:</b><br>
             &emsp;&emsp;<code>Logger = Console+Out</code> - <i>コンソール(標準出力)へ出力</i><br>
             &emsp;&emsp;<code>Logger = Console+Error</code> - <i>コンソール(標準エラー出力)へ出力 <i>(デフォルト)</i></i><br>
-            &emsp;&emsp;<code>Logger = Diagnostics+Debug</code> - <i><code>System.Diagnostics.Debug</code> クラスを使用して出力 - 1.6.0 より</i><br>
-            &emsp;&emsp;<code>Logger = Diagnostics+Trace</code> - <i><code>System.Diagnostics.Trace</code> クラスを使用して出力 - 1.6.0 より</i><br>
+            &emsp;&emsp;<code>Logger = Diagnostics+Debug</code> - <i><code>System.Diagnostics.Debug</code> クラスを使用して出力</i><br>
+            &emsp;&emsp;<code>Logger = Diagnostics+Trace</code> - <i><code>System.Diagnostics.Trace</code> クラスを使用して出力</i><br>
             &emsp;&emsp;<code>Logger = Log4net</code> - <i><code>Log4net</code> を使用して出力</i><br>
             &emsp;&emsp;<code>Logger = NLog</code> - <i><code>NLog</code> を使用して出力</i><br>
-            <b>設定例(複数):</b> - <i>1.5.0 より</i><br>
+            <b>設定例(複数):</b><br>
             &emsp;&emsp;<code>Logger = Console+Out; Log4net</code> - <i>Outputs to the console (stdout) and using <code>Log4net</code></i>
         </td>
     </tr>
@@ -401,16 +284,12 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
             &emsp;&emsp;<code>LogLevel = Off</code><br>
             <b>Log4net と NLog を同時使用する際の設定例:</b> (Logger = Log4net; NLog)<br>
             &emsp;&emsp;<code>LogLevel = Debug</code> - <i><code>Log4net</code> と <code>NLog</code> の両方に <code>Debug</code> レベルで出力</code></i><br>
-            &emsp;&emsp;<code>LogLevel = Finer; Trace</code> - <i><code>Log4net</code> では <code>Finer </code>レベル、<code>NLog</code> では <code>Trace</code> レベルで出力 - 1.5.0 より</i>
+            &emsp;&emsp;<code>LogLevel = Finer; Trace</code> - <i><code>Log4net</code> では <code>Finer </code>レベル、<code>NLog</code> では <code>Trace</code> レベルで出力</i>
         </td>
     </tr>
     <tr>
         <td>
-            <code>EnterFormat</code><br>
-            &emsp;<i>2.0.0 より名称変更</i><br>
-            <br>
-            <i><code>EnterString</code></i><br>
-            &emsp;<i>2.0.0 より非推奨</i>
+            <code>EnterFormat</code>
         </td>
         <td>
             メソッドに入る際に出力するログのフォーマット文字列<br>
@@ -425,11 +304,7 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
     </tr>
     <tr>
         <td>
-            <code>LeaveFormat</code><br>
-            &emsp;<i>2.0.0 より名称変更</i><br>
-            <br>
-            <i><code>LeaveString</code></i><br>
-            &emsp;<i>2.0.0 より非推奨</i>
+            <code>LeaveFormat</code>
         </td>
         <td>
             メソッドから出る際のログ出力のフォーマット文字列<br>
@@ -445,11 +320,7 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
     </tr>
     <tr>
         <td>
-            <code>ThreadBoundaryFormat</code><br>
-            &emsp;<i>2.0.0 より名称変更</i><br>
-            <br>
-            <i><code>ThreadBoundaryString</code></i><br>
-            &emsp;<i>2.0.0 より非推奨</i></td>
+            <code>ThreadBoundaryFormat</code></td>
         <td>
             スレッド境界のログ出力の文字列フォーマット<br>
             <b>設定例:</b><br>
@@ -461,11 +332,7 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
     </tr>
     <tr>
         <td>
-            <code>ClassBoundaryFormat</code><br>
-            &emsp;<i>2.0.0 より名称変更</i><br>
-            <br>
-            <i><code>ClassBoundaryString</code></i><br>
-            &emsp;<i>2.0.0 より非推奨</i></td>
+            <code>ClassBoundaryFormat</code</td>
         <td>
             クラス境界のログ出力の文字列フォーマット<br>
             <b>設定例:</b><br>
@@ -476,11 +343,7 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
     </tr>
     <tr>
         <td>
-            <code>IndentString</code><br>
-            &emsp;<i>2.0.0 より名称変更</i><br>
-            <br>
-            <i><code>CodeIndentString</code></i><br>
-            &emsp;<i>2.0.0 より非推奨</i>
+            <code>IndentString</code>
         </td>
         <td>
             コードのインデント文字列<br>
@@ -508,11 +371,7 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
     </tr>
     <tr>
         <td>
-            <code>NonOutputString</code><br>
-            &emsp;<i>2.0.0 より名称変更</i><br>
-            <br>
-            <i><code>NonPrintString</code></i><br>
-            &emsp;<i>2.0.0 より非推奨</i>
+            <code>NonOutputString</code>
         </td>
         <td>
             値を出力しない場合に代わりに出力する文字列<br>
@@ -562,8 +421,7 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
     </tr>
     <tr>
         <td>
-            <code>CountFormat</code><br>
-            &emsp;<i>1.5.1 より</i>
+            <code>CountFormat</code>
         </td>
         <td>
             コレクションの要素数のフォーマット<br>
@@ -575,8 +433,7 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
     </tr>
     <tr>
         <td>
-            <code>MinimumOutputCount</code><br>
-            &emsp;<i>since 2.0.0</i>
+            <code>MinimumOutputCount</code>
         </td>
         <td>
             コレクションの要素数を出力する最小値<br>
@@ -586,12 +443,7 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
     </tr>
     <tr>
         <td>
-            <code>LengthFormat</code><br>
-            &emsp;<i>2.0.0 より名称変更</i><br>
-            <br>
-            <code>StringLengthFormat</code><br>
-            &emsp;<i>1.5.1 より</i><br>
-            &emsp;<i>2.0.0 より非推奨</i></td>
+            <code>LengthFormat</code>
         <td>
             文字列長のフォーマット<br>
             <b>設定例:</b><br>
@@ -602,8 +454,7 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
     </tr>
     <tr>
         <td>
-            <code>MinimumOutputLength</code><br>
-            &emsp;<i>since 2.0.0</i>
+            <code>MinimumOutputLength</code>
         </td>
         <td>
             文字列長を出力する最小値<br>
@@ -635,11 +486,8 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
     </tr>
     <tr>
         <td>
-            <code>MaximumDataOutputWidth</code><br>
-            &emsp;<i>2.0.0 より名称変更</i><br>
-            <br>
-            <code>MaxDataOutputWidth</code><br>
-            &emsp;<i>2.0.0 より非推奨</i></td>
+            <code>MaximumDataOutputWidth</code>
+        </td>
         <td>
             データの出力幅の最大値<br>
             <b>設定例:</b><br>
@@ -672,11 +520,7 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
     </tr>
     <tr>
         <td>
-            <code>NonOutputProperties</code><br>
-            &emsp;<i>2.0.0 より名称変更</i><br>
-            <br>
-            <i><code>NonPrintProperties</code></i><br>
-            &emsp;<i>2.0.0 より非推奨</i>
+            <code>NonOutputProperties</code>
         </td>
         <td>
             出力しないプロパティ名およびフィールド名の配列<br>
@@ -744,22 +588,22 @@ DebugTrace は、カレントディレクトリにある `DebugTrace.properties`
 
 ### 7.1. DebugTrace.properties ファイルの追加
 
-以下の手順でプロジェクトに `DebugTrace.properties` ファイルを追加します。
+以下の手順でプロジェクトに`DebugTrace.properties`ファイルを追加します。
 
-1. プロジェクトのコンテキストメニューから `追加` - `新しい項目...` を選択する。
-1. ダイアログで、 `テキスト ファイル` を選択し、名前を `DebugTrace.properties` にして `追加` ボタンをクリックする。
-1. 追加された `DebugTrace.properties` のコンテキストメニューから `プロパティ` を選択する。
-1. `プロパティ` の `詳細` セクションにある `出力ディレクトリにコピー` の設定値を `新しい場合はコピーする` または `常にコピーする` に変更する。
+1. プロジェクトのコンテキストメニューから`追加` - `新しい項目...`を選択する。
+1. ダイアログで、`テキスト ファイル`を選択し、名前を`DebugTrace.properties`にして`追加`ボタンをクリックする。
+1. 追加された`DebugTrace.properties`のコンテキストメニューから`プロパティ`を選択する。
+1. `プロパティ`の`詳細`セクションにある`出力ディレクトリにコピー`の設定値を`新しい場合はコピーする`または`常にコピーする`に変更する。
 
 
 ### 7.2. **NonOutputProperties**, **NonOutputString**
 
-DebugTrace use reflection to output object contenDebugTrace は、 `ToString` メソッドが実装されていない場合は、リフレクションを使用してオブジェクト内容を出力します。
+DebugTrace use reflection to output object contenDebugTrace は、`ToString`メソッドが実装されていない場合は、リフレクションを使用してオブジェクト内容を出力します。
 他のオブジェクトの参照があれば、そのオブジェクトの内容も出力します。
 ただし循環参照がある場合は、自動的に検出して出力を中断します。  
-`NonOutputProperties` プロパティを指定して出力を抑制する事もできます。
+`NonOutputProperties`プロパティを指定して出力を抑制する事もできます。
 このプロパティの値は、カンマ区切りで複数指定できます。  
-`NonOutputProperties` で指定されたプロパティの値は、 `NonOutputString` で指定された文字列 (デフォルト: `***`) で出力されます。
+`NonOutputProperties`で指定されたプロパティの値は、`NonOutputString`で指定された文字列 (デフォルト: `***`) で出力されます。
 
 &emsp;&emsp;_NonOutputProperties の例_
 ```properties
@@ -774,7 +618,7 @@ NonOutputProperties = \
     DebugTraceExample.Node.Right
 ```
 
-## 8. ロギングライブラリの使用
+## 7. ロギングライブラリの使用
 
 You can output logs using the following libraries besides console output.
 
@@ -786,7 +630,7 @@ You can output logs using the following libraries besides console output.
 </table>
 
 使用する場合は、上記パッケージを NuGet から追加してください。  
-ロギングライブラリを使用する際の DebugTrace のロガー名は、`DebugTrace` です。
+ロギングライブラリを使用する際の DebugTrace のロガー名は、`DebugTrace`です。
 
 ### 8-1. log4net
 
@@ -807,7 +651,7 @@ Logger = Log4net
 <configuration>
   <log4net>
     <appender name="A" type="log4net.Appender.FileAppender">
-      <File value="C:/Logs/DebugTrace/Log4net.log" />
+      <File value="/Logs/DebugTrace/Log4net.log" />
       <AppendToFile value="true" />
       <ImmediateFlush value="true" />
       <lockingModel type="log4net.Appender.FileAppender+MinimalLock" />
@@ -839,9 +683,9 @@ Logger = NLog
       xsi:schemaLocation="http://www.nlog-project.org/schemas/NLog.xsd NLog.xsd"
       autoReload="true"
       throwExceptions="false"
-      internalLogLevel="Off" internalLogFile="C:/Logs/DebugTrace/NLog-internal.log">
+      internalLogLevel="Off" internalLogFile="/Logs/DebugTrace/NLog-internal.log">
   <targets>
-    <target xsi:type="File" name="f" fileName="C:/Logs/DebugTrace/NLog.log" encoding="utf-8"
+    <target xsi:type="File" name="f" fileName="/Logs/DebugTrace/NLog.log" encoding="utf-8"
             layout="${longdate} [${threadid}] ${uppercase:${level}} ${logger} ${message}" />
   </targets>
   <rules>

@@ -2,7 +2,7 @@
 // (C) 2018 Masato Kokubo
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static DebugTrace.CSharp;
+using DebugTrace;
 
 namespace DebugTraceTest;
 
@@ -12,13 +12,13 @@ public class PrintArrayTest {
 
     [ClassInitialize]
     public static void ClassInit(TestContext context) {
-        maxDataOutputWidth = DebugTrace.TraceBase.MaximumDataOutputWidth;
-        DebugTrace.TraceBase.MaximumDataOutputWidth = int.MaxValue;
+        maxDataOutputWidth = DebugTrace.Trace.MaximumDataOutputWidth;
+        DebugTrace.Trace.MaximumDataOutputWidth = int.MaxValue;
     }
 
     [ClassCleanup]
     public static void ClassCleanup() {
-        DebugTrace.TraceBase.MaximumDataOutputWidth = maxDataOutputWidth;
+        DebugTrace.Trace.MaximumDataOutputWidth = maxDataOutputWidth;
     }
 
     private class HasIndexer<T> {

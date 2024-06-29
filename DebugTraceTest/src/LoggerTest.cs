@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Text;
 using DebugTrace;
-using static DebugTrace.CSharp;
+using DebugTrace;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DebugTraceTest;
@@ -18,9 +18,9 @@ public class LoggerTest {
     // ClassInit
     [ClassInitialize]
     public static void ClassInit(TestContext context) {
-        beforeLogger = TraceBase.Logger;
-        log4netFileInfo = new FileInfo("C:/Logs/DebugTrace/Log4net.log");
-        nLogFileInfo = new FileInfo("C:/Logs/DebugTrace/NLog.log");
+        beforeLogger = Trace.Logger;
+        log4netFileInfo = new FileInfo("/Logs/DebugTrace/Log4net.log");
+        nLogFileInfo = new FileInfo("/Logs/DebugTrace/NLog.log");
         try {
             using (var stream = log4netFileInfo.Open(FileMode.Truncate)) {}
         }
@@ -35,7 +35,7 @@ public class LoggerTest {
     [ClassCleanup]
     public static void ClassCleanup() {
         if (beforeLogger != null)
-            TraceBase.Logger = beforeLogger;
+            Trace.Logger = beforeLogger;
     }
 
     // Log4netLevel
@@ -95,8 +95,8 @@ public class LoggerTest {
     [DataRow("off"      )]
     public void Log4netLevel(string level) {
         // setup:
-        TraceBase.Logger = Log4net.Instance;
-        TraceBase.Logger.Level = level;
+        Trace.Logger = Log4net.Instance;
+        Trace.Logger.Level = level;
 
         log4netFileInfo?.Refresh();
         var beforeLength = 0L;
@@ -137,8 +137,8 @@ public class LoggerTest {
     [DataRow("fatal"    )]
     public void NLogLevel(string level) {
         // setup:
-        TraceBase.Logger = global::DebugTrace.NLog.Instance;
-        TraceBase.Logger.Level = level;
+        Trace.Logger = global::DebugTrace.NLog.Instance;
+        Trace.Logger.Level = level;
 
         nLogFileInfo?.Refresh();
         var beforeLength = 0L;
@@ -179,8 +179,8 @@ public class LoggerTest {
     [DataRow("fatal"    )]
     public void Log4netAndNLogLevel(string level) {
         // setup:
-        TraceBase.Logger = new Loggers(Log4net.Instance, global::DebugTrace.NLog.Instance);
-        TraceBase.Logger.Level = level;
+        Trace.Logger = new Loggers(Log4net.Instance, global::DebugTrace.NLog.Instance);
+        Trace.Logger.Level = level;
 
         log4netFileInfo?.Refresh();
         nLogFileInfo?.Refresh();

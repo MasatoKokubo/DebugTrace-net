@@ -3,23 +3,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static DebugTrace.CSharp;
+using DebugTrace;
 
 namespace DebugTraceTest;
 
 [TestClass]
 public class PrintCollectionTest {
     private static int maxDataOutputWidth;
+    private static int minimumOutputCount;
 
     [ClassInitialize]
     public static void ClassInit(TestContext context) {
-        maxDataOutputWidth = DebugTrace.TraceBase.MaximumDataOutputWidth;
-        DebugTrace.TraceBase.MaximumDataOutputWidth = int.MaxValue;
+        maxDataOutputWidth = DebugTrace.Trace.MaximumDataOutputWidth;
+        DebugTrace.Trace.MaximumDataOutputWidth = int.MaxValue;
+
+        minimumOutputCount = DebugTrace.Trace.MinimumOutputCount;
+        DebugTrace.Trace.MinimumOutputCount = 5;
     }
 
     [ClassCleanup]
     public static void ClassCleanup() {
-        DebugTrace.TraceBase.MaximumDataOutputWidth = maxDataOutputWidth;
+        DebugTrace.Trace.MaximumDataOutputWidth = maxDataOutputWidth;
+        DebugTrace.Trace.MinimumOutputCount = minimumOutputCount;
     }
 
     // List<int> count < 5

@@ -2,7 +2,7 @@
 // (C) 2018 Masato Kokubo
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static DebugTrace.CSharp; // ToDo: Remove after debugging
+using DebugTrace; // TODO: Debug
 
 namespace Examples;
 
@@ -12,30 +12,30 @@ public class Examples1 {
     /// <summary>Example1_1</summary>
     [TestMethod]
     public void Example1_1() {
-        Trace.Enter(); // ToDo: Remove after debugging
+        Trace.Enter(); // TODO: Debug
 
         var a = 3;
-        Trace.Print("a", a);
+        Trace.Print("a", a); // TODO: Debug
 
         var b = new List<int> {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        Trace.Print("b", b);
+        Trace.Print("b", b); // TODO: Debug
 
         b.AddRange(b);
-        Trace.Print("b", b);
+        Trace.Print("b", b); // TODO: Debug
 
         b.AddRange(b);
-        Trace.Print("b", b);
+        Trace.Print("b", b); // TODO: Debug
 
         b.AddRange(b);
-        Trace.Print("b", b);
+        Trace.Print("b", b); // TODO: Debug
 
         b.AddRange(b);
-        Trace.Print("b", b);
+        Trace.Print("b", b); // TODO: Debug
 
         b.AddRange(b);
-        Trace.Print("b", b);
+        Trace.Print("b", b); // TODO: Debug
 
-        Trace.Leave(); // ToDo: Remove after debugging
+        Trace.Leave(); // TODO: Debug
     }
 
 }

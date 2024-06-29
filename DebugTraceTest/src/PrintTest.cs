@@ -5,17 +5,30 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DebugTrace;
-using static DebugTrace.CSharp;
+using DebugTrace;
 
 namespace DebugTraceTest;
 
 [TestClass]
 public class PrintTest {
+    private static int minimumOutputLength;
+
+    [ClassInitialize]
+    public static void ClassInit(TestContext context) {
+        minimumOutputLength = DebugTrace.Trace.MinimumOutputLength;
+        DebugTrace.Trace.MinimumOutputLength = 5;
+    }
+
+    [ClassCleanup]
+    public static void ClassCleanup() {
+        DebugTrace.Trace.MinimumOutputLength = minimumOutputLength;
+    }
+
     // TestCleanup
     [TestCleanup]
     public void TestCleanup() {
-        TraceBase.OutputNonPublicFields     = false;
-        TraceBase.OutputNonPublicProperties = false;
+        Trace.OutputNonPublicFields     = false;
+        Trace.OutputNonPublicProperties = false;
     }
 
     // bool
@@ -274,8 +287,8 @@ public class PrintTest {
         Thread.Sleep(10); // wait Running 
         Assert.AreEqual(TaskStatus.Running, task.Status);
 
-        TraceBase.OutputNonPublicFields     = outputNonPublicFields;
-        TraceBase.OutputNonPublicProperties = outputNonPublicProperties;
+        Trace.OutputNonPublicFields     = outputNonPublicFields;
+        Trace.OutputNonPublicProperties = outputNonPublicProperties;
 
         Trace.Print("v", task);
         StringAssert.Contains(Trace.LastLog, expect);

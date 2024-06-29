@@ -2,16 +2,8 @@
 
 [Japanese](README_ja.md)
 
-**DebugTrace-net** is a library that outputs trace logs when debugging .NET programs.
-It based on [.NET 6](https://docs.microsoft.com/ja-jp/dotnet/core/whats-new/dotnet-6) and
-[.NET Core 3.1](https://docs.microsoft.com/ja-jp/dotnet/core/whats-new/dotnet-core-3-1).
-
-&emsp;&emsp;_Correspondence between .DebugTrace-net versions and .NET or .NET Core versions_
-
-|DebugTrace-net version|.NET or .NET Core version|
-|:----|:----|
-|3.x.x<br>&emsp;_Not compatible with Visual Basic_|.NET 6.0|
-|2.x.x|.NET Core 3.1|
+**DebugTrace-net** is a library that outputs trace logs when debugging .NET programs,
+and can be used with programs using [.NET 6](https://docs.microsoft.com/ja-jp/dotnet/core/whats-new/dotnet-6) or later.
 
 ## 1. Features
 
@@ -23,8 +15,8 @@ It based on [.NET 6](https://docs.microsoft.com/ja-jp/dotnet/core/whats-new/dotn
 * You can customize the output content in `DebugTrace.properties`.
 * There are no dependent libraries at run time if you output to the console.
 * You can use the following logging library.
-    * [log4net](ttps://logging.apache.org/log4net/)
-    * [NLog](http://nlog-project.org/)
+    * [log4net](https://logging.apache.org/log4net/)
+    * [NLog](https://nlog-project.org/)
 
 ## 2. Install
 
@@ -42,32 +34,56 @@ Do the following for debug target and related methods.
 
 [Details...](README_details.md)
 
-## 9. License
+## 8. License
 
 [The MIT License (MIT)](LICENSE)
 
-## 10. Release Notes
+## 9. Release Notes
 
-### DebugTrace-net 3.0.0 - _May 22, 2022_
+### DebugTrace-net 3.0.0 - _June 23, 2022_
 
-* Support for .NET 6.0.
-* `Print` methods now returns the value or the message of the argument.
+* Now compatible with .NET 6.
+* Changed the default values of the following properties in DebugTrace.properties.
+
+* Support for VisualStudio has been dropped.
+    As a result, the following has been done:
+    * The `ITrace` interface has been removed.
+    * The `CSharp` and `VisualBasic` classes have been removed.
+    * The `TraceBase` class name has been changed to `Trace`.
+ 
+    The `using` statement will change to the following: 
+    `using static DebugTrace.CSharp;`  
+        ↓  
+    `using DebugTrace;`
+
+* Changes to method argument specifications    
+    * `T? Print<T>(string name, T? value)`  
+        ↓  
+    `T? Print<T>(string name, T? value, bool forceReflection = false,`  
+    `    bool? outputNonPublicFields = null, bool? putNonPublicProperties = null,`  
+    `    int minimumOutputCount = -1, int minimumOutputLength = -1,`  
+    `    int collectionLimit = -1, int stringLimit = -1, int reflectionNestLimit = -1)`
+
+    * `T? Print<T>(string name, Func<T?> valueSupplier)`  
+        ↓  
+    `T? Print<T>(string name, Func<T?> valueSupplier, bool forceReflection = false,`  
+    `    bool? outputNonPublicFields = null, bool? putNonPublicProperties = null,`  
+    `    int minimumOutputCount = -1, int minimumOutputLength = -1,`  
+    `    int collectionLimit = -1, int stringLimit = -1, int reflectionNestLimit = -1)`
+
+|Property Name|New Default Value|Old Default Value|
+|:----------- |:---------------:|:---------------:|
+|MinimumOutputCount |128|   5|
+|MinimumOutputLength|256|   5|
+|CollectionLimit    |128| 512|
+|StringLimit        |256|8192|
 
 _Related packages:_
-<table>
-    <tr><td>DebugTrace.Log4net 3.0.0</td><td>log4net 2.0.14</td></tr>
-    <tr><td>DebugTrace.NLog 3.0.0</td><td>NLog 4.7.15</td></tr>
-</table>
 
-### DebugTrace-net 2.1.0 - _May 22, 2022_
-
-* `Print` methods now returns the value or the message of the argument.
-
-_Related packages:_
-<table>
-    <tr><td>DebugTrace.Log4net 2.1.0</td><td>log4net 2.0.14</td></tr>
-    <tr><td>DebugTrace.NLog 2.1.0</td><td>NLog 4.7.15</td></tr>
-</table>
+|DebugTrace Package|Related Package|
+|:----|:----|
+|DebugTrace.Log4net 3.0.0|log4net 2.0.17|
+|DebugTrace.NLog 3.0.0   |NLog 5.2.8|
 
 [All Release Notes...](README_releaseNotes.md)
 

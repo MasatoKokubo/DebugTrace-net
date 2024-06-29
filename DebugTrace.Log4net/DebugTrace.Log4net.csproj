@@ -14,10 +14,16 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Description>Bridge library that uses log4net for DebugTrace-net output.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <AssemblyName>$(MSBuildProjectName)</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningsAsErrors>NU1605, CS8600, CS8602, CS8603, CS8604, CS8605, CS8618, CS8625</WarningsAsErrors>
+    <WarningLevel>7</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <WarningLevel>7</WarningLevel>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="log4net" Version="2.0.14" />
+    <PackageReference Include="log4net" Version="2.0.17" />
   </ItemGroup>
 
   <ItemGroup>

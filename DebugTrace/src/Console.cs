@@ -52,7 +52,7 @@ public abstract class Console : ILogger {
         /// </summary>
         /// <param name="message">the message</param>
         public override void Log(string message) {
-            System.Console.Out.WriteLine(string.Format(TraceBase.LogDateTimeFormat,
+            System.Console.Out.WriteLine(string.Format(Trace.LogDateTimeFormat,
                 DateTime.Now, Thread.CurrentThread.ManagedThreadId, message));
         }
     }
@@ -74,7 +74,7 @@ public abstract class Console : ILogger {
         /// </summary>
         /// <param name="message">the message</param>
         public override void Log(string message) {
-            System.Console.Error.WriteLine(string.Format(TraceBase.LogDateTimeFormat,
+            System.Console.Error.WriteLine(string.Format(Trace.LogDateTimeFormat,
                 DateTime.Now, Thread.CurrentThread.ManagedThreadId, message));
         }
     }

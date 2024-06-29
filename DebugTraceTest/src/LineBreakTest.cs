@@ -1,7 +1,7 @@
 // LineBreakSpec.cs
 // (C) 2018 Masato Kokubo
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static DebugTrace.CSharp;
+using DebugTrace;
 using DebugTrace;
 using System;
 using System.Collections.Generic;
@@ -42,19 +42,19 @@ public class LineBreakTest {
 
     [ClassInitialize]
     public static void ClassInit(TestContext context) {
-        maximumDataOutputWidth = TraceBase.MaximumDataOutputWidth;
+        maximumDataOutputWidth = Trace.MaximumDataOutputWidth;
     }
 
     [ClassCleanup]
     public static void ClassCleanup() {
-        TraceBase.MaximumDataOutputWidth = maximumDataOutputWidth;
+        Trace.MaximumDataOutputWidth = maximumDataOutputWidth;
     }
 
     [TestMethod]
     public void LineBreakOfArray() {
         // setup
         Trace.Enter();
-        TraceBase.MaximumDataOutputWidth = 80;
+        Trace.MaximumDataOutputWidth = 80;
         var contacts = new Contact?[] {
             new Contact("Akane" , "Apple", (2020, 1, 1), "080-1111-1111"),
             new Contact("Yukari", "Apple", (2020, 2, 2), "080-2222-2222"),
@@ -69,8 +69,8 @@ public class LineBreakTest {
         StringAssert.Contains(Trace.LastLog, "{\n|   DebugTraceTest.Contact {");
         StringAssert.Contains(Trace.LastLog, "  FirstName:");
         StringAssert.Contains(Trace.LastLog, ", LastName:");
-        StringAssert.Contains(Trace.LastLog, "  Birthday:");
-        StringAssert.Contains(Trace.LastLog, ", PhoneNumber:");
+        StringAssert.Contains(Trace.LastLog, ", Birthday:");
+        StringAssert.Contains(Trace.LastLog, "  PhoneNumber:");
         StringAssert.Contains(Trace.LastLog, "},\n|   DebugTraceTest.Contact {\n");
         StringAssert.Contains(Trace.LastLog, "},\n|   null, null");
 
@@ -82,7 +82,7 @@ public class LineBreakTest {
     public void LineBreakOfList() {
         // setup
         Trace.Enter();
-        TraceBase.MaximumDataOutputWidth = 80;
+        Trace.MaximumDataOutputWidth = 80;
         var contacts = new List<Contact?> { 
             new Contact("Akane" , "Apple" , (2020, 1, 1), "080-1111-1111"),
             new Contact("Yukari", "Apple" , (2020, 2, 2), "080-2222-2222"),
@@ -97,8 +97,8 @@ public class LineBreakTest {
         StringAssert.Contains(Trace.LastLog, "{\n|   DebugTraceTest.Contact {");
         StringAssert.Contains(Trace.LastLog, "  FirstName:");
         StringAssert.Contains(Trace.LastLog, ", LastName:");
-        StringAssert.Contains(Trace.LastLog, "  Birthday:");
-        StringAssert.Contains(Trace.LastLog, ", PhoneNumber:");
+        StringAssert.Contains(Trace.LastLog, ", Birthday:");
+        StringAssert.Contains(Trace.LastLog, "  PhoneNumber:");
         StringAssert.Contains(Trace.LastLog, "},\n|   DebugTraceTest.Contact {\n");
         StringAssert.Contains(Trace.LastLog, "},\n|   null, null");
 
@@ -110,7 +110,7 @@ public class LineBreakTest {
     public void LineBreakOfMap() {
         // setup
         Trace.Enter();
-        TraceBase.MaximumDataOutputWidth = 80;
+        Trace.MaximumDataOutputWidth = 80;
         var contacts = new Dictionary<int, Contact?> {
             {1, new Contact("Akane" , "Apple" , (2020, 1, 1), "080-1111-1111")},
             {2, new Contact("Yukari", "Apple" , (2020, 2, 2), "080-2222-2222")},
@@ -125,8 +125,8 @@ public class LineBreakTest {
         StringAssert.Contains(Trace.LastLog, "{\n|   1: DebugTraceTest.Contact {");
         StringAssert.Contains(Trace.LastLog, "  FirstName:");
         StringAssert.Contains(Trace.LastLog, ", LastName:");
-        StringAssert.Contains(Trace.LastLog, "  Birthday:");
-        StringAssert.Contains(Trace.LastLog, ", PhoneNumber:");
+        StringAssert.Contains(Trace.LastLog, ", Birthday:");
+        StringAssert.Contains(Trace.LastLog, "  PhoneNumber:");
         StringAssert.Contains(Trace.LastLog, "},\n|   2: DebugTraceTest.Contact {\n");
         StringAssert.Contains(Trace.LastLog, "},\n|   3: null, 4: null");
 
@@ -138,7 +138,7 @@ public class LineBreakTest {
     public void LineBreakOfReflectionSpec() {
         // setup
         Trace.Enter();
-        TraceBase.MaximumDataOutputWidth = 80;
+        Trace.MaximumDataOutputWidth = 80;
         var contacts = new Contacts(
             new Contact("Akane" , "Apple", (2020, 1, 1), "080-1111-1111"),
             new Contact("Yukari", "Apple", (2020, 2, 2), "080-2222-2222"),
@@ -153,8 +153,8 @@ public class LineBreakTest {
         StringAssert.Contains(Trace.LastLog, "{\n|   Contact1: DebugTraceTest.Contact {");
         StringAssert.Contains(Trace.LastLog, "  FirstName:");
         StringAssert.Contains(Trace.LastLog, ", LastName:");
-        StringAssert.Contains(Trace.LastLog, "  Birthday:");
-        StringAssert.Contains(Trace.LastLog, ", PhoneNumber:");
+        StringAssert.Contains(Trace.LastLog, ", Birthday:");
+        StringAssert.Contains(Trace.LastLog, "  PhoneNumber:");
         StringAssert.Contains(Trace.LastLog, "},\n|   Contact2: DebugTraceTest.Contact {\n");
         StringAssert.Contains(Trace.LastLog, "},\n|   DebugTraceTest.Contact Contact3: null, DebugTraceTest.Contact Contact4: null");
 
@@ -168,14 +168,15 @@ public class LineBreakTest {
     public void NoLineBreak_NameValue() {
         // setup
         Trace.Enter();
-        TraceBase.MaximumDataOutputWidth = 60;
+        Trace.MaximumDataOutputWidth = 60;
         var foo = "000000000011111111112222222222333333333344444444445555555555";
 
         // when
         Trace.Print("foo", foo);
 
         // then
-        StringAssert.Contains(Trace.LastLog, "foo = (Length:60)\"0000000000");
+    //  StringAssert.Contains(Trace.LastLog, "foo = (Length:60)\"0000000000");
+        StringAssert.Contains(Trace.LastLog, "foo = \"000000000011111111112222222222333333333344444444445555555555");
 
         // cleanup
         Trace.Leave();
@@ -186,7 +187,7 @@ public class LineBreakTest {
     public void NoLineBreak_Object_NameValue() {
         // setup
         Trace.Enter();
-        TraceBase.MaximumDataOutputWidth = 60;
+        Trace.MaximumDataOutputWidth = 60;
         var foo = new Contact("000000000011111111112222222222333333333344444444445555555555", "", (2021, 1, 1), "");
 
 
@@ -194,7 +195,8 @@ public class LineBreakTest {
         Trace.Print("foo", foo);
 
         // then
-        StringAssert.Contains(Trace.LastLog, "FirstName: (Length:60)\"0000000000");
+    //  StringAssert.Contains(Trace.LastLog, "FirstName: (Length:60)\"0000000000");
+        StringAssert.Contains(Trace.LastLog, "FirstName: \"000000000011111111112222222222333333333344444444445555555555");
 
         // cleanup
         Trace.Leave();
@@ -205,7 +207,7 @@ public class LineBreakTest {
     public void NoLineBreak_KeyValue() {
         // setup
         Trace.Enter();
-        TraceBase.MaximumDataOutputWidth = 60;
+        Trace.MaximumDataOutputWidth = 60;
         var foo = new Dictionary<int, string>();
         foo[1] = "000000000011111111112222222222333333333344444444445555555555";
 
@@ -215,7 +217,8 @@ public class LineBreakTest {
 
 
         // then
-        StringAssert.Contains(Trace.LastLog, "1: (Length:60)\"0000000000");
+    //  StringAssert.Contains(Trace.LastLog, "1: (Length:60)\"0000000000");
+        StringAssert.Contains(Trace.LastLog, "1: \"000000000011111111112222222222333333333344444444445555555555");
 
         // cleanup
         Trace.Leave();

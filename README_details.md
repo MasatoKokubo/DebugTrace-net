@@ -1,4 +1,4 @@
-The following are examples of C# and Visual Basic source used DebugTrace-net methods and the log of when it has been executed.
+The following are examples of C# source used DebugTrace-net methods and the log of when it has been executed.
 
 &emsp;&emsp;_ReadmeExample.cs_
 ```c#
@@ -6,7 +6,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static DebugTrace.CSharp; // ToDo: Remove after debugging
+using DebugTrace; // TODO: Debug
 
 namespace Readme;
 
@@ -16,15 +16,15 @@ public class ReadmeExample1 {
     /// <summary>Example1</summary>
     [TestMethod]
     public void Example1() {
-        Trace.Enter(); // ToDo: Remove after debugging
+        Trace.Enter(); // TODO: Debug
 
         var contacts = new [] {
             new Contact(1, "Akane" , "Apple", new DateTime(1991, 2, 3)),
             new Contact(2, "Yukari", "Apple", new DateTime(1992, 3, 4))
         };
-        Trace.Print("contacts", contacts); // ToDo: Remove after debugging
+        Trace.Print("contacts", contacts); // TODO: Debug
 
-        Trace.Leave(); // ToDo: Remove after debugging
+        Trace.Leave(); // TODO: Debug
     }
 
 }
@@ -60,149 +60,48 @@ public class Contact : ContactBase {
 
 &emsp;&emsp;_Console output / C#_
 ```log
-2022-05-22 21:39:45.227 [04] DebugTrace-net 3.0.0 on .NET 6.0.5
-2022-05-22 21:39:45.231 [04]   properties file path: Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceTest\bin\Debug\net6.0\DebugTrace.properties
-2022-05-22 21:39:45.231 [04]   logger: DebugTrace.Console+Error
-2022-05-22 21:39:45.232 [04] 
-2022-05-22 21:39:45.232 [04] ______________________________ Thread 4 ______________________________
-2022-05-22 21:39:45.232 [04] 
-2022-05-22 21:39:45.265 [04] Enter Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:17)
-2022-05-22 21:39:45.275 [04] | 
-2022-05-22 21:39:45.275 [04] | contacts = Readme.Contact[2] {
-2022-05-22 21:39:45.275 [04] |   Readme.Contact {
-2022-05-22 21:39:45.275 [04] |     ____ Readme.Entity ____
-2022-05-22 21:39:45.275 [04] |     ID: 1
-2022-05-22 21:39:45.275 [04] |     ____ Readme.ContactBase ____
-2022-05-22 21:39:45.275 [04] |     FirstName: (Length:5)"Akane", LastName: (Length:5)"Apple"
-2022-05-22 21:39:45.275 [04] |     ____ Readme.Contact ____
-2022-05-22 21:39:45.275 [04] |     Birthday: 1991-02-03 00:00:00.0000000
-2022-05-22 21:39:45.275 [04] |   },
-2022-05-22 21:39:45.275 [04] |   Readme.Contact {
-2022-05-22 21:39:45.275 [04] |     ____ Readme.Entity ____
-2022-05-22 21:39:45.275 [04] |     ID: 2
-2022-05-22 21:39:45.275 [04] |     ____ Readme.ContactBase ____
-2022-05-22 21:39:45.275 [04] |     FirstName: (Length:6)"Yukari", LastName: (Length:5)"Apple"
-2022-05-22 21:39:45.275 [04] |     ____ Readme.Contact ____
-2022-05-22 21:39:45.275 [04] |     Birthday: 1992-03-04 00:00:00.0000000
-2022-05-22 21:39:45.275 [04] |   }
-2022-05-22 21:39:45.275 [04] | } (ReadmeExamples.cs:23)
-2022-05-22 21:39:45.275 [04] | 
-2022-05-22 21:39:45.276 [04] Leave Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:25) duration: 00:00:00.0102507
+2024-06-29 12:00:40.799 [04] DebugTrace-net 3.0.0 on .NET 6.0.31
+2024-06-29 12:00:40.802 [04]   properties file path: Z:\Develop\DebugTrace\DebugTrace-net\DebugTraceTest\bin\Debug\net6.0\DebugTrace.properties
+2024-06-29 12:00:40.802 [04]   logger: DebugTrace.Console+Error
+2024-06-29 12:00:40.803 [04] 
+2024-06-29 12:00:40.803 [04] ______________________________ Thread 4 ______________________________
+2024-06-29 12:00:40.803 [04] 
+2024-06-29 12:00:40.845 [04] Enter Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:17)
+2024-06-29 12:00:40.855 [04] | 
+2024-06-29 12:00:40.855 [04] | contacts = Readme.Contact[2] {
+2024-06-29 12:00:40.855 [04] |   Readme.Contact {
+2024-06-29 12:00:40.855 [04] |     ____ Readme.Entity ____
+2024-06-29 12:00:40.855 [04] |     ID: 1
+2024-06-29 12:00:40.855 [04] |     ____ Readme.ContactBase ____
+2024-06-29 12:00:40.855 [04] |     FirstName: "Akane", LastName: "Apple"
+2024-06-29 12:00:40.855 [04] |     ____ Readme.Contact ____
+2024-06-29 12:00:40.855 [04] |     Birthday: 1991-02-03 00:00:00.0000000
+2024-06-29 12:00:40.855 [04] |   },
+2024-06-29 12:00:40.855 [04] |   Readme.Contact {
+2024-06-29 12:00:40.855 [04] |     ____ Readme.Entity ____
+2024-06-29 12:00:40.855 [04] |     ID: 2
+2024-06-29 12:00:40.855 [04] |     ____ Readme.ContactBase ____
+2024-06-29 12:00:40.855 [04] |     FirstName: "Yukari", LastName: "Apple"
+2024-06-29 12:00:40.855 [04] |     ____ Readme.Contact ____
+2024-06-29 12:00:40.855 [04] |     Birthday: 1992-03-04 00:00:00.0000000
+2024-06-29 12:00:40.855 [04] |   }
+2024-06-29 12:00:40.855 [04] | } (ReadmeExamples.cs:23)
+2024-06-29 12:00:40.855 [04] | 
+2024-06-29 12:00:40.856 [04] Leave Readme.ReadmeExample1.Example1() (ReadmeExamples.cs:25) duration: 00:00:00.0102235
 ```
 
-&emsp;&emsp;_ReadmeExample.vb (version 2.1.0)_
-```vb
-Imports System.Threading
-Imports Microsoft.VisualStudio.TestTools.UnitTesting
-Imports DebugTrace.VisualBasic ' for Debugging
+### 3.1 When `using System.Diagnostics`
 
-Namespace Readme
-    ''' <summary>ReadmeExample1</summary>
-    <TestClass()>
-    Public Class ReadmeExample1
-        ''' <summary>Example1</summary>
-        <TestMethod()>
-        Public Sub Example1()
-            Trace.Enter() ' for Debugging
-
-            Dim contacts = New Contact() {
-                New Contact(1, "Akane", "Apple", New DateTime(1991, 2, 3)),
-                New Contact(2, "Yukari", "Apple", New DateTime(1992, 3, 4))
-            }
-            Trace.Print("contacts", contacts) ' for Debugging
-
-            Trace.Leave() ' for Debugging
-        End Sub
-    End Class
-
-    ''' <summary>Entity</summary>
-    Public class Entity
-        Public Property Id As Integer
-
-        Public Sub New(id_ As Integer)
-            Id = id_
-        End Sub
-    End Class
-
-    ''' <summary>ContactBase</summary>
-    public class ContactBase : Inherits Entity
-        Public Property FirstName As String
-        Public Property LastName As String
-
-        Public Sub New(id_ As Integer, firstName_ As String, lastName_ As String)
-            MyBase.New(id_)
-            FirstName = firstName_ : LastName = lastName_
-        End Sub
-    End Class
-
-    ''' <summary>Contact</summary>
-    Public Class Contact : Inherits ContactBase
-        Public Birthday As DateTime
-
-        Public Sub New(id_ As Integer, firstName_ As String, lastName_ As String, birthday_ As DateTime)
-            MyBase.New(id_, firstName_, lastName_)
-            Birthday = birthday_
-        End Sub
-    End Class
-End Namespace
-```
-
-&emsp;&emsp;_Console output / Visual Basic_
-```log
-2022-05-22 21:29:05.534 [05] DebugTrace-net 2.1.0 on .NET Core 3.1.25
-2022-05-22 21:29:05.535 [05]   properties file path: Z:\Develop\C#\DebugTrace\DebugTrace\DebugTraceVBTest\bin\Debug\netcoreapp3.1\DebugTrace.properties
-2022-05-22 21:29:05.535 [05]   logger: DebugTrace.Console+Error
-2022-05-22 21:29:05.536 [05] 
-2022-05-22 21:29:05.536 [05] ______________________________ Thread 5 ______________________________
-2022-05-22 21:29:05.536 [05] 
-2022-05-22 21:29:05.567 [05] Enter DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:12)
-2022-05-22 21:29:05.576 [05] | 
-2022-05-22 21:29:05.576 [05] | contacts = DebugTraceVBTest.Readme.Contact(Length: 2) {
-2022-05-22 21:29:05.576 [05] |   DebugTraceVBTest.Readme.Contact {
-2022-05-22 21:29:05.576 [05] |     ____ DebugTraceVBTest.Readme.Entity ____
-2022-05-22 21:29:05.576 [05] |     Id: 1
-2022-05-22 21:29:05.576 [05] |     ____ DebugTraceVBTest.Readme.ContactBase ____
-2022-05-22 21:29:05.576 [05] |     FirstName: (Length:5)"Akane", LastName: (Length:5)"Apple"
-2022-05-22 21:29:05.576 [05] |     ____ DebugTraceVBTest.Readme.Contact ____
-2022-05-22 21:29:05.576 [05] |     Birthday: 1991-02-03 00:00:00.0000000
-2022-05-22 21:29:05.576 [05] |   },
-2022-05-22 21:29:05.576 [05] |   DebugTraceVBTest.Readme.Contact {
-2022-05-22 21:29:05.576 [05] |     ____ DebugTraceVBTest.Readme.Entity ____
-2022-05-22 21:29:05.576 [05] |     Id: 2
-2022-05-22 21:29:05.576 [05] |     ____ DebugTraceVBTest.Readme.ContactBase ____
-2022-05-22 21:29:05.576 [05] |     FirstName: (Length:6)"Yukari", LastName: (Length:5)"Apple"
-2022-05-22 21:29:05.576 [05] |     ____ DebugTraceVBTest.Readme.Contact ____
-2022-05-22 21:29:05.576 [05] |     Birthday: 1992-03-04 00:00:00.0000000
-2022-05-22 21:29:05.576 [05] |   }
-2022-05-22 21:29:05.576 [05] | } (ReadmeExamples.vb:18)
-2022-05-22 21:29:05.576 [05] | 
-2022-05-22 21:29:05.577 [05] Leave DebugTraceVBTest.Readme.ReadmeExample1.Example1() (ReadmeExamples.vb:20) duration: 00:00:00.0091880
-```
-
-### 3.1 When using or Imports System.Diagnostics
-
-If you are `using System.Diagnostics` or `Impors System.Diagnostics`, since the `DebugTrace.CSharp.Trace` (`DebugTrace.VisualBaisc.Trace`) property and `System.Diagnostics.Trace` class overlap, use `Trace_`  property instead of `Trace`.
+If you are `using` the `System.Diagnostics` namespace, since the `DebugTrace.Trace` class and `System.Diagnostics.Trace` class overlap, use the namespaced `DebugTrace.Trace`.
 
 &emsp;&emsp;_ReadmeExample.cs_
 ```c#
 using System.Diagnostics;
-using static DebugTrace.CSharp; // ToDo: Remove after debugging
 
 namespace Readme {
     public class ReadmeExample {
         public static void Main(string[] args) {
-            Trace_.Enter(); // ToDo: Remove after debugging
-```
-
-&emsp;&emsp;_ReadmeExample.vb_
-```vb
-Imports System.Diagnostics
-Imports DebugTrace.VisualBasic ' ToDo: Remove after debugging
-
-Namespace Global.Readme
-    Public Class ReadmeExample
-        Public Shared Sub Main(args As String())
-            Trace_.Enter() ' ToDo: Remove after debugging
+            DebugTrace.Trace.Enter(); // TODO: Debug
 ```
 
 ## 4. Interfaces and Classes
@@ -212,24 +111,17 @@ There are mainly the following interfaces and classes.
 &emsp;&emsp;_Interfaces and Classes_
 <table>
     <tr><th>Name</th><th>Super Class or Implemented Interfaces</th><th>Description</th></tr>
-    <tr><td>DebugTrace.ITrace       </td><td>None              </td><td>Trace processing interface</td></tr>
-    <tr><td>DebugTrace.TraceBase    </td><td>DebugTrace.ITrace </td><td>Trace processing base class</td></tr>
-    <tr><td>DebugTrace.CSharp       </td><td>DebugTrace.Trace  </td><td>Trace processing class for C#</td></tr>
-    <tr><td>DebugTrace.VisualBasic  </td><td>DebugTrace.Trace  </td><td>Trace processing class for VisualBasic</td></tr>
-    <tr><td>DebugTrace.ILogger      </td><td>None              </td><td>Log output interface</td></tr>
-    <tr><td>DebugTrace.Console      </td><td>DebugTrace.ILogger</td><td>Abstract super class of <code>DebugTrace.Console.Out</code> and <code>DebugTrace.Console.Error</code></td></tr>
-    <tr><td>DebugTrace.Console.Out  </td><td>DebugTrace.Console</td><td>Class that outputs logs to standard output</td></tr>
-    <tr><td>DebugTrace.Console.Error</td><td>DebugTrace.Console</td><td>Class that outputs logs to standard error output</td></tr>
-    <tr><td>DebugTrace.Diagnostics<br>&emsp;<i>since 1.6.0</i></td><td>DebugTrace.ILogger</td><td>Abstract super class of DebugTrace.Diagnostics.Debug and DebugTrace.Diagnostics.Trace class</td></tr>
-    <tr><td>DebugTrace.Diagnostics.Debug<br>&emsp;<i>since 1.6.0</i></td><td>DebugTrace.Diagnostics</td><td>Class that outputs logs using <code>System.Diagnostics.Debug</code> class</td></tr>
-    <tr><td>DebugTrace.Diagnostics.Trace<br>&emsp;<i>since 1.6.0</i></td><td>DebugTrace.Diagnostics</td><td>Class that outputs logs using <code>System.Diagnostics.Trace</code> class</td></tr>
+    <tr><td>DebugTrace.Trace            </td><td><i>None</i>           </td><td>Trace processing class</td></tr>
+    <tr><td>DebugTrace.ILogger          </td><td><i>None</i>           </td><td>Log output interface</td></tr>
+    <tr><td>DebugTrace.Console          </td><td>DebugTrace.ILogger    </td><td>Abstract super class of <code>DebugTrace.Console.Out</code> and <code>DebugTrace.Console.Error</code></td></tr>
+    <tr><td>DebugTrace.Console.Out      </td><td>DebugTrace.Console    </td><td>Class that outputs logs to standard output</td></tr>
+    <tr><td>DebugTrace.Console.Error    </td><td>DebugTrace.Console    </td><td>Class that outputs logs to standard error output</td></tr>
+    <tr><td>DebugTrace.Diagnostics      </td><td>DebugTrace.ILogger    </td><td>Abstract super class of DebugTrace.Diagnostics.Debug and DebugTrace.Diagnostics.Trace class</td></tr>
+    <tr><td>DebugTrace.Diagnostics.Debug</td><td>DebugTrace.Diagnostics</td><td>Class that outputs logs using <code>System.Diagnostics.Debug</code> class</td></tr>
+    <tr><td>DebugTrace.Diagnostics.Trace</td><td>DebugTrace.Diagnostics</td><td>Class that outputs logs using <code>System.Diagnostics.Trace</code> class</td></tr>
 </table>
 
-## 5. Properties of DebugTrace.CSharp class and DebugTrace.VisualBasic class
-
-`DebugTrace.CSharp` and `DebugTrace.VisualBasic` class has `Trace` and `Trace_` property as an instance of its own type.
-
-## 6. Properties and methods of ITrace interface
+## 5. Properties and methods of ITrace interface
 
 It has the following properties and methods.
 
@@ -248,105 +140,97 @@ It has the following properties and methods.
 
 &emsp;&emsp;_Table of Methods_
 <table>
-    <tr><th>Name</th><th>DebugTrace<br>version</th><th>Arguments</th><th>Return Value</th><th>Description</th></tr>
+    <tr><th>Name</th><th>Arguments</th><th>Return Value</th><th>Description</th></tr>
     <tr>
         <td><code>ResetNest</code></td>
-        <td></td>
         <td><i>None</i></td>
         <td><i>None</i></td>
         <td>Initializes the nesting level for the current thread.</td>
     </tr>
     <tr>
         <td><code>Enter</code></td>
-        <td></td>
         <td><i>None</i></td>
         <td><code>int</code> thread ID</td>
         <td>Outputs method start to log.</td>
     </tr>
     <tr>
         <td><code>Leave</code></td>
-        <td></td>
         <td><code>int threadId</code>: the thread ID<br>(default: <code>-1</code>)</td>
         <td><i>None</i></td>
         <td>Outputs method end to the log.</td>
     </tr>
     <tr>
-        <td rowspan=2><code>Print</code></td>
-        <td>2.1.0 or lator</td>
-        <td rowspan=2><code>string message</code>: the message</td>
+        <td><code>Print</code></td>
+        <td><code>string message</code>: the message</td>
         <td>the message</td>
-        <td rowspan=2>Outputs the message to the log.</td>
+        <td>Outputs the message to the log.</td>
     </tr>
     <tr>
-        <td>2.0.3 or earlier</td>
-        <td><i>None</i></td>
-    </tr>
-    <tr>
-        <td rowspan=2><code>Print</code></td>
-        <td>2.1.0 or lator</td>
-        <td rowspan=2><code>Func&lt;string&gt; messageSupplier</code>: the function to return a message</td>
+        <td><code>Print</code></td>
+        <td><code>Func&lt;string&gt; messageSupplier</code>: the function to return a message</td>
         <td>the message obtained from <code>messageSupplier</code></td>
-        <td rowspan=2>Gets a message from <code>messageSupplier</code> and output it to the log.</td>
+        <td>Gets a message from <code>messageSupplier</code> and output it to the log.</td>
     </tr>
     <tr>
-        <td>2.0.3 or earlier</td>
-        <td><i>None</i></td>
-    </tr>
-    <tr>
-        <td rowspan=3><code>Print</code></td>
-        <td>3.0.0 or lator</td>
+        <td><code>Print</code></td>
         <td>
-            <code>string name</code>: the value name<br>
-            <code>T value</code>: the value
+            <li><code>string name</code>: the value name</li>
+            <li><code>T value</code>: the value</li>
+            <li><code>bool forceReflection = false</code>:<br>
+                if true, outputs using reflection even if it has ToString() method<br>
+            <br>
+            The following will override the settings in DebugTrace.properties if they are not the default values.<br>
+            <br>
+            <li><code>bool? outputNonPublicFields = null</code>:<br>
+                if true, outputs using reflection even if it has ToString() method<br>
+            <li><code>bool? outputNonPublicProperties = null</code>:<br>
+                if true, outputs non-public field when using reflection<br>
+            <li><code>int minimumOutputCount = -1</code>:<br>
+                the minimum value to output the number of elements for IDictionary and IEnumerable<br>
+            <li><code>int minimumOutputLength = -1</code>:<br>
+                the minimum value to output the length of string<br>
+            <li><code>int collectionLimit = -1</code>:<br>
+                output limit for IDictionary and IEnumerable elements<br>
+            <li><code>int stringLimit = -1</code>:<br>
+                output limit of characters for string<br>
+            <li><code>reflectionNestLimit = -1</code>:<br>
+                the nest limit when using reflection<br>
         </td>
-        <td rowspan=2>the value</td>
-        <td rowspan=3>Outputs to the log in the form of <code>name = value</code></td>
+        <td>the value</td>
+        <td>Outputs to the log in the form of <code>name = value</code></td>
     </tr>
     <tr>
-        <td>2.1.0 or lator</td>
-        <td rowspan=2>
-            <code>string name</code>: the value name<br>
-            <code>object value</code>: the value
-        </td>
-    </tr>
-    <tr>
-        <td>2.0.3 or earlier</td>
-        <td><i>None</i></td>
-    </tr>
-    <tr>
-        <td rowspan=3><code>Print</code></td>
-        <td>3.0.0 or lator</td>
+        <td><code>Print</code></td>
         <td>
-            <code>string name</code>: the name of the value<br>
-            <code>Func&lt;T&gt; valueSupplier</code>: the function to return a value
+            <li><code>string name</code>: the name of the value
+            <li><code>Func&lt;T&gt; valueSupplier</code>: the function to return a value
+            <br>
+            <br>
+            See above for the following:
+            <li><code>bool forceReflection = false</code>
+            <li><code>bool? outputNonPublicFields = null</code>
+            <li><code>bool? outputNonPublicProperties = null</code>
+            <li><code>int minimumOutputCount = -1</code>
+            <li><code>int minimumOutputLength = -1</code>
+            <li><code>int collectionLimit = -1</code>
+            <li><code>int stringLimit = -1</code>
+            <li><code>reflectionNestLimit = -1</code>
         </td>
-        <td rowspan=2>the value obtained from <code>valueSupplier</code></td>
+        <td>the value obtained from <code>valueSupplier</code></td>
         <td>
             Gets a value from <code>valueSupplier</code> and output it to the log in the form of
             <code>name = value</code>.
         </td>
     </tr>
     <tr>
-        <td>2.1.0 or lator</td>
-        <td rowspan=2>
-            <code>string name</code>: the name of the value<br>
-            <code>Func&lt;object&gt; valueSupplier</code>: the function to return a value
-        </td>
-    </tr>
-    <tr>
-        <td>2.0.3 or earlier</td>
-        <td><i>None</i></td>
-    </tr>
-    <tr>
         <td><code>PrintStack</code></td>
-        <td>since 1.6.0</td>
         <td><code>int maxCount</code>: maximum number of stack elements to output</td>
         <td><i>None</i></td>
         <td>Outputs call stack to log.</td>
     </tr>
 </table>
 
-## 7. Properties of *DebugTrace.properties* file
+## 6. Properties of *DebugTrace.properties* file
 
 DebugTrace reads the `DebugTrace.properties` file in the current directory at startup.
 You can specify following properties in the `DebugTrace.properties` file.
@@ -361,11 +245,11 @@ You can specify following properties in the `DebugTrace.properties` file.
             <b>Examples:</b><br>
             &emsp;&emsp;<code>Logger = Console+Out</code> - <i>Outputs to the console (stdout)</i><br>
             &emsp;&emsp;<code>Logger = Console+Error</code> - <i>Outputs to the console (stderr) <i>(This is the defalut)</i></i><br>
-            &emsp;&emsp;<code>Logger = Diagnostics+Debug</code> - <i>Outputs using <code>System.Diagnostics.Debug</code> class - since 1.6.0</i><br>
-            &emsp;&emsp;<code>Logger = Diagnostics+Trace</code> - <i>Outputs using <code>System.Diagnostics.Trace</code> class - since 1.6.0</i><br>
+            &emsp;&emsp;<code>Logger = Diagnostics+Debug</code> - <i>Outputs using <code>System.Diagnostics.Debug</code> class</i><br>
+            &emsp;&emsp;<code>Logger = Diagnostics+Trace</code> - <i>Outputs using <code>System.Diagnostics.Trace</code> class</i><br>
             &emsp;&emsp;<code>Logger = Log4net</code> - <i>Outputs using <code>Log4net</code></i><br>
             &emsp;&emsp;<code>Logger = NLog</code> - <i>Outputs using <code>NLog</code></i><br>
-            <b>Example for multiple outputs:</b> - <i>since 1.5.0</i><br>
+            <b>Example for multiple outputs:</b><br>
             &emsp;&emsp;<code>Logger = Console+Out; Log4net</code> - <i>Outputs to the console (stdout) and using <code>Log4net</code></i>
         </td>
     </tr>
@@ -401,16 +285,12 @@ You can specify following properties in the `DebugTrace.properties` file.
             &emsp;&emsp;<code>LogLevel = Off</code><br>
             <b>Examples when using Log4net and NLog:</b> (Logger = Log4net; NLog)<br>
             &emsp;&emsp;<code>LogLevel = Debug</code> - <i>Outputs <code>Debug</code> level for both <code>Log4net</code> and <code>NLog</code></i><br>
-            &emsp;&emsp;<code>LogLevel = Finer; Trace</code> - <i>Outputs <code>Finer</code> level for <code>Log4net</code> and <code>Trace</code> level for <code>NLog</code> - since 1.5.0</i>
+            &emsp;&emsp;<code>LogLevel = Finer; Trace</code> - <i>Outputs <code>Finer</code> level for <code>Log4net</code> and <code>Trace</code> level for <code>NLog</code></i>
         </td>
     </tr>
     <tr>
         <td>
-            <code>EnterFormat</code><br>
-            &emsp;<i>Renamed since 2.0.0</i><br>
-            <br>
-            <i><code>EnterString</code></i><br>
-            &emsp;<i>Deprecated since 2.0.0</i>
+            <code>EnterFormat</code>
         </td>
         <td>
             The format string of log output when entering methods<br>
@@ -425,11 +305,7 @@ You can specify following properties in the `DebugTrace.properties` file.
     </tr>
     <tr>
         <td>
-            <code>LeaveFormat</code><br>
-            &emsp;<i>Renamed since 2.0.0</i><br>
-            <br>
-            <i><code>LeaveString</code></i><br>
-            &emsp;<i>Deprecated since 2.0.0</i>
+            <code>LeaveFormat</code
         </td>
         <td>
             The format string of log output when leaving methods<br>
@@ -445,11 +321,8 @@ You can specify following properties in the `DebugTrace.properties` file.
     </tr>
     <tr>
         <td>
-            <code>ThreadBoundaryFormat</code><br>
-            &emsp;<i>Renamed since 2.0.0</i><br>
-            <br>
-            <i><code>ThreadBoundaryString</code></i><br>
-            &emsp;<i>Deprecated since 2.0.0</i></td>
+            <code>ThreadBoundaryFormat</code>
+            </td>
         <td>
             The format string of log output at threads boundary<br>
             <b>Example:</b><br>
@@ -461,11 +334,8 @@ You can specify following properties in the `DebugTrace.properties` file.
     </tr>
     <tr>
         <td>
-            <code>ClassBoundaryFormat</code><br>
-            &emsp;<i>Renamed since 2.0.0</i><br>
-            <br>
-            <i><code>ClassBoundaryString</code></i><br>
-            &emsp;<i>Deprecated since 2.0.0</i></td>
+            <code>ClassBoundaryFormat</code>
+        </td>
         <td>
             The format string of log output at classes boundary<br>
             <b>Example:</b><br>
@@ -476,11 +346,7 @@ You can specify following properties in the `DebugTrace.properties` file.
     </tr>
     <tr>
         <td>
-            <code>IndentString</code><br>
-            &emsp;<i>Renamed since 2.0.0</i><br>
-            <br>
-            <i><code>CodeIndentString</code></i><br>
-            &emsp;<i>Deprecated since 2.0.0</i>
+            <code>IndentString</code>
         </td>
         <td>
             The indentation string for code<br>
@@ -508,11 +374,7 @@ You can specify following properties in the `DebugTrace.properties` file.
     </tr>
     <tr>
         <td>
-            <code>NonOutputString</code><br>
-            &emsp;<i>Renamed since 2.0.0</i><br>
-            <br>
-            <i><code>NonPrintString</code></i><br>
-            &emsp;<i>Deprecated since 2.0.0</i>
+            <code>NonOutputString</code>
         </td>
         <td>
             The string to be output instead of not outputting value<br>
@@ -563,8 +425,7 @@ You can specify following properties in the `DebugTrace.properties` file.
     </tr>
     <tr>
         <td>
-            <code>CountFormat</code><br>
-            &emsp;<i>since 1.5.1</i>
+            <code>CountFormat</code>
         </td>
         <td>
             The format string of the number of elements of collection<br>
@@ -576,8 +437,7 @@ You can specify following properties in the `DebugTrace.properties` file.
     </tr>
     <tr>
         <td>
-            <code>MinimumOutputCount</code><br>
-            &emsp;<i>since 2.0.0</i>
+            <code>MinimumOutputCount</code>
         </td>
         <td>
             The minimum value to output the number of elements of collection<br>
@@ -587,12 +447,8 @@ You can specify following properties in the `DebugTrace.properties` file.
     </tr>
     <tr>
         <td>
-            <code>LengthFormat</code><br>
-            &emsp;<i>Renamed since 2.0.0</i><br>
-            <br>
-            <code>StringLengthFormat</code><br>
-            &emsp;<i>since 1.5.1</i><br>
-            &emsp;<i>Deprecated since 2.0.0</i></td>
+            <code>LengthFormat</code>
+        </td>
         <td>
             The format string of the length of string<br>
             <b>Examples:</b><br>
@@ -603,8 +459,7 @@ You can specify following properties in the `DebugTrace.properties` file.
     </tr>
     <tr>
         <td>
-            <code>MinimumOutputLength</code><br>
-            &emsp;<i>since 2.0.0</i>
+            <code>MinimumOutputLength</code>
         </td>
         <td>
             The minimum value to output the length of string<br>
@@ -636,11 +491,8 @@ You can specify following properties in the `DebugTrace.properties` file.
     </tr>
     <tr>
         <td>
-            <code>MaximumDataOutputWidth</code><br>
-            &emsp;<i>Renamed since 2.0.0</i><br>
-            <br>
-            <code>MaxDataOutputWidth</code><br>
-            &emsp;<i>Deprecated since 2.0.0</i></td>
+            <code>MaximumDataOutputWidth</code>
+        </td>
         <td>
             The maximum output width of data<br>
             <b>Example:</b><br>
@@ -673,11 +525,7 @@ You can specify following properties in the `DebugTrace.properties` file.
     </tr>
     <tr>
         <td>
-            <code>NonOutputProperties</code><br>
-            &emsp;<i>Renamed since 2.0.0</i><br>
-            <br>
-            <i><code>NonPrintProperties</code></i><br>
-            &emsp;<i>Deprecated since 2.0.0</i>
+            <code>NonOutputProperties</code>
         </td>
         <td>
             Properties and fields not to be output value<br>
@@ -774,7 +622,7 @@ NonOutputProperties = \
     DebugTraceExample.Node.Right
 ```
 
-## 8. Using logging libraries
+## 7. Using logging libraries
 
 You can output logs using the following libraries besides console output.
 
@@ -807,7 +655,7 @@ Logger = Log4net
 <configuration>
   <log4net>
     <appender name="A" type="log4net.Appender.FileAppender">
-      <File value="C:/Logs/DebugTrace/Log4net.log" />
+      <File value="/Logs/DebugTrace/Log4net.log" />
       <AppendToFile value="true" />
       <ImmediateFlush value="true" />
       <lockingModel type="log4net.Appender.FileAppender+MinimalLock" />
@@ -839,9 +687,9 @@ Logger = NLog
       xsi:schemaLocation="http://www.nlog-project.org/schemas/NLog.xsd NLog.xsd"
       autoReload="true"
       throwExceptions="false"
-      internalLogLevel="Off" internalLogFile="C:/Logs/DebugTrace/NLog-internal.log">
+      internalLogLevel="Off" internalLogFile="/Logs/DebugTrace/NLog-internal.log">
   <targets>
-    <target xsi:type="File" name="f" fileName="C:/Logs/DebugTrace/NLog.log" encoding="utf-8"
+    <target xsi:type="File" name="f" fileName="/Logs/DebugTrace/NLog.log" encoding="utf-8"
             layout="${longdate} [${threadid}] ${uppercase:${level}} ${logger} ${message}" />
   </targets>
   <rules>

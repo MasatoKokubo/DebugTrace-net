@@ -7,7 +7,7 @@ namespace DebugTrace;
 /// </summary>
 /// <since>1.0.0</since>
 /// <author>Masato Kokubo</author>
-public struct StackTraceElement {
+internal struct StackTraceElement {
     /// <summary>
     /// Construct a <c>StackTraceElement</c>.
     /// </summary>

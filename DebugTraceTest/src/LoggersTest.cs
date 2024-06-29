@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DebugTrace;
-using static DebugTrace.CSharp;
+using DebugTrace;
 using Console = DebugTrace.Console;
 
 namespace DebugTraceTest;
@@ -21,7 +21,7 @@ public class LoggersTest {
     // ClassInit
     [ClassInitialize]
     public static void ClassInit(TestContext context) {
-        nLogFileInfo = new FileInfo("C:/Logs/DebugTrace/NLog.log");
+        nLogFileInfo = new FileInfo("/Logs/DebugTrace/NLog.log");
         try {
             using (var stream = nLogFileInfo.Open(FileMode.Truncate)) {}
         }
@@ -36,7 +36,7 @@ public class LoggersTest {
     // TestInit
     [TestInitialize]
     public void TestInit() {
-        beforeLogger = TraceBase.Logger;
+        beforeLogger = Trace.Logger;
         beforeLevel = beforeLogger.Level;
     }
 
@@ -44,9 +44,9 @@ public class LoggersTest {
     [TestCleanup]
     public void TestCleanup() {
         if (beforeLogger != null)
-            TraceBase.Logger = beforeLogger;
+            Trace.Logger = beforeLogger;
         if (beforeLevel != null)
-            TraceBase.Logger.Level = beforeLevel;
+            Trace.Logger.Level = beforeLevel;
     }
 
     // 0 Loggers
@@ -120,8 +120,8 @@ public class LoggersTest {
     [DataRow("fatal"    )]
     public void NLogLevel(string level) {
         // setup:
-        TraceBase.Logger = global::DebugTrace.NLog.Instance;
-        TraceBase.Logger.Level = level;
+        Trace.Logger = global::DebugTrace.NLog.Instance;
+        Trace.Logger.Level = level;
 
         nLogFileInfo?.Refresh();
         var beforeLength = 0L;

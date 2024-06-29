@@ -1,25 +1,61 @@
 ## 11. Release Notes
 
-### DebugTrace-net 3.0.0 - _April 24, 2022_
+### DebugTrace-net 3.0.0 - _June 23, 2022_
 
-* Support for .NET 6.0.
-* `Print` methods now returns the value or the message of the argument.
+* Now compatible with .NET 6.
+* Changed the default values of the following properties in DebugTrace.properties.
+
+* Support for VisualStudio has been dropped.
+    As a result, the following has been done:
+    * The `ITrace` interface has been removed.
+    * The `CSharp` and `VisualBasic` classes have been removed.
+    * The `TraceBase` class name has been changed to `Trace`.
+ 
+    The `using` statement will change to the following: 
+    `using static DebugTrace.CSharp;`  
+        ↓  
+    `using DebugTrace;`
+
+* Changes to method argument specifications    
+    * `T? Print<T>(string name, T? value)`  
+        ↓  
+    `T? Print<T>(string name, T? value, bool forceReflection = false,`  
+    `    bool? outputNonPublicFields = null, bool? putNonPublicProperties = null,`  
+    `    int minimumOutputCount = -1, int minimumOutputLength = -1,`  
+    `    int collectionLimit = -1, int stringLimit = -1, int reflectionNestLimit = -1)`
+
+    * `T? Print<T>(string name, Func<T?> valueSupplier)`  
+        ↓  
+    `T? Print<T>(string name, Func<T?> valueSupplier, bool forceReflection = false,`  
+    `    bool? outputNonPublicFields = null, bool? putNonPublicProperties = null,`  
+    `    int minimumOutputCount = -1, int minimumOutputLength = -1,`  
+    `    int collectionLimit = -1, int stringLimit = -1, int reflectionNestLimit = -1)`
+
+|Property Name|New Default Value|Old Default Value|
+|:----------- |:---------------:|:---------------:|
+|MinimumOutputCount |128|   5|
+|MinimumOutputLength|256|   5|
+|CollectionLimit    |128| 512|
+|StringLimit        |256|8192|
 
 _Related packages:_
-<table>
-    <tr><td>DebugTrace.Log4net 3.0.0</td><td>log4net 2.0.14</td></tr>
-    <tr><td>DebugTrace.NLog 3.0.0</td><td>NLog 4.7.15</td></tr>
-</table>
 
-### DebugTrace-net 2.1.0 - _April 24, 2022_
+|DebugTrace Package|Related Package|
+|:----|:----|
+|DebugTrace.Log4net 3.0.0|log4net 2.0.17|
+|DebugTrace.NLog 3.0.0   |NLog 5.2.8|
+
+### DebugTrace-net 2.1.0 - _November 13, 2022_
 
 * `Print` methods now returns the value or the message of the argument.
+* Now prints the runtime `.NET` version in the `DbeugTrace-net` startup log.
 
 _Related packages:_
-<table>
-    <tr><td>DebugTrace.Log4net 2.1.0</td><td>log4net 2.0.14</td></tr>
-    <tr><td>DebugTrace.NLog 2.1.0</td><td>NLog 4.7.15</td></tr>
-</table>
+
+|DebugTrace Package|Related Package|
+|:----|:----|
+|DebugTrace.Log4net 2.1.0|log4net 2.0.15|
+|DebugTrace.NLog 2.1.0   |NLog 4.7.15|
 
 ### DebugTrace-net 2.0.3 - _August 13, 2021_
 
@@ -59,7 +95,7 @@ _Related packages:_
     * Diagnostics+Debug
     * Diagnostics+Trace
 
-* Add `PrintStack(int)` method to `TraceBase` class.
+* Add `PrintStack(int)` method to `Trace` class.
 
 ### DebugTrace-net 1.5.4 - _February 11, 2019_
 
@@ -96,7 +132,7 @@ _Related packages:_
 
 ### DebugTrace-net 1.5.0 - _October 28, 2018_
 * Bug fix
-    * **_[Fixed]_** Throws a `NullReferenceException` when print a `Task` on `TraceBase.OutputNonPublicFields = true`.
+    * **_[Fixed]_** Throws a `NullReferenceException` when print a `Task` on `Trace.OutputNonPublicFields = true`.
 
 * Improvement
     * You can now specify multiple loggers in DebugTrace.properties. (e.g.: `Logger = Console+Out; Log4net`)

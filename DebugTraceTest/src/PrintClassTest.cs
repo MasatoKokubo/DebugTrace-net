@@ -1,7 +1,7 @@
 // PrintClassTest.cs
 // (C) 2018 Masato Kokubo
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static DebugTrace.CSharp;
+using DebugTrace;
 
 namespace DebugTraceTest;
 
@@ -32,5 +32,4 @@ public class PrintClassTest {
         Trace.Print("node", node);
         StringAssert.Contains(Trace.LastLog, "DebugTraceTest.Node<int>");
     }
-    
 }

@@ -10,7 +10,7 @@ namespace DebugTrace;
 /// </summary>
 /// <since>1.0.0</since>
 /// <author>Masato Kokubo</author>
-public class LogBuffer {
+internal class LogBuffer {
     private int nestLevel = 0;
     private int appendNestLevel = 0; // since 2.0.0
     private IList<(int, string)> lines = new List<(int, string)>();
@@ -45,7 +45,7 @@ public class LogBuffer {
     /// <since>2.0.0</since>
     public LogBuffer Append(object value, int nestLevel = 0, bool noBreak = false) {
         var str = value.ToString() ?? "";
-        if (!noBreak && Length > 0 && Length + str.Length > TraceBase.MaximumDataOutputWidth)
+        if (!noBreak && Length > 0 && Length + str.Length > Trace.MaximumDataOutputWidth)
             LineFeed();
         appendNestLevel = nestLevel;
         lastLine.Append(str);
@@ -68,8 +68,8 @@ public class LogBuffer {
     /// <param name="buff">another <c>LogBuffer</c></param>
     /// <returns>this object</returns>
     public LogBuffer Append(string? separator, LogBuffer buff) {
-    if (separator != null)
-        Append(separator, 0, true);
+        if (separator != null)
+            Append(separator, 0, true);
         var index = 0;
         foreach ((var nestLevel, var str) in buff.Lines) {
             if (index > 0)

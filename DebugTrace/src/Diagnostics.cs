@@ -51,7 +51,7 @@ public abstract class Diagnostics : ILogger {
         /// </summary>
         /// <param name="message">the message</param>
         public override void Log(string message) {
-            System.Diagnostics.Debug.WriteLine(string.Format(TraceBase.LogDateTimeFormat,
+            System.Diagnostics.Debug.WriteLine(string.Format(DebugTrace.Trace.LogDateTimeFormat,
                 DateTime.Now, Thread.CurrentThread.ManagedThreadId, message));
         }
     }
@@ -73,7 +73,7 @@ public abstract class Diagnostics : ILogger {
         /// </summary>
         /// <param name="message">the message</param>
         public override void Log(string message) {
-            System.Diagnostics.Trace.WriteLine(string.Format(TraceBase.LogDateTimeFormat,
+            System.Diagnostics.Trace.WriteLine(string.Format(DebugTrace.Trace.LogDateTimeFormat,
                 DateTime.Now, Thread.CurrentThread.ManagedThreadId, message));
         }
     }

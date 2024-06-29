@@ -1,12 +1,14 @@
-// TraceBase.cs
+// Trace.cs
 // (C) 2018 Masato Kokubo
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 
@@ -17,11 +19,11 @@ namespace DebugTrace;
 /// </summary>
 /// <since>1.0.0</since>
 /// <author>Masato Kokubo</author>
-public abstract class TraceBase : ITrace {
+public class Trace {
     /// <summary>
     /// Resources including DebugTrace operation option
     /// </summary>
-    public static Resource Resource {get; private set;}
+    internal static Resource Resource {get; private set;}
 
     /// <summary>
     /// Format string of log output when entering methods
@@ -170,12 +172,12 @@ public abstract class TraceBase : ITrace {
     /// <summary>
     /// Array of indent strings
     /// </summary>
-    protected static string[] indentStrings = new string[0];
+    private static string[] indentStrings = new string[0];
 
     /// <summary>
     /// Array of data indent strings
     /// </summary>
-    protected static string[] dataIndentStrings = new string[0];
+    private static string[] dataIndentStrings = new string[0];
 
     /// <summary>
     /// The logger
@@ -185,47 +187,91 @@ public abstract class TraceBase : ITrace {
     /// <summary>
     /// Whether tracing is IsEnabled
     /// </summary>
-    public bool IsEnabled {get => Logger.IsEnabled;}
+    public static bool IsEnabled {get => Logger.IsEnabled;}
 
     /// <summary>
     /// Set of classes that dose not output the type name
     /// </summary>
-    protected abstract ISet<Type> NoOutputTypes {get;}
+    private static ISet<Type> NoOutputTypes {get;} = new HashSet<Type>() {
+        typeof(bool    ),
+        typeof(char    ),
+        typeof(int     ),
+        typeof(uint    ),
+        typeof(long    ),
+        typeof(ulong   ),
+        typeof(float   ),
+        typeof(double  ),
+        typeof(decimal ),
+        typeof(string  ),
+        typeof(DateTime),
+    };
 
     /// <summary>
     /// Set of element types of array that dose not output the type name
     /// </summary>
-    protected abstract ISet<Type> NoOutputElementTypes {get;}
+    private static ISet<Type> NoOutputElementTypes {get;} = new HashSet<Type>() {
+        typeof(bool    ),
+        typeof(char    ),
+        typeof(sbyte   ),
+        typeof(byte    ),
+        typeof(short   ),
+        typeof(ushort  ),
+        typeof(int     ),
+        typeof(uint    ),
+        typeof(long    ),
+        typeof(ulong   ),
+        typeof(float   ),
+        typeof(double  ),
+        typeof(decimal ),
+        typeof(string  ),
+        typeof(DateTime),
+    };
 
     /// <summary>
     /// Dictionary of type to type name
     /// </summary>
-    protected abstract IDictionary<Type, string> TypeNameMap {get;}
+    private static IDictionary<Type, string> TypeNameMap {get;} = new Dictionary<Type, string>() {
+        {typeof(object ), "object" },
+        {typeof(bool   ), "bool"   },
+        {typeof(char   ), "char"   },
+        {typeof(sbyte  ), "sbyte"  },
+        {typeof(byte   ), "byte"   },
+        {typeof(short  ), "short"  },
+        {typeof(ushort ), "ushort" },
+        {typeof(int    ), "int"    },
+        {typeof(uint   ), "uint"   },
+        {typeof(long   ), "long"   },
+        {typeof(ulong  ), "ulong"  },
+        {typeof(float  ), "float"  },
+        {typeof(double ), "double" },
+        {typeof(decimal), "decimal"},
+        {typeof(string ), "string" },
+    };
 
     /// <summary>
     /// Dictionary of thread id to indent state
     /// </summary>
-    protected readonly IDictionary<int, State> states = new Dictionary<int, State>();
+    private static readonly IDictionary<int, State> states = new Dictionary<int, State>();
 
     /// <summary>
     /// Previous thread id
     /// </summary>
-    protected int beforeThreadId;
+    private static int beforeThreadId;
 
     /// <summary>
     /// Reflected objects
     /// </summary>
-    protected readonly IList<object> reflectedObjects = new List<object>();
+    private static  readonly IList<object> reflectedObjects = new List<object>();
 
     /// <summary>
     /// The last log string output
     /// </summary>
-    public string LastLog {get; private set;} = "";
+    public static string LastLog {get; private set;} = "";
 
     /// <summary>
     /// Class constructor
     /// </summary>
-    static TraceBase() {
+    static Trace() {
         Resource = new Resource("DebugTrace");
         InitClass("");
     }
@@ -251,14 +297,14 @@ public abstract class TraceBase : ITrace {
         KeyValueSeparator         = Resource.GetString(nameof(KeyValueSeparator        ), Resource.Unescape(@":\s"));
         PrintSuffixFormat         = Resource.GetString(nameof(PrintSuffixFormat        ), Resource.Unescape(@"\s({2}:{3:D})"));
         CountFormat               = Resource.GetString(nameof(CountFormat              ), Resource.Unescape(@"\sCount:{0}")); // since 1.5.1
-        MinimumOutputCount        = Resource.GetInt   (nameof(MinimumOutputCount       ), 5); // since 2.0.0
+        MinimumOutputCount        = Resource.GetInt   (nameof(MinimumOutputCount       ), 128); // 128 <- 5 since 3.0.0, since 2.0.0
         LengthFormat              = Resource.GetString(nameof(LengthFormat             ), "StringLengthFormat", Resource.Unescape(@"(Length:{0})")); // since 1.5.1
-        MinimumOutputLength       = Resource.GetInt   (nameof(MinimumOutputLength      ), 5); // since 2.0.0
+        MinimumOutputLength       = Resource.GetInt   (nameof(MinimumOutputLength      ), 256); // 256 <- 5 since 3.0.0, since 2.0.0
         DateTimeFormat            = Resource.GetString(nameof(DateTimeFormat           ), Resource.Unescape(@"{0:yyyy-MM-dd HH:mm:ss.fffffffK}"));
         LogDateTimeFormat         = Resource.GetString(nameof(LogDateTimeFormat        ), Resource.Unescape(@"{0:yyyy-MM-dd HH:mm:ss.fff} [{1:D2}] {2}")); // since 1.3.0
         MaximumDataOutputWidth    = Resource.GetInt   (nameof(MaximumDataOutputWidth   ), "MaxDataOutputWidth", 70);
-        CollectionLimit           = Resource.GetInt   (nameof(CollectionLimit          ), 512);
-        StringLimit               = Resource.GetInt   (nameof(StringLimit              ), 8192);
+        CollectionLimit           = Resource.GetInt   (nameof(CollectionLimit          ), 128); // 128 <- 512 since 3.0.0
+        StringLimit               = Resource.GetInt   (nameof(StringLimit              ), 256); // 256 <- 8192 since 3.0.0
         ReflectionNestLimit       = Resource.GetInt   (nameof(ReflectionNestLimit      ), 4);
         NonOutputProperties       = new List<string>(Resource.GetStrings(nameof(NonOutputProperties), "NonPrintProperties", new string[0]));
         NonOutputProperties.Add("System.Threading.Tasks.Task.Result");
@@ -343,9 +389,13 @@ public abstract class TraceBase : ITrace {
         // my version
         var versionAttribute = (AssemblyInformationalVersionAttribute?)
             Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(), typeof(AssemblyInformationalVersionAttribute));
+        string version = versionAttribute?.InformationalVersion ?? "?.?.?";
+        var plusIndex = version.IndexOf('+');
+        if (plusIndex >= 0)
+            version = version.Substring(0, plusIndex);
 
         // output version log
-        Logger.Log($"DebugTrace-net {versionAttribute?.InformationalVersion} on {RuntimeInformation.FrameworkDescription}");
+        Logger.Log($"DebugTrace-net {version} on {RuntimeInformation.FrameworkDescription}");
         Logger.Log($"  properties file path: {Resource.FileInfo.FullName}");
         Logger.Log($"  logger: {Logger}");
     }
@@ -355,7 +405,7 @@ public abstract class TraceBase : ITrace {
     /// </summary>
     /// <param name="threadId">the thread id</param>
     /// <returns>the indent state of the current thread</returns>
-    private protected State GetCurrentState(int threadId = -1) {
+    private static State GetCurrentState(int threadId = -1) {
         State state;
         if (threadId == -1)
             threadId = Thread.CurrentThread.ManagedThreadId;
@@ -377,7 +427,7 @@ public abstract class TraceBase : ITrace {
     /// <param name="nestLevel">the code nest level</param>
     /// <param name="dataNestLevel">the data nest level</param>
     /// <returns>a string corresponding to the current indent</returns>
-    protected string GetIndentString(int nestLevel, int dataNestLevel) {
+    private static string GetIndentString(int nestLevel, int dataNestLevel) {
         return indentStrings[
                 nestLevel < 0 ? 0 :
                 nestLevel >= indentStrings.Length ? indentStrings.Length - 1
@@ -392,7 +442,7 @@ public abstract class TraceBase : ITrace {
     /// Common start processing of output.
     /// </summary>
     /// <param name="state">the state</param>
-    protected void PrintStart(State state) {
+    private static void PrintStart(State state) {
         if (state.ThreadId !=  beforeThreadId) {
             // Thread changing
             Logger.Log(""); // Line break
@@ -406,7 +456,7 @@ public abstract class TraceBase : ITrace {
     /// <summary>
     /// Resets the nest level
     /// </summary>
-    public void ResetNest() {
+    public static void ResetNest() {
         if (!IsEnabled) return;
 
         lock (states) {
@@ -418,7 +468,7 @@ public abstract class TraceBase : ITrace {
     /// Outputs a log when enters the method.
     /// </summary>
     /// <returns>the current thread id</returns>
-    public int Enter() {
+    public static int Enter() {
         if (!IsEnabled) return -1;
 
         lock (states) {
@@ -444,7 +494,7 @@ public abstract class TraceBase : ITrace {
     /// Outputs a log when leaves the method.
     /// </summary>
     /// <param name="threadId">the thread id</param>
-    public void Leave(int threadId = -1) {
+    public static void Leave(int threadId = -1) {
         if (!IsEnabled) return;
 
         lock (states) {
@@ -470,7 +520,7 @@ public abstract class TraceBase : ITrace {
     /// <param name="baseString">the string for formatting</param>
     /// <param name="timeSpan">the time span</param>
     /// <returns>a string embedded caller information</returns>
-    protected string GetCallerInfo(string baseString, TimeSpan? timeSpan = null) {
+    private static string GetCallerInfo(string baseString, TimeSpan? timeSpan = null) {
         var element = GetStackTraceElement();
 
         return string.Format(baseString,
@@ -486,7 +536,7 @@ public abstract class TraceBase : ITrace {
     /// </summary>
     /// <param name="message">the message</param>
     /// <returns>the message</returns>
-    public string Print(string message) {
+    public static string Print(string message) {
         if (IsEnabled)
             PrintSub(message);
         return message;
@@ -497,7 +547,7 @@ public abstract class TraceBase : ITrace {
     /// </summary>
     /// <param name="messageSupplier">the message supplier</param>
     /// <returns>the message if IsEnabled, otherwise a empty string</returns>
-    public string Print(Func<string> messageSupplier) {
+    public static string Print(Func<string> messageSupplier) {
         if (IsEnabled) {
             var message = messageSupplier();
             PrintSub(message);
@@ -510,7 +560,7 @@ public abstract class TraceBase : ITrace {
     /// Outputs the message to the log.
     /// </summary>
     /// <param name="message">the message</param>
-    protected void PrintSub(string message) {
+    private static void PrintSub(string message) {
         lock (states) {
             var state = GetCurrentState();
             PrintStart(state); // Common start processing of output
@@ -539,7 +589,8 @@ public abstract class TraceBase : ITrace {
     /// </summary>
     /// <param name="name">the name of the value</param>
     /// <param name="value">the value to output</param>
-    protected void PrintSub(string name, object? value) {
+    /// <param name="printOptions">print options</param>
+    private static void PrintSub(string name, object? value, PrintOptions printOptions) {
         lock (states) {
             var state = GetCurrentState();
             PrintStart(state); // Common start processing of output
@@ -549,9 +600,9 @@ public abstract class TraceBase : ITrace {
             var buff = new LogBuffer();
 
             buff.Append(name);
-            var normalizedName = name.Substring(name.LastIndexOf('.') + 1).Trim();
-            normalizedName = normalizedName.Substring(normalizedName.LastIndexOf(' ') + 1);
-            var valueBuff = ToString(value);
+        //  var normalizedName = name.Substring(name.LastIndexOf('.') + 1).Trim();
+        //  normalizedName = normalizedName.Substring(normalizedName.LastIndexOf(' ') + 1);
+            var valueBuff = ToString(value, printOptions);
             buff.Append(VarNameValueSeparator, valueBuff);
 
             var element = GetStackTraceElement();
@@ -578,13 +629,13 @@ public abstract class TraceBase : ITrace {
         }
     }
 
-    private static string thisClassFullName = typeof(TraceBase).FullName + '.';
+    private static string thisClassFullName = typeof(Trace).FullName + '.';
 
     /// <summary>
     /// Returns the caller stack trace element.
     /// </summary>
     /// <returns>the caller stack trace element</returns>
-    protected StackTraceElement GetStackTraceElement() {
+    private static StackTraceElement GetStackTraceElement() {
         var elements = GetStackTraceElements(1);
 
         var result = elements.Count() > 0
@@ -600,7 +651,7 @@ public abstract class TraceBase : ITrace {
     /// <param name="maxCount">maximum number of stack trace elements to return</param>
     /// <returns>stack trace elements</returns>
     /// <since>1.5.5</since>
-    protected StackTraceElement[] GetStackTraceElements(int maxCount) {
+    private static StackTraceElement[] GetStackTraceElements(int maxCount) {
         return Environment.StackTrace.Split('\n')
             .Select(str => str.Trim())
             .Where(str => str != "" && !str.Contains(thisClassFullName) && !str.Contains("StackTrace"))
@@ -629,7 +680,7 @@ public abstract class TraceBase : ITrace {
     /// <param name="str">the string</param>
     /// <param name="separator">the separator</param>
     /// <returns>a tuple of strings</returns>
-    protected static (string, string) Split(string str, char separator) {
+    private static (string, string) Split(string str, char separator) {
         var index = str.IndexOf(separator);
         return index < 0
             ? (str, "")
@@ -643,7 +694,7 @@ public abstract class TraceBase : ITrace {
     /// <param name="str">the string</param>
     /// <param name="separator">the separator</param>
     /// <returns>a tuple of strings</returns>
-    protected static (string, string) LastSplit(string str, char separator) {
+    private static (string, string) LastSplit(string str, char separator) {
         var index = str.LastIndexOf(separator);
         return index < 0
             ? (str, "")
@@ -656,10 +707,37 @@ public abstract class TraceBase : ITrace {
     /// <typeparam name="T">the type of the value</typeparam>
     /// <param name="name">the name of the value</param>
     /// <param name="value">the value to output</param>
+    /// <param name="forceReflection">if true, outputs using reflection even if it has ToString() method</param>
+    /// <param name="outputNonPublicFields">if true, outputs non-public field when using reflection (Overrides Debugtarace.properties value)</param>
+    /// <param name="outputNonPublicProperties">if true, outputs non-public properties when using reflection (Overrides Debugtarace.properties value)</param>
+    /// <param name="minimumOutputCount">the minimum value to output the number of elements for IDictionary and IEnumerable (Overrides Debugtarace.properties value)</param>
+    /// <param name="minimumOutputLength">the minimum value to output the length of string (Overrides Debugtarace.properties value)</param>
+    /// <param name="collectionLimit">output limit for IDictionary and IEnumerable elements (Overrides Debugtarace.properties value)</param>
+    /// <param name="stringLimit">output limit of characters for string (Overrides Debugtarace.properties value)</param>
+    /// <param name="reflectionNestLimit">the nest limit when using reflection (Overrides Debugtarace.properties value)</param>
     /// <returns>the value</returns>
-    public T? Print<T>(string name, T? value) {
-        if (IsEnabled)
-            PrintSub(name, value);
+    public static T? Print<T>(string name, T? value,
+            bool forceReflection = false,
+            bool? outputNonPublicFields = null,
+            bool? outputNonPublicProperties = null,
+            int minimumOutputCount = -1,
+            int minimumOutputLength = -1,
+            int collectionLimit = -1,
+            int stringLimit = -1,
+            int reflectionNestLimit = -1) {
+        if (IsEnabled) {
+            var printOptions = new PrintOptions(
+                forceReflection,
+                outputNonPublicFields     == null ? OutputNonPublicFields     : outputNonPublicFields.Value,
+                outputNonPublicProperties == null ? OutputNonPublicProperties : outputNonPublicProperties.Value,
+                minimumOutputCount        == -1   ? MinimumOutputCount        : minimumOutputCount,
+                minimumOutputLength       == -1   ? MinimumOutputLength       : minimumOutputLength,
+                collectionLimit           == -1   ? CollectionLimit           : collectionLimit,
+                stringLimit               == -1   ? StringLimit               : stringLimit,
+                reflectionNestLimit       == -1   ? ReflectionNestLimit       : reflectionNestLimit
+            );
+            PrintSub(name, value, printOptions);
+        }
         return value;
     }
 
@@ -670,16 +748,42 @@ public abstract class TraceBase : ITrace {
     /// <typeparam name="T">the type of the value</typeparam>
     /// <param name="name">the name of the value</param>
     /// <param name="valueSupplier">the supplier of value to output</param>
+    /// <param name="forceReflection">if true, outputs using reflection even if it has ToString() method</param>
+    /// <param name="outputNonPublicFields">if true, outputs non-public field when using reflection (Overrides Debugtarace.properties value)</param>
+    /// <param name="outputNonPublicProperties">if true, outputs non-public properties when using reflection (Overrides Debugtarace.properties value)</param>
+    /// <param name="minimumOutputCount">the minimum value to output the number of elements for IDictionary and IEnumerable (Overrides Debugtarace.properties value)</param>
+    /// <param name="minimumOutputLength">the minimum value to output the length of string (Overrides Debugtarace.properties value)</param>
+    /// <param name="collectionLimit">output limit for IDictionary and IEnumerable elements (Overrides Debugtarace.properties value)</param>
+    /// <param name="stringLimit">output limit of characters for string (Overrides Debugtarace.properties value)</param>
+    /// <param name="reflectionNestLimit">the nest limit when using reflection (Overrides Debugtarace.properties value)</param>
     /// <returns>the value if IsEnabled, otherwise a default value of the T type</returns>
-    public T? Print<T>(string name, Func<T?> valueSupplier) {
+    public static T? Print<T>(string name, Func<T?> valueSupplier,
+            bool forceReflection = false,
+            bool? outputNonPublicFields = null,
+            bool? outputNonPublicProperties = null,
+            int minimumOutputCount = -1,
+            int minimumOutputLength = -1,
+            int collectionLimit = -1,
+            int stringLimit = -1,
+            int reflectionNestLimit = -1) {
         if (IsEnabled) {
+            var printOptions = new PrintOptions(
+                forceReflection,
+                outputNonPublicFields     == null ? OutputNonPublicFields     : outputNonPublicFields.Value,
+                outputNonPublicProperties == null ? OutputNonPublicProperties : outputNonPublicProperties.Value,
+                minimumOutputCount        == -1   ? MinimumOutputCount        : minimumOutputCount,
+                minimumOutputLength       == -1   ? MinimumOutputLength       : minimumOutputLength,
+                collectionLimit           == -1   ? CollectionLimit           : collectionLimit,
+                stringLimit               == -1   ? StringLimit               : stringLimit,
+                reflectionNestLimit       == -1   ? ReflectionNestLimit       : reflectionNestLimit
+            );
             try {
                 var value = valueSupplier();
-                PrintSub(name, value);
+                PrintSub(name, value, printOptions);
                 return value;
             }
             catch (Exception ex) {
-                PrintSub(name, ex.ToString());
+                PrintSub(name, ex.ToString(), printOptions);
             }
         }
         return default;
@@ -690,7 +794,7 @@ public abstract class TraceBase : ITrace {
     /// </summary>
     /// <param name="maxCount">maximum number of stack trace elements to output</param>
     /// <since>1.5.5</since>
-    public void PrintStack(int maxCount) {
+    public static void PrintStack(int maxCount) {
         Print("Stack", GetStackTraceElements(maxCount));
     }
 
@@ -698,9 +802,10 @@ public abstract class TraceBase : ITrace {
     /// Creates a string buffer from the value.
     /// </summary>
     /// <param name="value">the value object</param>
+    /// <param name="printOptions">print options</param>
     /// <param name="isElement"><c>true</c> if the value is element of a container class, <c>false</c> otherwise</param>
     /// <returns>a LogBuffer</returns>
-    protected LogBuffer ToString(object? value, bool isElement = false) {
+    private static LogBuffer ToString(object? value, PrintOptions printOptions, bool isElement = false) {
         var buff = new LogBuffer();
 
         if (value == null) {
@@ -710,7 +815,7 @@ public abstract class TraceBase : ITrace {
 
         var type = value.GetType();
 
-        var typeName = GetTypeName(type, value, isElement);
+        var typeName = GetTypeName(type, value, printOptions, isElement);
         var fullTypeName = GetFullTypeName(type);
         bool isReflection = ReflectionClasses.Contains(fullTypeName);
         if (!isReflection) {
@@ -730,12 +835,12 @@ public abstract class TraceBase : ITrace {
             case double   doubleValue: buff.Append(typeName); Append(buff,  doubleValue); return buff;
             case decimal decimalValue: buff.Append(typeName); Append(buff, decimalValue); return buff;
             case DateTime    dateTime: buff.Append(typeName); Append(buff,     dateTime); return buff;
-            case string   stringValue: buff.Append(typeName); AppendString(buff, stringValue); return buff;
-            case IDictionary dictionary: return ToStringDictionary(dictionary);
-            case IEnumerable enumerable: return ToStringEnumerable(enumerable);
+            case string   stringValue: buff.Append(typeName); AppendString(buff, stringValue, printOptions); return buff;
+            case IDictionary dictionary: return ToStringDictionary(dictionary, printOptions);
+            case IEnumerable enumerable: return ToStringEnumerable(enumerable, printOptions);
             case Enum       enumValue: buff.Append(typeName); buff.Append(enumValue); return buff;
             default:
-                if (!HasToString(type)) {
+                if (printOptions.ForceReflection || !HasToString(type)) {
                     isReflection = true;
                     ReflectionClasses.Add(fullTypeName);
                 }
@@ -749,14 +854,14 @@ public abstract class TraceBase : ITrace {
                 // Cyclic reference
                 buff.Append(CyclicReferenceString);
 
-            else if (reflectedObjects.Count > ReflectionNestLimit)
+            else if (reflectedObjects.Count >= printOptions.ReflectionNestLimit)
                 // Over reflection level limitation
                 buff.NoBreakAppend(LimitString);
 
             else {
                 // Use Reflection
                 reflectedObjects.Add(value);
-                var valueBuff = ToStringReflection(value);
+                var valueBuff = ToStringReflection(value, printOptions);
                 buff.Append(null, valueBuff);
                 reflectedObjects.RemoveAt(reflectedObjects.Count - 1);
             }
@@ -774,14 +879,15 @@ public abstract class TraceBase : ITrace {
     /// </summary>
     /// <param name="type">the type of the value</param>
     /// <param name="value">the value object</param>
+    /// <param name="printOptions">print options</param>
     /// <param name="isElement"><c>true</c> if the value is element of a container class, <c>false</c> otherwise</param>
     /// <param name="nest">current nest count</param>
     /// <returns>the type name to be output to the log</returns>
-    protected string GetTypeName(Type type, object? value, bool isElement, int nest = 0) {
+    private static string GetTypeName(Type type, object? value, PrintOptions printOptions, bool isElement, int nest = 0) {
         var typeName = "";
         if (type.IsArray) {
             // Array
-            typeName = GetArrayTypeName(type, value, isElement, nest);
+            typeName = GetArrayTypeName(type, value, printOptions, isElement, nest);
 
         } else {
             typeName = GetTypeName(type);
@@ -812,7 +918,7 @@ public abstract class TraceBase : ITrace {
                                 typeName = "enum " + typeName;
                             else if (type.IsValueType)
                                 typeName += " struct";
-                        } else if (count >= MinimumOutputCount)
+                        } else if (count >= printOptions.MinimumOutputCount)
                             typeName += string.Format(CountFormat, count);
                     }
                 }
@@ -830,20 +936,36 @@ public abstract class TraceBase : ITrace {
     /// </summary>
     /// <param name="type">the type of the value</param>
     /// <param name="value">the value object</param>
+    /// <param name="printOptions">print options</param>
     /// <param name="isElement"><c>true</c> if the value is element of a container class, <c>false</c> otherwise</param>
     /// <param name="nest">current nest count</param>
     /// <returns>the type name to be output to the log</returns>
-    protected abstract string GetArrayTypeName(Type type, object? value, bool isElement, int nest);
+    private static string GetArrayTypeName(Type type, object? value, PrintOptions printOptions, bool isElement, int nest) {
+        string typeName = GetTypeName(type.GetElementType()!, null, printOptions, false, nest + 1);
+
+        if (typeName.Length > 0) {
+            var bracket = "[";
+            if (value != null)
+                bracket += ((Array)value).Length;
+            bracket += ']';
+            int braIndex = typeName.IndexOf('[');
+            if (braIndex < 0)
+                braIndex = typeName.Length;
+            typeName = typeName.Substring(0, braIndex) + bracket + typeName.Substring(braIndex);
+        }
+
+        return typeName;
+    }
 
     // GetTypeName
-    private string GetTypeName(Type type) {
+    private static string GetTypeName(Type type) {
         var builder = new StringBuilder();
         AppendTypeName(builder, type);
         return  builder.ToString();
     }
 
     // AppendTypeName
-    private void AppendTypeName(StringBuilder builder, Type type) {
+    private static void AppendTypeName(StringBuilder builder, Type type) {
         var typeName = GetFullTypeName(type);
         if (typeName == "System.Tuple")
             typeName = "Tuple";
@@ -865,7 +987,7 @@ public abstract class TraceBase : ITrace {
     }
 
     // GetFullTypeName
-    private string GetFullTypeName(Type type) {
+    private static string GetFullTypeName(Type type) {
         if (TypeNameMap.ContainsKey(type))
             return TypeNameMap[type];
 
@@ -882,7 +1004,7 @@ public abstract class TraceBase : ITrace {
     /// </summary>
     /// <param name="typeName">a class name</param>
     /// <returns>the replaced ckass name</returns>
-    protected string ReplaceTypeName(string typeName) {
+    private static string ReplaceTypeName(string typeName) {
         if (DefaultNameSpace != "" && typeName.StartsWith(DefaultNameSpace))
             typeName = DefaultNameSpaceString + typeName.Substring(DefaultNameSpace.Length);
         return typeName;
@@ -894,7 +1016,7 @@ public abstract class TraceBase : ITrace {
     /// <param name="buff">the log buffer</param>
     /// <param name="value">the value</param>
     /// <returns></returns>
-    protected abstract void Append(LogBuffer buff, bool value);
+    private static void Append(LogBuffer buff, bool value) {buff.Append(value ? "true" : "false");}
 
     /// <summary>
     /// Appends a string representation of the value to the log buffer.
@@ -902,7 +1024,10 @@ public abstract class TraceBase : ITrace {
     /// <param name="buff">the log buffer</param>
     /// <param name="value">the value</param>
     /// <returns></returns>
-    protected abstract void Append(LogBuffer buff, char value);
+    private static void Append(LogBuffer buff, char value) {
+        buff.Append('\'');
+        AppendChar(buff, value, '\'', true); buff.Append('\'');
+    }
 
     /// <summary>
     /// Appends a string representation of the value to the log buffer.
@@ -910,7 +1035,7 @@ public abstract class TraceBase : ITrace {
     /// <param name="buff">the log buffer</param>
     /// <param name="value">the value</param>
     /// <returns></returns>
-    protected abstract void Append(LogBuffer buff, sbyte value);
+    private static void Append(LogBuffer buff, sbyte value) {buff.Append(value);}
 
     /// <summary>
     /// Appends a string representation of the value to the log buffer.
@@ -918,7 +1043,7 @@ public abstract class TraceBase : ITrace {
     /// <param name="buff">the log buffer</param>
     /// <param name="value">the value</param>
     /// <returns></returns>
-    protected abstract void Append(LogBuffer buff, byte value);
+    private static void Append(LogBuffer buff, byte value) {buff.Append(value);}
 
     /// <summary>
     /// Appends a string representation of the value to the log buffer.
@@ -926,7 +1051,7 @@ public abstract class TraceBase : ITrace {
     /// <param name="buff">the log buffer</param>
     /// <param name="value">the value</param>
     /// <returns></returns>
-    protected abstract void Append(LogBuffer buff, short value);
+    private static void Append(LogBuffer buff, short value) {buff.Append(value);}
 
     /// <summary>
     /// Appends a string representation of the value to the log buffer.
@@ -934,7 +1059,7 @@ public abstract class TraceBase : ITrace {
     /// <param name="buff">the log buffer</param>
     /// <param name="value">the value</param>
     /// <returns></returns>
-    protected abstract void Append(LogBuffer buff, ushort value);
+    private static void Append(LogBuffer buff, ushort value) {buff.Append(value);}
 
     /// <summary>
     /// Appends a string representation of the value to the log buffer.
@@ -942,7 +1067,7 @@ public abstract class TraceBase : ITrace {
     /// <param name="buff">the log buffer</param>
     /// <param name="value">the value</param>
     /// <returns></returns>
-    protected abstract void Append(LogBuffer buff, int value);
+    private static void Append(LogBuffer buff, int value) {buff.Append(value);}
 
     /// <summary>
     /// Appends a string representation of the value to the log buffer.
@@ -950,7 +1075,7 @@ public abstract class TraceBase : ITrace {
     /// <param name="buff">the log buffer</param>
     /// <param name="value">the value</param>
     /// <returns></returns>
-    protected abstract void Append(LogBuffer buff, uint value);
+    private static void Append(LogBuffer buff, uint value) {buff.Append(value).Append('u' );}
 
     /// <summary>
     /// Appends a string representation of the value to the log buffer.
@@ -958,7 +1083,7 @@ public abstract class TraceBase : ITrace {
     /// <param name="buff">the log buffer</param>
     /// <param name="value">the value</param>
     /// <returns></returns>
-    protected abstract void Append(LogBuffer buff, long value);
+    private static void Append(LogBuffer buff, long value) {buff.Append(value).Append('L' );}
 
     /// <summary>
     /// Appends a string representation of the value to the log buffer.
@@ -966,7 +1091,7 @@ public abstract class TraceBase : ITrace {
     /// <param name="buff">the log buffer</param>
     /// <param name="value">the value</param>
     /// <returns></returns>
-    protected abstract void Append(LogBuffer buff, ulong value);
+    private static void Append(LogBuffer buff, ulong value) {buff.Append(value).Append("uL");}
 
     /// <summary>
     /// Appends a string representation of the value to the log buffer.
@@ -974,7 +1099,7 @@ public abstract class TraceBase : ITrace {
     /// <param name="buff">the log buffer</param>
     /// <param name="value">the value</param>
     /// <returns></returns>
-    protected abstract void Append(LogBuffer buff, float value);
+     private static void Append(LogBuffer buff, float value) {buff.Append(value).Append('f' );}
 
     /// <summary>
     /// Appends a string representation of the value to the log buffer.
@@ -982,7 +1107,7 @@ public abstract class TraceBase : ITrace {
     /// <param name="buff">the log buffer</param>
     /// <param name="value">the value</param>
     /// <returns></returns>
-    protected abstract void Append(LogBuffer buff, double value);
+    private static void Append(LogBuffer buff, double value) {buff.Append(value).Append('d' );}
 
     /// <summary>
     /// Appends a string representation of the value to the log buffer.
@@ -990,7 +1115,7 @@ public abstract class TraceBase : ITrace {
     /// <param name="buff">the log buffer</param>
     /// <param name="value">the value</param>
     /// <returns></returns>
-    protected abstract void Append(LogBuffer buff, decimal value);
+    private static void Append(LogBuffer buff, decimal value) {buff.Append(value).Append('m' );}
 
     /// <summary>
     /// Appends a string representation of the value to the log buffer.
@@ -998,7 +1123,7 @@ public abstract class TraceBase : ITrace {
     /// <param name="buff">the log buffer</param>
     /// <param name="value">the value</param>
     /// <returns></returns>
-    protected abstract void Append(LogBuffer buff, DateTime value);
+    private static void Append(LogBuffer buff, DateTime value) {buff.Append(string.Format(DateTimeFormat, value));}
 
     /// <summary>
     /// Appends a character representation for logging to the string buffer.
@@ -1008,7 +1133,7 @@ public abstract class TraceBase : ITrace {
     /// <param name="enclosure">the enclosure character</param>
     /// <param name="escape">escape characters if true, dose not escape characters otherwise</param>
     /// <returns><c>true</c> if successful, <c>false</c> otherwise</returns>
-    protected void AppendChar(LogBuffer buff, char ch, char enclosure, bool escape) {
+    private static void AppendChar(LogBuffer buff, char ch, char enclosure, bool escape) {
         if (escape) {
             // escape
             switch (ch) {
@@ -1042,15 +1167,16 @@ public abstract class TraceBase : ITrace {
     /// </summary>
     /// <param name="buff">the logging buffer</param>
     /// <param name="str">a string object</param>
+    /// <param name="printOptions">print options</param>
     /// <returns>always false</returns>
-    protected void AppendString(LogBuffer buff, string str) {
-        if (str.Length >= MinimumOutputLength)
+    private static void AppendString(LogBuffer buff, string str, PrintOptions printOption) {
+        if (str.Length >= printOption.MinimumOutputLength)
             buff.NoBreakAppend(string.Format(LengthFormat, str.Length));
 
         var hasBackslash = false;
         var hasEscaped = false;
         for (var index = 0; index < str.Length; ++index) {
-            if (index >= StringLimit)
+            if (index >= printOption.StringLimit)
                 break;
             var ch = str[index];
             if (ch == '\\')
@@ -1064,7 +1190,7 @@ public abstract class TraceBase : ITrace {
         buff.NoBreakAppend('"');
 
         for (var index = 0; index < str.Length; ++index) {
-            if (index >= StringLimit) {
+            if (index >= printOption.StringLimit) {
                 buff.NoBreakAppend(LimitString);
                 break;
             }
@@ -1078,14 +1204,15 @@ public abstract class TraceBase : ITrace {
     /// Creates a string buffer from the dictionary.
     /// </summary>
     /// <param name="dictionary">a IDictionary</param>
+    /// <param name="printOptions">print options</param>
     /// <returns>a LogBuffer</returns>
-    protected LogBuffer ToStringDictionary(IDictionary dictionary) {
+    private static LogBuffer ToStringDictionary(IDictionary dictionary, PrintOptions printOptions) {
         var buff = new LogBuffer();
 
-        buff.Append(GetTypeName(dictionary.GetType(), dictionary, false));
+        buff.Append(GetTypeName(dictionary.GetType(), dictionary, printOptions, false));
         buff.Append('{');
 
-        var bodyBuff = ToStringDictionaryBody(dictionary);
+        var bodyBuff = ToStringDictionaryBody(dictionary, printOptions);
 
         var isMultiLines = bodyBuff.IsMultiLines || buff.Length + bodyBuff.Length > MaximumDataOutputWidth;
 
@@ -1106,7 +1233,7 @@ public abstract class TraceBase : ITrace {
         return buff;
     }
 
-    private LogBuffer ToStringDictionaryBody(IDictionary dictionary) {
+    private static LogBuffer ToStringDictionaryBody(IDictionary dictionary, PrintOptions printOptions) {
         var buff = new LogBuffer();
 
         var wasMultiLines = false;
@@ -1122,7 +1249,8 @@ public abstract class TraceBase : ITrace {
 
             var value = dictionary[key!];
 
-            var elementBuff = ToString(key, true).Append(KeyValueSeparator, ToString(value, true));
+            var elementBuff = ToString(key, printOptions, true)
+                .Append(KeyValueSeparator, ToString(value, printOptions, true));
             if (index > 0 && (wasMultiLines || elementBuff.IsMultiLines))
                 buff.LineFeed();
             buff.Append(null, elementBuff);
@@ -1138,16 +1266,17 @@ public abstract class TraceBase : ITrace {
     /// Creates a string buffer from the enumerable.
     /// </summary>
     /// <param name="enumerable">a IEnumerable object</param>
+    /// <param name="printOptions">print options</param>
     /// <returns>a LogBuffer</returns>
     /// <since>1.4.1</since>
 
-    protected LogBuffer ToStringEnumerable(IEnumerable enumerable) {
+    private static LogBuffer ToStringEnumerable(IEnumerable enumerable, PrintOptions printOptions) {
         var buff = new LogBuffer();
 
-        buff.Append(GetTypeName(enumerable.GetType(), enumerable, false));
+        buff.Append(GetTypeName(enumerable.GetType(), enumerable, printOptions, false));
         buff.Append('{');
 
-        var bodyBuff = ToStringEnumerableBody(enumerable);
+        var bodyBuff = ToStringEnumerableBody(enumerable, printOptions);
 
         var isMultiLines = bodyBuff.IsMultiLines || buff.Length + bodyBuff.Length > MaximumDataOutputWidth;
 
@@ -1168,7 +1297,7 @@ public abstract class TraceBase : ITrace {
         return buff;
     }
 
-    private LogBuffer ToStringEnumerableBody(IEnumerable enumerable) {
+    private static LogBuffer ToStringEnumerableBody(IEnumerable enumerable, PrintOptions printOptions) {
         var buff = new LogBuffer();
 
         var wasMultiLines = false;
@@ -1177,12 +1306,12 @@ public abstract class TraceBase : ITrace {
             if (index > 0)
                 buff.NoBreakAppend(", "); // Append a delimiter
 
-            if (index >= CollectionLimit) {
+            if (index >= printOptions.CollectionLimit) {
                 buff.Append(LimitString);
                 break;
             }
 
-            var elementBuff = ToString(element, true);
+            var elementBuff = ToString(element, printOptions, true);
             if (index > 0 && (wasMultiLines || elementBuff.IsMultiLines))
                 buff.LineFeed();
             buff.Append(null, elementBuff);
@@ -1202,7 +1331,7 @@ public abstract class TraceBase : ITrace {
     /// </summary>
     /// <param name="type">the type</param>
     /// <returns><c>true</c> if the type or it base types without object and ValueType class has ToString method, <c>false</c> otherwise</returns>
-    protected bool HasToString(Type type) {
+    private static bool HasToString(Type type) {
         var result = false;
 
         try {
@@ -1232,16 +1361,17 @@ public abstract class TraceBase : ITrace {
     /// Creates a string builder from the value.
     /// </summary>
     /// <param name="obj">an object</param>
+    /// <param name="printOptions">print options</param>
     /// <returns>a LogBuffer</returns>
-    protected LogBuffer ToStringReflection(object obj) {
+    private static LogBuffer ToStringReflection(object obj, PrintOptions printOptions) {
         var buff = new LogBuffer();
 
         var type = obj.GetType();
-        buff.Append(GetTypeName(type, obj, false));
+        buff.Append(GetTypeName(type, obj, printOptions, false));
         var isExtended = type.BaseType != typeof(object) && type.BaseType != typeof(ValueType);
         var isTuple = IsTuple(type);
 
-        var bodyBuff = ToStringReflectionBody(obj, type, isExtended);
+        var bodyBuff = ToStringReflectionBody(obj, type, isExtended, printOptions);
 
         buff.Append(isTuple ? '(' : '{');
         if (bodyBuff.IsMultiLines) {
@@ -1261,13 +1391,13 @@ public abstract class TraceBase : ITrace {
         return buff;
     }
 
-    private LogBuffer ToStringReflectionBody(object obj, Type type, bool isExtended) {
+    private static LogBuffer ToStringReflectionBody(object obj, Type type, bool isExtended, PrintOptions printOptions) {
         var buff = new LogBuffer();
 
         Type? baseType = type.BaseType;
         if (baseType != null && baseType != typeof(object) && baseType != typeof(ValueType)) {
             // Call for the base type
-            var baseBuff =  ToStringReflectionBody(obj, baseType, isExtended);
+            var baseBuff =  ToStringReflectionBody(obj, baseType, isExtended, printOptions);
             buff.Append(null, baseBuff);
         }
 
@@ -1287,7 +1417,7 @@ public abstract class TraceBase : ITrace {
         var fieldInfos = type.GetFields(
                 BindingFlags.DeclaredOnly
             | BindingFlags.Public
-            | (OutputNonPublicFields ? BindingFlags.NonPublic : 0) // since 1.4.4
+            | (printOptions.OutputNonPublicFields ? BindingFlags.NonPublic : 0) // since 1.4.4
             | BindingFlags.Instance)
             .Where(fieldInfo => !fieldInfo.Name.EndsWith("__BackingField")); // Exclude property backing fields // since 1.4.4
 
@@ -1295,7 +1425,7 @@ public abstract class TraceBase : ITrace {
             if (fieldPropertyIndex > 0)
                 buff.NoBreakAppend(", "); // Append a delimiter
 
-            var valueBuff = ToStringReflectValue(type, obj, fieldInfo);
+            var valueBuff = ToStringReflectValue(type, obj, fieldInfo, printOptions);
             if (fieldPropertyIndex > 0 && (wasMultiLines || valueBuff.IsMultiLines))
                 buff.LineFeed();
             buff.Append(null, valueBuff);
@@ -1308,7 +1438,7 @@ public abstract class TraceBase : ITrace {
         var propertyInfos = type.GetProperties(
                 BindingFlags.DeclaredOnly
             | BindingFlags.Public
-            | (OutputNonPublicProperties ? BindingFlags.NonPublic : 0) // since 1.4.4
+            | (printOptions.OutputNonPublicProperties ? BindingFlags.NonPublic : 0) // since 1.4.4
             | BindingFlags.Instance);
 
         foreach (var propertyInfo in propertyInfos) {
@@ -1318,7 +1448,7 @@ public abstract class TraceBase : ITrace {
             if (fieldPropertyIndex > 0)
                 buff.NoBreakAppend(", "); // Append a delimiter
 
-            var valueBuff = ToStringReflectValue(type, obj, propertyInfo);
+            var valueBuff = ToStringReflectValue(type, obj, propertyInfo, printOptions);
             if (fieldPropertyIndex > 0 && (wasMultiLines || valueBuff.IsMultiLines))
                 buff.LineFeed();
             buff.Append(null, valueBuff);
@@ -1331,7 +1461,7 @@ public abstract class TraceBase : ITrace {
     }
 
     // AppendReflectValue / MemberInfo
-    private LogBuffer ToStringReflectValue(Type type, object obj, MemberInfo memberInfo) {
+    private static LogBuffer ToStringReflectValue(Type type, object obj, MemberInfo memberInfo, PrintOptions printOptions) {
         var buff = new LogBuffer();
 
         AppendAccessModifire(buff, memberInfo);
@@ -1372,8 +1502,8 @@ public abstract class TraceBase : ITrace {
             if (separator != null)
                 buff.NoBreakAppend(separator);
             buff.NoBreakAppend(NonOutputString);
-        } else
-            buff.Append(separator, ToString(value));
+    } else
+            buff.Append(separator, ToString(value, printOptions));
 
         return buff;
     }
@@ -1384,7 +1514,28 @@ public abstract class TraceBase : ITrace {
     /// <param name="buff">the log buffer</param>
     /// <param name="memberInfo">the member information</param>
     /// <since>1.5.0</since>
-    protected abstract void AppendAccessModifire(LogBuffer buff, MemberInfo memberInfo);
+    private static void AppendAccessModifire(LogBuffer buff, MemberInfo memberInfo) {
+        switch (memberInfo) {
+        case FieldInfo fieldInfo:
+            if (!fieldInfo.IsPublic) {
+                if      (fieldInfo.IsPrivate          ) buff.Append("private ");
+                else if (fieldInfo.IsFamily           ) buff.Append("protected ");
+                else if (fieldInfo.IsAssembly         ) buff.Append("internal ");
+                else if (fieldInfo.IsFamilyOrAssembly ) buff.Append("protected internal ");
+                else if (fieldInfo.IsFamilyAndAssembly) buff.Append("private protected ");
+            }
+            break;
+        case PropertyInfo propertyInfo:
+            if (!propertyInfo.GetMethod?.IsPublic ?? false) {
+                if      (propertyInfo.GetMethod?.IsPrivate           ?? false) buff.Append("private ");
+                else if (propertyInfo.GetMethod?.IsFamily            ?? false) buff.Append("protected ");
+                else if (propertyInfo.GetMethod?.IsAssembly          ?? false) buff.Append("internal ");
+                else if (propertyInfo.GetMethod?.IsFamilyOrAssembly  ?? false) buff.Append("protected internal ");
+                else if (propertyInfo.GetMethod?.IsFamilyAndAssembly ?? false) buff.Append("private protected ");
+            }
+            break;
+        }
+    }
 
     // IsTuple
     private static bool IsTuple(Type type) {

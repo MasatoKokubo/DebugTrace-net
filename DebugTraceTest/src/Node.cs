@@ -13,7 +13,7 @@ public class Node<T> {
         Item = item;
     }
 
-    public Node(T item, Node<T> left, Node<T> right) {
+    public Node(T item, Node<T>? left, Node<T>? right) {
         Item = item; Left = left; Right = right;
     }
 }

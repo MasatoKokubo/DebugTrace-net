@@ -43,7 +43,7 @@ public class NLog : ILogger {
     public string Level {
         get => levelStr;
         set {
-            TraceBase.RequreNonNull(value, "value"); // since 1.1.1
+            Trace.RequreNonNull(value, "value"); // since 1.1.1
             var upperValue = value.ToUpper();
             if (levelDictionary.ContainsKey(upperValue)) {
                 level = levelDictionary[upperValue];

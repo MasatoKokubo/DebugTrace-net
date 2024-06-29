@@ -10,7 +10,7 @@ namespace DebugTrace;
 /// </summary>
 /// <since>1.0.0</since>
 /// <author>Masato Kokubo</author>
-public class State {
+internal class State {
     /// <summary>
     /// The thread id
     /// </summary>

@@ -1,25 +1,61 @@
 ## 11. リリースノート
 
-### DebugTrace-net 3.0.0 - _2022/4/24_
+### DebugTrace-net 3.0.0 - _2024/6/23_
 
-* `.NET 6.0` に対応しました。
-* `Print` メソッドは、引数の値またはメッセージを返すようにしました。
+* .NET 6に対応しました。
+* DebugTrace.propertiesの以下のプロパティのデフォルト値を変更しました。
+
+| プロパティ名|新デフォルト値|旧デフォルト値|
+|:----------|:----------:|:----------:|
+|MinimumOutputCount |128|   5|
+|MinimumOutputLength|256|   5|
+|CollectionLimit    |128| 512|
+|StringLimit        |256|8192|
+
+* VisualStudioのサポートを廃止しました。
+    これに伴い以下を行いました。
+    * `ITrace`インタフェースの削除
+    * `CSharp`および`VisualBasic`クラスの削除
+    * `TraceBase`のクラス名を`Trace`に変更  
+
+    `using`の記述は以下のように変わります。  
+    `using static DebugTrace.CSharp;`  
+        ↓  
+    `using DebugTrace;`
+
+* メソッドの引数の仕様変更  
+    * `T? Print<T>(string name, T? value)`  
+        ↓  
+    `T? Print<T>(string name, T? value, bool forceReflection = false,`  
+    `    bool? outputNonPublicFields = null, bool? putNonPublicProperties = null,`  
+    `    int minimumOutputCount = -1, int minimumOutputLength = -1,`  
+    `    int collectionLimit = -1, int stringLimit = -1, int reflectionNestLimit = -1)`
+
+    * `T? Print<T>(string name, Func<T?> valueSupplier)`  
+        ↓  
+    `T? Print<T>(string name, Func<T?> valueSupplier, bool forceReflection = false,`  
+    `    bool? outputNonPublicFields = null, bool? putNonPublicProperties = null,`  
+    `    int minimumOutputCount = -1, int minimumOutputLength = -1,`  
+    `    int collectionLimit = -1, int stringLimit = -1, int reflectionNestLimit = -1)`
 
 <small><i>関連パッケージ:</i></small>
-<table>
-    <tr><td>DebugTrace.Log4net 3.0.0</td><td>log4net 2.0.14</td></tr>
-    <tr><td>DebugTrace.NLog 3.0.0</td><td>NLog 4.7.15</td></tr>
-</table>
 
-### DebugTrace-net 2.1.0 - _2022/4/24_
+|DebugTraceパッケージ|関連パッケージ|
+|:-----------------|:-------------|
+|DebugTrace.Log4net 3.0.0|log4net 2.0.17|
+|DebugTrace.NLog 3.0.0   |NLog 5.2.8|
 
-* `Print` メソッドは、引数の値またはメッセージを返すようにしました。
+### DebugTrace-net 2.1.0 - _2022/11/13_
+
+* `Print`メソッドは、引数の値またはメッセージを返すようにしました。
+* `DebugTrace-net`の開始時のログにランタイムの`.NET`バージョンを出力するようにしました。
 
 <small><i>関連パッケージ:</i></small>
-<table>
-    <tr><td>DebugTrace.Log4net 2.1.0</td><td>log4net 2.0.14</td></tr>
-    <tr><td>DebugTrace.NLog 2.1.0</td><td>NLog 4.7.15</td></tr>
-</table>
+
+|DebugTraceパッケージ|関連パッケージ|
+|:----|:----|
+|DebugTrace.Log4net 2.1.0|log4net 2.0.15|
+|DebugTrace.NLog 2.1.0   |NLog 4.7.15|
 
 ### DebugTrace-net 2.0.3 - _2021/8/13_
 
@@ -59,23 +95,23 @@
     * Diagnostics+Debug
     * Diagnostics+Trace
 
-* `TraceBase` クラスに `PrintStack(int)` メソッドを追加。
+* `Trace`クラスに`PrintStack(int)`メソッドを追加。
 
 ### DebugTrace-net 1.5.4 - _2019/2/11_
 
-* `Print` メソッドの変更
-    * 型名の前に `enum` の表示  
+* `Print`メソッドの変更
+    * 型名の前に`enum`の表示  
       例: `v = enum Fruits Apple`
 
-* `Print` メソッドの改善
+* `Print`メソッドの改善
     * プロパティまたはフィールドの型とその値の型が異なる場合は、プロパティまたはフィールド名の前に型名を出力する。
 
 ### DebugTrace-net 1.5.3 - _2019/2/3_
 
-* `Print` メソッドの改善
-    * 型名の後に `struct` の表示を追加。  
+* `Print`メソッドの改善
+    * 型名の後に`struct`の表示を追加。  
       例: `v = Point struct {X: 1, Y: 2}`
-    * 型名の後に `enum` の表示を追加。  
+    * 型名の後に`enum`の表示を追加。  
       例: `v = Fruits enum Apple`
 
 ### DebugTrace-net 1.5.2 - _2019/1/28_
@@ -96,7 +132,7 @@
 
 ### DebugTrace-net 1.5.0 - _2018/10/28_
 * バグ修正
-    * **_[修正済]_** `TraceBase.OutputNonPublicFields = true` の場合に `Task` を出力すると `NullReferenceException` がスローされる。
+    * **_[修正済]_** `Trace.OutputNonPublicFields = true`の場合に`Task`を出力すると`NullReferenceException`がスローされる。
 
 * 改善
     * DebugTrace.propertiesで複数のロガーを指定できるようになりました。(例: `Logger = Console+Out; Log4net`)

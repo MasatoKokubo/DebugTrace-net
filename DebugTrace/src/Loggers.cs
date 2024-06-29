@@ -33,7 +33,7 @@ public class Loggers : ILogger {
     public string Level {
         get => string.Join(Separator, Members.Select(logger => logger.Level));
         set {
-            TraceBase.RequreNonNull(value, "value");
+            Trace.RequreNonNull(value, "value");
             var levels = value.Split(SeparatorChar).Select(str => str.Trim()).ToList();
             if (levels.Count == 0)
                 return;
@@ -60,7 +60,7 @@ public class Loggers : ILogger {
     /// <param name="loggers">an array of ILoggers</param>
     /// <exception cref="NullReferenceException">if the loggers is null</exception>
     public Loggers(params ILogger[] loggers) {
-        Members = TraceBase.RequreNonNull(loggers, "loggers");
+        Members = Trace.RequreNonNull(loggers, "loggers");
     }
 
     /// <summary>

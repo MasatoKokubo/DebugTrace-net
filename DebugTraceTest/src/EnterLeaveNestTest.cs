@@ -2,7 +2,7 @@
 // (C) 2018 Masato Kokubo
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static DebugTrace.CSharp;
+using DebugTrace;
 
 namespace DebugTraceTest;
 
@@ -10,40 +10,40 @@ namespace DebugTraceTest;
 public class EnterLeaveNestTest {
     [TestMethod]
     public void EnterLeaveNestTest1() {
-        Trace.Enter(); // ToDo: Remove after debugging
+        Trace.Enter();
         Method1();
-        Trace.Leave(); // ToDo: Remove after debugging
-        Trace.Leave(); // ToDo: Remove after debugging
-        Trace.Enter(); // ToDo: Remove after debugging
+        Trace.Leave();
+        Trace.Leave();
+        Trace.Enter();
         Thread.Sleep(1111);
-        Trace.Leave(); // ToDo: Remove after debugging
+        Trace.Leave();
         Trace.ResetNest();
     }
 
     private void Method1() {
-        Trace.Enter(); // ToDo: Remove after debugging
+        Trace.Enter();
         Thread.Sleep(1111);
         Method2();
-        Trace.Leave(); // ToDo: Remove after debugging
+        Trace.Leave();
     }
 
     private void Method2() {
-        Trace.Enter(); // ToDo: Remove after debugging
+        Trace.Enter();
         Thread.Sleep(1111);
         Method3();
-        Trace.Leave(); // ToDo: Remove after debugging
+        Trace.Leave();
     }
 
     private void Method3() {
-        Trace.Enter(); // ToDo: Remove after debugging
+        Trace.Enter();
         Thread.Sleep(1111);
         Method4();
-        Trace.Leave(); // ToDo: Remove after debugging
+        Trace.Leave();
     }
 
     private void Method4() {
-        Trace.Enter(); // ToDo: Remove after debugging
+        Trace.Enter();
         Thread.Sleep(1111);
-        Trace.Leave(); // ToDo: Remove after debugging
+        Trace.Leave();
     }
 }
