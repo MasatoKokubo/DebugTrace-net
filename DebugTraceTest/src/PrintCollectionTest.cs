@@ -14,17 +14,21 @@ public class PrintCollectionTest {
 
     [ClassInitialize]
     public static void ClassInit(TestContext context) {
-        maxDataOutputWidth = DebugTrace.Trace.MaximumDataOutputWidth;
-        DebugTrace.Trace.MaximumDataOutputWidth = int.MaxValue;
+        Trace.Enter();
+        maxDataOutputWidth = Trace.MaximumDataOutputWidth;
+        Trace.MaximumDataOutputWidth = int.MaxValue;
 
-        minimumOutputCount = DebugTrace.Trace.MinimumOutputCount;
-        DebugTrace.Trace.MinimumOutputCount = 5;
+        minimumOutputCount = Trace.MinimumOutputCount;
+        Trace.MinimumOutputCount = 5;
+        Trace.Leave();
     }
 
     [ClassCleanup]
     public static void ClassCleanup() {
-        DebugTrace.Trace.MaximumDataOutputWidth = maxDataOutputWidth;
-        DebugTrace.Trace.MinimumOutputCount = minimumOutputCount;
+        Trace.Enter();
+        Trace.MaximumDataOutputWidth = maxDataOutputWidth;
+        Trace.MinimumOutputCount = minimumOutputCount;
+        Trace.Leave();
     }
 
     // List<int> count < 5

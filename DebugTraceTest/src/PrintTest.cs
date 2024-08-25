@@ -5,26 +5,31 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DebugTrace;
-using DebugTrace;
 
 namespace DebugTraceTest;
 
 [TestClass]
 public class PrintTest {
+    public static SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
     private static int minimumOutputLength;
 
     [ClassInitialize]
     public static void ClassInit(TestContext context) {
-        minimumOutputLength = DebugTrace.Trace.MinimumOutputLength;
-        DebugTrace.Trace.MinimumOutputLength = 5;
+        Trace.Enter();
+        semaphore.Wait();
+        minimumOutputLength = Trace.MinimumOutputLength;
+        Trace.MinimumOutputLength = 5;
+        Trace.Leave();
     }
 
     [ClassCleanup]
     public static void ClassCleanup() {
-        DebugTrace.Trace.MinimumOutputLength = minimumOutputLength;
+        Trace.Enter();
+        Trace.MinimumOutputLength = minimumOutputLength;
+        semaphore.Release();
+        Trace.Leave();
     }
 
-    // TestCleanup
     [TestCleanup]
     public void TestCleanup() {
         Trace.OutputNonPublicFields     = false;

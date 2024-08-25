@@ -8,16 +8,28 @@ namespace DebugTraceTest;
 
 [TestClass]
 public class PrintOptionsTest {
+    [ClassInitialize]
+    public static void ClassInit(TestContext context) {
+        Trace.Enter();
+        Trace.Leave();
+    }
+
+    [ClassCleanup]
+    public static void ClassCleanup() {
+        Trace.Enter();
+        Trace.Leave();
+    }
+
     [TestMethod]
-    public void ForceReflection() {
+    public void Reflection() {
         var p = new Point3(1, 2, 3);
         Trace.Print("p", p);
         StringAssert.Contains(Trace.LastLog, "(1, 2, 3)");
 
-        Trace.Print("p", p, forceReflection:false);
+        Trace.Print("p", p, reflection:false);
         StringAssert.Contains(Trace.LastLog, "(1, 2, 3)");
 
-        Trace.Print("p", p, forceReflection:true);
+        Trace.Print("p", p, reflection:true);
         StringAssert.Contains(Trace.LastLog, "{X: 1, Y: 2, Z: 3}");
     }
 
@@ -131,7 +143,7 @@ public class PrintOptionsTest {
     }
 
     [TestMethod]
-    public void ReflectionNestLimit() {
+    public void ReflectionLimit() {
         var node =
                 new Node<int>(1, null,
                     new Node<int>(2, null,
@@ -139,18 +151,18 @@ public class PrintOptionsTest {
                             new Node<int>(4, null, null))));
 
 
-        Trace.Print("node Limit:0", node, reflectionNestLimit:0);
+        Trace.Print("node Limit:0", node, reflectionLimit:0);
         Assert.IsFalse(Trace.LastLog.Contains("Item: 1"));
 
-        Trace.Print("node Limit:1", node, reflectionNestLimit:1);
+        Trace.Print("node Limit:1", node, reflectionLimit:1);
         Assert.IsTrue (Trace.LastLog.Contains("Item: 1"));
         Assert.IsFalse(Trace.LastLog.Contains("Item: 2"));
 
-        Trace.Print("node Limit:2", node, reflectionNestLimit:2);
+        Trace.Print("node Limit:2", node, reflectionLimit:2);
         Assert.IsTrue (Trace.LastLog.Contains("Item: 2"));
         Assert.IsFalse(Trace.LastLog.Contains("Item: 3"));
 
-        Trace.Print("node Limit:3", node, reflectionNestLimit:3);
+        Trace.Print("node Limit:3", node, reflectionLimit:3);
         Assert.IsTrue (Trace.LastLog.Contains("Item: 3"));
         Assert.IsFalse(Trace.LastLog.Contains("Item: 4"));
 

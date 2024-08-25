@@ -9,6 +9,19 @@ namespace DebugTraceTest;
 
 [TestClass]
 public class EnterLeaveAsyncAwaitTest {
+    [ClassInitialize]
+    public static void ClassInit(TestContext context) {
+        Trace.Enter();
+        Trace.Leave();
+    }
+
+    [ClassCleanup]
+    public static void ClassCleanup() {
+
+        Trace.Enter();
+        Trace.Leave();
+    }
+
     // TaskExample
     [TestMethod]
     public void Test() {
@@ -16,7 +29,7 @@ public class EnterLeaveAsyncAwaitTest {
         TaskExample().Wait();
         Trace.Leave();
         Trace.Print("");
-        Assert.IsFalse(Trace.LastLog.Contains(DebugTrace.Trace.IndentString), "The indent level is 0");
+        Assert.IsFalse(Trace.LastLog.Contains(Trace.IndentString), "The indent level is 0");
     }
 
     public async Task<int> TaskExample() {

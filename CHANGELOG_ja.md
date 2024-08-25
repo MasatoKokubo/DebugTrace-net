@@ -1,6 +1,22 @@
-## 11. リリースノート
+### 4.0.0 - _2025/6/28_
 
-### DebugTrace-net 3.0.0 - _2024/6/23_
+* .NET 8 に対応しました。
+
+* `Print`メソッドの以下の引数名を変更しました。
+    * reflection ← forceReflection
+    * reflectionLimit ← reflectionNestLimit
+
+* `DebugTrace.properties`の以下のプロパティ名を変更しました。
+    * ReflectionLimit ← ReflectionNestLimit
+
+<small><i>関連パッケージ:</i></small>
+
+|DebugTraceパッケージ|関連パッケージ|
+|:-----------------|:-------------|
+|DebugTrace.Log4net 4.0.0|log4net 3.1.0|
+|DebugTrace.NLog 4.0.0   |NLog 6.0.1|
+
+### 3.0.0 - _2024/6/23_
 
 * .NET 6に対応しました。
 * DebugTrace.propertiesの以下のプロパティのデフォルト値を変更しました。
@@ -26,17 +42,17 @@
 * メソッドの引数の仕様変更  
     * `T? Print<T>(string name, T? value)`  
         ↓  
-    `T? Print<T>(string name, T? value, bool forceReflection = false,`  
+    `T? Print<T>(string name, T? value, bool reflection = false,`  
     `    bool? outputNonPublicFields = null, bool? putNonPublicProperties = null,`  
     `    int minimumOutputCount = -1, int minimumOutputLength = -1,`  
-    `    int collectionLimit = -1, int stringLimit = -1, int reflectionNestLimit = -1)`
+    `    int collectionLimit = -1, int stringLimit = -1, int reflectionLimit = -1)`
 
     * `T? Print<T>(string name, Func<T?> valueSupplier)`  
         ↓  
-    `T? Print<T>(string name, Func<T?> valueSupplier, bool forceReflection = false,`  
+    `T? Print<T>(string name, Func<T?> valueSupplier, bool reflection = false,`  
     `    bool? outputNonPublicFields = null, bool? putNonPublicProperties = null,`  
     `    int minimumOutputCount = -1, int minimumOutputLength = -1,`  
-    `    int collectionLimit = -1, int stringLimit = -1, int reflectionNestLimit = -1)`
+    `    int collectionLimit = -1, int stringLimit = -1, int reflectionLimit = -1)`
 
 <small><i>関連パッケージ:</i></small>
 
@@ -45,7 +61,7 @@
 |DebugTrace.Log4net 3.0.0|log4net 2.0.17|
 |DebugTrace.NLog 3.0.0   |NLog 5.2.8|
 
-### DebugTrace-net 2.1.0 - _2022/11/13_
+### 2.1.0 - _2022/11/13_
 
 * `Print`メソッドは、引数の値またはメッセージを返すようにしました。
 * `DebugTrace-net`の開始時のログにランタイムの`.NET`バージョンを出力するようにしました。
@@ -57,19 +73,19 @@
 |DebugTrace.Log4net 2.1.0|log4net 2.0.15|
 |DebugTrace.NLog 2.1.0   |NLog 4.7.15|
 
-### DebugTrace-net 2.0.3 - _2021/8/13_
+### 2.0.3 - _2021/8/13_
 
 * データ出力の改行処理を改善しました。
 
-### DebugTrace-net 2.0.2 - _2020/7/12_
+### 2.0.2 - _2020/7/12_
 
 * データ出力の改行処理を改善しました。
 
-### DebugTrace-net 2.0.1 - _2020/5/16_
+### 2.0.1 - _2020/5/16_
 
 * データ出力の改行処理を改善しました。
 
-### DebugTrace-net 2.0.0 - _2020/4/4_
+### 2.0.0 - _2020/4/4_
 
 * 対応フレームワークを .NET Standard 2.0 から .NET Core 3.1 に変更しました。
 
@@ -89,7 +105,7 @@
 * 改善
     * 改行の検出のアルゴリズムを変更して高速化しました。
 
-### DebugTrace-net 1.6.0 - _2019/3/24_
+### 1.6.0 - _2019/3/24_
 
 * 以下のロガーを追加。
     * Diagnostics+Debug
@@ -97,7 +113,7 @@
 
 * `Trace`クラスに`PrintStack(int)`メソッドを追加。
 
-### DebugTrace-net 1.5.4 - _2019/2/11_
+### 1.5.4 - _2019/2/11_
 
 * `Print`メソッドの変更
     * 型名の前に`enum`の表示  
@@ -106,7 +122,7 @@
 * `Print`メソッドの改善
     * プロパティまたはフィールドの型とその値の型が異なる場合は、プロパティまたはフィールド名の前に型名を出力する。
 
-### DebugTrace-net 1.5.3 - _2019/2/3_
+### 1.5.3 - _2019/2/3_
 
 * `Print`メソッドの改善
     * 型名の後に`struct`の表示を追加。  
@@ -114,11 +130,11 @@
     * 型名の後に`enum`の表示を追加。  
       例: `v = Fruits enum Apple`
 
-### DebugTrace-net 1.5.2 - _2019/1/28_
+### 1.5.2 - _2019/1/28_
 
 * Add `Trace_` property to `CSharp` and `VisualBasic` classes.
 
-### DebugTrace-net 1.5.1 - _2018/12/15_
+### 1.5.1 - _2018/12/15_
 
 * 改善
     * 文字列の長さを出力するようになりました。
@@ -130,7 +146,7 @@
 ### DebugTrace.NLog 1.6.0 - _2018/11/18_
 * 対応フレームワークを.NET Frameword 4.7から.NET Standard 2.0に変更。
 
-### DebugTrace-net 1.5.0 - _2018/10/28_
+### 1.5.0 - _2018/10/28_
 * バグ修正
     * **_[修正済]_** `Trace.OutputNonPublicFields = true`の場合に`Task`を出力すると`NullReferenceException`がスローされる。
 

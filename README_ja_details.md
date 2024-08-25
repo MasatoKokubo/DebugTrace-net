@@ -176,7 +176,7 @@ namespace Readme {
         <td>
             <li><code>string name</code>: 値の名前<br>
             <li><code>T value</code>: 値<br>
-            <li><code>bool forceReflection = false</code>:<br>
+            <li><code>bool reflection = false</code>:<br>
                 <small>trueの場合、ToString()メソッドがあってもリフレクションを使用して出力</small><br>
             <br>
             <small>以下はデフォルト値ではない場合は、DebugTrace.propertiesの設定を上書きする。</small><br>
@@ -193,7 +193,7 @@ namespace Readme {
                 <small>IDictionaryおよびIEnumerableの出力する要素数の制限値</small><br>
             <li><code>int stringLimit = -1</code>:<br>
                 <small>文字列の出力する文字数の制限値</small><br>
-            <li><code>reflectionNestLimit = -1</code>:<br>
+            <li><code>int reflectionLimit = -1</code>:<br>
                 <small>リフレクション使用時のネスト制限値</small>
         </td>
         <td>値</td>
@@ -206,14 +206,14 @@ namespace Readme {
             <li><code>Func&lt;T&gt; valueSupplier</code>: 値を返す関数<br>
             <br>
             <small>以下は上を参照</small><br>
-            <li><code>bool forceReflection = false</code><br>
+            <li><code>bool reflection = false</code><br>
             <li><code>bool? outputNonPublicFields = null</code><br>
             <li><code>bool? outputNonPublicProperties = null</code><br>
             <li><code>int minimumOutputCount = -1</code><br>
             <li><code>int minimumOutputLength = -1</code><br>
             <li><code>int collectionLimit = -1</code><br>
             <li><code>int stringLimit = -1</code><br>
-            <li><code>reflectionNestLimit = -1</code><br>
+            <li><code>int reflectionLimit = -1</code><br>
         </td>
         <td><code>valueSupplier</code>から取得した値</td>
         <td>
@@ -511,11 +511,11 @@ DebugTrace は、カレントディレクトリにある`DebugTrace.properties`�
         </td>
     </tr>
     <tr>
-        <td><code>ReflectionNestLimit</code></td>
+        <td><code>ReflectionLimit</code></td>
         <td>
             リフレクションのネスト数の制限値<br>
             <b>設定例:</b><br>
-            &emsp;&emsp;<code>ReflectionNestLimit = 4</code> <i>(デフォルト)</i>
+            &emsp;&emsp;<code>ReflectionLimit = 4</code> <i>(デフォルト)</i>
         </td>
     </tr>
     <tr>

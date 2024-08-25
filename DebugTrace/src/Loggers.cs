@@ -25,7 +25,7 @@ public class Loggers : ILogger {
     /// <summary>
     /// IEnumerable of loggers.
     /// </summary>
-    public IEnumerable<ILogger> Members {get; private set;} = new List<ILogger>();
+    public ILogger[] Members {get; private set;} = new ILogger[0];
 
     /// <summary>
     /// Set the logging level

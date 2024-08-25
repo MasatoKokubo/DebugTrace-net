@@ -12,13 +12,17 @@ public class PrintArrayTest {
 
     [ClassInitialize]
     public static void ClassInit(TestContext context) {
-        maxDataOutputWidth = DebugTrace.Trace.MaximumDataOutputWidth;
-        DebugTrace.Trace.MaximumDataOutputWidth = int.MaxValue;
+        Trace.Enter();
+        maxDataOutputWidth = Trace.MaximumDataOutputWidth;
+        Trace.MaximumDataOutputWidth = int.MaxValue;
+        Trace.Leave();
     }
 
     [ClassCleanup]
     public static void ClassCleanup() {
-        DebugTrace.Trace.MaximumDataOutputWidth = maxDataOutputWidth;
+        Trace.Enter();
+        Trace.MaximumDataOutputWidth = maxDataOutputWidth;
+        Trace.Leave();
     }
 
     private class HasIndexer<T> {

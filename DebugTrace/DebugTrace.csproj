@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <NullableReferenceTypes>true</NullableReferenceTypes>
-    <Version>3.0.0</Version>
+    <Version>4.0.0</Version>
     <Authors>Masato Kokubo</Authors>
     <Company>Masato Kokubo</Company>
     <Copyright>© 2018 Masato Kokubo</Copyright>
@@ -15,7 +15,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes>Please Read README.md.</PackageReleaseNotes>
+    <PackageReleaseNotes>Please Read CHANGELOG.md.</PackageReleaseNotes>
     <AssemblyName>$(MSBuildProjectName)</AssemblyName>
   </PropertyGroup>
 

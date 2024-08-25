@@ -36,53 +36,8 @@ NuGetから`DebugTrace`パッケージを検索してインストールしてく
 
 [MIT ライセンス(MIT)](LICENSE)
 
-## 9. リリースノート
+## 9. 更新履歴
 
-### DebugTrace-net 3.0.0 - _2024/6/23_
-
-* .NET 6に対応しました。
-* DebugTrace.propertiesの以下のプロパティのデフォルト値を変更しました。
-
-| プロパティ名|新デフォルト値|旧デフォルト値|
-|:----------|:----------:|:----------:|
-|MinimumOutputCount |128|   5|
-|MinimumOutputLength|256|   5|
-|CollectionLimit    |128| 512|
-|StringLimit        |256|8192|
-
-* VisualStudioのサポートを廃止しました。
-    これに伴い以下を行いました。
-    * `ITrace`インタフェースの削除
-    * `CSharp`および`VisualBasic`クラスの削除
-    * `TraceBase`のクラス名を`Trace`に変更  
-
-    `using`の記述は以下のように変わります。  
-    `using static DebugTrace.CSharp;`  
-        ↓  
-    `using DebugTrace;`
-
-* メソッドの引数の仕様変更  
-    * `T? Print<T>(string name, T? value)`  
-        ↓  
-    `T? Print<T>(string name, T? value, bool forceReflection = false,`  
-    `    bool? outputNonPublicFields = null, bool? putNonPublicProperties = null,`  
-    `    int minimumOutputCount = -1, int minimumOutputLength = -1,`  
-    `    int collectionLimit = -1, int stringLimit = -1, int reflectionNestLimit = -1)`
-
-    * `T? Print<T>(string name, Func<T?> valueSupplier)`  
-        ↓  
-    `T? Print<T>(string name, Func<T?> valueSupplier, bool forceReflection = false,`  
-    `    bool? outputNonPublicFields = null, bool? putNonPublicProperties = null,`  
-    `    int minimumOutputCount = -1, int minimumOutputLength = -1,`  
-    `    int collectionLimit = -1, int stringLimit = -1, int reflectionNestLimit = -1)`
-
-<small><i>関連パッケージ:</i></small>
-
-|DebugTraceパッケージ|関連パッケージ|
-|:-----------------|:-------------|
-|DebugTrace.Log4net 3.0.0|log4net 2.0.17|
-|DebugTrace.NLog 3.0.0   |NLog 5.2.8|
-
-[すべてのリリースノート...](README_ja_releaseNotes.md)
+[更新履歴](CHANGELOG_ja.md)
 
 <div align="center" style="color:#6699EE">(C) 2018 Masato Kokubo</div>

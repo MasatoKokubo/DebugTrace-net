@@ -16,26 +16,25 @@ namespace DebugTrace;
 /// <since>1.0.0</since>
 /// <author>Masato Kokubo</author>
 public class Log4net : ILogger {
-    private static readonly Dictionary<string, Level> levelDictionary = 
-        new Dictionary<string, Level>() {
-            {"ALL"      , log4net.Core.Level.All      },
-            {"FINEST"   , log4net.Core.Level.Finest   },
-            {"VERBOSE"  , log4net.Core.Level.Verbose  },
-            {"FINER"    , log4net.Core.Level.Finer    },
-            {"TRACE"    , log4net.Core.Level.Trace    },
-            {"FINE"     , log4net.Core.Level.Fine     },
-            {"DEBUG"    , log4net.Core.Level.Debug    },
-            {"INFO"     , log4net.Core.Level.Info     },
-            {"NOTICE"   , log4net.Core.Level.Notice   },
-            {"WARN"     , log4net.Core.Level.Warn     },
-            {"ERROR"    , log4net.Core.Level.Error    },
-            {"SEVERE"   , log4net.Core.Level.Severe   },
-            {"CRITICAL" , log4net.Core.Level.Critical },
-            {"ALERT"    , log4net.Core.Level.Alert    },
-            {"FATAL"    , log4net.Core.Level.Fatal    },
-            {"EMERGENCY", log4net.Core.Level.Emergency},
-            {"OFF"      , log4net.Core.Level.Off      },
-        };
+    private static readonly Dictionary<string, Level> levelDictionary = new () {
+        {"ALL"      , log4net.Core.Level.All      },
+        {"FINEST"   , log4net.Core.Level.Finest   },
+        {"VERBOSE"  , log4net.Core.Level.Verbose  },
+        {"FINER"    , log4net.Core.Level.Finer    },
+        {"TRACE"    , log4net.Core.Level.Trace    },
+        {"FINE"     , log4net.Core.Level.Fine     },
+        {"DEBUG"    , log4net.Core.Level.Debug    },
+        {"INFO"     , log4net.Core.Level.Info     },
+        {"NOTICE"   , log4net.Core.Level.Notice   },
+        {"WARN"     , log4net.Core.Level.Warn     },
+        {"ERROR"    , log4net.Core.Level.Error    },
+        {"SEVERE"   , log4net.Core.Level.Severe   },
+        {"CRITICAL" , log4net.Core.Level.Critical },
+        {"ALERT"    , log4net.Core.Level.Alert    },
+        {"FATAL"    , log4net.Core.Level.Fatal    },
+        {"EMERGENCY", log4net.Core.Level.Emergency},
+        {"OFF"      , log4net.Core.Level.Off      },
+    };
 
     // Log4net Logger
     private readonly log4net.Core.ILogger logger = LogManager.GetLogger(
@@ -81,7 +80,7 @@ public class Log4net : ILogger {
     /// Output the message to the log.
     /// </summary>
     public void Log(string message) {
-        logger.Log(null, level, message, null);
+        logger.Log(typeof(Log4net), level, message, null);
     }
 
     /// <summary>

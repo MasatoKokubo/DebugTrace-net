@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DebugTrace;
-using DebugTrace;
 using Console = DebugTrace.Console;
 
 namespace DebugTraceTest;
@@ -18,22 +17,23 @@ public class LoggersTest {
     private ILogger? beforeLogger;
     private string? beforeLevel;
 
-    // ClassInit
     [ClassInitialize]
     public static void ClassInit(TestContext context) {
+        Trace.Enter();
         nLogFileInfo = new FileInfo("/Logs/DebugTrace/NLog.log");
         try {
             using (var stream = nLogFileInfo.Open(FileMode.Truncate)) {}
         }
         catch (Exception) {}
+        Trace.Leave();
     }
 
-    // ClassCleanup
     [ClassCleanup]
     public static void ClassCleanup() {
+        Trace.Enter();
+        Trace.Leave();
     }
 
-    // TestInit
     [TestInitialize]
     public void TestInit() {
         beforeLogger = Trace.Logger;

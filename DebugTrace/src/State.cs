@@ -32,7 +32,7 @@ internal class State {
     public int PreviousLineCount {get; set;}
 
     // Datetime Stack - since 1.4.3
-    private Stack<DateTime> DateTimes = new Stack<DateTime>();
+    private Stack<DateTime> DateTimes = new ();
 
     /// <summary>
     /// Resets

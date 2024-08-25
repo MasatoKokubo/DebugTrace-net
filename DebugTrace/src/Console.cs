@@ -42,7 +42,7 @@ public abstract class Console : ILogger {
         /// <summary>
         /// The only <c>DebugTrace.Console.Out</c> object.
         /// </summary>
-        public static Out Instance {get;} = new Out();
+        public static Out Instance {get;} = new ();
 
         private Out() {
         }
@@ -52,8 +52,7 @@ public abstract class Console : ILogger {
         /// </summary>
         /// <param name="message">the message</param>
         public override void Log(string message) {
-            System.Console.Out.WriteLine(string.Format(Trace.LogDateTimeFormat,
-                DateTime.Now, Thread.CurrentThread.ManagedThreadId, message));
+            System.Console.Out.WriteLine(Trace.FormatLog(message));
         }
     }
 
@@ -74,8 +73,7 @@ public abstract class Console : ILogger {
         /// </summary>
         /// <param name="message">the message</param>
         public override void Log(string message) {
-            System.Console.Error.WriteLine(string.Format(Trace.LogDateTimeFormat,
-                DateTime.Now, Thread.CurrentThread.ManagedThreadId, message));
+            System.Console.Error.WriteLine(Trace.FormatLog(message));
         }
     }
 }

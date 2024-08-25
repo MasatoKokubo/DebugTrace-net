@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <Version>3.0.0</Version>
+    <Version>4.0.0</Version>
     <Authors>Masato Kokubo</Authors>
     <Copyright>© 2018 Masato Kokubo</Copyright>
     <PackageProjectUrl>https://github.com/MasatoKokubo/DebugTrace-net</PackageProjectUrl>
@@ -14,6 +14,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <AssemblyName>$(MSBuildProjectName)</AssemblyName>
+    <PackageReleaseNotes>Please Read CHANGELOG.md.</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -25,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NLog" Version="5.3.2" />
+    <PackageReference Include="NLog" Version="6.0.1" />
   </ItemGroup>
 
   <ItemGroup>

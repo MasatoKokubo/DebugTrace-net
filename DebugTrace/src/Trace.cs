@@ -142,12 +142,12 @@ public class Trace {
     /// <summary>
     /// Limit value of reflection nest
     /// </summary>
-    public static int ReflectionNestLimit {get; set;}
+    public static int ReflectionLimit {get; set;}
 
     /// <summary>
     /// Properties and fields not to be output value
     /// </summary>
-    public static IList<string> NonOutputProperties {get; set;} = new List<string>(); // since 2.0.0 NonOutputProperties <- NonPrintProperties
+    public static List<string> NonOutputProperties {get; set;} = new (); // since 2.0.0 NonOutputProperties <- NonPrintProperties
 
     /// <summary>
     /// Default namespace of your C# source
@@ -157,7 +157,7 @@ public class Trace {
     /// <summary>
     /// Classe names that output content by reflection even if <c>ToString</c> method is implemented
     /// </summary>
-    public static ISet<string> ReflectionClasses {get; set;} = new HashSet<string>();
+    public static HashSet<string> ReflectionClasses {get; set;} = new ();
 
     /// <summary>
     /// If <c>true</c>, outputs the contents by reflection even for fields which are not <c>public</c>
@@ -192,7 +192,7 @@ public class Trace {
     /// <summary>
     /// Set of classes that dose not output the type name
     /// </summary>
-    private static ISet<Type> NoOutputTypes {get;} = new HashSet<Type>() {
+    private static HashSet<Type> NoOutputTypes {get;} = [
         typeof(bool    ),
         typeof(char    ),
         typeof(int     ),
@@ -204,12 +204,12 @@ public class Trace {
         typeof(decimal ),
         typeof(string  ),
         typeof(DateTime),
-    };
+    ];
 
     /// <summary>
     /// Set of element types of array that dose not output the type name
     /// </summary>
-    private static ISet<Type> NoOutputElementTypes {get;} = new HashSet<Type>() {
+    private static HashSet<Type> NoOutputElementTypes {get;} = [
         typeof(bool    ),
         typeof(char    ),
         typeof(sbyte   ),
@@ -225,12 +225,12 @@ public class Trace {
         typeof(decimal ),
         typeof(string  ),
         typeof(DateTime),
-    };
+    ];
 
     /// <summary>
     /// Dictionary of type to type name
     /// </summary>
-    private static IDictionary<Type, string> TypeNameMap {get;} = new Dictionary<Type, string>() {
+    private static Dictionary<Type, string> TypeNameMap {get;} = new () {
         {typeof(object ), "object" },
         {typeof(bool   ), "bool"   },
         {typeof(char   ), "char"   },
@@ -251,7 +251,7 @@ public class Trace {
     /// <summary>
     /// Dictionary of thread id to indent state
     /// </summary>
-    private static readonly IDictionary<int, State> states = new Dictionary<int, State>();
+    private static readonly Dictionary<int, State> states = new ();
 
     /// <summary>
     /// Previous thread id
@@ -261,7 +261,7 @@ public class Trace {
     /// <summary>
     /// Reflected objects
     /// </summary>
-    private static  readonly IList<object> reflectedObjects = new List<object>();
+    private static  readonly List<object> reflectedObjects = new ();
 
     /// <summary>
     /// The last log string output
@@ -269,10 +269,26 @@ public class Trace {
     public static string LastLog {get; private set;} = "";
 
     /// <summary>
+    /// Formats the message for logging.
+    /// </summary>
+    /// <param name="message">the message</param>
+    /// <since>4.0.0</since>
+    public static string FormatLog(string message) {
+        return string.Format(LogDateTimeFormat, DateTime.Now, Thread.CurrentThread.ManagedThreadId, message);
+    }
+
+    /// <summary>
+    /// Formatted last log
+    /// </summary>
+    /// <since>4.0.0</since>
+    public static string FormattedLastLog => 
+        string.Format(LogDateTimeFormat, DateTime.Now, Thread.CurrentThread.ManagedThreadId, LastLog);
+
+    /// <summary>
     /// Class constructor
     /// </summary>
     static Trace() {
-        Resource = new Resource("DebugTrace");
+        Resource = new ("DebugTrace");
         InitClass("");
     }
 
@@ -282,35 +298,35 @@ public class Trace {
     /// <param name="baseName">the base name of the resource properties file</param>
     public static void InitClass(string baseName) {
         if (baseName != "")
-            Resource = new Resource(baseName);
+            Resource = new (baseName);
 
-        EnterFormat               = Resource.GetString(nameof(EnterFormat              ), "EnterString", Resource.Unescape(@"Enter {0}.{1} ({2}:{3:D})"));
-        LeaveFormat               = Resource.GetString(nameof(LeaveFormat              ), "LeaveString", Resource.Unescape(@"Leave {0}.{1} ({2}:{3:D}) duration: {4}"));
-        ThreadBoundaryFormat      = Resource.GetString(nameof(ThreadBoundaryFormat     ), "ThreadBoundaryString", Resource.Unescape(@"______________________________ Thread {0} ______________________________"));
-        ClassBoundaryFormat       = Resource.GetString(nameof(ClassBoundaryFormat      ), "ClassBoundaryString" , Resource.Unescape(@"____ {0} ____"));
-        IndentString              = Resource.GetString(nameof(IndentString             ), "CodeIndentString", Resource.Unescape(@"|\s"));
+        EnterFormat               = Resource.GetString(nameof(EnterFormat              ), Resource.Unescape(@"Enter {0}.{1} ({2}:{3:D})"));
+        LeaveFormat               = Resource.GetString(nameof(LeaveFormat              ), Resource.Unescape(@"Leave {0}.{1} ({2}:{3:D}) duration: {4}"));
+        ThreadBoundaryFormat      = Resource.GetString(nameof(ThreadBoundaryFormat     ), Resource.Unescape(@"______________________________ Thread {0} ______________________________"));
+        ClassBoundaryFormat       = Resource.GetString(nameof(ClassBoundaryFormat      ), Resource.Unescape(@"____ {0} ____"));
+        IndentString              = Resource.GetString(nameof(IndentString             ), Resource.Unescape(@"|\s"));
         DataIndentString          = Resource.GetString(nameof(DataIndentString         ), Resource.Unescape(@"\s\s"));
         LimitString               = Resource.GetString(nameof(LimitString              ), Resource.Unescape(@"..."));
-        NonOutputString           = Resource.GetString(nameof(NonOutputString          ), "NonPrintString", Resource.Unescape(@"***"));
+        NonOutputString           = Resource.GetString(nameof(NonOutputString          ), Resource.Unescape(@"***"));
         CyclicReferenceString     = Resource.GetString(nameof(CyclicReferenceString    ), Resource.Unescape(@"*** Cyclic Reference ***"));
         VarNameValueSeparator     = Resource.GetString(nameof(VarNameValueSeparator    ), Resource.Unescape(@"\s=\s"));
         KeyValueSeparator         = Resource.GetString(nameof(KeyValueSeparator        ), Resource.Unescape(@":\s"));
         PrintSuffixFormat         = Resource.GetString(nameof(PrintSuffixFormat        ), Resource.Unescape(@"\s({2}:{3:D})"));
         CountFormat               = Resource.GetString(nameof(CountFormat              ), Resource.Unescape(@"\sCount:{0}")); // since 1.5.1
         MinimumOutputCount        = Resource.GetInt   (nameof(MinimumOutputCount       ), 128); // 128 <- 5 since 3.0.0, since 2.0.0
-        LengthFormat              = Resource.GetString(nameof(LengthFormat             ), "StringLengthFormat", Resource.Unescape(@"(Length:{0})")); // since 1.5.1
+        LengthFormat              = Resource.GetString(nameof(LengthFormat             ), Resource.Unescape(@"(Length:{0})")); // since 1.5.1
         MinimumOutputLength       = Resource.GetInt   (nameof(MinimumOutputLength      ), 256); // 256 <- 5 since 3.0.0, since 2.0.0
         DateTimeFormat            = Resource.GetString(nameof(DateTimeFormat           ), Resource.Unescape(@"{0:yyyy-MM-dd HH:mm:ss.fffffffK}"));
         LogDateTimeFormat         = Resource.GetString(nameof(LogDateTimeFormat        ), Resource.Unescape(@"{0:yyyy-MM-dd HH:mm:ss.fff} [{1:D2}] {2}")); // since 1.3.0
-        MaximumDataOutputWidth    = Resource.GetInt   (nameof(MaximumDataOutputWidth   ), "MaxDataOutputWidth", 70);
+        MaximumDataOutputWidth    = Resource.GetInt   (nameof(MaximumDataOutputWidth   ), 70);
         CollectionLimit           = Resource.GetInt   (nameof(CollectionLimit          ), 128); // 128 <- 512 since 3.0.0
         StringLimit               = Resource.GetInt   (nameof(StringLimit              ), 256); // 256 <- 8192 since 3.0.0
-        ReflectionNestLimit       = Resource.GetInt   (nameof(ReflectionNestLimit      ), 4);
-        NonOutputProperties       = new List<string>(Resource.GetStrings(nameof(NonOutputProperties), "NonPrintProperties", new string[0]));
+        ReflectionLimit           = Resource.GetInt   (nameof(ReflectionLimit          ), 4);
+        NonOutputProperties       = new (Resource.GetStrings(nameof(NonOutputProperties), new string[0]));
         NonOutputProperties.Add("System.Threading.Tasks.Task.Result");
         DefaultNameSpace          = Resource.GetString(nameof(DefaultNameSpace         ), "");
         DefaultNameSpaceString    = Resource.GetString(nameof(DefaultNameSpaceString   ), Resource.Unescape(@"..."));
-        ReflectionClasses         = new HashSet<string>(Resource.GetStrings(nameof(ReflectionClasses), new string[0]));
+        ReflectionClasses         = new (Resource.GetStrings(nameof(ReflectionClasses), new string[0]));
         ReflectionClasses.Add(typeof(Tuple).FullName ?? ""); // Tuple
         ReflectionClasses.Add(typeof(ValueTuple).FullName ?? ""); // ValueTuple
         OutputNonPublicFields     = Resource.GetBool  (nameof(OutputNonPublicFields    ), false); // since 1.4.4
@@ -413,7 +429,7 @@ public class Trace {
         if (states.ContainsKey(threadId)) {
             state = states[threadId];
         } else {
-            state = new State();
+            state = new ();
             state.ThreadId = threadId;
             states[threadId] = state;
         }
@@ -707,34 +723,34 @@ public class Trace {
     /// <typeparam name="T">the type of the value</typeparam>
     /// <param name="name">the name of the value</param>
     /// <param name="value">the value to output</param>
-    /// <param name="forceReflection">if true, outputs using reflection even if it has ToString() method</param>
+    /// <param name="reflection">if true, outputs using reflection even if it has ToString() method</param>
     /// <param name="outputNonPublicFields">if true, outputs non-public field when using reflection (Overrides Debugtarace.properties value)</param>
     /// <param name="outputNonPublicProperties">if true, outputs non-public properties when using reflection (Overrides Debugtarace.properties value)</param>
     /// <param name="minimumOutputCount">the minimum value to output the number of elements for IDictionary and IEnumerable (Overrides Debugtarace.properties value)</param>
     /// <param name="minimumOutputLength">the minimum value to output the length of string (Overrides Debugtarace.properties value)</param>
     /// <param name="collectionLimit">output limit for IDictionary and IEnumerable elements (Overrides Debugtarace.properties value)</param>
     /// <param name="stringLimit">output limit of characters for string (Overrides Debugtarace.properties value)</param>
-    /// <param name="reflectionNestLimit">the nest limit when using reflection (Overrides Debugtarace.properties value)</param>
+    /// <param name="reflectionLimit">the nest limit when using reflection (Overrides Debugtarace.properties value)</param>
     /// <returns>the value</returns>
     public static T? Print<T>(string name, T? value,
-            bool forceReflection = false,
+            bool reflection = false,
             bool? outputNonPublicFields = null,
             bool? outputNonPublicProperties = null,
             int minimumOutputCount = -1,
             int minimumOutputLength = -1,
             int collectionLimit = -1,
             int stringLimit = -1,
-            int reflectionNestLimit = -1) {
+            int reflectionLimit = -1) {
         if (IsEnabled) {
             var printOptions = new PrintOptions(
-                forceReflection,
+                reflection,
                 outputNonPublicFields     == null ? OutputNonPublicFields     : outputNonPublicFields.Value,
                 outputNonPublicProperties == null ? OutputNonPublicProperties : outputNonPublicProperties.Value,
                 minimumOutputCount        == -1   ? MinimumOutputCount        : minimumOutputCount,
                 minimumOutputLength       == -1   ? MinimumOutputLength       : minimumOutputLength,
                 collectionLimit           == -1   ? CollectionLimit           : collectionLimit,
                 stringLimit               == -1   ? StringLimit               : stringLimit,
-                reflectionNestLimit       == -1   ? ReflectionNestLimit       : reflectionNestLimit
+                reflectionLimit           == -1   ? ReflectionLimit           : reflectionLimit
             );
             PrintSub(name, value, printOptions);
         }
@@ -748,34 +764,34 @@ public class Trace {
     /// <typeparam name="T">the type of the value</typeparam>
     /// <param name="name">the name of the value</param>
     /// <param name="valueSupplier">the supplier of value to output</param>
-    /// <param name="forceReflection">if true, outputs using reflection even if it has ToString() method</param>
+    /// <param name="reflection">if true, outputs using reflection even if it has ToString() method</param>
     /// <param name="outputNonPublicFields">if true, outputs non-public field when using reflection (Overrides Debugtarace.properties value)</param>
     /// <param name="outputNonPublicProperties">if true, outputs non-public properties when using reflection (Overrides Debugtarace.properties value)</param>
     /// <param name="minimumOutputCount">the minimum value to output the number of elements for IDictionary and IEnumerable (Overrides Debugtarace.properties value)</param>
     /// <param name="minimumOutputLength">the minimum value to output the length of string (Overrides Debugtarace.properties value)</param>
     /// <param name="collectionLimit">output limit for IDictionary and IEnumerable elements (Overrides Debugtarace.properties value)</param>
     /// <param name="stringLimit">output limit of characters for string (Overrides Debugtarace.properties value)</param>
-    /// <param name="reflectionNestLimit">the nest limit when using reflection (Overrides Debugtarace.properties value)</param>
+    /// <param name="reflectionLimit">the nest limit when using reflection (Overrides Debugtarace.properties value)</param>
     /// <returns>the value if IsEnabled, otherwise a default value of the T type</returns>
     public static T? Print<T>(string name, Func<T?> valueSupplier,
-            bool forceReflection = false,
+            bool reflection = false,
             bool? outputNonPublicFields = null,
             bool? outputNonPublicProperties = null,
             int minimumOutputCount = -1,
             int minimumOutputLength = -1,
             int collectionLimit = -1,
             int stringLimit = -1,
-            int reflectionNestLimit = -1) {
+            int reflectionLimit = -1) {
         if (IsEnabled) {
             var printOptions = new PrintOptions(
-                forceReflection,
+                reflection,
                 outputNonPublicFields     == null ? OutputNonPublicFields     : outputNonPublicFields.Value,
                 outputNonPublicProperties == null ? OutputNonPublicProperties : outputNonPublicProperties.Value,
                 minimumOutputCount        == -1   ? MinimumOutputCount        : minimumOutputCount,
                 minimumOutputLength       == -1   ? MinimumOutputLength       : minimumOutputLength,
                 collectionLimit           == -1   ? CollectionLimit           : collectionLimit,
                 stringLimit               == -1   ? StringLimit               : stringLimit,
-                reflectionNestLimit       == -1   ? ReflectionNestLimit       : reflectionNestLimit
+                reflectionLimit           == -1   ? ReflectionLimit           : reflectionLimit
             );
             try {
                 var value = valueSupplier();
@@ -840,7 +856,7 @@ public class Trace {
             case IEnumerable enumerable: return ToStringEnumerable(enumerable, printOptions);
             case Enum       enumValue: buff.Append(typeName); buff.Append(enumValue); return buff;
             default:
-                if (printOptions.ForceReflection || !HasToString(type)) {
+                if (printOptions.Reflection || !HasToString(type)) {
                     isReflection = true;
                     ReflectionClasses.Add(fullTypeName);
                 }
@@ -854,7 +870,7 @@ public class Trace {
                 // Cyclic reference
                 buff.Append(CyclicReferenceString);
 
-            else if (reflectedObjects.Count >= printOptions.ReflectionNestLimit)
+            else if (reflectedObjects.Count >= printOptions.ReflectionLimit)
                 // Over reflection level limitation
                 buff.NoBreakAppend(LimitString);
 

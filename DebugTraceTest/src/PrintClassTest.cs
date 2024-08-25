@@ -7,6 +7,18 @@ namespace DebugTraceTest;
 
 [TestClass]
 public class PrintClassTest {
+    [ClassInitialize]
+    public static void ClassInit(TestContext context) {
+        Trace.Enter();
+        Trace.Leave();
+    }
+
+    [ClassCleanup]
+    public static void ClassCleanup() {
+        Trace.Enter();
+        Trace.Leave();
+    }
+
     // Print a class that does not have ToString method
     [TestMethod]
     public void DoseNotHaveToString() {

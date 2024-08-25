@@ -2,7 +2,6 @@
 // (C) 2018 Masato Kokubo
 using System;
 using DebugTrace;
-using DebugTrace;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DebugTraceTest;
@@ -11,17 +10,19 @@ namespace DebugTraceTest;
 public class PrintTupleTest {
     private static int maxDataOutputWidth;
 
-    // ClassInitialize
     [ClassInitialize]
     public static void ClassInit(TestContext testContext) {
+        Trace.Enter();
         maxDataOutputWidth = Trace.MaximumDataOutputWidth;
         Trace.MaximumDataOutputWidth = 100;
+        Trace.Leave();
     }
 
-    // ClassCleanup
     [ClassCleanup]
     public static void ClassCleanup() {
+        Trace.Enter();
         Trace.MaximumDataOutputWidth = maxDataOutputWidth;
+        Trace.Leave();
     }
 
     // (int, int)

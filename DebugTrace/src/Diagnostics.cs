@@ -41,7 +41,7 @@ public abstract class Diagnostics : ILogger {
         /// <summary>
         /// The only <c>Console.Out</c> object.
         /// </summary>
-        public static Debug Instance {get;} = new Debug();
+        public static Debug Instance {get;} = new ();
 
         private Debug() {
         }
@@ -51,8 +51,7 @@ public abstract class Diagnostics : ILogger {
         /// </summary>
         /// <param name="message">the message</param>
         public override void Log(string message) {
-            System.Diagnostics.Debug.WriteLine(string.Format(DebugTrace.Trace.LogDateTimeFormat,
-                DateTime.Now, Thread.CurrentThread.ManagedThreadId, message));
+            System.Diagnostics.Debug.WriteLine(DebugTrace.Trace.FormatLog(message));
         }
     }
 
@@ -73,8 +72,7 @@ public abstract class Diagnostics : ILogger {
         /// </summary>
         /// <param name="message">the message</param>
         public override void Log(string message) {
-            System.Diagnostics.Trace.WriteLine(string.Format(DebugTrace.Trace.LogDateTimeFormat,
-                DateTime.Now, Thread.CurrentThread.ManagedThreadId, message));
+            System.Diagnostics.Trace.WriteLine(DebugTrace.Trace.FormatLog(message));
         }
     }
 }

@@ -38,53 +38,8 @@ Do the following for debug target and related methods.
 
 [The MIT License (MIT)](LICENSE)
 
-## 9. Release Notes
+## 9.Change Log
 
-### DebugTrace-net 3.0.0 - _June 23, 2022_
-
-* Now compatible with .NET 6.
-* Changed the default values of the following properties in DebugTrace.properties.
-
-* Support for VisualStudio has been dropped.
-    As a result, the following has been done:
-    * The `ITrace` interface has been removed.
-    * The `CSharp` and `VisualBasic` classes have been removed.
-    * The `TraceBase` class name has been changed to `Trace`.
- 
-    The `using` statement will change to the following: 
-    `using static DebugTrace.CSharp;`  
-        ↓  
-    `using DebugTrace;`
-
-* Changes to method argument specifications    
-    * `T? Print<T>(string name, T? value)`  
-        ↓  
-    `T? Print<T>(string name, T? value, bool forceReflection = false,`  
-    `    bool? outputNonPublicFields = null, bool? putNonPublicProperties = null,`  
-    `    int minimumOutputCount = -1, int minimumOutputLength = -1,`  
-    `    int collectionLimit = -1, int stringLimit = -1, int reflectionNestLimit = -1)`
-
-    * `T? Print<T>(string name, Func<T?> valueSupplier)`  
-        ↓  
-    `T? Print<T>(string name, Func<T?> valueSupplier, bool forceReflection = false,`  
-    `    bool? outputNonPublicFields = null, bool? putNonPublicProperties = null,`  
-    `    int minimumOutputCount = -1, int minimumOutputLength = -1,`  
-    `    int collectionLimit = -1, int stringLimit = -1, int reflectionNestLimit = -1)`
-
-|Property Name|New Default Value|Old Default Value|
-|:----------- |:---------------:|:---------------:|
-|MinimumOutputCount |128|   5|
-|MinimumOutputLength|256|   5|
-|CollectionLimit    |128| 512|
-|StringLimit        |256|8192|
-
-_Related packages:_
-
-|DebugTrace Package|Related Package|
-|:----|:----|
-|DebugTrace.Log4net 3.0.0|log4net 2.0.17|
-|DebugTrace.NLog 3.0.0   |NLog 5.2.8|
-
-[All Release Notes...](README_releaseNotes.md)
+[Change Log](CHANGELOG.md)
 
 <div align="center" style="color:#6699EE">(C) 2018 Masato Kokubo</div>

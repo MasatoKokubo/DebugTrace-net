@@ -14,14 +14,14 @@ namespace DebugTrace;
 /// <since>1.0.0</since>
 /// <author>Masato Kokubo</author>
 public class Resource {
-    private static DirectoryInfo currentDirInfo = new DirectoryInfo(".");
+    private static DirectoryInfo currentDirInfo = new (".");
 
     /// <summary>
     /// The <c>FileInfo</c> of the resource properties file
     /// </summary>
     public FileInfo FileInfo {get; private set;}
 
-    private IDictionary<string, string> values = new Dictionary<string, string>();
+    private Dictionary<string, string> values = new ();
 
     /// <summary>
     /// Construct a <c>Resource</c>.

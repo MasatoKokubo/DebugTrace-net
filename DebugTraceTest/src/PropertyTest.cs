@@ -5,23 +5,23 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DebugTrace;
-using DebugTrace;
 
 namespace DebugTraceTest;
 
 [TestClass]
 public class PropertyTest {
-    // testProperties
-    // ClassInit
     [ClassInitialize]
     public static void ClassInit(TestContext context) {
+        Trace.Enter();
         Trace.InitClass("DebugTrace_PropertyTest");
+        Trace.Leave();
     }
 
-    // ClassCleanup
     [ClassCleanup]
     public static void ClassCleanup() {
+        Trace.Enter();
         Trace.InitClass("DebugTrace");
+        Trace.Leave();
     }
 
     // Trace.InitClass
@@ -49,7 +49,7 @@ public class PropertyTest {
         Assert.AreEqual(                  "60"                                       , Trace.MaximumDataOutputWidth.ToString());
         Assert.AreEqual(                  "8"                                        , Trace.CollectionLimit       .ToString());
         Assert.AreEqual(                  "32"                                       , Trace.StringLimit           .ToString());
-        Assert.AreEqual(                  "2"                                        , Trace.ReflectionNestLimit   .ToString());
+        Assert.AreEqual(                  "2"                                        , Trace.ReflectionLimit       .ToString());
         Assert.AreEqual(                  "DebugTraceTest"                           , Trace.DefaultNameSpace                 );
         Assert.IsTrue(Trace.ReflectionClasses.Contains("DebugTraceTest.Point3"));
         Assert.IsTrue(Trace.ReflectionClasses.Contains("System.DateTime"));

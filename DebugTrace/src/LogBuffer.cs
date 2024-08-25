@@ -13,8 +13,8 @@ namespace DebugTrace;
 internal class LogBuffer {
     private int nestLevel = 0;
     private int appendNestLevel = 0; // since 2.0.0
-    private IList<(int, string)> lines = new List<(int, string)>();
-    private StringBuilder lastLine = new StringBuilder();
+    private List<(int, string)> lines = new ();
+    private StringBuilder lastLine = new ();
 
     /// <summary>
     /// Breaks the current line.

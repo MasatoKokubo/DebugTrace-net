@@ -4,7 +4,6 @@ using System;
 using System.IO;
 using System.Text;
 using DebugTrace;
-using DebugTrace;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DebugTraceTest;
@@ -15,9 +14,9 @@ public class LoggerTest {
     private static FileInfo? log4netFileInfo;
     private static FileInfo? nLogFileInfo;
 
-    // ClassInit
     [ClassInitialize]
     public static void ClassInit(TestContext context) {
+        Trace.Enter();
         beforeLogger = Trace.Logger;
         log4netFileInfo = new FileInfo("/Logs/DebugTrace/Log4net.log");
         nLogFileInfo = new FileInfo("/Logs/DebugTrace/NLog.log");
@@ -29,13 +28,15 @@ public class LoggerTest {
             using (var stream = nLogFileInfo.Open(FileMode.Truncate)) {}
         }
         catch (Exception) {}
+        Trace.Leave();
     }
 
-    // ClassCleanup
     [ClassCleanup]
     public static void ClassCleanup() {
+        Trace.Enter();
         if (beforeLogger != null)
             Trace.Logger = beforeLogger;
+        Trace.Leave();
     }
 
     // Log4netLevel

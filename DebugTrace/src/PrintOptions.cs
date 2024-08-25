@@ -8,12 +8,12 @@ namespace DebugTrace;
 /// <since>3.0.0</since>
 /// <author>Masato Kokubo</author>
 internal record class PrintOptions(
-    bool ForceReflection,
+    bool Reflection,
     bool OutputNonPublicFields,
     bool OutputNonPublicProperties,
     int MinimumOutputCount,
     int MinimumOutputLength,
     int CollectionLimit,
     int StringLimit,
-    int ReflectionNestLimit
+    int ReflectionLimit
 );

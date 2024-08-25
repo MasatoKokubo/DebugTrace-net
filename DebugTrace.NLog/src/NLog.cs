@@ -11,19 +11,18 @@ namespace DebugTrace;
 /// <since>1.0.0</since>
 /// <author>Masato Kokubo</author>
 public class NLog : ILogger {
-    private static readonly Dictionary<string, global::NLog.LogLevel> levelDictionary = 
-        new Dictionary<string, global::NLog.LogLevel>() {
-            {"TRACE", global::NLog.LogLevel.Trace},
-            {"DEBUG", global::NLog.LogLevel.Debug},
-            {"INFO" , global::NLog.LogLevel.Info },
-            {"WARN" , global::NLog.LogLevel.Warn },
-            {"ERROR", global::NLog.LogLevel.Error},
-            {"FATAL", global::NLog.LogLevel.Fatal},
-            {"OFF"  , global::NLog.LogLevel.Off  },
-        };
+    private static readonly Dictionary<string, global::NLog.LogLevel> levelDictionary = new () {
+        {"TRACE", global::NLog.LogLevel.Trace},
+        {"DEBUG", global::NLog.LogLevel.Debug},
+        {"INFO" , global::NLog.LogLevel.Info },
+        {"WARN" , global::NLog.LogLevel.Warn },
+        {"ERROR", global::NLog.LogLevel.Error},
+        {"FATAL", global::NLog.LogLevel.Fatal},
+        {"OFF"  , global::NLog.LogLevel.Off  },
+    };
 
     // NLog Logger
-    private readonly global::NLog.Logger logger = global::NLog.LogManager.GetLogger(typeof(ILogger).Namespace);
+    private readonly global::NLog.Logger logger = global::NLog.LogManager.GetLogger("DebugTrace");
 
     private static readonly string defaultLevelStr = "DEBUG";
     private string levelStr = defaultLevelStr;

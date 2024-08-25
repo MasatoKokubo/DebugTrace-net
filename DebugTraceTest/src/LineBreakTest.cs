@@ -2,7 +2,6 @@
 // (C) 2018 Masato Kokubo
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DebugTrace;
-using DebugTrace;
 using System;
 using System.Collections.Generic;
 
@@ -42,12 +41,16 @@ public class LineBreakTest {
 
     [ClassInitialize]
     public static void ClassInit(TestContext context) {
+        Trace.Enter();
         maximumDataOutputWidth = Trace.MaximumDataOutputWidth;
+        Trace.Leave();
     }
 
     [ClassCleanup]
     public static void ClassCleanup() {
+        Trace.Enter();
         Trace.MaximumDataOutputWidth = maximumDataOutputWidth;
+        Trace.Leave();
     }
 
     [TestMethod]

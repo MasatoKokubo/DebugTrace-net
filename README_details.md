@@ -176,7 +176,7 @@ It has the following properties and methods.
         <td>
             <li><code>string name</code>: the value name</li>
             <li><code>T value</code>: the value</li>
-            <li><code>bool forceReflection = false</code>:<br>
+            <li><code>bool reflection = false</code>:<br>
                 if true, outputs using reflection even if it has ToString() method<br>
             <br>
             The following will override the settings in DebugTrace.properties if they are not the default values.<br>
@@ -193,7 +193,7 @@ It has the following properties and methods.
                 output limit for IDictionary and IEnumerable elements<br>
             <li><code>int stringLimit = -1</code>:<br>
                 output limit of characters for string<br>
-            <li><code>reflectionNestLimit = -1</code>:<br>
+            <li><code>int reflectionLimit = -1</code>:<br>
                 the nest limit when using reflection<br>
         </td>
         <td>the value</td>
@@ -207,14 +207,14 @@ It has the following properties and methods.
             <br>
             <br>
             See above for the following:
-            <li><code>bool forceReflection = false</code>
+            <li><code>bool reflection = false</code>
             <li><code>bool? outputNonPublicFields = null</code>
             <li><code>bool? outputNonPublicProperties = null</code>
             <li><code>int minimumOutputCount = -1</code>
             <li><code>int minimumOutputLength = -1</code>
             <li><code>int collectionLimit = -1</code>
             <li><code>int stringLimit = -1</code>
-            <li><code>reflectionNestLimit = -1</code>
+            <li><code>int reflectionLimit = -1</code>
         </td>
         <td>the value obtained from <code>valueSupplier</code></td>
         <td>
@@ -516,11 +516,11 @@ You can specify following properties in the `DebugTrace.properties` file.
         </td>
     </tr>
     <tr>
-        <td><code>ReflectionNestLimit</code></td>
+        <td><code>ReflectionLimit</code></td>
         <td>
             The The limit value for reflection nesting<br>
             <b>Example:</b><br>
-            &emsp;&emsp;<code>ReflectionNestLimit = 4</code> <i>(This is the defalut)</i>
+            &emsp;&emsp;<code>ReflectionLimit = 4</code> <i>(This is the defalut)</i>
         </td>
     </tr>
     <tr>

@@ -8,6 +8,18 @@ namespace DebugTraceTest;
 
 [TestClass]
 public class EnterLeaveNestTest {
+    [ClassInitialize]
+    public static void ClassInit(TestContext context) {
+        Trace.Enter();
+        Trace.Leave();
+    }
+
+    [ClassCleanup]
+    public static void ClassCleanup() {
+        Trace.Enter();
+        Trace.Leave();
+    }
+
     [TestMethod]
     public void EnterLeaveNestTest1() {
         Trace.Enter();
